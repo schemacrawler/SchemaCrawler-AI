@@ -92,17 +92,17 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   }
 
   @Override
+  public String getName() {
+    return "Function Definitions";
+  }
+
+  @Override
   public Collection<PropertyName> getRegisteredPlugins() {
     final Collection<PropertyName> registeredPlugins = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
+    for (final FunctionDefinition functionDefinition : functionDefinitionRegistry.values()) {
       registeredPlugins.add(
           new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
     }
     return registeredPlugins;
-  }
-
-  @Override
-  public String getName() {
-    return "Function Definitions";
   }
 }

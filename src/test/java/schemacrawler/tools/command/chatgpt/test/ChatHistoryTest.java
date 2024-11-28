@@ -2,20 +2,20 @@ package schemacrawler.tools.command.chatgpt.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
-import static org.mockito.Mockito.mock;
 import java.util.Arrays;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import com.theokanning.openai.completion.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import schemacrawler.tools.command.chatgpt.utility.ChatHistory;
 
 public class ChatHistoryTest {
 
   @Test
   public void chatHistory() {
-    final List<ChatMessage> messages = Arrays.asList(mock(ChatMessage.class));
+    final List<ChatMessage> messages = Arrays.asList(UserMessage.of("1"));
     final ChatHistory chatHistory = new ChatHistory(10, messages);
-    chatHistory.add(mock(ChatMessage.class));
+    chatHistory.add(UserMessage.of("2"));
     chatHistory.add(null);
     final List<ChatMessage> historyList = chatHistory.toList();
     assertThat(historyList, hasSize(2));

@@ -28,9 +28,9 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static java.util.Objects.requireNonNull;
 import java.io.StringWriter;
 import java.util.function.Function;
+import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;

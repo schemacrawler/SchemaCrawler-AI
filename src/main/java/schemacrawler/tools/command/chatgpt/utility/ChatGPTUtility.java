@@ -32,16 +32,14 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.math3.stat.descriptive.summary.Product;
 import static java.util.Objects.requireNonNull;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ChatRole;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType;
-import schemacrawler.tools.command.chatgpt.FunctionParameters;
-import schemacrawler.tools.command.chatgpt.functions.ExitFunctionDefinition;
 import schemacrawler.tools.command.chatgpt.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
@@ -54,9 +52,8 @@ public class ChatGPTUtility {
 
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
-    final String exitFunctionName = new ExitFunctionDefinition().getName();
     for (final ChatMessage c : completions) {
-      if (c.getFunctionCall() != null && c.getName().equals(exitFunctionName)) {
+      if (c.getRole() == ChatRole.TOOL && c.toString().contains("Thank you")) {
         return true;
       }
     }
@@ -70,7 +67,7 @@ public class ChatGPTUtility {
     requireNonNull(connection, "No connection provided");
 
     final List<FunctionDef> chatFunctions = new ArrayList<>();
-    for (final FunctionDefinition<? extends FunctionParameters> functionDefinition :
+    for (final FunctionDefinition functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
       if (functionDefinition.getFunctionType() != FunctionType.USER) {
         continue;
@@ -78,11 +75,11 @@ public class ChatGPTUtility {
       functionDefinition.setCatalog(catalog);
       functionDefinition.setConnection(connection);
 
-      final FunctionDef chatFunction = FunctionDef.builder()
+      final FunctionDef chatFunction =
+          FunctionDef.builder()
               .name(functionDefinition.getName())
               .description(functionDefinition.getDescription())
-              .functionalClass(Product.class)
-              //.executor(functionDefinition.getParameters(), functionDefinition.getExecutor())
+              .functionalClass(functionDefinition.getClass())
               .strict(Boolean.TRUE)
               .build();
       chatFunctions.add(chatFunction);
@@ -99,7 +96,7 @@ public class ChatGPTUtility {
     requireNonNull(out, "No ouput stream provided");
     requireNonNull(completions, "No completions provided");
     for (final ChatMessage chatMessage : completions) {
-      out.println(chatMessage.getContent());
+      out.println(chatMessage);
     }
   }
 

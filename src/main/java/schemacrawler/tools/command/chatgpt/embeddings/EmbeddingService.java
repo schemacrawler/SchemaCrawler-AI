@@ -60,8 +60,8 @@ public final class EmbeddingService {
               .model(TEXT_EMBEDDING_MODEL)
               .input(Collections.singletonList(text))
               .build();
-
-      final Embedding<EmbeddingFloat> embeddingResult = service.embeddings(). create(embeddingRequest).get();
+      final Embedding<EmbeddingFloat> embeddingResult =
+          service.embeddings().create(embeddingRequest).get();
       return new TextEmbedding(text, embeddingResult);
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Could not embed text"));

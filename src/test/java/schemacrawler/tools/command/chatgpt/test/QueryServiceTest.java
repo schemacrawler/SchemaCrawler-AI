@@ -36,17 +36,17 @@ import java.util.Collection;
 import java.util.Collections;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.theokanning.openai.completion.chat.ChatMessage;
-import com.theokanning.openai.service.OpenAiService;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.chatgpt.embeddings.QueryService;
-import schemacrawler.tools.command.chatgpt.test.utility.ChatGptTestUtility;
+import schemacrawler.tools.command.chatgpt.test.utility.AITestUtility;
 
 public class QueryServiceTest {
 
-  private OpenAiService openAiService;
+  private SimpleOpenAI service;
   private QueryService queryService;
   private Table table;
 
@@ -56,9 +56,8 @@ public class QueryServiceTest {
     table.addColumn("column_name");
     this.table = table;
 
-    openAiService =
-        ChatGptTestUtility.setUpMockOpenAiService(new ArrayList<>(Collections.singletonList(0.5)));
-    queryService = new QueryService(openAiService);
+    service = AITestUtility.mockAiService(new ArrayList<>(Collections.singletonList(0.5)));
+    queryService = new QueryService(service);
   }
 
   @Test

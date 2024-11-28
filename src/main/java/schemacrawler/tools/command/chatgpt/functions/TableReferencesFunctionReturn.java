@@ -28,9 +28,9 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static java.util.Objects.requireNonNull;
 import java.util.Collection;
 import java.util.Collections;
+import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.TableRelationshipType;
 import schemacrawler.schema.View;
@@ -38,7 +38,7 @@ import schemacrawler.schemacrawler.IdentifierQuotingStrategy;
 import schemacrawler.schemacrawler.Identifiers;
 import schemacrawler.schemacrawler.IdentifiersBuilder;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionParameters.TableReferenceType;
+import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionDefinition.TableReferenceType;
 
 public class TableReferencesFunctionReturn implements FunctionReturn {
 
@@ -52,7 +52,7 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
 
   protected TableReferencesFunctionReturn(final Table table, final TableReferenceType scope) {
     this.table = requireNonNull(table, "Table not provided");
-    this.tableReferenceType = requireNonNull(scope, "Table description scope not provided");
+    tableReferenceType = requireNonNull(scope, "Table description scope not provided");
   }
 
   @Override

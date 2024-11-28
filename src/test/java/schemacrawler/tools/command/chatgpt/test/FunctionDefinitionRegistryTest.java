@@ -35,6 +35,7 @@ import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
 import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition;
@@ -49,20 +50,10 @@ import us.fatehi.utility.property.PropertyName;
 public class FunctionDefinitionRegistryTest {
 
   @Test
-  public void testCommandPlugin() throws Exception {
+  public void name() {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition> functions = registry.getFunctionDefinitions();
-    assertThat(functions, hasSize(6));
-    assertThat(
-        functions,
-        containsInAnyOrder(
-            new DatabaseObjectListFunctionDefinition(),
-            new TableDecriptionFunctionDefinition(),
-            new TableReferencesFunctionDefinition(),
-            new DatabaseObjectDescriptionFunctionDefinition(),
-            new LintFunctionDefinition(),
-            new ExitFunctionDefinition()));
+    assertThat(registry.getName(), is("Function Definitions"));
   }
 
   @Test
@@ -88,9 +79,21 @@ public class FunctionDefinitionRegistryTest {
   }
 
   @Test
-  public void name() {
+  public void testCommandPlugin() throws Exception {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    assertThat(registry.getName(), is("Function Definitions"));
+    final Collection<FunctionDefinition> functions = registry.getFunctionDefinitions();
+    assertThat(functions, hasSize(6));
+    assertThat(
+        functions.stream()
+            .map(function -> function.getClass().getSimpleName())
+            .collect(Collectors.toList()),
+        containsInAnyOrder(
+            DatabaseObjectListFunctionDefinition.class.getSimpleName(),
+            TableDecriptionFunctionDefinition.class.getSimpleName(),
+            TableReferencesFunctionDefinition.class.getSimpleName(),
+            DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
+            ExitFunctionDefinition.class.getSimpleName()));
   }
 }

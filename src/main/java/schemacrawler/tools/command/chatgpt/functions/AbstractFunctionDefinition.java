@@ -28,40 +28,25 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.requireNotBlank;
+import static schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType.USER;
 import java.sql.Connection;
-import java.util.Objects;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
-import schemacrawler.tools.command.chatgpt.FunctionParameters;
 
-public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
-    implements FunctionDefinition<P> {
+@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+@JsonPropertyOrder()
+public abstract class AbstractFunctionDefinition implements FunctionDefinition {
 
-  private final String description;
-  private final Class<P> parameters;
-  protected Catalog catalog;
-  protected Connection connection;
+  @JsonIgnore protected Catalog catalog;
 
-  protected AbstractFunctionDefinition(final String description, final Class<P> parameters) {
-    this.description = requireNotBlank(description, "Function description not provided");
-    this.parameters = requireNonNull(parameters, "Function parameters not provided");
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    final AbstractFunctionDefinition<?> other = (AbstractFunctionDefinition<?>) obj;
-    return Objects.equals(description, other.description)
-        && Objects.equals(parameters, other.parameters);
-  }
+  @JsonIgnore protected Connection connection;
 
   @Override
   public Catalog getCatalog() {
@@ -72,19 +57,20 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     return connection;
   }
 
+  @JsonIgnore
   @Override
-  public String getDescription() {
-    return description;
+  public abstract String getDescription();
+
+  @JsonIgnore
+  @Override
+  public FunctionType getFunctionType() {
+    return USER;
   }
 
+  @JsonIgnore
   @Override
-  public Class<P> getParameters() {
-    return parameters;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(description, parameters);
+  public String getName() {
+    return new KebabCaseStrategy().translate(getClass().getSimpleName());
   }
 
   @Override
@@ -99,8 +85,10 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
 
   @Override
   public String toString() {
-    return String.format(
-        "function %s(%s)%n\"%s\"",
-        getName(), new KebabCaseStrategy().translate(parameters.getSimpleName()), description);
+    try {
+      return new ObjectMapper().writeValueAsString(this);
+    } catch (final JsonProcessingException e) {
+      return super.toString();
+    }
   }
 }

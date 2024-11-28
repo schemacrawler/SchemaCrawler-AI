@@ -35,12 +35,19 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Scanner;
+import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
+import io.github.sashirestela.openai.common.tool.ToolCall;
+import io.github.sashirestela.openai.domain.chat.Chat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
+import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.embeddings.QueryService;
 import schemacrawler.tools.command.chatgpt.options.ChatGPTCommandOptions;
@@ -72,9 +79,7 @@ public final class ChatGPTConsole implements AutoCloseable {
 
     functionExecutor = ChatGPTUtility.newFunctionExecutor(catalog, connection);
 
-    service = SimpleOpenAI.builder()
-        .apiKey(System.getenv("OPENAI_API_KEY"))
-        .build();
+    service = SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
 
     queryService = new QueryService(service);
     queryService.addTables(catalog.getTables());
@@ -84,8 +89,7 @@ public final class ChatGPTConsole implements AutoCloseable {
   }
 
   @Override
-  public void close() {
-  }
+  public void close() {}
 
   /** Simple REPL for the SchemaCrawler ChatGPT integration. */
   public void console() {
@@ -113,8 +117,7 @@ public final class ChatGPTConsole implements AutoCloseable {
 
     try {
 
-      final ChatMessage userMessage = new ChatMessage(USER.value(), prompt);
-      chatHistory.add(userMessage);
+      chatHistory.add(UserMessage.of(prompt));
 
       final List<ChatMessage> messages = chatHistory.toList();
 
@@ -123,57 +126,31 @@ public final class ChatGPTConsole implements AutoCloseable {
         messages.addAll(chatMessages);
       }
 
-      final ChatCompletionRequest completionRequest =
-          ChatCompletionRequest.builder()
-              .messages(messages)
-              .functions(functionExecutor.getFunctions())
-              .functionCall(new ChatCompletionRequestFunctionCall("auto"))
+      final ChatRequest chatRequest =
+          ChatRequest.builder()
               .model(commandOptions.getModel())
-              .n(1)
+              .messages(messages)
+              .tools(functionExecutor.getToolFunctions())
               .build();
-      logChatRequest(completionRequest.getMessages(), completionRequest.getFunctions());
+      final CompletableFuture<Chat> futureChat = service.chatCompletions().create(chatRequest);
+      final Chat chatResponse = futureChat.join();
 
-      final ChatCompletionResult chatCompletion = service.createChatCompletion(completionRequest);
-      LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatCompletion.getUsage()));
+      LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatResponse.getUsage()));
       // Assume only one message was returned, since we asked for only one
-      final ChatMessage responseMessage = chatCompletion.getChoices().get(0).getMessage();
-      chatHistory.add(responseMessage);
-      final ChatFunctionCall functionCall = responseMessage.getFunctionCall();
-      if (functionCall != null) {
-        final FunctionReturn functionReturn = functionExecutor.execute(functionCall);
-        final ChatMessage functionResponseMessage =
-            new ChatMessage(
-                FUNCTION.value(), functionReturn.get(), functionCall.getName(), functionCall);
-        completions.add(functionResponseMessage);
+      final ResponseMessage responseMessage = chatResponse.firstMessage();
+
+      final List<ToolCall> toolCalls = responseMessage.getToolCalls();
+      if (toolCalls != null && !toolCalls.isEmpty()) {
+        final ToolCall chatToolCall = toolCalls.get(0);
+        final FunctionReturn functionReturn = functionExecutor.execute(chatToolCall.getFunction());
+        completions.add(ToolMessage.of(functionReturn.get(), chatToolCall.getId()));
       } else {
         completions.add(responseMessage);
       }
     } catch (final Exception e) {
       LOGGER.log(Level.INFO, e.getMessage(), e);
-      final ChatMessage exceptionMessage = functionExecutor.convertExceptionToMessage(e);
-      completions.add(exceptionMessage);
     }
 
     return completions;
-  }
-
-  private void logChatRequest(final List<ChatMessage> messages, final List<?> functions) {
-    final Level level = Level.CONFIG;
-    if (!LOGGER.isLoggable(level)) {
-      return;
-    }
-    final StringBuilder buffer = new StringBuilder();
-    buffer.append("ChatGPT request:").append(System.lineSeparator());
-    if (messages != null) {
-      for (final ChatMessage message : messages) {
-        buffer.append(message).append(System.lineSeparator());
-      }
-    }
-    if (functions != null) {
-      for (final Object function : functions) {
-        buffer.append(function).append(System.lineSeparator());
-      }
-    }
-    LOGGER.log(level, buffer.toString());
   }
 }

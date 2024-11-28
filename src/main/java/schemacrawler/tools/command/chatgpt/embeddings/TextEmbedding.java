@@ -50,10 +50,9 @@ public final class TextEmbedding {
   public TextEmbedding(final String text, final Embedding<EmbeddingFloat> embeddingResult) {
     requireNonNull(embeddingResult, "No embedding result provided");
 
-
     final List<EmbeddingFloat> data = embeddingResult.getData();
     final List<Double> embedding;
-    if ((data != null) && (data.size() == 1)) {
+    if (data != null && data.size() == 1) {
       embedding = data.get(0).getEmbedding();
     } else {
       embedding = new ArrayList<>();
@@ -64,16 +63,16 @@ public final class TextEmbedding {
     embeddingVector = new ListRealVector(embedding);
   }
 
-  public String getText() {
-    return text;
-  }
-
   public List<Double> getEmbedding() {
     return embeddingVector.getEmbedding();
   }
 
   public RealVector getEmbeddingVector() {
     return embeddingVector;
+  }
+
+  public String getText() {
+    return text;
   }
 
   public long getTokenCount() {

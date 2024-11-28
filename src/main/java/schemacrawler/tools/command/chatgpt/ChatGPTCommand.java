@@ -46,10 +46,7 @@ public final class ChatGPTCommand extends BaseSchemaCrawlerCommand<ChatGPTComman
 
   @Override
   public void checkAvailability() throws RuntimeException {
-    // Check that OpenAI API key works, and the model is available
-    final SimpleOpenAI service = SimpleOpenAI.builder()
-        .apiKey(System.getenv("OPENAI_API_KEY"))
-        .build();
+    SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
   }
 
   @Override

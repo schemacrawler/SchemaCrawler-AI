@@ -38,18 +38,6 @@ public class ChatGPTCommandProviderTest {
   }
 
   @Test
-  public void testChatGPTCommandProviderPluginCommand(final TestContext testContext) {
-    final PluginCommand pluginCommand = new ChatGPTCommandProvider().getCommandLineCommand();
-    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
-  }
-
-  @Test
-  public void testChatGPTCommandProviderHelpCommand(final TestContext testContext) {
-    final PluginCommand pluginCommand = new ChatGPTCommandProvider().getHelpCommand();
-    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
-  }
-
-  @Test
   public void pluginCommand() {
     final ChatGPTCommandProvider commandProvider = new ChatGPTCommandProvider();
     assertThat(
@@ -69,5 +57,17 @@ public class ChatGPTCommandProviderTest {
   public void supportsOutputFormat() {
     final ChatGPTCommandProvider commandProvider = new ChatGPTCommandProvider();
     assertThat(commandProvider.supportsOutputFormat(null, null), is(true));
+  }
+
+  @Test
+  public void testChatGPTCommandProviderHelpCommand(final TestContext testContext) {
+    final PluginCommand pluginCommand = new ChatGPTCommandProvider().getHelpCommand();
+    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
+  }
+
+  @Test
+  public void testChatGPTCommandProviderPluginCommand(final TestContext testContext) {
+    final PluginCommand pluginCommand = new ChatGPTCommandProvider().getCommandLineCommand();
+    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
   }
 }

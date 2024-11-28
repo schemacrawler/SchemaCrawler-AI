@@ -26,15 +26,13 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.test;
+package schemacrawler.tools.command.chatgpt.functions.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -51,17 +49,43 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
+import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters;
+import schemacrawler.tools.command.chatgpt.functions.LintFunctionDefinition;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RefilterTest {
+public class LintFunctionTest {
 
   private Catalog catalog;
+
+  @Test
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintAllTables(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
+    lintTable(testContext, functionDefinition, connection);
+  }
+
+  @Test
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintTable(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
+    functionDefinition.setTableName("AUTHORS");
+    lintTable(testContext, functionDefinition, connection);
+  }
+
+  @Test
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintUnknownTable(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
+    functionDefinition.setTableName("NOT_A_TABLE");
+    lintTable(testContext, functionDefinition, connection);
+  }
 
   @BeforeAll
   public void loadCatalog(final Connection connection) throws Exception {
@@ -84,29 +108,21 @@ public class RefilterTest {
     catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
   }
 
-  @Test
-  public void refilterTest(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args1 = new DatabaseObjectListFunctionParameters();
-    args1.setDatabaseObjectType(SEQUENCES);
-    databaseObjects(testContext.testMethodFullName() + ".sequences", args1);
+  private void lintTable(
+      final TestContext testContext,
+      final LintFunctionDefinition functionDefinition,
+      final Connection connection)
+      throws Exception {
 
-    final DatabaseObjectListFunctionParameters args2 = new DatabaseObjectListFunctionParameters();
-    args2.setDatabaseObjectType(TABLES);
-    databaseObjects(testContext.testMethodFullName() + ".tables", args2);
-  }
-
-  private void databaseObjects(
-      final String reference, final DatabaseObjectListFunctionParameters args) throws Exception {
-
-    final DatabaseObjectListFunctionDefinition functionDefinition =
-        new DatabaseObjectListFunctionDefinition();
     functionDefinition.setCatalog(catalog);
+    functionDefinition.setConnection(connection);
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
+      final FunctionReturn functionReturn = functionDefinition.getExecutor().get();
       out.write(functionReturn.get());
     }
-    assertThat(outputOf(testout), hasSameContentAs(classpathResource(reference)));
+    assertThat(
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 }

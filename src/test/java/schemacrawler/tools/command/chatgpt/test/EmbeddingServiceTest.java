@@ -35,21 +35,21 @@ import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import com.theokanning.openai.service.OpenAiService;
+import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.tools.command.chatgpt.embeddings.EmbeddingService;
-import schemacrawler.tools.command.chatgpt.test.utility.ChatGptTestUtility;
+import schemacrawler.tools.command.chatgpt.test.utility.AITestUtility;
 
 public class EmbeddingServiceTest {
 
-  private OpenAiService openAiService;
+  private SimpleOpenAI service;
   private EmbeddingService embeddingService;
   private List<Double> expectedEmbedding;
 
   @BeforeEach
   void setUp() {
     expectedEmbedding = new ArrayList<>(Collections.singletonList(0.5));
-    openAiService = ChatGptTestUtility.setUpMockOpenAiService(expectedEmbedding);
-    embeddingService = new EmbeddingService(openAiService);
+    service = AITestUtility.mockAiService(expectedEmbedding);
+    embeddingService = new EmbeddingService(service);
   }
 
   @Test
