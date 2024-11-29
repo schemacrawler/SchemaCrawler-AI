@@ -42,8 +42,8 @@ public class ExecutableFunctionReturn implements FunctionReturn {
   private final SchemaCrawlerExecutable executable;
   private final Function<Catalog, Boolean> resultsChecker;
 
-  protected ExecutableFunctionReturn(final SchemaCrawlerExecutable executable,
-      final Function<Catalog, Boolean> resultsChecker) {
+  protected ExecutableFunctionReturn(
+      final SchemaCrawlerExecutable executable, final Function<Catalog, Boolean> resultsChecker) {
     this.executable = requireNonNull(executable, "SchemaCrawler executable not provided");
     this.resultsChecker = requireNonNull(resultsChecker, "Check for results");
   }

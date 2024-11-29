@@ -40,14 +40,17 @@ import schemacrawler.tools.command.chatgpt.FunctionParameters;
 public class TableReferencesFunctionParameters implements FunctionParameters {
 
   public enum TableReferenceType {
-    ALL, PARENT, CHILD;
+    ALL,
+    PARENT,
+    CHILD;
   }
 
   @JsonPropertyDescription("Name of database table for which to show references.")
   @JsonProperty(required = true)
   private String tableName;
 
-  @JsonPropertyDescription("The type of related tables requested - either child tables or parent tables, or both types (all relationships).")
+  @JsonPropertyDescription(
+      "The type of related tables requested - either child tables or parent tables, or both types (all relationships).")
   private TableReferenceType tableReferenceType;
 
   public String getTableName() {

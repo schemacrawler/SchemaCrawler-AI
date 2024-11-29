@@ -61,8 +61,9 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     final Map<String, FunctionDefinition> functionDefinitionRegistry = new HashMap<>();
 
     try {
-      final ServiceLoader<FunctionDefinition> serviceLoader = ServiceLoader
-          .load(FunctionDefinition.class, FunctionDefinitionRegistry.class.getClassLoader());
+      final ServiceLoader<FunctionDefinition> serviceLoader =
+          ServiceLoader.load(
+              FunctionDefinition.class, FunctionDefinitionRegistry.class.getClassLoader());
       for (final FunctionDefinition functionDefinition : serviceLoader) {
         final String functionName = functionDefinition.getName();
         LOGGER.log(Level.CONFIG, new StringFormat("Loading function definition, %s", functionName));
@@ -73,7 +74,8 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
       throw new InternalRuntimeException("Could not load function definition registry", e);
     }
 
-    LOGGER.log(Level.CONFIG,
+    LOGGER.log(
+        Level.CONFIG,
         new StringFormat("Loaded %d function definitions", functionDefinitionRegistry.size()));
 
     return functionDefinitionRegistry;
@@ -98,8 +100,8 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   public Collection<PropertyName> getRegisteredPlugins() {
     final Collection<PropertyName> registeredPlugins = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      registeredPlugins
-          .add(new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
+      registeredPlugins.add(
+          new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
     }
     return registeredPlugins;
   }

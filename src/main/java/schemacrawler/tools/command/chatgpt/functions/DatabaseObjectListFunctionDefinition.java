@@ -119,8 +119,11 @@ public final class DatabaseObjectListFunctionDefinition
       case SYNONYMS:
         return catalog -> !catalog.getSynonyms().isEmpty();
       default:
-        return catalog -> (!catalog.getTables().isEmpty() || !catalog.getRoutines().isEmpty()
-            || !catalog.getSequences().isEmpty() || !catalog.getSynonyms().isEmpty());
+        return catalog ->
+            (!catalog.getTables().isEmpty()
+                || !catalog.getRoutines().isEmpty()
+                || !catalog.getSequences().isEmpty()
+                || !catalog.getSynonyms().isEmpty());
     }
   }
 }

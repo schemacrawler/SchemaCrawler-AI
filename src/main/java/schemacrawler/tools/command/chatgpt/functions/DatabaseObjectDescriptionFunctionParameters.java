@@ -39,13 +39,18 @@ import schemacrawler.tools.command.chatgpt.FunctionParameters;
 public class DatabaseObjectDescriptionFunctionParameters implements FunctionParameters {
 
   public enum DatabaseObjectsScope {
-    NONE, SEQUENCES, SYNONYMS, ROUTINES,;
+    NONE,
+    SEQUENCES,
+    SYNONYMS,
+    ROUTINES,
+    ;
   }
 
   @JsonPropertyDescription("Name of database object to describe.")
   private String databaseObjectName;
 
-  @JsonPropertyDescription("Indicates what details of database objects to show - sequences, synonyms, or routines (that is, stored procedures or functions).")
+  @JsonPropertyDescription(
+      "Indicates what details of database objects to show - sequences, synonyms, or routines (that is, stored procedures or functions).")
   private DatabaseObjectsScope databaseObjectsScope;
 
   public String getDatabaseObjectName() {

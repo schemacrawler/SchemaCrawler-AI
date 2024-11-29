@@ -55,8 +55,10 @@ public final class TableReferencesFunctionDefinition
       // Re-filter catalog
       MetaDataUtility.reduceCatalog(catalog, SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions());
 
-      final Optional<Table> firstMatchedTable = catalog.getTables().stream()
-          .filter(table -> table.getName().matches("(?i)" + args.getTableName())).findFirst();
+      final Optional<Table> firstMatchedTable =
+          catalog.getTables().stream()
+              .filter(table -> table.getName().matches("(?i)" + args.getTableName()))
+              .findFirst();
 
       if (firstMatchedTable.isPresent()) {
         final Table table = firstMatchedTable.get();

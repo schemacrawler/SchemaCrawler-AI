@@ -101,7 +101,8 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
 
   @Override
   public String toString() {
-    return String.format("function %s(%s)%n\"%s\"", getName(),
-        new KebabCaseStrategy().translate(parameters.getSimpleName()), getDescription());
+    return String.format(
+        "function %s(%s)%n\"%s\"",
+        getName(), new KebabCaseStrategy().translate(parameters.getSimpleName()), getDescription());
   }
 }

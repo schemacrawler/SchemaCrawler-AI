@@ -63,7 +63,6 @@ public class ChatGptTestUtility {
     public Usage getUsage() {
       return usage;
     }
-
   }
 
   public static SimpleOpenAI setUpMockAiService(final List<Double> expectedEmbedding) {

@@ -18,13 +18,13 @@ public class EqualsTest {
     }
 
     @Override
-    public Function<FunctionParameters, FunctionReturn> getExecutor() {
-      return null;
+    public String getDescription() {
+      return "";
     }
 
     @Override
-    public String getDescription() {
-      return "";
+    public Function<FunctionParameters, FunctionReturn> getExecutor() {
+      return null;
     }
   }
 

@@ -68,6 +68,8 @@ public final class ChatGPTConsole implements AutoCloseable {
   private final QueryService queryService;
   private final ChatHistory chatHistory;
   private final boolean useMetadata;
+  private final Catalog catalog;
+  private final Connection connection;
 
   public ChatGPTConsole(
       final ChatGPTCommandOptions commandOptions,
@@ -75,10 +77,10 @@ public final class ChatGPTConsole implements AutoCloseable {
       final Connection connection) {
 
     this.commandOptions = requireNonNull(commandOptions, "ChatGPT options not provided");
-    requireNonNull(catalog, "No catalog provided");
-    requireNonNull(connection, "No connection provided");
+    this.catalog = requireNonNull(catalog, "No catalog provided");
+    this.connection = requireNonNull(connection, "No connection provided");
 
-    functionExecutor = ChatGPTUtility.newFunctionExecutor(catalog, connection);
+    functionExecutor = ChatGPTUtility.newFunctionExecutor();
 
     service = SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
 
@@ -137,7 +139,6 @@ public final class ChatGPTConsole implements AutoCloseable {
       final CompletableFuture<Chat> futureChat = service.chatCompletions().create(chatRequest);
       final Chat chatResponse = futureChat.join();
 
-      System.out.println(String.format("Token usage: %s", chatResponse.getUsage()));
       LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatResponse.getUsage()));
       // Assume only one message was returned, since we asked for only one
       final ResponseMessage responseMessage = chatResponse.firstMessage();
@@ -145,12 +146,14 @@ public final class ChatGPTConsole implements AutoCloseable {
       final List<ToolCall> toolCalls = responseMessage.getToolCalls();
       if (toolCalls != null && !toolCalls.isEmpty()) {
         final ToolCall toolCall = toolCalls.get(0);
-        final FunctionCall function = toolCall.getFunction();
-        System.out.println(String.format("Function call: %s(%s)", function.getName(), function.getArguments()));
-        LOGGER.log(Level.INFO, new StringFormat("Function call: %s(%s)", function.getName(), function.getArguments()));
-        final FunctionReturn functionReturn = functionExecutor.execute(function);
-        System.out.println(functionReturn.get());
-        completions.add(ToolMessage.of(functionReturn.get(), toolCall.getId()));
+        final FunctionCall functionCall = toolCall.getFunction();
+        LOGGER.log(
+            Level.INFO,
+            new StringFormat(
+                "Function call: %s(%s)", functionCall.getName(), functionCall.getArguments()));
+        final String returnString = ChatGPTUtility.execute(functionCall, catalog, connection);
+        System.out.println(returnString);
+        completions.add(ToolMessage.of(returnString, toolCall.getId()));
       } else {
         System.out.println(chatResponse.firstContent());
         completions.add(responseMessage);

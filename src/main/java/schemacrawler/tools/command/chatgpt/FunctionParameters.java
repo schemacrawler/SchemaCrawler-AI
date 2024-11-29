@@ -34,7 +34,8 @@ public interface FunctionParameters extends Functional {
 
   @Override
   default Object execute() {
-    throw new UnsupportedOperationException();
+    throw new UnsupportedOperationException(
+        "Execute using executor on function definition; "
+            + "this method is provided for API compatibility");
   }
-
 }

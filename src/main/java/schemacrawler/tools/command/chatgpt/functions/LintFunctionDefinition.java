@@ -60,8 +60,10 @@ public final class LintFunctionDefinition
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions(final LintFunctionParameters args) {
     final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder().includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll()).includeRoutines(new ExcludeAll());
+        LimitOptionsBuilder.builder()
+            .includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll())
+            .includeRoutines(new ExcludeAll());
     final Pattern grepTablesPattern = makeNameInclusionPattern(args.getTableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
