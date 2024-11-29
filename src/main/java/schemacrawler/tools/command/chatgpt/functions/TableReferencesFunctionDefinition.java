@@ -52,6 +52,7 @@ public final class TableReferencesFunctionDefinition extends AbstractFunctionDef
 
   @JsonPropertyDescription(
       "The type of related tables requested - either child tables or parent tables, or both types (all relationships).")
+  @JsonProperty(required = false)
   private TableReferenceType tableReferenceType;
 
   @Override

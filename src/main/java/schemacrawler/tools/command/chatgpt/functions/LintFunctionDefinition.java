@@ -30,6 +30,7 @@ package schemacrawler.tools.command.chatgpt.functions;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
@@ -42,6 +43,7 @@ import schemacrawler.tools.options.Config;
 public final class LintFunctionDefinition extends AbstractExecutableFunctionDefinition {
 
   @JsonPropertyDescription("Name of database table for which to find design issues.")
+  @JsonProperty(required = true)
   private String tableName;
 
   @Override

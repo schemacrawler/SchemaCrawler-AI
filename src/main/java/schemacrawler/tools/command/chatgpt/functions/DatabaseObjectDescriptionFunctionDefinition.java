@@ -30,6 +30,7 @@ package schemacrawler.tools.command.chatgpt.functions;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
@@ -52,10 +53,12 @@ public final class DatabaseObjectDescriptionFunctionDefinition
   }
 
   @JsonPropertyDescription("Name of database object to describe.")
+  @JsonProperty(required = true)
   private String databaseObjectName;
 
   @JsonPropertyDescription(
       "Indicates what details of database objects to show - sequences, synonyms, or routines (that is, stored procedures or functions).")
+  @JsonProperty(required = false)
   private DatabaseObjectsScope databaseObjectsScope;
 
   public String getDatabaseObjectName() {

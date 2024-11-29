@@ -34,6 +34,7 @@ import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFu
 import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.TABLES;
 import java.util.function.Function;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
@@ -56,6 +57,7 @@ public final class DatabaseObjectListFunctionDefinition
 
   @JsonPropertyDescription(
       "Type of database object to list, like tables, routines (that is, functions and stored procedures), schemas (that is, catalogs), sequences, or synonyms.")
+  @JsonProperty(required = false)
   private DatabaseObjectType databaseObjectType;
 
   public DatabaseObjectType getDatabaseObjectType() {

@@ -131,6 +131,7 @@ public final class ChatGPTConsole implements AutoCloseable {
               .model(commandOptions.getModel())
               .messages(messages)
               .tools(functionExecutor.getToolFunctions())
+              .temperature(0.0)
               .build();
       final CompletableFuture<Chat> futureChat = service.chatCompletions().create(chatRequest);
       final Chat chatResponse = futureChat.join();
@@ -138,6 +139,7 @@ public final class ChatGPTConsole implements AutoCloseable {
       LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatResponse.getUsage()));
       // Assume only one message was returned, since we asked for only one
       final ResponseMessage responseMessage = chatResponse.firstMessage();
+      System.out.println(chatResponse.firstContent());
 
       final List<ToolCall> toolCalls = responseMessage.getToolCalls();
       if (toolCalls != null && !toolCalls.isEmpty()) {

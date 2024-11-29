@@ -80,7 +80,7 @@ public class ChatGPTUtility {
               .name(functionDefinition.getName())
               .description(functionDefinition.getDescription())
               .functionalClass(functionDefinition.getClass())
-              .strict(Boolean.TRUE)
+              .strict(Boolean.FALSE)
               .build();
       chatFunctions.add(chatFunction);
     }

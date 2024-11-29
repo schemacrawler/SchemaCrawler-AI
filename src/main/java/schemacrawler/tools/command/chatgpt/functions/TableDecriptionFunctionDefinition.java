@@ -36,6 +36,7 @@ import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunct
 import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.TRIGGERS;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
@@ -58,10 +59,12 @@ public final class TableDecriptionFunctionDefinition extends AbstractExecutableF
   }
 
   @JsonPropertyDescription("Name of database table or view to describe.")
+  @JsonProperty(required = true)
   private String tableName;
 
   @JsonPropertyDescription(
       "Indicates what details of the database table or view to show - columns, primary key, indexes, foreign keys, or triggers.")
+  @JsonProperty(required = false)
   private TableDescriptionScope descriptionScope;
 
   @Override
