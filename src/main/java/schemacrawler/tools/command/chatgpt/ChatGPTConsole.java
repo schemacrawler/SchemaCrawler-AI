@@ -40,6 +40,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.common.function.FunctionCall;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.openai.domain.chat.Chat;
@@ -136,20 +137,26 @@ public final class ChatGPTConsole implements AutoCloseable {
       final CompletableFuture<Chat> futureChat = service.chatCompletions().create(chatRequest);
       final Chat chatResponse = futureChat.join();
 
+      System.out.println(String.format("Token usage: %s", chatResponse.getUsage()));
       LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatResponse.getUsage()));
       // Assume only one message was returned, since we asked for only one
       final ResponseMessage responseMessage = chatResponse.firstMessage();
-      System.out.println(chatResponse.firstContent());
 
       final List<ToolCall> toolCalls = responseMessage.getToolCalls();
       if (toolCalls != null && !toolCalls.isEmpty()) {
-        final ToolCall chatToolCall = toolCalls.get(0);
-        final FunctionReturn functionReturn = functionExecutor.execute(chatToolCall.getFunction());
-        completions.add(ToolMessage.of(functionReturn.get(), chatToolCall.getId()));
+        final ToolCall toolCall = toolCalls.get(0);
+        final FunctionCall function = toolCall.getFunction();
+        System.out.println(String.format("Function call: %s(%s)", function.getName(), function.getArguments()));
+        LOGGER.log(Level.INFO, new StringFormat("Function call: %s(%s)", function.getName(), function.getArguments()));
+        final FunctionReturn functionReturn = functionExecutor.execute(function);
+        System.out.println(functionReturn.get());
+        completions.add(ToolMessage.of(functionReturn.get(), toolCall.getId()));
       } else {
+        System.out.println(chatResponse.firstContent());
         completions.add(responseMessage);
       }
     } catch (final Exception e) {
+      e.printStackTrace();
       LOGGER.log(Level.INFO, e.getMessage(), e);
     }
 

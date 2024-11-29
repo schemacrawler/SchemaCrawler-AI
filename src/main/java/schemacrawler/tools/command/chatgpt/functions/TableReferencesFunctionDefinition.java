@@ -29,31 +29,18 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.chatgpt.functions;
 
 import java.util.Optional;
-import java.util.function.Supplier;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import java.util.function.Function;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.utility.MetaDataUtility;
 
-public final class TableReferencesFunctionDefinition extends AbstractFunctionDefinition {
+public final class TableReferencesFunctionDefinition
+    extends AbstractFunctionDefinition<TableReferencesFunctionParameters> {
 
-  public enum TableReferenceType {
-    ALL,
-    PARENT,
-    CHILD;
+  public TableReferencesFunctionDefinition() {
+    super(TableReferencesFunctionParameters.class);
   }
-
-  @JsonPropertyDescription("Name of database table for which to show references.")
-  @JsonProperty(required = true)
-  private String tableName;
-
-  @JsonPropertyDescription(
-      "The type of related tables requested - either child tables or parent tables, or both types (all relationships).")
-  @JsonProperty(required = false)
-  private TableReferenceType tableReferenceType;
 
   @Override
   public String getDescription() {
@@ -62,42 +49,20 @@ public final class TableReferencesFunctionDefinition extends AbstractFunctionDef
         + "Parent tables are also known as referenced tables, or primary key tables.";
   }
 
-  @JsonIgnore
   @Override
-  public Supplier<FunctionReturn> getExecutor() {
-    return () -> {
+  public Function<TableReferencesFunctionParameters, FunctionReturn> getExecutor() {
+    return args -> {
       // Re-filter catalog
       MetaDataUtility.reduceCatalog(catalog, SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions());
 
-      final Optional<Table> firstMatchedTable =
-          catalog.getTables().stream()
-              .filter(table -> table.getName().matches("(?i)" + getTableName()))
-              .findFirst();
+      final Optional<Table> firstMatchedTable = catalog.getTables().stream()
+          .filter(table -> table.getName().matches("(?i)" + args.getTableName())).findFirst();
 
       if (firstMatchedTable.isPresent()) {
         final Table table = firstMatchedTable.get();
-        return new TableReferencesFunctionReturn(table, getTableReferenceType());
+        return new TableReferencesFunctionReturn(table, args.getTableReferenceType());
       }
       return new NoResultsReturn();
     };
-  }
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public TableReferenceType getTableReferenceType() {
-    if (tableReferenceType == null) {
-      return TableReferenceType.ALL;
-    }
-    return tableReferenceType;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
-  }
-
-  public void setTableReferenceType(final TableReferenceType tableReferenceType) {
-    this.tableReferenceType = tableReferenceType;
   }
 }

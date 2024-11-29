@@ -28,22 +28,33 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import java.util.function.Function;
-import schemacrawler.tools.command.chatgpt.FunctionReturn;
+import com.fasterxml.jackson.annotation.JsonPropertyDescription;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import schemacrawler.tools.command.chatgpt.FunctionParameters;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
+@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+public class LintFunctionParameters implements FunctionParameters {
 
-  public ExitFunctionDefinition() {
-    super(NoFunctionParameters.class);
+  @JsonPropertyDescription("Name of database table for which to find design issues.")
+  private String tableName;
+
+  public String getTableName() {
+    return tableName;
+  }
+
+  public void setTableName(final String tableName) {
+    this.tableName = tableName;
   }
 
   @Override
-  public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
-  }
-
-  @Override
-  public Function<NoFunctionParameters, FunctionReturn> getExecutor() {
-    return args -> () -> "Thank you for using SchemaCrawler with ChatGPT.";
+  public String toString() {
+    try {
+      return new ObjectMapper().writeValueAsString(this);
+    } catch (final JsonProcessingException e) {
+      return super.toString();
+    }
   }
 }

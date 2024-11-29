@@ -79,7 +79,7 @@ public class ChatGPTUtility {
           FunctionDef.builder()
               .name(functionDefinition.getName())
               .description(functionDefinition.getDescription())
-              .functionalClass(functionDefinition.getClass())
+              .functionalClass(functionDefinition.getParametersClass())
               .strict(Boolean.FALSE)
               .build();
       chatFunctions.add(chatFunction);

@@ -30,43 +30,46 @@ package schemacrawler.tools.command.chatgpt.functions;
 
 import java.util.Collection;
 import java.util.function.Function;
-import java.util.function.Supplier;
 import java.util.regex.Pattern;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
+import schemacrawler.tools.command.chatgpt.FunctionParameters;
+import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.utility.ConnectionDatabaseConnectionSource;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-public abstract class AbstractExecutableFunctionDefinition extends AbstractFunctionDefinition {
+public abstract class AbstractExecutableFunctionDefinition<P extends FunctionParameters>
+    extends AbstractFunctionDefinition<P> {
 
-  @JsonIgnore
+  protected AbstractExecutableFunctionDefinition(final Class<P> parameters) {
+    super(parameters);
+  }
+
   @Override
-  public Supplier<ExecutableFunctionReturn> getExecutor() {
+  public Function<P, FunctionReturn> getExecutor() {
     if (catalog == null) {
       throw new ExecutionRuntimeException("Catalog is not provided");
     }
-    return () -> {
-      final SchemaCrawlerExecutable executable = createExecutable();
-      final Function<Catalog, Boolean> resultsChecker = getResultsChecker();
+    return args -> {
+      final SchemaCrawlerExecutable executable = createExecutable(args);
+      final Function<Catalog, Boolean> resultsChecker = getResultsChecker(args);
       return new ExecutableFunctionReturn(executable, resultsChecker);
     };
   }
 
-  protected abstract Config createAdditionalConfig();
+  protected abstract Config createAdditionalConfig(final P args);
 
-  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions(final P args);
 
-  @JsonIgnore
   protected abstract String getCommand();
 
-  protected abstract Function<Catalog, Boolean> getResultsChecker();
+  protected abstract Function<Catalog, Boolean> getResultsChecker(final P args);
 
   protected Pattern makeNameInclusionPattern(final String name) {
     if (isBlank(name)) {
@@ -76,10 +79,10 @@ public abstract class AbstractExecutableFunctionDefinition extends AbstractFunct
     return Pattern.compile(String.format(".*%s(?i)%s(?-i)", hasDefaultSchema ? "" : "\\.", name));
   }
 
-  private SchemaCrawlerExecutable createExecutable() {
+  private SchemaCrawlerExecutable createExecutable(final P args) {
 
-    final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
-    final Config config = createAdditionalConfig();
+    final SchemaCrawlerOptions options = createSchemaCrawlerOptions(args);
+    final Config config = createAdditionalConfig(args);
     final String command = getCommand();
 
     // Re-filter catalog

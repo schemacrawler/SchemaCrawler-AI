@@ -28,72 +28,40 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.DEFAULT;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.FOREIGN_KEYS;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionDefinition.TableDescriptionScope.TRIGGERS;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.DEFAULT;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 
-public final class TableDecriptionFunctionDefinition extends AbstractExecutableFunctionDefinition {
+public final class TableDecriptionFunctionDefinition
+    extends AbstractExecutableFunctionDefinition<TableDecriptionFunctionParameters> {
 
-  public enum TableDescriptionScope {
-    DEFAULT,
-    COLUMNS,
-    PRIMARY_KEY,
-    INDEXES,
-    FOREIGN_KEYS,
-    TRIGGERS;
+  public TableDecriptionFunctionDefinition() {
+    super(TableDecriptionFunctionParameters.class);
   }
-
-  @JsonPropertyDescription("Name of database table or view to describe.")
-  @JsonProperty(required = true)
-  private String tableName;
-
-  @JsonPropertyDescription(
-      "Indicates what details of the database table or view to show - columns, primary key, indexes, foreign keys, or triggers.")
-  @JsonProperty(required = false)
-  private TableDescriptionScope descriptionScope;
 
   @Override
   public String getDescription() {
-    return "Gets the details and description of database tables or views, including columns, foreign keys, indexes and triggers.";
-  }
-
-  public TableDescriptionScope getDescriptionScope() {
-    if (descriptionScope == null) {
-      return TableDescriptionScope.DEFAULT;
-    }
-    return descriptionScope;
-  }
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public void setDescriptionScope(final TableDescriptionScope descriptionScope) {
-    this.descriptionScope = descriptionScope;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
+    return "Gets the details and description of database tables or views, "
+        + "including columns, foreign keys, indexes and triggers.";
   }
 
   @Override
-  protected Config createAdditionalConfig() {
-    final TableDescriptionScope scope = getDescriptionScope();
+  protected Config createAdditionalConfig(final TableDecriptionFunctionParameters args) {
+    final TableDescriptionScope scope = args.getDescriptionScope();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
     if (scope != DEFAULT) {
       if (scope != COLUMNS) {
@@ -118,13 +86,12 @@ public final class TableDecriptionFunctionDefinition extends AbstractExecutableF
   }
 
   @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions(
+      final TableDecriptionFunctionParameters args) {
     final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(getTableName());
+        LimitOptionsBuilder.builder().includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll()).includeRoutines(new ExcludeAll());
+    final Pattern grepTablesPattern = makeNameInclusionPattern(args.getTableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
@@ -138,7 +105,8 @@ public final class TableDecriptionFunctionDefinition extends AbstractExecutableF
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
+  protected Function<Catalog, Boolean> getResultsChecker(
+      final TableDecriptionFunctionParameters args) {
     return catalog -> !catalog.getTables().isEmpty();
   }
 }

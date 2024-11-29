@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.functions.test;
+package schemacrawler.tools.command.chatgpt.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
@@ -40,6 +40,7 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.functions.ExitFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.NoFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext
@@ -50,10 +51,11 @@ public class ExitFunctionTest {
   public void exit(final TestContext testContext) throws Exception {
 
     final ExitFunctionDefinition functionDefinition = new ExitFunctionDefinition();
+    final NoFunctionParameters args = new NoFunctionParameters();
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().get();
+      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
       out.write(functionReturn.get());
     }
     assertThat(

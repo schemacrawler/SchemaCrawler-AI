@@ -34,7 +34,7 @@ public class ChatGPTCommandProviderTest {
     final ChatGPTCommand command = commandProvider.newSchemaCrawlerCommand("chatgpt", config);
     final ChatGPTCommandOptions commandOptions = command.getCommandOptions();
     assertThat(commandOptions.getApiKey(), is("api-key"));
-    assertThat(commandOptions.getModel(), startsWith("gpt-3.5-turbo"));
+    assertThat(commandOptions.getModel(), startsWith("gpt-4o-mini"));
   }
 
   @Test

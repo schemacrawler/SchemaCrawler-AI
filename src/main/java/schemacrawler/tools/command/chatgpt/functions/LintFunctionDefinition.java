@@ -30,8 +30,6 @@ package schemacrawler.tools.command.chatgpt.functions;
 
 import java.util.function.Function;
 import java.util.regex.Pattern;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
@@ -40,11 +38,12 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.options.Config;
 
-public final class LintFunctionDefinition extends AbstractExecutableFunctionDefinition {
+public final class LintFunctionDefinition
+    extends AbstractExecutableFunctionDefinition<LintFunctionParameters> {
 
-  @JsonPropertyDescription("Name of database table for which to find design issues.")
-  @JsonProperty(required = true)
-  private String tableName;
+  public LintFunctionDefinition() {
+    super(LintFunctionParameters.class);
+  }
 
   @Override
   public String getDescription() {
@@ -53,27 +52,17 @@ public final class LintFunctionDefinition extends AbstractExecutableFunctionDefi
         + "Find problems with database design, such as no indexes on foreign keys.";
   }
 
-  public String getTableName() {
-    return tableName;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
-  }
-
   @Override
-  protected Config createAdditionalConfig() {
+  protected Config createAdditionalConfig(final LintFunctionParameters args) {
     return new Config();
   }
 
   @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions(final LintFunctionParameters args) {
     final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(getTableName());
+        LimitOptionsBuilder.builder().includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll()).includeRoutines(new ExcludeAll());
+    final Pattern grepTablesPattern = makeNameInclusionPattern(args.getTableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
@@ -87,7 +76,7 @@ public final class LintFunctionDefinition extends AbstractExecutableFunctionDefi
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
+  protected Function<Catalog, Boolean> getResultsChecker(final LintFunctionParameters args) {
     return catalog -> !catalog.getTables().isEmpty();
   }
 }

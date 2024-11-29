@@ -38,15 +38,13 @@ import schemacrawler.schemacrawler.IdentifierQuotingStrategy;
 import schemacrawler.schemacrawler.Identifiers;
 import schemacrawler.schemacrawler.IdentifiersBuilder;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionDefinition.TableReferenceType;
+import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionParameters.TableReferenceType;
 
 public class TableReferencesFunctionReturn implements FunctionReturn {
 
   private static final String NEW_LINE = String.format("%n");
-  private static final Identifiers identifiers =
-      IdentifiersBuilder.builder()
-          .withIdentifierQuotingStrategy(IdentifierQuotingStrategy.quote_all)
-          .toOptions();
+  private static final Identifiers identifiers = IdentifiersBuilder.builder()
+      .withIdentifierQuotingStrategy(IdentifierQuotingStrategy.quote_all).toOptions();
   private final Table table;
   private final TableReferenceType tableReferenceType;
 
@@ -63,10 +61,9 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
       case CHILD:
         return renderTableRelationships(TableReferenceType.CHILD);
       case ALL:
-      // Fall-through
+        // Fall-through
       default:
-        return renderTableRelationships(TableReferenceType.PARENT)
-            + NEW_LINE
+        return renderTableRelationships(TableReferenceType.PARENT) + NEW_LINE
             + renderTableRelationships(TableReferenceType.CHILD);
     }
   }
@@ -78,12 +75,8 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
     } else {
       buffer.append("Table ");
     }
-    buffer
-        .append(identifiers.quoteFullName(table))
-        .append(" has no ")
-        .append(tableReferenceType.name().toLowerCase())
-        .append(" relationships.")
-        .append(NEW_LINE);
+    buffer.append(identifiers.quoteFullName(table)).append(" has no ")
+        .append(tableReferenceType.name().toLowerCase()).append(" relationships.").append(NEW_LINE);
     return buffer.toString();
   }
 
@@ -110,8 +103,7 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
     tableName(buffer, tableReferenceType);
 
     for (final Table referencedTable : referencedTables) {
-      buffer
-          .append(String.format("- %s", identifiers.quoteFullName(referencedTable)))
+      buffer.append(String.format("- %s", identifiers.quoteFullName(referencedTable)))
           .append(NEW_LINE);
     }
     return buffer.toString();
@@ -124,11 +116,7 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
     } else {
       buffer.append("Table ");
     }
-    buffer
-        .append(identifiers.quoteFullName(table))
-        .append(" has the following ")
-        .append(tableReferenceType.name().toLowerCase())
-        .append(" tables:")
-        .append(NEW_LINE);
+    buffer.append(identifiers.quoteFullName(table)).append(" has the following ")
+        .append(tableReferenceType.name().toLowerCase()).append(" tables:").append(NEW_LINE);
   }
 }

@@ -28,25 +28,37 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType.USER;
 import java.sql.Connection;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
+import schemacrawler.tools.command.chatgpt.FunctionParameters;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-@JsonPropertyOrder()
-public abstract class AbstractFunctionDefinition implements FunctionDefinition {
+public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
+    implements FunctionDefinition<P> {
 
-  @JsonIgnore protected Catalog catalog;
+  private final Class<P> parameters;
+  protected Catalog catalog;
+  protected Connection connection;
 
-  @JsonIgnore protected Connection connection;
+  protected AbstractFunctionDefinition(final Class<P> parameters) {
+    this.parameters = requireNonNull(parameters, "Function parameters not provided");
+  }
+
+  @Override
+  public boolean equals(final Object obj) {
+    if (this == obj) {
+      return true;
+    }
+    if (obj == null || getClass() != obj.getClass()) {
+      return false;
+    }
+    final AbstractFunctionDefinition<?> other = (AbstractFunctionDefinition<?>) obj;
+    return Objects.equals(parameters, other.parameters);
+  }
 
   @Override
   public Catalog getCatalog() {
@@ -63,14 +75,18 @@ public abstract class AbstractFunctionDefinition implements FunctionDefinition {
 
   @JsonIgnore
   @Override
-  public FunctionType getFunctionType() {
-    return USER;
+  public final String getName() {
+    return new KebabCaseStrategy().translate(this.getClass().getSimpleName());
   }
 
-  @JsonIgnore
   @Override
-  public String getName() {
-    return new KebabCaseStrategy().translate(getClass().getSimpleName());
+  public Class<P> getParametersClass() {
+    return parameters;
+  }
+
+  @Override
+  public int hashCode() {
+    return Objects.hash(parameters);
   }
 
   @Override
@@ -85,10 +101,7 @@ public abstract class AbstractFunctionDefinition implements FunctionDefinition {
 
   @Override
   public String toString() {
-    try {
-      return new ObjectMapper().writeValueAsString(this);
-    } catch (final JsonProcessingException e) {
-      return super.toString();
-    }
+    return String.format("function %s(%s)%n\"%s\"", getName(),
+        new KebabCaseStrategy().translate(parameters.getSimpleName()), getDescription());
   }
 }

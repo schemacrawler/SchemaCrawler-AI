@@ -28,57 +28,37 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
 import java.util.function.Function;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 
 public final class DatabaseObjectListFunctionDefinition
-    extends AbstractExecutableFunctionDefinition {
+    extends AbstractExecutableFunctionDefinition<DatabaseObjectListFunctionParameters> {
 
-  public enum DatabaseObjectType {
-    ALL,
-    TABLES,
-    ROUTINES,
-    SEQUENCES,
-    SYNONYMS;
-  }
-
-  @JsonPropertyDescription(
-      "Type of database object to list, like tables, routines (that is, functions and stored procedures), schemas (that is, catalogs), sequences, or synonyms.")
-  @JsonProperty(required = false)
-  private DatabaseObjectType databaseObjectType;
-
-  public DatabaseObjectType getDatabaseObjectType() {
-    if (databaseObjectType == null) {
-      return ALL;
-    }
-    return databaseObjectType;
+  public DatabaseObjectListFunctionDefinition() {
+    super(DatabaseObjectListFunctionParameters.class);
   }
 
   @Override
   public String getDescription() {
-    return "Lists database objects like tables, routines (that is, functions and stored procedures), sequences, or synonyms.";
-  }
-
-  public void setDatabaseObjectType(final DatabaseObjectType databaseObjectType) {
-    this.databaseObjectType = databaseObjectType;
+    return "Lists database objects like tables, routines "
+        + "(that is, functions and stored procedures), sequences, or synonyms.";
   }
 
   @Override
-  protected Config createAdditionalConfig() {
-    final DatabaseObjectType databaseObjectType = getDatabaseObjectType();
+  protected Config createAdditionalConfig(final DatabaseObjectListFunctionParameters args) {
+    final DatabaseObjectType databaseObjectType = args.getDatabaseObjectType();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
     if (databaseObjectType != ALL) {
       if (databaseObjectType != TABLES) {
@@ -99,8 +79,9 @@ public final class DatabaseObjectListFunctionDefinition
   }
 
   @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final DatabaseObjectType databaseObjectType = getDatabaseObjectType();
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions(
+      final DatabaseObjectListFunctionParameters args) {
+    final DatabaseObjectType databaseObjectType = args.getDatabaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     if (databaseObjectType != TABLES && databaseObjectType != ALL) {
       limitOptionsBuilder.includeTables(new ExcludeAll());
@@ -125,8 +106,9 @@ public final class DatabaseObjectListFunctionDefinition
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
-    final DatabaseObjectType databaseObjectType = getDatabaseObjectType();
+  protected Function<Catalog, Boolean> getResultsChecker(
+      final DatabaseObjectListFunctionParameters args) {
+    final DatabaseObjectType databaseObjectType = args.getDatabaseObjectType();
     switch (databaseObjectType) {
       case TABLES:
         return catalog -> !catalog.getTables().isEmpty();
@@ -137,11 +119,8 @@ public final class DatabaseObjectListFunctionDefinition
       case SYNONYMS:
         return catalog -> !catalog.getSynonyms().isEmpty();
       default:
-        return catalog ->
-            (!catalog.getTables().isEmpty()
-                || !catalog.getRoutines().isEmpty()
-                || !catalog.getSequences().isEmpty()
-                || !catalog.getSynonyms().isEmpty());
+        return catalog -> (!catalog.getTables().isEmpty() || !catalog.getRoutines().isEmpty()
+            || !catalog.getSequences().isEmpty() || !catalog.getSynonyms().isEmpty());
     }
   }
 }

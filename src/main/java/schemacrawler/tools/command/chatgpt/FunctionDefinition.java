@@ -28,32 +28,31 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt;
 
+import static schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType.USER;
 import java.sql.Connection;
-import java.util.function.Supplier;
-import io.github.sashirestela.openai.common.function.Functional;
+import java.util.function.Function;
 import schemacrawler.schema.Catalog;
 
-public interface FunctionDefinition extends Functional {
+public interface FunctionDefinition<P extends FunctionParameters> {
 
   public enum FunctionType {
     USER,
     SYSTEM;
   }
 
-  @Override
-  default FunctionReturn execute() {
-    return getExecutor().get();
-  }
-
   Catalog getCatalog();
 
   String getDescription();
 
-  Supplier<? extends FunctionReturn> getExecutor();
+  Function<P, FunctionReturn> getExecutor();
 
-  FunctionType getFunctionType();
+  default FunctionType getFunctionType() {
+    return USER;
+  }
 
   String getName();
+
+  Class<P> getParametersClass();
 
   void setCatalog(Catalog catalog);
 

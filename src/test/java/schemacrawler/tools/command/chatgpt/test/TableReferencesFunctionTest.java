@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.functions.test;
+package schemacrawler.tools.command.chatgpt.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,9 +34,6 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition.DatabaseObjectsScope.ROUTINES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition.DatabaseObjectsScope.SEQUENCES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition.DatabaseObjectsScope.SYNONYMS;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,64 +52,23 @@ import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionParameters;
+import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionParameters.TableReferenceType;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DatabaseObjectDescriptionFunctionTest {
+public class TableReferencesFunctionTest {
 
   private Catalog catalog;
 
   @Test
-  public void describeAllRoutines(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(ROUTINES);
-    describeDatabaseObject(testContext, functionDefinition);
-  }
-
-  @Test
-  public void describeNone(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    describeDatabaseObject(testContext, functionDefinition);
-  }
-
-  @Test
-  public void describeRoutines(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(ROUTINES);
-    functionDefinition.setDatabaseObjectName("CUSTOMADD");
-    describeDatabaseObject(testContext, functionDefinition);
-  }
-
-  @Test
-  public void describeSequences(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(SEQUENCES);
-    functionDefinition.setDatabaseObjectName("PUBLISHER_ID_SEQ");
-    describeDatabaseObject(testContext, functionDefinition);
-  }
-
-  @Test
-  public void describeSynonyms(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(SYNONYMS);
-    functionDefinition.setDatabaseObjectName("PUBLICATIONS");
-    describeDatabaseObject(testContext, functionDefinition);
-  }
-
-  @Test
-  public void describeUnknownDatabaseObject(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(SYNONYMS);
-    functionDefinition.setDatabaseObjectName("NOT_A SYNONYM");
-    describeDatabaseObject(testContext, functionDefinition);
+  public void childrenForTable(final TestContext testContext) throws Exception {
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("BOOKS");
+    args.setTableReferenceType(TableReferenceType.CHILD);
+    referencesForTable(testContext, args);
   }
 
   @BeforeAll
@@ -138,24 +94,53 @@ public class DatabaseObjectDescriptionFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
-        new DatabaseObjectDescriptionFunctionDefinition();
-    functionDefinition.setDatabaseObjectsScope(ROUTINES);
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("BOOKS");
+    args.setTableReferenceType(TableReferenceType.CHILD);
     assertThat(
-        functionDefinition.toString(),
-        is("{\"database-object-name\":null,\"database-objects-scope\":\"ROUTINES\"}"));
+        args.toString(), is("{\"table-name\":\"BOOKS\",\"table-reference-type\":\"CHILD\"}"));
   }
 
-  private void describeDatabaseObject(
-      final TestContext testContext,
-      final DatabaseObjectDescriptionFunctionDefinition functionDefinition)
+  @Test
+  public void parentsForTable(final TestContext testContext) throws Exception {
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("BOOKAUTHORS");
+    args.setTableReferenceType(TableReferenceType.PARENT);
+    referencesForTable(testContext, args);
+  }
+
+  @Test
+  public void referencesForTable(final TestContext testContext) throws Exception {
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("BOOKS");
+    referencesForTable(testContext, args);
+  }
+
+  @Test
+  public void referencesForUnknownTable(final TestContext testContext) throws Exception {
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("NOT_A_TABLE");
+    referencesForTable(testContext, args);
+  }
+
+  @Test
+  public void referencesForView(final TestContext testContext) throws Exception {
+    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
+    args.setTableName("AuthorsList");
+    referencesForTable(testContext, args);
+  }
+
+  private void referencesForTable(
+      final TestContext testContext, final TableReferencesFunctionParameters args)
       throws Exception {
 
+    final TableReferencesFunctionDefinition functionDefinition =
+        new TableReferencesFunctionDefinition();
     functionDefinition.setCatalog(catalog);
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().get();
+      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
       out.write(functionReturn.get());
     }
     assertThat(

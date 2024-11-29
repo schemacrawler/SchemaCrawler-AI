@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.functions.test;
+package schemacrawler.tools.command.chatgpt.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -34,6 +34,11 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -52,23 +57,21 @@ import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionDefinition;
-import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionDefinition.TableReferenceType;
+import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TableReferencesFunctionTest {
+public class DatabaseObjectListFunctionTest {
 
   private Catalog catalog;
 
   @Test
-  public void childrenForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("BOOKS");
-    functionDefinition.setTableReferenceType(TableReferenceType.CHILD);
-    referencesForTable(testContext, functionDefinition);
+  public void all(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(ALL);
+    databaseObjects(testContext, args);
   }
 
   @BeforeAll
@@ -94,57 +97,50 @@ public class TableReferencesFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("BOOKS");
-    functionDefinition.setTableReferenceType(TableReferenceType.CHILD);
-    assertThat(
-        functionDefinition.toString(),
-        is("{\"table-name\":\"BOOKS\",\"table-reference-type\":\"CHILD\"}"));
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(ALL);
+    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
   }
 
   @Test
-  public void parentsForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("BOOKAUTHORS");
-    functionDefinition.setTableReferenceType(TableReferenceType.PARENT);
-    referencesForTable(testContext, functionDefinition);
+  public void routines(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(ROUTINES);
+    databaseObjects(testContext, args);
   }
 
   @Test
-  public void referencesForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("BOOKS");
-    referencesForTable(testContext, functionDefinition);
+  public void sequences(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(SEQUENCES);
+    databaseObjects(testContext, args);
   }
 
   @Test
-  public void referencesForUnknownTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("NOT_A_TABLE");
-    referencesForTable(testContext, functionDefinition);
+  public void synonyms(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(SYNONYMS);
+    databaseObjects(testContext, args);
   }
 
   @Test
-  public void referencesForView(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionDefinition functionDefinition =
-        new TableReferencesFunctionDefinition();
-    functionDefinition.setTableName("AuthorsList");
-    referencesForTable(testContext, functionDefinition);
+  public void tables(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
+    args.setDatabaseObjectType(TABLES);
+    databaseObjects(testContext, args);
   }
 
-  private void referencesForTable(
-      final TestContext testContext, final TableReferencesFunctionDefinition functionDefinition)
+  private void databaseObjects(
+      final TestContext testContext, final DatabaseObjectListFunctionParameters args)
       throws Exception {
 
+    final DatabaseObjectListFunctionDefinition functionDefinition =
+        new DatabaseObjectListFunctionDefinition();
     functionDefinition.setCatalog(catalog);
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().get();
+      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
       out.write(functionReturn.get());
     }
     assertThat(

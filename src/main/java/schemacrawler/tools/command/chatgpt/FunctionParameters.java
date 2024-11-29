@@ -26,24 +26,15 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.functions;
+package schemacrawler.tools.command.chatgpt;
 
-import java.util.function.Function;
-import schemacrawler.tools.command.chatgpt.FunctionReturn;
+import io.github.sashirestela.openai.common.function.Functional;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
-
-  public ExitFunctionDefinition() {
-    super(NoFunctionParameters.class);
-  }
+public interface FunctionParameters extends Functional {
 
   @Override
-  public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
+  default Object execute() {
+    throw new UnsupportedOperationException();
   }
 
-  @Override
-  public Function<NoFunctionParameters, FunctionReturn> getExecutor() {
-    return args -> () -> "Thank you for using SchemaCrawler with ChatGPT.";
-  }
 }
