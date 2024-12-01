@@ -28,20 +28,34 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
+import java.util.Optional;
+import schemacrawler.schema.Table;
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.chatgpt.FunctionReturn;
+import schemacrawler.utility.MetaDataUtility;
+import us.fatehi.utility.property.PropertyName;
 
-  @Override
-  public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
+public final class TableReferencesFunctionExecutor
+    extends AbstractFunctionExecutor<TableReferencesFunctionParameters> {
+
+  protected TableReferencesFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override
-  public Class<NoFunctionParameters> getParametersClass() {
-    return NoFunctionParameters.class;
-  }
+  public FunctionReturn execute() {
+    // Re-filter catalog
+    MetaDataUtility.reduceCatalog(catalog, SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions());
 
-  @Override
-  public ExitFunctionExecutor newExecutor() {
-    return new ExitFunctionExecutor(getFunctionName());
+    final Optional<Table> firstMatchedTable =
+        catalog.getTables().stream()
+            .filter(table -> table.getName().matches("(?i)" + args.getTableName()))
+            .findFirst();
+
+    if (firstMatchedTable.isPresent()) {
+      final Table table = firstMatchedTable.get();
+      return new TableReferencesFunctionReturn(table, args.getTableReferenceType());
+    }
+    return new NoResultsReturn();
   }
 }

@@ -56,6 +56,7 @@ import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
+import schemacrawler.tools.command.chatgpt.FunctionExecutor;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters;
@@ -136,11 +137,13 @@ public class DatabaseObjectListFunctionTest {
 
     final DatabaseObjectListFunctionDefinition functionDefinition =
         new DatabaseObjectListFunctionDefinition();
-    functionDefinition.setCatalog(catalog);
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
+      final FunctionExecutor<DatabaseObjectListFunctionParameters> executor =
+          functionDefinition.newExecutor();
+      executor.initialize(args, catalog, null);
+      final FunctionReturn functionReturn = executor.execute();
       out.write(functionReturn.get());
     }
     assertThat(

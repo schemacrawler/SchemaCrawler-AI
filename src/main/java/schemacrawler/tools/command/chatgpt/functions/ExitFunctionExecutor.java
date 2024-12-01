@@ -28,20 +28,17 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
+import schemacrawler.tools.command.chatgpt.FunctionReturn;
+import us.fatehi.utility.property.PropertyName;
 
-  @Override
-  public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
+public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoFunctionParameters> {
+
+  protected ExitFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override
-  public Class<NoFunctionParameters> getParametersClass() {
-    return NoFunctionParameters.class;
-  }
-
-  @Override
-  public ExitFunctionExecutor newExecutor() {
-    return new ExitFunctionExecutor(getFunctionName());
+  public FunctionReturn execute() {
+    return () -> "Thank you for using SchemaCrawler with ChatGPT.";
   }
 }

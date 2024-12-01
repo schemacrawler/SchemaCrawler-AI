@@ -51,6 +51,7 @@ import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
+import schemacrawler.tools.command.chatgpt.FunctionExecutor;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.functions.LintFunctionDefinition;
 import schemacrawler.tools.command.chatgpt.functions.LintFunctionParameters;
@@ -114,12 +115,12 @@ public class LintFunctionTest {
       throws Exception {
 
     final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
-    functionDefinition.setCatalog(catalog);
-    functionDefinition.setConnection(connection);
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
+      final FunctionExecutor<LintFunctionParameters> executor = functionDefinition.newExecutor();
+      executor.initialize(args, catalog, connection);
+      final FunctionReturn functionReturn = executor.execute();
       out.write(functionReturn.get());
     }
     assertThat(

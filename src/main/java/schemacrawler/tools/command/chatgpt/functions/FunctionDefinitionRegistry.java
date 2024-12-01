@@ -66,8 +66,7 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
               FunctionDefinition.class, FunctionDefinitionRegistry.class.getClassLoader());
       for (final FunctionDefinition functionDefinition : serviceLoader) {
         final String functionName = functionDefinition.getName();
-        LOGGER.log(Level.CONFIG, new StringFormat("Loading function definition, %s", functionName));
-        // Put in map
+        LOGGER.log(Level.FINE, new StringFormat("Loading function definition, %s", functionName));
         functionDefinitionRegistry.put(functionName, functionDefinition);
       }
     } catch (final Exception e) {
@@ -105,4 +104,17 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     }
     return registeredPlugins;
   }
+
+  public boolean hasFunctionDefinition(final String functionName) {
+    return functionDefinitionRegistry.containsKey(functionName);
+  }
+
+  /*
+   * public FunctionExecutor newFunctionDefinition(final String functionName, final Object config) {
+   * requireNonNull(config, "No lint collector provided"); if (!hasFunctionDefinition(functionName))
+   * { LOGGER.log( Level.WARNING, new StringFormat("Could not instantiate function <%s>",
+   * functionName)); return something; } final FunctionDefinition<?> functionDefinition =
+   * functionDefinitionRegistry.get(functionName); return
+   * functionDefinition.newFunctionExecutor(config); }
+   */
 }

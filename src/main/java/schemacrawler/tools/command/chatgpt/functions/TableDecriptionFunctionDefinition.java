@@ -28,30 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.DEFAULT;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
-import java.util.function.Function;
-import java.util.regex.Pattern;
-import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.GrepOptionsBuilder;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.chatgpt.functions.TableDecriptionFunctionParameters.TableDescriptionScope;
-import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
-import schemacrawler.tools.options.Config;
-
 public final class TableDecriptionFunctionDefinition
-    extends AbstractExecutableFunctionDefinition<TableDecriptionFunctionParameters> {
-
-  public TableDecriptionFunctionDefinition() {
-    super(TableDecriptionFunctionParameters.class);
-  }
+    extends AbstractFunctionDefinition<TableDecriptionFunctionParameters> {
 
   @Override
   public String getDescription() {
@@ -60,55 +38,12 @@ public final class TableDecriptionFunctionDefinition
   }
 
   @Override
-  protected Config createAdditionalConfig(final TableDecriptionFunctionParameters args) {
-    final TableDescriptionScope scope = args.getDescriptionScope();
-    final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
-    if (scope != DEFAULT) {
-      if (scope != COLUMNS) {
-        schemaTextOptionsBuilder.noTableColumns();
-      } // fall through - no else
-      if (scope != PRIMARY_KEY) {
-        schemaTextOptionsBuilder.noPrimaryKeys();
-      } // fall through - no else
-      if (scope != FOREIGN_KEYS) {
-        schemaTextOptionsBuilder.noForeignKeys();
-        schemaTextOptionsBuilder.noWeakAssociations();
-      } // fall through - no else
-      if (scope != INDEXES) {
-        schemaTextOptionsBuilder.noIndexes();
-      } // fall through - no else
-      if (scope != TRIGGERS) {
-        schemaTextOptionsBuilder.noTriggers();
-      } // fall through - no else
-    }
-    schemaTextOptionsBuilder.noTableConstraints().noAlternateKeys().noInfo();
-    return schemaTextOptionsBuilder.toConfig();
+  public Class<TableDecriptionFunctionParameters> getParametersClass() {
+    return TableDecriptionFunctionParameters.class;
   }
 
   @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions(
-      final TableDecriptionFunctionParameters args) {
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(args.getTableName());
-    final GrepOptionsBuilder grepOptionsBuilder =
-        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
-    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-        .withLimitOptions(limitOptionsBuilder.toOptions())
-        .withGrepOptions(grepOptionsBuilder.toOptions());
-  }
-
-  @Override
-  protected String getCommand() {
-    return "schema";
-  }
-
-  @Override
-  protected Function<Catalog, Boolean> getResultsChecker(
-      final TableDecriptionFunctionParameters args) {
-    return catalog -> !catalog.getTables().isEmpty();
+  public TableDecriptionFunctionExecutor newExecutor() {
+    return new TableDecriptionFunctionExecutor(getFunctionName());
   }
 }

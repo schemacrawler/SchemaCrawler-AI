@@ -26,22 +26,21 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.functions;
+package schemacrawler.tools.command.chatgpt;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
+import java.sql.Connection;
+import java.util.UUID;
+import schemacrawler.schema.Catalog;
 
-  @Override
-  public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
-  }
+public interface FunctionExecutor<P extends FunctionParameters> {
 
-  @Override
-  public Class<NoFunctionParameters> getParametersClass() {
-    return NoFunctionParameters.class;
-  }
+  FunctionReturn execute();
 
-  @Override
-  public ExitFunctionExecutor newExecutor() {
-    return new ExitFunctionExecutor(getFunctionName());
-  }
+  String getDescription();
+
+  UUID getExecutorInstanceId();
+
+  String getName();
+
+  void initialize(P args, Catalog catalog, Connection connection);
 }

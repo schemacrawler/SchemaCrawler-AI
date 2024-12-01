@@ -32,7 +32,6 @@ import java.io.PrintStream;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -56,7 +55,7 @@ public class ChatGPTUtility {
 
   private static final Logger LOGGER = Logger.getLogger(ChatGPTUtility.class.getCanonicalName());
 
-  public static String execute(
+  public static <P extends FunctionParameters> String execute(
       final FunctionCall functionCall, final Catalog catalog, final Connection connection) {
     requireNonNull(functionCall, "No function call provided");
 
@@ -80,13 +79,12 @@ public class ChatGPTUtility {
     }
 
     // Build parameters
-    final FunctionParameters parameters;
+    final P parameters;
     final ObjectMapper objectMapper = new ObjectMapper();
     try {
       parameters =
           objectMapper.readValue(
-              functionCall.getArguments(),
-              (Class<? extends FunctionParameters>) functionToCall.getParametersClass());
+              functionCall.getArguments(), (Class<P>) functionToCall.getParametersClass());
       System.out.println(parameters);
     } catch (final Exception e) {
       LOGGER.log(
@@ -97,15 +95,13 @@ public class ChatGPTUtility {
               functionToCall.getParametersClass().getName(), functionCall.getArguments()));
       return "";
     }
-    // Initialize function
-    functionToCall.setCatalog(catalog);
-    functionToCall.setConnection(connection);
-    // Call function
-    final Function<FunctionParameters, FunctionReturn> executor =
-        (Function<FunctionParameters, FunctionReturn>) functionToCall.getExecutor();
-    final FunctionReturn returnValue = executor.apply(parameters);
+    // Execute function
+    final schemacrawler.tools.command.chatgpt.FunctionExecutor<P> functionExecutor =
+        (schemacrawler.tools.command.chatgpt.FunctionExecutor<P>) functionToCall.newExecutor();
+    functionExecutor.initialize(parameters, catalog, connection);
+    final FunctionReturn functionReturn = functionExecutor.execute();
 
-    return returnValue.get();
+    return functionReturn.get();
   }
 
   public static boolean inIntegerRange(final int value, final int min, final int max) {

@@ -28,19 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import java.util.Optional;
-import java.util.function.Function;
-import schemacrawler.schema.Table;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.utility.MetaDataUtility;
-
 public final class TableReferencesFunctionDefinition
     extends AbstractFunctionDefinition<TableReferencesFunctionParameters> {
-
-  public TableReferencesFunctionDefinition() {
-    super(TableReferencesFunctionParameters.class);
-  }
 
   @Override
   public String getDescription() {
@@ -50,21 +39,12 @@ public final class TableReferencesFunctionDefinition
   }
 
   @Override
-  public Function<TableReferencesFunctionParameters, FunctionReturn> getExecutor() {
-    return args -> {
-      // Re-filter catalog
-      MetaDataUtility.reduceCatalog(catalog, SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions());
+  public Class<TableReferencesFunctionParameters> getParametersClass() {
+    return TableReferencesFunctionParameters.class;
+  }
 
-      final Optional<Table> firstMatchedTable =
-          catalog.getTables().stream()
-              .filter(table -> table.getName().matches("(?i)" + args.getTableName()))
-              .findFirst();
-
-      if (firstMatchedTable.isPresent()) {
-        final Table table = firstMatchedTable.get();
-        return new TableReferencesFunctionReturn(table, args.getTableReferenceType());
-      }
-      return new NoResultsReturn();
-    };
+  @Override
+  public TableReferencesFunctionExecutor newExecutor() {
+    return new TableReferencesFunctionExecutor(getFunctionName());
   }
 }

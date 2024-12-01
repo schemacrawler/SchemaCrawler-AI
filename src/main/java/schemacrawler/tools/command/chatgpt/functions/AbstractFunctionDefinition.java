@@ -28,46 +28,13 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import java.sql.Connection;
-import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import static java.util.Objects.requireNonNull;
-import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
 import schemacrawler.tools.command.chatgpt.FunctionParameters;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
-
-  private final Class<P> parameters;
-  protected Catalog catalog;
-  protected Connection connection;
-
-  protected AbstractFunctionDefinition(final Class<P> parameters) {
-    this.parameters = requireNonNull(parameters, "Function parameters not provided");
-  }
-
-  @Override
-  public boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    final AbstractFunctionDefinition<?> other = (AbstractFunctionDefinition<?>) obj;
-    return Objects.equals(parameters, other.parameters);
-  }
-
-  @Override
-  public Catalog getCatalog() {
-    return catalog;
-  }
-
-  public Connection getConnection() {
-    return connection;
-  }
 
   @JsonIgnore
   @Override
@@ -80,29 +47,11 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   }
 
   @Override
-  public Class<P> getParametersClass() {
-    return parameters;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(parameters);
-  }
-
-  @Override
-  public void setCatalog(final Catalog catalog) {
-    this.catalog = catalog;
-  }
-
-  @Override
-  public void setConnection(final Connection connection) {
-    this.connection = connection;
-  }
-
-  @Override
   public String toString() {
     return String.format(
         "function %s(%s)%n\"%s\"",
-        getName(), new KebabCaseStrategy().translate(parameters.getSimpleName()), getDescription());
+        getName(),
+        new KebabCaseStrategy().translate(getParametersClass().getSimpleName()),
+        getDescription());
   }
 }

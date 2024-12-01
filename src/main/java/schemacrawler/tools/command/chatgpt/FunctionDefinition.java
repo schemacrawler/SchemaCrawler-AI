@@ -29,9 +29,7 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.chatgpt;
 
 import static schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType.USER;
-import java.sql.Connection;
-import java.util.function.Function;
-import schemacrawler.schema.Catalog;
+import us.fatehi.utility.property.PropertyName;
 
 public interface FunctionDefinition<P extends FunctionParameters> {
 
@@ -40,11 +38,11 @@ public interface FunctionDefinition<P extends FunctionParameters> {
     SYSTEM;
   }
 
-  Catalog getCatalog();
-
   String getDescription();
 
-  Function<P, FunctionReturn> getExecutor();
+  default PropertyName getFunctionName() {
+    return new PropertyName(getName(), getDescription());
+  }
 
   default FunctionType getFunctionType() {
     return USER;
@@ -54,7 +52,5 @@ public interface FunctionDefinition<P extends FunctionParameters> {
 
   Class<P> getParametersClass();
 
-  void setCatalog(Catalog catalog);
-
-  void setConnection(Connection connection);
+  FunctionExecutor<P> newExecutor();
 }

@@ -29,15 +29,18 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.chatgpt.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
+import schemacrawler.tools.command.chatgpt.FunctionExecutor;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.functions.ExitFunctionDefinition;
 import schemacrawler.tools.command.chatgpt.functions.NoFunctionParameters;
@@ -55,7 +58,9 @@ public class ExitFunctionTest {
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionReturn functionReturn = functionDefinition.getExecutor().apply(args);
+      final FunctionExecutor<NoFunctionParameters> executor = functionDefinition.newExecutor();
+      executor.initialize(args, mock(Catalog.class), null);
+      final FunctionReturn functionReturn = executor.execute();
       out.write(functionReturn.get());
     }
     assertThat(

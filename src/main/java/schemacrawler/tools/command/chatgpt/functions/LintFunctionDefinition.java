@@ -28,22 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-import java.util.function.Function;
-import java.util.regex.Pattern;
-import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.GrepOptionsBuilder;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.options.Config;
-
 public final class LintFunctionDefinition
-    extends AbstractExecutableFunctionDefinition<LintFunctionParameters> {
-
-  public LintFunctionDefinition() {
-    super(LintFunctionParameters.class);
-  }
+    extends AbstractFunctionDefinition<LintFunctionParameters> {
 
   @Override
   public String getDescription() {
@@ -53,32 +39,12 @@ public final class LintFunctionDefinition
   }
 
   @Override
-  protected Config createAdditionalConfig(final LintFunctionParameters args) {
-    return new Config();
+  public Class<LintFunctionParameters> getParametersClass() {
+    return LintFunctionParameters.class;
   }
 
   @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions(final LintFunctionParameters args) {
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(args.getTableName());
-    final GrepOptionsBuilder grepOptionsBuilder =
-        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
-    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-        .withLimitOptions(limitOptionsBuilder.toOptions())
-        .withGrepOptions(grepOptionsBuilder.toOptions());
-  }
-
-  @Override
-  protected String getCommand() {
-    return "lint";
-  }
-
-  @Override
-  protected Function<Catalog, Boolean> getResultsChecker(final LintFunctionParameters args) {
-    return catalog -> !catalog.getTables().isEmpty();
+  public LintFunctionExecutor newExecutor() {
+    return new LintFunctionExecutor(getFunctionName());
   }
 }
