@@ -41,6 +41,8 @@ import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ChatRole;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition.FunctionType;
@@ -148,7 +150,12 @@ public class ChatGPTUtility {
     requireNonNull(out, "No ouput stream provided");
     requireNonNull(completions, "No completions provided");
     for (final ChatMessage chatMessage : completions) {
-      out.println(chatMessage);
+      if (chatMessage instanceof ToolMessage toolMessage) {
+        out.println(toolMessage.getContent());
+      }
+      if (chatMessage instanceof ResponseMessage responseMessage) {
+        out.println(responseMessage.getContent());
+      }
     }
   }
 
