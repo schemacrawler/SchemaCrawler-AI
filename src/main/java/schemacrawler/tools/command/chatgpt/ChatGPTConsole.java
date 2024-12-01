@@ -49,6 +49,7 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
+import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.embeddings.QueryService;
 import schemacrawler.tools.command.chatgpt.options.ChatGPTCommandOptions;
@@ -135,6 +136,7 @@ public final class ChatGPTConsole implements AutoCloseable {
               .messages(messages)
               .tools(functionExecutor.getToolFunctions())
               .temperature(1.0)
+              .modality(Modality.TEXT)
               .build();
       final CompletableFuture<Chat> futureChat = service.chatCompletions().create(chatRequest);
       final Chat chatResponse = futureChat.join();
