@@ -54,7 +54,9 @@ public final class TableReferencesFunctionExecutor
 
     if (firstMatchedTable.isPresent()) {
       final Table table = firstMatchedTable.get();
-      return new TableReferencesFunctionReturn(table, args.getTableReferenceType());
+      final TableReferencesFormatter formatter =
+          new TableReferencesFormatter(table, args.getTableReferenceType());
+      return () -> formatter.format();
     }
     return new NoResultsReturn();
   }

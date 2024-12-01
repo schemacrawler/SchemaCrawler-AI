@@ -37,10 +37,9 @@ import schemacrawler.schema.View;
 import schemacrawler.schemacrawler.IdentifierQuotingStrategy;
 import schemacrawler.schemacrawler.Identifiers;
 import schemacrawler.schemacrawler.IdentifiersBuilder;
-import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import schemacrawler.tools.command.chatgpt.functions.TableReferencesFunctionParameters.TableReferenceType;
 
-public class TableReferencesFunctionReturn implements FunctionReturn {
+public class TableReferencesFormatter {
 
   private static final String NEW_LINE = String.format("%n");
   private static final Identifiers identifiers =
@@ -50,13 +49,12 @@ public class TableReferencesFunctionReturn implements FunctionReturn {
   private final Table table;
   private final TableReferenceType tableReferenceType;
 
-  protected TableReferencesFunctionReturn(final Table table, final TableReferenceType scope) {
+  protected TableReferencesFormatter(final Table table, final TableReferenceType scope) {
     this.table = requireNonNull(table, "Table not provided");
     tableReferenceType = requireNonNull(scope, "Table description scope not provided");
   }
 
-  @Override
-  public String get() {
+  public String format() {
     switch (tableReferenceType) {
       case PARENT:
         return renderTableRelationships(TableReferenceType.PARENT);
