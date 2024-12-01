@@ -43,7 +43,7 @@ public final class TableReferencesFunctionExecutor
   }
 
   @Override
-  public FunctionReturn execute() {
+  public FunctionReturn call() {
     // Re-filter catalog
     MetaDataUtility.reduceCatalog(catalog, SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions());
 

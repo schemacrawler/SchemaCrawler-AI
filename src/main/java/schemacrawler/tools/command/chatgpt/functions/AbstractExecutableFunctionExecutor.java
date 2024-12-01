@@ -55,7 +55,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   }
 
   @Override
-  public FunctionReturn execute() {
+  public FunctionReturn call() {
 
     final SchemaCrawlerExecutable executable = createExecutable();
     final Function<Catalog, Boolean> resultsChecker = getResultsChecker();

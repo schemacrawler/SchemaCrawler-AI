@@ -98,10 +98,21 @@ public class ChatGPTUtility {
       return "";
     }
     // Execute function
-    final schemacrawler.tools.command.chatgpt.FunctionExecutor<P> functionExecutor =
-        (schemacrawler.tools.command.chatgpt.FunctionExecutor<P>) functionToCall.newExecutor();
-    functionExecutor.initialize(parameters, catalog, connection);
-    final FunctionReturn functionReturn = functionExecutor.execute();
+    FunctionReturn functionReturn;
+    try {
+      final schemacrawler.tools.command.chatgpt.FunctionExecutor<P> functionExecutor =
+          (schemacrawler.tools.command.chatgpt.FunctionExecutor<P>) functionToCall.newExecutor();
+      functionExecutor.initialize(parameters, catalog, connection);
+      functionReturn = functionExecutor.call();
+    } catch (final Exception e) {
+      LOGGER.log(
+          Level.INFO,
+          e,
+          new StringFormat(
+              "Could not call function with arguments: %s(%s)",
+              functionToCall, functionCall.getArguments()));
+      return "";
+    }
 
     return functionReturn.get();
   }

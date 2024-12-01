@@ -120,7 +120,7 @@ public class LintFunctionTest {
     try (final TestWriter out = testout) {
       final FunctionExecutor<LintFunctionParameters> executor = functionDefinition.newExecutor();
       executor.initialize(args, catalog, connection);
-      final FunctionReturn functionReturn = executor.execute();
+      final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
     assertThat(

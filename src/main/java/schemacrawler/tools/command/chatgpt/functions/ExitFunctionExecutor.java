@@ -38,7 +38,7 @@ public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoFunct
   }
 
   @Override
-  public FunctionReturn execute() {
+  public FunctionReturn call() {
     return () -> "Thank you for using SchemaCrawler with ChatGPT.";
   }
 }

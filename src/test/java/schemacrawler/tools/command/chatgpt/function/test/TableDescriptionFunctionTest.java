@@ -172,7 +172,7 @@ public class TableDescriptionFunctionTest {
       final FunctionExecutor<TableDecriptionFunctionParameters> executor =
           functionDefinition.newExecutor();
       executor.initialize(args, catalog, null);
-      final FunctionReturn functionReturn = executor.execute();
+      final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
     assertThat(

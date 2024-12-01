@@ -30,11 +30,10 @@ package schemacrawler.tools.command.chatgpt;
 
 import java.sql.Connection;
 import java.util.UUID;
+import java.util.concurrent.Callable;
 import schemacrawler.schema.Catalog;
 
-public interface FunctionExecutor<P extends FunctionParameters> {
-
-  FunctionReturn execute();
+public interface FunctionExecutor<P extends FunctionParameters> extends Callable<FunctionReturn> {
 
   String getDescription();
 

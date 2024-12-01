@@ -160,7 +160,7 @@ public class DatabaseObjectDescriptionFunctionTest {
       final FunctionExecutor<DatabaseObjectDescriptionFunctionParameters> executor =
           functionDefinition.newExecutor();
       executor.initialize(args, catalog, null);
-      final FunctionReturn functionReturn = executor.execute();
+      final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
     assertThat(
