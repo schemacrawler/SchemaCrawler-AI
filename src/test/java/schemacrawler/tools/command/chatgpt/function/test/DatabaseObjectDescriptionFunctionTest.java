@@ -26,15 +26,17 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.test;
+package schemacrawler.tools.command.chatgpt.function.test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
+import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -54,15 +56,66 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionExecutor;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters;
+import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectDescriptionFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RefilterTest {
+public class DatabaseObjectDescriptionFunctionTest {
 
   private Catalog catalog;
+
+  @Test
+  public void describeAllRoutines(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(ROUTINES);
+    describeDatabaseObject(testContext, args);
+  }
+
+  @Test
+  public void describeNone(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    describeDatabaseObject(testContext, args);
+  }
+
+  @Test
+  public void describeRoutines(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(ROUTINES);
+    args.setDatabaseObjectName("CUSTOMADD");
+    describeDatabaseObject(testContext, args);
+  }
+
+  @Test
+  public void describeSequences(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(SEQUENCES);
+    args.setDatabaseObjectName("PUBLISHER_ID_SEQ");
+    describeDatabaseObject(testContext, args);
+  }
+
+  @Test
+  public void describeSynonyms(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(SYNONYMS);
+    args.setDatabaseObjectName("PUBLICATIONS");
+    describeDatabaseObject(testContext, args);
+  }
+
+  @Test
+  public void describeUnknownDatabaseObject(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(SYNONYMS);
+    args.setDatabaseObjectName("NOT_A SYNONYM");
+    describeDatabaseObject(testContext, args);
+  }
 
   @BeforeAll
   public void loadCatalog(final Connection connection) throws Exception {
@@ -86,30 +139,31 @@ public class RefilterTest {
   }
 
   @Test
-  public void refilterTest(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args1 = new DatabaseObjectListFunctionParameters();
-    args1.setDatabaseObjectType(SEQUENCES);
-    databaseObjects(testContext.testMethodFullName() + ".sequences", args1);
-
-    final DatabaseObjectListFunctionParameters args2 = new DatabaseObjectListFunctionParameters();
-    args2.setDatabaseObjectType(TABLES);
-    databaseObjects(testContext.testMethodFullName() + ".tables", args2);
+  public void parameters(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters();
+    args.setDatabaseObjectsScope(ROUTINES);
+    assertThat(
+        args.toString(),
+        is("{\"database-object-name\":null,\"database-objects-scope\":\"ROUTINES\"}"));
   }
 
-  private void databaseObjects(
-      final String reference, final DatabaseObjectListFunctionParameters args) throws Exception {
+  private void describeDatabaseObject(
+      final TestContext testContext, final DatabaseObjectDescriptionFunctionParameters args)
+      throws Exception {
 
-    final DatabaseObjectListFunctionDefinition functionDefinition =
-        new DatabaseObjectListFunctionDefinition();
+    final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
+        new DatabaseObjectDescriptionFunctionDefinition();
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionExecutor<DatabaseObjectListFunctionParameters> executor =
+      final FunctionExecutor<DatabaseObjectDescriptionFunctionParameters> executor =
           functionDefinition.newExecutor();
       executor.initialize(args, catalog, null);
       final FunctionReturn functionReturn = executor.execute();
       out.write(functionReturn.get());
     }
-    assertThat(outputOf(testout), hasSameContentAs(classpathResource(reference)));
+    assertThat(
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 }

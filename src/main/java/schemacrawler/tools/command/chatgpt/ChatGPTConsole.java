@@ -45,6 +45,7 @@ import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.common.tool.ToolCall;
 import io.github.sashirestela.openai.domain.chat.Chat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
@@ -159,7 +160,7 @@ public final class ChatGPTConsole implements AutoCloseable {
         // Add to chat history
         chatHistory.add(ToolMessage.of(returnString, toolCall.getId()));
       } else {
-        completions.add(responseMessage);
+        completions.add(AssistantMessage.of(responseMessage.getContent()));
       }
     } catch (final Exception e) {
       e.printStackTrace();

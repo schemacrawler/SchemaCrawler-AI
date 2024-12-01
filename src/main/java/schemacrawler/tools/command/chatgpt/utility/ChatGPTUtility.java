@@ -40,8 +40,8 @@ import io.github.sashirestela.openai.common.function.FunctionCall;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ChatRole;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.chatgpt.FunctionDefinition;
@@ -153,8 +153,8 @@ public class ChatGPTUtility {
       if (chatMessage instanceof ToolMessage toolMessage) {
         out.println(toolMessage.getContent());
       }
-      if (chatMessage instanceof ResponseMessage responseMessage) {
-        out.println(responseMessage.getContent());
+      if (chatMessage instanceof AssistantMessage assistantMessage) {
+        out.println(assistantMessage.getContent());
       }
     }
   }

@@ -26,19 +26,13 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.chatgpt.test;
+package schemacrawler.tools.command.chatgpt.function.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,24 +49,44 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
+import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.chatgpt.FunctionExecutor;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionDefinition;
-import schemacrawler.tools.command.chatgpt.functions.DatabaseObjectListFunctionParameters;
+import schemacrawler.tools.command.chatgpt.functions.LintFunctionDefinition;
+import schemacrawler.tools.command.chatgpt.functions.LintFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DatabaseObjectListFunctionTest {
+public class LintFunctionTest {
 
   private Catalog catalog;
 
   @Test
-  public void all(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ALL);
-    databaseObjects(testContext, args);
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintAllTables(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionParameters args = new LintFunctionParameters();
+    lintTable(testContext, args, connection);
+  }
+
+  @Test
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintTable(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionParameters args = new LintFunctionParameters();
+    args.setTableName("AUTHORS");
+    lintTable(testContext, args, connection);
+  }
+
+  @Test
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
+  public void lintUnknownTable(final TestContext testContext, final Connection connection)
+      throws Exception {
+    final LintFunctionParameters args = new LintFunctionParameters();
+    args.setTableName("NOT_A_TABLE");
+    lintTable(testContext, args, connection);
   }
 
   @BeforeAll
@@ -96,53 +110,16 @@ public class DatabaseObjectListFunctionTest {
     catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
   }
 
-  @Test
-  public void parameters(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ALL);
-    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
-  }
-
-  @Test
-  public void routines(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ROUTINES);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void sequences(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(SEQUENCES);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void synonyms(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(SYNONYMS);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void tables(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(TABLES);
-    databaseObjects(testContext, args);
-  }
-
-  private void databaseObjects(
-      final TestContext testContext, final DatabaseObjectListFunctionParameters args)
+  private void lintTable(
+      final TestContext testContext, final LintFunctionParameters args, final Connection connection)
       throws Exception {
 
-    final DatabaseObjectListFunctionDefinition functionDefinition =
-        new DatabaseObjectListFunctionDefinition();
+    final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      final FunctionExecutor<DatabaseObjectListFunctionParameters> executor =
-          functionDefinition.newExecutor();
-      executor.initialize(args, catalog, null);
+      final FunctionExecutor<LintFunctionParameters> executor = functionDefinition.newExecutor();
+      executor.initialize(args, catalog, connection);
       final FunctionReturn functionReturn = executor.execute();
       out.write(functionReturn.get());
     }
