@@ -30,4 +30,4 @@ package schemacrawler.tools.command.chatgpt.functions;
 
 import schemacrawler.tools.command.chatgpt.FunctionParameters;
 
-public class NoFunctionParameters implements FunctionParameters {}
+public class NoParameters implements FunctionParameters {}

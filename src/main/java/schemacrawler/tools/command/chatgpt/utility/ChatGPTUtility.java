@@ -61,60 +61,34 @@ public class ChatGPTUtility {
       final FunctionCall functionCall, final Catalog catalog, final Connection connection) {
     requireNonNull(functionCall, "No function call provided");
 
-    FunctionDefinition<?> functionToCall = null;
-    for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
-      if (functionDefinition.getName().equals(functionCall.getName())) {
-        functionToCall = functionDefinition;
-        break;
-      }
-    }
-    if (functionToCall == null) {
-      LOGGER.log(
-          Level.INFO,
-          new StringFormat(
-              "Function not found: %s(%s)", functionCall.getName(), functionCall.getArguments()));
+    // Look up function definition
+    final FunctionDefinition<P> functionDefinitionToCall =
+        (FunctionDefinition<P>) lookupFunctionDefinition(functionCall);
+    if (functionDefinitionToCall == null) {
       return "";
     }
 
     // Build parameters
-    final P parameters;
-    final ObjectMapper objectMapper = new ObjectMapper();
-    try {
-      parameters =
-          objectMapper.readValue(
-              functionCall.getArguments(), (Class<P>) functionToCall.getParametersClass());
-      System.out.println(parameters);
-    } catch (final Exception e) {
-      LOGGER.log(
-          Level.INFO,
-          e,
-          new StringFormat(
-              "Function parameters could not be instantiated: %s(%s)",
-              functionToCall.getParametersClass().getName(), functionCall.getArguments()));
-      return "";
-    }
+    final Class<P> parametersClass = functionDefinitionToCall.getParametersClass();
+    final P parameters = instantiateArgs(functionCall, parametersClass);
+
     // Execute function
     FunctionReturn functionReturn;
     try {
       final schemacrawler.tools.command.chatgpt.FunctionExecutor<P> functionExecutor =
-          (schemacrawler.tools.command.chatgpt.FunctionExecutor<P>) functionToCall.newExecutor();
+          functionDefinitionToCall.newExecutor();
       functionExecutor.initialize(parameters, catalog, connection);
       functionReturn = functionExecutor.call();
+      return functionReturn.get();
     } catch (final Exception e) {
       LOGGER.log(
           Level.INFO,
           e,
           new StringFormat(
               "Could not call function with arguments: %s(%s)",
-              functionToCall, functionCall.getArguments()));
+              functionDefinitionToCall, functionCall.getArguments()));
       return "";
     }
-
-    return functionReturn.get();
   }
 
   public static boolean inIntegerRange(final int value, final int min, final int max) {
@@ -161,13 +135,54 @@ public class ChatGPTUtility {
     requireNonNull(out, "No ouput stream provided");
     requireNonNull(completions, "No completions provided");
     for (final ChatMessage chatMessage : completions) {
-      if (chatMessage instanceof ToolMessage toolMessage) {
+      if (chatMessage instanceof final ToolMessage toolMessage) {
         out.println(toolMessage.getContent());
       }
-      if (chatMessage instanceof AssistantMessage assistantMessage) {
+      if (chatMessage instanceof final AssistantMessage assistantMessage) {
         out.println(assistantMessage.getContent());
       }
     }
+  }
+
+  private static <P extends FunctionParameters> P instantiateArgs(
+      final FunctionCall functionCall, final Class<P> parametersClass) {
+    final P parameters;
+    final ObjectMapper objectMapper = new ObjectMapper();
+    try {
+      parameters = objectMapper.readValue(functionCall.getArguments(), parametersClass);
+      System.out.println(parameters);
+    } catch (final Exception e) {
+      LOGGER.log(
+          Level.INFO,
+          e,
+          new StringFormat(
+              "Function parameters could not be instantiated: %s(%s)",
+              parametersClass.getName(), functionCall.getArguments()));
+      return null;
+    }
+    return parameters;
+  }
+
+  private static FunctionDefinition<?> lookupFunctionDefinition(final FunctionCall functionCall) {
+    FunctionDefinition<?> functionDefinitionToCall = null;
+    for (final FunctionDefinition<?> functionDefinition :
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+      if (functionDefinition.getFunctionType() != FunctionType.USER) {
+        continue;
+      }
+      if (functionDefinition.getName().equals(functionCall.getName())) {
+        functionDefinitionToCall = functionDefinition;
+        break;
+      }
+    }
+    if (functionDefinitionToCall == null) {
+      LOGGER.log(
+          Level.INFO,
+          new StringFormat(
+              "Function not found: %s(%s)", functionCall.getName(), functionCall.getArguments()));
+      return null;
+    }
+    return functionDefinitionToCall;
   }
 
   private ChatGPTUtility() {

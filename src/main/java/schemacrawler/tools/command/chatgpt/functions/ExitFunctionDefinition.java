@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.chatgpt.functions;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoFunctionParameters> {
+public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {
@@ -36,8 +36,8 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoF
   }
 
   @Override
-  public Class<NoFunctionParameters> getParametersClass() {
-    return NoFunctionParameters.class;
+  public Class<NoParameters> getParametersClass() {
+    return NoParameters.class;
   }
 
   @Override

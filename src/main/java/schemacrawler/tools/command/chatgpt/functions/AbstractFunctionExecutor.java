@@ -97,7 +97,7 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
 
   @Override
   public void initialize(final P args, final Catalog catalog, final Connection connection) {
-    this.args = requireNonNull(args, "No parameters provided");
+    this.args = requireNonNull(args, "No arguments provided");
     if (catalog == null) {
       throw new ExecutionRuntimeException("Catalog is not provided");
     }

@@ -31,7 +31,7 @@ package schemacrawler.tools.command.chatgpt.functions;
 import schemacrawler.tools.command.chatgpt.FunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
-public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoFunctionParameters> {
+public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParameters> {
 
   protected ExitFunctionExecutor(final PropertyName functionName) {
     super(functionName);
