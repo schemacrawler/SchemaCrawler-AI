@@ -1,0 +1,38 @@
+name: Quick Build
+
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+    branches:
+      - main
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions: read-all
+
+jobs:
+  build:
+    name: Quick build
+    runs-on: ubuntu-latest
+    steps:
+
+# SETUP BUILD ENVIRONMENT
+    - id: prepare-maven-build
+      name: Prepare Maven build
+      uses: sualeh/prepare-maven-build@v1.4.0
+      with:
+        java-version: 21
+
+# BUILD AND TEST
+    - id: build-test
+      name: Build all modules and run tests
+      shell: bash
+      run: |
+        # Build
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          clean package

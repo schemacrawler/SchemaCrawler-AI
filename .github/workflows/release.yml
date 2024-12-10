@@ -1,0 +1,80 @@
+name: Create Release
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-[A-Z]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Create Release
+    runs-on: ubuntu-latest
+    steps:
+
+# SETUP BUILD ENVIRONMENT
+    - id: prepare-maven-build
+      name: Prepare Maven build
+      uses: sualeh/prepare-maven-build@v1.4.0
+      with:
+        java-version: 21
+
+# BUILD FOR DISTRIBUTION
+    - id: build
+      name: Build and test for distribution
+      shell: bash
+      run: |
+        # Build
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          clean install
+
+# CREATE GITHUB RELEASE
+    - id: create-release
+      name: Create GitHub release
+      uses: softprops/action-gh-release@v2
+      if: startsWith(github.ref, 'refs/tags/')
+      with:
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: ${{ github.ref_name }}
+        draft: false
+        prerelease: false
+        body: |
+          SchemaCrawler ${{ github.event.release.tag_name }} release at last commit ${{ github.sha }}
+          See the change history at https://www.schemacrawler.com/changes-report.html
+        generate_release_notes: true
+
+# PUBLISH TO CENTRAL REPOSITORY
+    - id: install-secret-key
+      name: Install secret key
+      if: startsWith(github.ref, 'refs/tags/')
+      # Note: OSSRH_GPG_SECRET_KEY is exported using gpg --export-secret-keys -a <keyid>
+      # and has newlines substituted with a literal \n
+      shell: bash
+      run: |
+        # Install secret key
+        cat <(echo -e "${{ secrets.OSSRH_GPG_SECRET_KEY }}") | gpg --batch --import
+        gpg --list-secret-keys --keyid-format LONG
+    - id: publish-to-central
+      name: Publish to Central Repository
+      if: startsWith(github.ref, 'refs/tags/')
+      env:
+        MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
+        MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
+      shell: bash
+      run: |
+        # Publish to Central Repository
+        export GPG_TTY=$(tty)
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -Dmaven.javadoc.skip=false \
+          -Dskip.signing.artifacts=false \
+          -Dgpg.passphrase=${{ secrets.OSSRH_GPG_SECRET_KEY_PASSWORD }} \
+          clean deploy
