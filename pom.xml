@@ -148,7 +148,6 @@
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
               <includeScope>runtime</includeScope>
               <includeTypes>jar</includeTypes>
-              <includeClassifiers>provided</includeClassifiers>
             </configuration>
           </execution>
         </executions>
