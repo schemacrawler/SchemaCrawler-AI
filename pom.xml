@@ -43,11 +43,12 @@
       <version>${project.version}</version>
     </dependency>
 
-	<dependency>
-	  <groupId>io.github.sashirestela</groupId>
-	  <artifactId>simple-openai</artifactId>
-	  <version>3.9.3</version>
-	</dependency>
+    <dependency>
+      <groupId>io.github.sashirestela</groupId>
+      <artifactId>simple-openai</artifactId>
+      <version>3.9.3</version>
+    </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math3</artifactId>
@@ -148,6 +149,7 @@
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
               <includeScope>runtime</includeScope>
               <includeTypes>jar</includeTypes>
+              <excludeGroupIds>org.slf4j</excludeGroupIds>
             </configuration>
           </execution>
         </executions>
