@@ -42,7 +42,7 @@
       <artifactId>schemacrawler-lint</artifactId>
       <version>${project.version}</version>
     </dependency>
-    
+
     <dependency>
       <groupId>io.github.sashirestela</groupId>
       <artifactId>simple-openai</artifactId>
@@ -125,7 +125,7 @@
           <source>21</source>
           <target>21</target>
         </configuration>
-      </plugin> 
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
