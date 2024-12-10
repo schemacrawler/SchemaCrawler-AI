@@ -48,6 +48,7 @@
       <artifactId>simple-openai</artifactId>
       <version>3.9.3</version>
     </dependency>
+
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-math3</artifactId>
