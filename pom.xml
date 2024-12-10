@@ -146,10 +146,36 @@
               <goal>copy-dependencies</goal>
             </goals>
             <configuration>
+              <skipDuringIncrementalBuild></skipDuringIncrementalBuild>
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
               <includeScope>runtime</includeScope>
               <includeTypes>jar</includeTypes>
-              <excludeGroupIds>org.slf4j</excludeGroupIds>
+              <excludeGroupIds>org.slf4j,commons-dbutils,us.fatehi,schemacrawler</excludeGroupIds>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-resources-plugin</artifactId>
+        <version>3.3.1</version>
+        <executions>
+          <execution>
+            <id>copy-artifact</id>
+            <phase>package</phase>
+            <goals>
+              <goal>copy-resources</goal>
+            </goals>
+            <configuration>
+              <outputDirectory>${project.build.directory}/lib</outputDirectory>
+              <resources>
+                <resource>
+                  <directory>${project.build.directory}</directory>
+                  <includes>
+                    <include>${project.build.finalName}.jar</include>
+                  </includes>
+                </resource>
+              </resources>
             </configuration>
           </execution>
         </executions>
