@@ -148,9 +148,7 @@
               <outputDirectory>${project.build.directory}/lib</outputDirectory>
               <includeScope>runtime</includeScope>
               <includeTypes>jar</includeTypes>
-              <excludes>
-                <exclude>org.slf4j:slf4j-api</exclude>
-              </excludes>
+			  <excludeGroupIds>org.slf4j</excludeGroupIds>
             </configuration>
           </execution>
         </executions>
