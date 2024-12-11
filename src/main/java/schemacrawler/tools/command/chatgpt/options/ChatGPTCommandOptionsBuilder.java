@@ -120,7 +120,7 @@ public final class ChatGPTCommandOptionsBuilder
   /**
    * Use the provided ChatGPT model is it is not blank.
    *
-   * @param apiKey ChatGPT model.
+   * @param model ChatGPT model.
    * @return Self.
    */
   public ChatGPTCommandOptionsBuilder withModel(final String model) {

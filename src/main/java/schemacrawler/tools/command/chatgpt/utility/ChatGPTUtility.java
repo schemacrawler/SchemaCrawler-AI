@@ -127,9 +127,10 @@ public class ChatGPTUtility {
   }
 
   /**
-   * Send prompt to ChatGPT API and display response
+   * Print ChatGPT API response.
    *
-   * @param prompt Input prompt.
+   * @param completions Chat completions
+   * @param out Output stream to print to
    */
   public static void printResponse(final List<ChatMessage> completions, final PrintStream out) {
     requireNonNull(out, "No ouput stream provided");
