@@ -1,0 +1,6 @@
+schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionDefinition
+schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition
+schemacrawler.tools.command.aichat.functions.TableReferencesFunctionDefinition
+schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionDefinition
+schemacrawler.tools.command.aichat.functions.LintFunctionDefinition
+schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition
