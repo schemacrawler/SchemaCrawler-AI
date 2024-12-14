@@ -45,7 +45,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          --DskipTests \
+          -Dmaven.test.skip=true \
           clean install
 
 # BUILD AND TEST
