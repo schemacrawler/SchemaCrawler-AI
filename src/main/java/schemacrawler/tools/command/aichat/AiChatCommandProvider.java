@@ -55,8 +55,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
         .addOption("api-key", String.class, "OpenAI API key")
         .addOption(
             "api-key:env", String.class, "OpenAI API key, from an environmental variable value")
-        .addOption(
-            "model", String.class, "AI chat model", "Optional, defaults to 'gpt-4o-mini'")
+        .addOption("model", String.class, "AI chat model", "Optional, defaults to 'gpt-4o-mini'")
         .addOption(
             "timeout",
             Integer.class,
@@ -86,7 +85,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
           AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
 
       final AiChatCommand scCommand = new AiChatCommand();
-      scCommand.setCommandOptions(options);
+      scCommand.configure(options);
       return scCommand;
     } catch (final Exception e) {
       throw new ExecutionRuntimeException(e);

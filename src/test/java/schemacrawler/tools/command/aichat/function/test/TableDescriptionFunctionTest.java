@@ -171,7 +171,8 @@ public class TableDescriptionFunctionTest {
     try (final TestWriter out = testout) {
       final FunctionExecutor<TableDecriptionFunctionParameters> executor =
           functionDefinition.newExecutor();
-      executor.initialize(args, catalog, null);
+      executor.configure(args);
+      executor.setCatalog(catalog);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

@@ -75,4 +75,9 @@ public final class LintFunctionExecutor
   protected Function<Catalog, Boolean> getResultsChecker() {
     return catalog -> !catalog.getTables().isEmpty();
   }
+
+  @Override
+  public boolean usesConnection() {
+    return true;
+  }
 }

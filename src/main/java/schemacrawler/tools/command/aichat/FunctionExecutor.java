@@ -28,18 +28,12 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
-import java.sql.Connection;
 import java.util.UUID;
-import java.util.concurrent.Callable;
-import schemacrawler.schema.Catalog;
+import schemacrawler.tools.executable.Command;
 
-public interface FunctionExecutor<P extends FunctionParameters> extends Callable<FunctionReturn> {
+public interface FunctionExecutor<P extends FunctionParameters> extends Command<P, FunctionReturn> {
 
   String getDescription();
 
   UUID getExecutorInstanceId();
-
-  String getName();
-
-  void initialize(P args, Catalog catalog, Connection connection);
 }

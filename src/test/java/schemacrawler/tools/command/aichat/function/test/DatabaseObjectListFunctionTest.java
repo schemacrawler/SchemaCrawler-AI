@@ -142,7 +142,8 @@ public class DatabaseObjectListFunctionTest {
     try (final TestWriter out = testout) {
       final FunctionExecutor<DatabaseObjectListFunctionParameters> executor =
           functionDefinition.newExecutor();
-      executor.initialize(args, catalog, null);
+      executor.configure(args);
+      executor.setCatalog(catalog);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

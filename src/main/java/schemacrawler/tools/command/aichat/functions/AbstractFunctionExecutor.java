@@ -55,6 +55,11 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
+  public void configure(final P args) {
+    this.args = requireNonNull(args, "No arguments provided");
+  }
+
+  @Override
   public boolean equals(final Object obj) {
     if (this == obj) {
       return true;
@@ -64,6 +69,16 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     }
     final AbstractFunctionExecutor<?> other = (AbstractFunctionExecutor<?>) obj;
     return Objects.equals(args, other.args);
+  }
+
+  @Override
+  public Catalog getCatalog() {
+    return catalog;
+  }
+
+  @Override
+  public Connection getConnection() {
+    return connection;
   }
 
   @Override
@@ -87,22 +102,29 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
+  public void initialize() {
+    // No-op
+  }
+
+  @Override
+  public void setCatalog(final Catalog catalog) {
+    this.catalog = requireNonNull(catalog, "Catalog is not provided");
+  }
+
+  @Override
+  public void setConnection(final Connection connection) {
+    if (!usesConnection()) {
+      throw new ExecutionRuntimeException("Function does not use a connection");
+    }
+    this.connection = requireNonNull(connection, "Connection is not provided");
+  }
+
+  @Override
   public String toString() {
     return String.format(
         "function %s(%s)%n\"%s\"",
         getName(),
         new KebabCaseStrategy().translate(args.getClass().getSimpleName()),
         getDescription());
-  }
-
-  @Override
-  public void initialize(final P args, final Catalog catalog, final Connection connection) {
-    this.args = requireNonNull(args, "No arguments provided");
-    if (catalog == null) {
-      throw new ExecutionRuntimeException("Catalog is not provided");
-    }
-    this.catalog = catalog;
-    // Connection can be null
-    this.connection = connection;
   }
 }

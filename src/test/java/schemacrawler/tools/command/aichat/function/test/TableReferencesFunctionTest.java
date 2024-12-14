@@ -142,7 +142,8 @@ public class TableReferencesFunctionTest {
     try (final TestWriter out = testout) {
       final FunctionExecutor<TableReferencesFunctionParameters> executor =
           functionDefinition.newExecutor();
-      executor.initialize(args, catalog, null);
+      executor.configure(args);
+      executor.setCatalog(catalog);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

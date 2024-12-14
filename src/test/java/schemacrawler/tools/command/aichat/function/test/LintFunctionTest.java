@@ -119,7 +119,11 @@ public class LintFunctionTest {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       final FunctionExecutor<LintFunctionParameters> executor = functionDefinition.newExecutor();
-      executor.initialize(args, catalog, connection);
+      executor.configure(args);
+      executor.setCatalog(catalog);
+      if (executor.usesConnection()) {
+        executor.setConnection(connection);
+      }
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

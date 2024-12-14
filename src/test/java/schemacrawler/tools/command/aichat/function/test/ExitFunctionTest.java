@@ -59,7 +59,8 @@ public class ExitFunctionTest {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       final FunctionExecutor<NoParameters> executor = functionDefinition.newExecutor();
-      executor.initialize(args, mock(Catalog.class), null);
+      executor.configure(args);
+      executor.setCatalog(mock(Catalog.class));
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
