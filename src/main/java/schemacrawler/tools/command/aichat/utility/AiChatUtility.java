@@ -77,7 +77,12 @@ public class AiChatUtility {
     try {
       final schemacrawler.tools.command.aichat.FunctionExecutor<P> functionExecutor =
           functionDefinitionToCall.newExecutor();
-      functionExecutor.initialize(parameters, catalog, connection);
+      functionExecutor.configure(parameters);
+      functionExecutor.initialize();
+      functionExecutor.setCatalog(catalog);
+      if (functionExecutor.usesConnection()) {
+        functionExecutor.setConnection(connection);
+      }
       functionReturn = functionExecutor.call();
       return functionReturn.get();
     } catch (final Exception e) {
@@ -108,7 +113,7 @@ public class AiChatUtility {
   public static FunctionExecutor newFunctionExecutor() {
 
     final List<FunctionDef> chatFunctions = new ArrayList<>();
-    for (final FunctionDefinition functionDefinition :
+    for (final FunctionDefinition<?> functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
       if (functionDefinition.getFunctionType() != FunctionType.USER) {
         continue;

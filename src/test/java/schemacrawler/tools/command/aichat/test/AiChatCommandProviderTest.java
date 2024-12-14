@@ -19,6 +19,18 @@ import schemacrawler.tools.options.Config;
 public class AiChatCommandProviderTest {
 
   @Test
+  public void aiChatCommandProviderHelpCommand(final TestContext testContext) {
+    final PluginCommand pluginCommand = new AiChatCommandProvider().getHelpCommand();
+    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
+  }
+
+  @Test
+  public void aiChatCommandProviderPluginCommand(final TestContext testContext) {
+    final PluginCommand pluginCommand = new AiChatCommandProvider().getCommandLineCommand();
+    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
+  }
+
+  @Test
   public void newSchemaCrawlerCommand() {
     final AiChatCommandProvider commandProvider = new AiChatCommandProvider();
     assertThrows(
@@ -57,17 +69,5 @@ public class AiChatCommandProviderTest {
   public void supportsOutputFormat() {
     final AiChatCommandProvider commandProvider = new AiChatCommandProvider();
     assertThat(commandProvider.supportsOutputFormat(null, null), is(true));
-  }
-
-  @Test
-  public void aiChatCommandProviderHelpCommand(final TestContext testContext) {
-    final PluginCommand pluginCommand = new AiChatCommandProvider().getHelpCommand();
-    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
-  }
-
-  @Test
-  public void aiChatCommandProviderPluginCommand(final TestContext testContext) {
-    final PluginCommand pluginCommand = new AiChatCommandProvider().getCommandLineCommand();
-    PluginCommandTestUtility.testPluginCommand(testContext, pluginCommand);
   }
 }

@@ -53,8 +53,7 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
 
   @Override
   public void execute() {
-    try (AiChatConsole aiChatConsole =
-        new AiChatConsole(commandOptions, catalog, connection); ) {
+    try (AiChatConsole aiChatConsole = new AiChatConsole(commandOptions, catalog, connection); ) {
       aiChatConsole.console();
     }
   }
