@@ -35,30 +35,24 @@ jobs:
       uses: actions/checkout@v4
       with:
         repository: schemacrawler/SchemaCrawler
-        path: ../SchemaCrawler
+        path: SchemaCrawler
     - id: build-schemacrawler
       name: Build SchemaCrawler for local Maven repository
       shell: bash
       run: |
         # Build SchemaCrawler
-        cd ../SchemaCrawler
+        cd SchemaCrawler
         mvn \
           --no-transfer-progress \
           --batch-mode \
           --DskipTests \
           clean install
-        # DEBUG
-        pwd
-        ls -l ..
 
 # BUILD AND TEST
     - id: build-test
       name: Build all modules and run tests
       shell: bash
       run: |
-        # DEBUG
-        pwd
-        ls -l .
         # Build
         mvn \
           --no-transfer-progress \
