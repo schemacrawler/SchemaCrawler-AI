@@ -53,7 +53,7 @@ public final class DatabaseObjectDescriptionFunctionExecutor
 
   @Override
   protected Config createAdditionalConfig() {
-    final DatabaseObjectsScope scope = args.getDatabaseObjectsScope();
+    final DatabaseObjectsScope scope = commandOptions.getDatabaseObjectsScope();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
     if (scope != SEQUENCES) {
       schemaTextOptionsBuilder.noSequences();
@@ -71,8 +71,9 @@ public final class DatabaseObjectDescriptionFunctionExecutor
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
 
-    final Pattern inclusionPattern = makeNameInclusionPattern(args.getDatabaseObjectName());
-    final DatabaseObjectsScope scope = args.getDatabaseObjectsScope();
+    final Pattern inclusionPattern =
+        makeNameInclusionPattern(commandOptions.getDatabaseObjectName());
+    final DatabaseObjectsScope scope = commandOptions.getDatabaseObjectsScope();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     switch (scope) {
       case SEQUENCES:
@@ -97,7 +98,7 @@ public final class DatabaseObjectDescriptionFunctionExecutor
 
   @Override
   protected Function<Catalog, Boolean> getResultsChecker() {
-    final DatabaseObjectsScope scope = args.getDatabaseObjectsScope();
+    final DatabaseObjectsScope scope = commandOptions.getDatabaseObjectsScope();
     switch (scope) {
       case SEQUENCES:
         return catalog -> !catalog.getSequences().isEmpty();

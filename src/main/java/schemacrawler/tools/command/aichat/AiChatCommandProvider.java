@@ -36,21 +36,17 @@ import schemacrawler.tools.executable.BaseCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
-import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in for AI chat. */
 public final class AiChatCommandProvider extends BaseCommandProvider {
 
-  public static final String DESCRIPTION_HEADER = "SchemaCrawler AI chat integration";
-
   public AiChatCommandProvider() {
-    super(new PropertyName(AiChatCommand.COMMAND, DESCRIPTION_HEADER));
+    super(AiChatCommand.COMMAND);
   }
 
   @Override
   public PluginCommand getCommandLineCommand() {
-    final PluginCommand pluginCommand =
-        newPluginCommand(AiChatCommand.COMMAND, "** " + DESCRIPTION_HEADER);
+    final PluginCommand pluginCommand = newPluginCommand(AiChatCommand.COMMAND);
     pluginCommand
         .addOption("api-key", String.class, "OpenAI API key")
         .addOption(
@@ -76,7 +72,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
 
   @Override
   public AiChatCommand newSchemaCrawlerCommand(final String command, final Config config) {
-    if (!AiChatCommand.COMMAND.equals(command)) {
+    if (!supportsCommand(command)) {
       throw new IllegalArgumentException("Cannot support command, " + command);
     }
 
