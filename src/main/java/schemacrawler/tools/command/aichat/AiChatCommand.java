@@ -33,13 +33,15 @@ import java.util.logging.Logger;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
+import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in. */
 public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandOptions> {
 
   private static final Logger LOGGER = Logger.getLogger(AiChatCommand.class.getName());
 
-  static final String COMMAND = "aichat";
+  static final PropertyName COMMAND =
+      new PropertyName("aichat", "SchemaCrawler AI chat integration");
 
   protected AiChatCommand() {
     super(COMMAND);

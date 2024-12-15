@@ -28,35 +28,26 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
-import java.sql.Connection;
 import java.util.Objects;
 import java.util.UUID;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 import static java.util.Objects.requireNonNull;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.command.aichat.FunctionExecutor;
 import schemacrawler.tools.command.aichat.FunctionParameters;
+import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
-    implements FunctionExecutor<P> {
+    extends BaseCommand<P, FunctionReturn> implements FunctionExecutor<P> {
 
   private final PropertyName functionName;
   private final UUID executorInstanceId;
-  // Running state
-  protected P args;
-  protected Catalog catalog;
-  protected Connection connection;
 
   protected AbstractFunctionExecutor(final PropertyName functionName) {
-    this.functionName = requireNonNull(functionName, "Function name cannot be null");
+    super(requireNonNull(functionName, "Function name not provided"));
+    this.functionName = functionName;
     executorInstanceId = UUID.randomUUID();
-  }
-
-  @Override
-  public void configure(final P args) {
-    this.args = requireNonNull(args, "No arguments provided");
   }
 
   @Override
@@ -68,17 +59,7 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
       return false;
     }
     final AbstractFunctionExecutor<?> other = (AbstractFunctionExecutor<?>) obj;
-    return Objects.equals(args, other.args);
-  }
-
-  @Override
-  public Catalog getCatalog() {
-    return catalog;
-  }
-
-  @Override
-  public Connection getConnection() {
-    return connection;
+    return Objects.equals(commandOptions, other.commandOptions);
   }
 
   @Override
@@ -92,13 +73,8 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
-  public final String getName() {
-    return functionName.getName();
-  }
-
-  @Override
   public int hashCode() {
-    return Objects.hash(args);
+    return Objects.hash(commandOptions);
   }
 
   @Override
@@ -107,24 +83,11 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
-  public void setCatalog(final Catalog catalog) {
-    this.catalog = requireNonNull(catalog, "Catalog is not provided");
-  }
-
-  @Override
-  public void setConnection(final Connection connection) {
-    if (!usesConnection()) {
-      throw new ExecutionRuntimeException("Function does not use a connection");
-    }
-    this.connection = requireNonNull(connection, "Connection is not provided");
-  }
-
-  @Override
-  public String toString() {
+  public final String toString() {
     return String.format(
         "function %s(%s)%n\"%s\"",
-        getName(),
-        new KebabCaseStrategy().translate(args.getClass().getSimpleName()),
+        command.getName(),
+        new KebabCaseStrategy().translate(commandOptions.getClass().getSimpleName()),
         getDescription());
   }
 }
