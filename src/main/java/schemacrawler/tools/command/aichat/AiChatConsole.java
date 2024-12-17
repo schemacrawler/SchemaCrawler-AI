@@ -30,7 +30,9 @@ package schemacrawler.tools.command.aichat;
 
 import static schemacrawler.tools.command.aichat.utility.AiChatUtility.isExitCondition;
 import static schemacrawler.tools.command.aichat.utility.AiChatUtility.printResponse;
+import java.net.http.HttpClient;
 import java.sql.Connection;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -84,7 +86,12 @@ public final class AiChatConsole implements AutoCloseable {
 
     functionExecutor = AiChatUtility.newFunctionExecutor();
 
-    service = SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).build();
+    final HttpClient httpClient =
+        HttpClient.newBuilder()
+            .connectTimeout(Duration.ofSeconds(commandOptions.getTimeout()))
+            .build();
+    service =
+        SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).httpClient(httpClient).build();
 
     queryService = new QueryService(service);
     queryService.addTables(catalog.getTables());

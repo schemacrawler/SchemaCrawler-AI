@@ -50,7 +50,7 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   @Override
   public void checkAvailability() throws RuntimeException {
     LOGGER.log(Level.FINE, "Looking for OPENAI_API_KEY environmental variable");
-    SimpleOpenAI.builder().apiKey(System.getenv("OPENAI_API_KEY")).build();
+    SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).build();
   }
 
   @Override

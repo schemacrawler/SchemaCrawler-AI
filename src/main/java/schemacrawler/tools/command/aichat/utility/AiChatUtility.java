@@ -70,7 +70,7 @@ public class AiChatUtility {
 
     // Build parameters
     final Class<P> parametersClass = functionDefinitionToCall.getParametersClass();
-    final P parameters = instantiateArgs(functionCall, parametersClass);
+    final P parameters = instantiateParameters(functionCall, parametersClass);
 
     // Execute function
     FunctionReturn functionReturn;
@@ -150,13 +150,13 @@ public class AiChatUtility {
     }
   }
 
-  private static <P extends FunctionParameters> P instantiateArgs(
+  private static <P extends FunctionParameters> P instantiateParameters(
       final FunctionCall functionCall, final Class<P> parametersClass) {
     final P parameters;
     final ObjectMapper objectMapper = new ObjectMapper();
     try {
       parameters = objectMapper.readValue(functionCall.getArguments(), parametersClass);
-      System.out.println(parameters);
+      LOGGER.log(Level.FINE, String.valueOf(parameters));
     } catch (final Exception e) {
       LOGGER.log(
           Level.INFO,
