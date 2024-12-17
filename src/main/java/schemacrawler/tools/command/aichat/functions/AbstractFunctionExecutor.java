@@ -28,7 +28,6 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
-import java.util.Objects;
 import java.util.UUID;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 import static java.util.Objects.requireNonNull;
@@ -51,18 +50,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
-  public boolean equals(final Object obj) {
-    if (this == obj) {
-      return true;
-    }
-    if (obj == null || getClass() != obj.getClass()) {
-      return false;
-    }
-    final AbstractFunctionExecutor<?> other = (AbstractFunctionExecutor<?>) obj;
-    return Objects.equals(commandOptions, other.commandOptions);
-  }
-
-  @Override
   public final String getDescription() {
     return functionName.getDescription();
   }
@@ -70,11 +57,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   @Override
   public final UUID getExecutorInstanceId() {
     return executorInstanceId;
-  }
-
-  @Override
-  public int hashCode() {
-    return Objects.hash(commandOptions);
   }
 
   @Override
