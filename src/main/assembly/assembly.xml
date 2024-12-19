@@ -24,7 +24,6 @@
         <exclude>commons-dbutils:*</exclude>
 		<exclude>com.fasterxml.jackson.core:*</exclude>
         <exclude>us.fatehi:*</exclude>
-        <exclude>schemacrawler:*</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>

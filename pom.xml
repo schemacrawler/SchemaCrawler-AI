@@ -120,11 +120,13 @@
         </configuration>
       </plugin>
       <plugin>
+        <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>21</source>
           <target>21</target>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
       <plugin>
@@ -139,6 +141,7 @@
             </goals>
             <configuration>
               <source>21</source>
+	      <doctitle>SchemaCrawler AI ${project.version}</doctitle>
             </configuration>
           </execution>
         </executions>
@@ -159,6 +162,7 @@
           </descriptors>
           <formats>
             <format>dir</format>
+			<format>zip</format>
           </formats>
           <appendAssemblyId>false</appendAssemblyId>
           <finalName>_extra-lib</finalName>
@@ -172,7 +176,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>	  
+      </plugin>
     </plugins>
   </build>
 </project>
