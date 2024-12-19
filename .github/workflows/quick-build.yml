@@ -58,3 +58,11 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           clean package
+
+    - id: upload-extra-lib
+      name: Upload extra lib
+      uses: actions/upload-artifact@v4
+      with:
+        name: extra-libs
+        path: ./target/_extra-lib
+        retention-days: 5

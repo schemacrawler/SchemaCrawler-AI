@@ -12,7 +12,7 @@
   <artifactId>schemacrawler-ai</artifactId>
   <packaging>jar</packaging>
   <name>SchemaCrawler AI</name>
-
+  <description>Integrates SchemaCrawler with AI chat services.</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
@@ -120,11 +120,13 @@
         </configuration>
       </plugin>
       <plugin>
+        <inherited>true</inherited>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>21</source>
           <target>21</target>
+          <encoding>UTF-8</encoding>
         </configuration>
       </plugin>
       <plugin>
@@ -139,6 +141,7 @@
             </goals>
             <configuration>
               <source>21</source>
+	      <doctitle>SchemaCrawler AI ${project.version}</doctitle>
             </configuration>
           </execution>
         </executions>
@@ -152,47 +155,25 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-dependency-plugin</artifactId>
-        <version>3.8.1</version>
+        <artifactId>maven-assembly-plugin</artifactId>
+        <configuration>
+          <descriptors>
+            <descriptor>src/main/assembly/assembly.xml</descriptor>
+          </descriptors>
+          <formats>
+            <format>dir</format>
+			<format>zip</format>
+          </formats>
+          <appendAssemblyId>false</appendAssemblyId>
+          <finalName>_extra-lib</finalName>
+        </configuration>
         <executions>
           <execution>
-            <id>copy-dependencies</id>
+            <id>make-assembly</id>
             <phase>package</phase>
             <goals>
-              <goal>copy-dependencies</goal>
+              <goal>single</goal>
             </goals>
-            <configuration>
-              <skipDuringIncrementalBuild></skipDuringIncrementalBuild>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <includeScope>runtime</includeScope>
-              <includeTypes>jar</includeTypes>
-              <excludeGroupIds>org.slf4j,commons-dbutils,us.fatehi,schemacrawler</excludeGroupIds>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-resources-plugin</artifactId>
-        <version>3.3.1</version>
-        <executions>
-          <execution>
-            <id>copy-artifact</id>
-            <phase>package</phase>
-            <goals>
-              <goal>copy-resources</goal>
-            </goals>
-            <configuration>
-              <outputDirectory>${project.build.directory}/lib</outputDirectory>
-              <resources>
-                <resource>
-                  <directory>${project.build.directory}</directory>
-                  <includes>
-                    <include>${project.build.finalName}.jar</include>
-                  </includes>
-                </resource>
-              </resources>
-            </configuration>
           </execution>
         </executions>
       </plugin>
