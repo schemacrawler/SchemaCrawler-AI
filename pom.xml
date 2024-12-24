@@ -130,10 +130,9 @@
           </descriptors>
           <formats>
             <format>dir</format>
-            <format>zip</format>
           </formats>
           <appendAssemblyId>false</appendAssemblyId>
-          <finalName>_extra-lib</finalName>
+          <finalName>_aichat/lib</finalName>
         </configuration>
         <executions>
           <execution>
