@@ -6,7 +6,6 @@
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
     <version>16.24.2</version>
-    <relativePath/>
   </parent>
   <artifactId>schemacrawler-ai</artifactId>
   <packaging>jar</packaging>
@@ -14,8 +13,6 @@
   <description>Integrates SchemaCrawler with AI chat services.</description>
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
-    <docker.skip>true</docker.skip>
     <java.version>21</java.version>
   </properties>
 
@@ -100,27 +97,6 @@
     <plugins>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-toolchains-plugin</artifactId>
-        <version>3.2.0</version>
-        <executions>
-          <execution>
-            <goals>
-              <goal>toolchain</goal>
-            </goals>
-          </execution>
-        </executions>
-        <configuration>
-          <toolchains>
-            <jdk>
-              <version>21</version>
-              <vendor>temurin</vendor>
-            </jdk>
-          </toolchains>
-        </configuration>
-      </plugin>
-      <plugin>
-        <inherited>true</inherited>
-        <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
         <configuration>
           <source>21</source>
@@ -140,7 +116,7 @@
             </goals>
             <configuration>
               <source>21</source>
-	      <doctitle>SchemaCrawler AI ${project.version}</doctitle>
+              <doctitle>SchemaCrawler AI ${project.version}</doctitle>
             </configuration>
           </execution>
         </executions>
