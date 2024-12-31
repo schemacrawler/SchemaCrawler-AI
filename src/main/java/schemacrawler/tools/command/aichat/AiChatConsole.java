@@ -58,6 +58,7 @@ import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.AiChatUtility;
 import schemacrawler.tools.command.aichat.utility.ChatHistory;
+import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
 import us.fatehi.utility.string.StringFormat;
 
 public final class AiChatConsole implements AutoCloseable {
@@ -162,7 +163,10 @@ public final class AiChatConsole implements AutoCloseable {
             Level.INFO,
             new StringFormat(
                 "Function call: %s(%s)", functionCall.getName(), functionCall.getArguments()));
-        final String returnString = AiChatUtility.execute(functionCall, catalog, connection);
+        requireNonNull(functionCall, "No function call provided");
+        final String returnString =
+            FunctionExecutionUtility.execute(
+                functionCall.getName(), functionCall.getArguments(), catalog, connection);
         completions.add(ToolMessage.of(returnString, toolCall.getId()));
         // Add to chat history
         chatHistory.add(ToolMessage.of(returnString, toolCall.getId()));

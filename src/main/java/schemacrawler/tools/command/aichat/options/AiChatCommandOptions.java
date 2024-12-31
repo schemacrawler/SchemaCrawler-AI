@@ -28,7 +28,6 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.options;
 
-import static schemacrawler.tools.command.aichat.utility.AiChatUtility.inIntegerRange;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.tools.executable.CommandOptions;
 
@@ -44,6 +43,10 @@ public class AiChatCommandOptions implements CommandOptions {
   private final int timeout;
   private final int context;
   private final boolean useMetadata;
+
+  private static boolean inIntegerRange(final int value, final int min, final int max) {
+    return value > min && value <= max;
+  }
 
   public AiChatCommandOptions(
       final String apiKey,

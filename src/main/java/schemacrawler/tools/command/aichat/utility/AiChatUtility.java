@@ -29,22 +29,18 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility;
 
 import java.io.PrintStream;
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
-import io.github.sashirestela.openai.common.function.FunctionCall;
 import io.github.sashirestela.openai.common.function.FunctionDef;
 import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ChatRole;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
-import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
-import schemacrawler.tools.command.aichat.FunctionParameters;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
@@ -52,18 +48,6 @@ import us.fatehi.utility.UtilityMarker;
 public class AiChatUtility {
 
   private static final Logger LOGGER = Logger.getLogger(AiChatUtility.class.getCanonicalName());
-
-  public static <P extends FunctionParameters> String execute(
-      final FunctionCall functionCall, final Catalog catalog, final Connection connection) {
-    requireNonNull(functionCall, "No function call provided");
-
-    return FunctionExecutionUtility.execute(
-        functionCall.getName(), functionCall.getArguments(), catalog, connection);
-  }
-
-  public static boolean inIntegerRange(final int value, final int min, final int max) {
-    return value > min && value <= max;
-  }
 
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
