@@ -45,6 +45,7 @@ import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
 
 public class QueryServiceTest {
 
@@ -59,7 +60,7 @@ public class QueryServiceTest {
     this.table = table;
 
     service = AITestUtility.mockAiService(new ArrayList<>(Collections.singletonList(0.5)));
-    final EmbeddingService embeddingService = new EmbeddingService(service);
+    final EmbeddingService embeddingService = new SimpleOpenAIEmbeddingService(service);
     queryService = new QueryService(embeddingService);
   }
 

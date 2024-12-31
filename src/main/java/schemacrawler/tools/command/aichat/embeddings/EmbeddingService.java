@@ -28,55 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.embeddings;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.requireNotBlank;
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.embedding.Embedding;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
-import us.fatehi.utility.string.StringFormat;
+public interface EmbeddingService {
 
-public final class EmbeddingService {
-
-  private static final Logger LOGGER = Logger.getLogger(EmbeddingService.class.getCanonicalName());
-
-  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
-
-  private final SimpleOpenAI service;
-
-  public EmbeddingService(final SimpleOpenAI service) {
-    this.service = requireNonNull(service, "No Open AI service provided");
-  }
-
-  public TextEmbedding embed(final String text) {
-    requireNotBlank(text, "No text provided");
-
-    try {
-      final EmbeddingRequest embeddingRequest =
-          EmbeddingRequest.builder()
-              .model(TEXT_EMBEDDING_MODEL)
-              .input(Collections.singletonList(text))
-              .build();
-      final Embedding<EmbeddingFloat> embeddingResult =
-          service.embeddings().create(embeddingRequest).get();
-      long tokenCount = embeddingResult.getUsage().getPromptTokens();
-      final List<EmbeddingFloat> data = embeddingResult.getData();
-      final List<Double> embedding;
-      if (data != null && data.size() == 1) {
-        embedding = data.get(0).getEmbedding();
-      } else {
-        embedding = new ArrayList<>();
-      }
-
-      return new TextEmbedding(text, tokenCount, embedding);
-    } catch (final Exception e) {
-      LOGGER.log(Level.WARNING, e, new StringFormat("Could not embed text"));
-    }
-    return new TextEmbedding(text);
-  }
+  TextEmbedding embed(String text);
 }

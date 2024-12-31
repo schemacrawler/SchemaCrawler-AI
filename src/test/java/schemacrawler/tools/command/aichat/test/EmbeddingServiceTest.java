@@ -37,6 +37,7 @@ import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
 
 public class EmbeddingServiceTest {
 
@@ -48,7 +49,7 @@ public class EmbeddingServiceTest {
   void setUp() {
     expectedEmbedding = Collections.singletonList(0.5);
     service = AITestUtility.mockAiService(expectedEmbedding);
-    embeddingService = new EmbeddingService(service);
+    embeddingService = new SimpleOpenAIEmbeddingService(service);
   }
 
   @Test

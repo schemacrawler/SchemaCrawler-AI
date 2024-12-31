@@ -59,6 +59,7 @@ import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
 import schemacrawler.tools.command.simpleopenai.utility.ChatHistory;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
 import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
 import us.fatehi.utility.string.StringFormat;
 
@@ -89,7 +90,7 @@ public final class AiChatConsole implements AutoCloseable {
     functionExecutor = SimpleOpenAIUtility.toolsList();
     service = SimpleOpenAIUtility.newService(commandOptions);
 
-    final EmbeddingService embeddingService = new EmbeddingService(service);
+    final EmbeddingService embeddingService = new SimpleOpenAIEmbeddingService(service);
     queryService = new QueryService(embeddingService);
     queryService.addTables(catalog.getTables());
 
