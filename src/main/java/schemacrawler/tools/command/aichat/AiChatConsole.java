@@ -40,6 +40,7 @@ import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import static java.util.Objects.requireNonNull;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import io.github.sashirestela.openai.common.function.FunctionCall;
@@ -49,6 +50,7 @@ import io.github.sashirestela.openai.domain.chat.Chat;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ResponseMessage;
+import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
@@ -135,8 +137,12 @@ public final class AiChatConsole implements AutoCloseable {
       final List<ChatMessage> messages = chatHistory.toList();
 
       if (useMetadata) {
-        final Collection<ChatMessage> chatMessages = queryService.query(prompt);
-        messages.addAll(chatMessages);
+        final Collection<String> chatMessages = queryService.query(prompt);
+        final List<SystemMessage> systemMessages =
+            chatMessages.stream()
+                .map(message -> SystemMessage.of(message))
+                .collect(Collectors.toList());
+        messages.addAll(systemMessages);
       }
 
       final ChatRequest chatRequest =
