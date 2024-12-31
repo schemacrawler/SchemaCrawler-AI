@@ -51,9 +51,10 @@ import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
-public class AiChatUtility {
+public class Langchain4JUtility {
 
-  private static final Logger LOGGER = Logger.getLogger(AiChatUtility.class.getCanonicalName());
+  private static final Logger LOGGER =
+      Logger.getLogger(Langchain4JUtility.class.getCanonicalName());
 
   public static List<ToolSpecification> toolsList() throws Exception {
 
@@ -124,7 +125,7 @@ public class AiChatUtility {
     return properties;
   }
 
-  private AiChatUtility() {
+  private Langchain4JUtility() {
     // Prevent instantiation
   }
 }

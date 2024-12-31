@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.utility;
+package schemacrawler.tools.command.simpleopenai.utility;
 
 import java.io.PrintStream;
 import java.util.ArrayList;
@@ -45,9 +45,10 @@ import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
-public class AiChatUtility {
+public class SimpleOpenAiUtility {
 
-  private static final Logger LOGGER = Logger.getLogger(AiChatUtility.class.getCanonicalName());
+  private static final Logger LOGGER =
+      Logger.getLogger(SimpleOpenAiUtility.class.getCanonicalName());
 
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
@@ -99,7 +100,7 @@ public class AiChatUtility {
     }
   }
 
-  private AiChatUtility() {
+  private SimpleOpenAiUtility() {
     // Prevent instantiation
   }
 }

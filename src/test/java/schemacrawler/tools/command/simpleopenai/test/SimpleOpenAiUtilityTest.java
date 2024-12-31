@@ -1,4 +1,4 @@
-package schemacrawler.tools.command.aichat.test;
+package schemacrawler.tools.command.simpleopenai.test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
@@ -16,32 +16,32 @@ import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import schemacrawler.test.utility.TestOutputStream;
-import schemacrawler.tools.command.aichat.utility.AiChatUtility;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility;
 
-public class AiChatUtilityTest {
+public class SimpleOpenAiUtilityTest {
 
   @Test
   public void printResponse() {
     final TestOutputStream stream = new TestOutputStream();
     final PrintStream out = new PrintStream(stream);
 
-    assertThrows(NullPointerException.class, () -> AiChatUtility.printResponse(null, out));
+    assertThrows(NullPointerException.class, () -> SimpleOpenAiUtility.printResponse(null, out));
     assertThrows(
         NullPointerException.class,
-        () -> AiChatUtility.printResponse(Collections.emptyList(), null));
+        () -> SimpleOpenAiUtility.printResponse(Collections.emptyList(), null));
 
     final List<ChatMessage> completions =
         Arrays.asList(
             AssistantMessage.of("Well how are you?"),
             AssistantMessage.of("I am glad to hear that"));
-    AiChatUtility.printResponse(completions, out);
+    SimpleOpenAiUtility.printResponse(completions, out);
     out.flush();
     assertThat(stream.getContents(), containsString("I am glad to hear that"));
   }
 
   @Test
   public void utility() throws Exception {
-    final FunctionExecutor functionExecutor = AiChatUtility.toolsList();
+    final FunctionExecutor functionExecutor = SimpleOpenAiUtility.toolsList();
     assertThat(functionExecutor, is(not(nullValue())));
     assertThat(functionExecutor.getToolFunctions(), hasSize(6));
   }
