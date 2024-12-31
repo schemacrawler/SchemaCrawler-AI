@@ -16,7 +16,6 @@ import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
 public class SingleCompletion {
 
   interface Assistant {
-
     String chat(String userMessage);
   }
 

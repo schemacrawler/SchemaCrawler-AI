@@ -3,6 +3,7 @@ package schemacrawler.tools.command.simpleopenai.test;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
@@ -25,16 +26,14 @@ public class SimpleOpenAiUtilityTest {
     final TestOutputStream stream = new TestOutputStream();
     final PrintStream out = new PrintStream(stream);
 
-    assertThrows(NullPointerException.class, () -> SimpleOpenAIUtility.printResponse(null, out));
-    assertThrows(
-        NullPointerException.class,
-        () -> SimpleOpenAIUtility.printResponse(Collections.emptyList(), null));
+    assertThrows(NullPointerException.class, () -> SimpleOpenAIUtility.getResponse(null));
+    assertThat(SimpleOpenAIUtility.getResponse(Collections.emptyList()), is(emptyString()));
 
     final List<ChatMessage> completions =
         Arrays.asList(
             AssistantMessage.of("Well how are you?"),
             AssistantMessage.of("I am glad to hear that"));
-    SimpleOpenAIUtility.printResponse(completions, out);
+    out.println(SimpleOpenAIUtility.getResponse(completions));
     out.flush();
     assertThat(stream.getContents(), containsString("I am glad to hear that"));
   }

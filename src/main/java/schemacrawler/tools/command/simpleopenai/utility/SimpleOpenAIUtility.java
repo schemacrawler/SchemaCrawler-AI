@@ -28,7 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.simpleopenai.utility;
 
-import java.io.PrintStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.http.HttpClient;
 import java.time.Duration;
 import java.util.ArrayList;
@@ -54,6 +55,28 @@ public class SimpleOpenAIUtility {
   private static final Logger LOGGER =
       Logger.getLogger(SimpleOpenAIUtility.class.getCanonicalName());
 
+  /**
+   * Print AI chat API response.
+   *
+   * @param completions Chat completions
+   * @param out Output stream to print to
+   */
+  public static String getResponse(final List<ChatMessage> completions) {
+    requireNonNull(completions, "No completions provided");
+    final StringWriter writer = new StringWriter();
+    try (final PrintWriter out = new PrintWriter(writer)) {
+      for (final ChatMessage chatMessage : completions) {
+        if (chatMessage instanceof final ToolMessage toolMessage) {
+          out.println(toolMessage.getContent());
+        }
+        if (chatMessage instanceof final AssistantMessage assistantMessage) {
+          out.println(assistantMessage.getContent());
+        }
+      }
+    }
+    return writer.toString();
+  }
+
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
     for (final ChatMessage c : completions) {
@@ -73,25 +96,6 @@ public class SimpleOpenAIUtility {
         SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).httpClient(httpClient).build();
 
     return service;
-  }
-
-  /**
-   * Print AI chat API response.
-   *
-   * @param completions Chat completions
-   * @param out Output stream to print to
-   */
-  public static void printResponse(final List<ChatMessage> completions, final PrintStream out) {
-    requireNonNull(out, "No ouput stream provided");
-    requireNonNull(completions, "No completions provided");
-    for (final ChatMessage chatMessage : completions) {
-      if (chatMessage instanceof final ToolMessage toolMessage) {
-        out.println(toolMessage.getContent());
-      }
-      if (chatMessage instanceof final AssistantMessage assistantMessage) {
-        out.println(assistantMessage.getContent());
-      }
-    }
   }
 
   public static FunctionExecutor toolsList() {

@@ -28,13 +28,10 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
-import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility.isExitCondition;
-import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility.printResponse;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-import java.util.Scanner;
 import java.util.concurrent.CompletableFuture;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -63,11 +60,9 @@ import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingSer
 import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
 import us.fatehi.utility.string.StringFormat;
 
-public final class AiChatConsole implements AutoCloseable {
+public final class AiChatConsole implements ChatAssistant {
 
   private static final Logger LOGGER = Logger.getLogger(AiChatConsole.class.getCanonicalName());
-
-  private static final String PROMPT = String.format("%nPrompt: ");
 
   private final AiChatCommandOptions commandOptions;
   private final FunctionExecutor functionExecutor;
@@ -77,6 +72,7 @@ public final class AiChatConsole implements AutoCloseable {
   private final boolean useMetadata;
   private final Catalog catalog;
   private final Connection connection;
+  private boolean shouldExit;
 
   public AiChatConsole(
       final AiChatCommandOptions commandOptions,
@@ -98,30 +94,13 @@ public final class AiChatConsole implements AutoCloseable {
     chatHistory = new ChatHistory(commandOptions.getContext(), new ArrayList<>());
   }
 
-  @Override
-  public void close() {}
-
-  /** Simple REPL for the SchemaCrawler AI chat integration. */
-  public void console() {
-    try (final Scanner scanner = new Scanner(System.in)) {
-      while (true) {
-        System.out.print(PROMPT);
-        final String prompt = scanner.nextLine();
-        final List<ChatMessage> completions = complete(prompt);
-        printResponse(completions, System.out);
-        if (isExitCondition(completions)) {
-          return;
-        }
-      }
-    }
-  }
-
   /**
    * Send prompt to AI chat API and get completions.
    *
    * @param prompt Input prompt.
    */
-  private List<ChatMessage> complete(final String prompt) {
+  @Override
+  public String chat(final String prompt) {
 
     final List<ChatMessage> completions = new ArrayList<>();
 
@@ -177,6 +156,16 @@ public final class AiChatConsole implements AutoCloseable {
       LOGGER.log(Level.INFO, e.getMessage(), e);
     }
 
-    return completions;
+    shouldExit = SimpleOpenAIUtility.isExitCondition(completions);
+    final String response = SimpleOpenAIUtility.getResponse(completions);
+    return response;
+  }
+
+  @Override
+  public void close() {}
+
+  @Override
+  public boolean shouldExit() {
+    return shouldExit;
   }
 }

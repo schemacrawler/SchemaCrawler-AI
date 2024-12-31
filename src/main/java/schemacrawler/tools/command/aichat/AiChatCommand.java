@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
@@ -59,8 +60,18 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
 
   @Override
   public void execute() {
-    try (AiChatConsole aiChatConsole = new AiChatConsole(commandOptions, catalog, connection); ) {
-      aiChatConsole.console();
+    final String PROMPT = String.format("%nPrompt: ");
+    try (final AiChatConsole aiChatConsole =
+            new AiChatConsole(commandOptions, catalog, connection);
+        final Scanner scanner = new Scanner(System.in); ) {
+      while (true) {
+        System.out.print(PROMPT);
+        final String prompt = scanner.nextLine();
+        aiChatConsole.chat(prompt);
+        if (aiChatConsole.shouldExit()) {
+          return;
+        }
+      }
     }
   }
 
