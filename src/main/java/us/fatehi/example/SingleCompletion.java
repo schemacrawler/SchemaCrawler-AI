@@ -11,6 +11,7 @@ import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
+import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
 
 public class SingleCompletion {
 
@@ -22,10 +23,11 @@ public class SingleCompletion {
   private static final class SimpleToolExecutor implements ToolExecutor {
     @Override
     public String execute(final ToolExecutionRequest toolExecutionRequest, final Object memoryId) {
+      String functionName = toolExecutionRequest.name();
+      String arguments = toolExecutionRequest.arguments();
       System.out.printf(
-          "id=%s, name=%s, args=%s%n",
-          toolExecutionRequest.id(), toolExecutionRequest.name(), toolExecutionRequest.arguments());
-      return "{'tables' = ['table1', 'table2']}";
+          "id=%s, name=%s, args=%s%n", toolExecutionRequest.id(), functionName, arguments);
+      return FunctionExecutionUtility.execute(functionName, arguments, null, null);
     }
   }
 
