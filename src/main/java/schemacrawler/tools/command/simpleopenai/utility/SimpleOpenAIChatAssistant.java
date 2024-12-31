@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
  */
 
-package schemacrawler.tools.command.aichat;
+package schemacrawler.tools.command.simpleopenai.utility;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -51,18 +51,16 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
-import schemacrawler.tools.command.simpleopenai.utility.ChatHistory;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
 import us.fatehi.utility.string.StringFormat;
 
-public final class AiChatConsole implements ChatAssistant {
+public final class SimpleOpenAIChatAssistant implements ChatAssistant {
 
-  private static final Logger LOGGER = Logger.getLogger(AiChatConsole.class.getCanonicalName());
+  private static final Logger LOGGER = Logger.getLogger(SimpleOpenAIChatAssistant.class.getCanonicalName());
 
   private final AiChatCommandOptions commandOptions;
   private final FunctionExecutor functionExecutor;
@@ -74,7 +72,7 @@ public final class AiChatConsole implements ChatAssistant {
   private final Connection connection;
   private boolean shouldExit;
 
-  public AiChatConsole(
+  public SimpleOpenAIChatAssistant(
       final AiChatCommandOptions commandOptions,
       final Catalog catalog,
       final Connection connection) {
