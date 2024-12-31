@@ -34,7 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
-import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.ConfigurationException;
 import us.fatehi.utility.IOUtility;
@@ -51,9 +50,8 @@ public final class QueryService {
   private final TableEmbeddingService tableEmbeddingService;
   private final TableSimilarityService tableSimilarityService;
 
-  public QueryService(final SimpleOpenAI service) {
-    requireNonNull(service, "No Open AI service provided");
-    final EmbeddingService embeddingService = new EmbeddingService(service);
+  public QueryService(final EmbeddingService embeddingService) {
+    requireNonNull(embeddingService, "No embedding service provided");
     tableEmbeddingService = new TableEmbeddingService(embeddingService);
     tableSimilarityService = new TableSimilarityService(embeddingService);
     metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");

@@ -30,9 +30,7 @@ package schemacrawler.tools.command.aichat;
 
 import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility.isExitCondition;
 import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility.printResponse;
-import java.net.http.HttpClient;
 import java.sql.Connection;
-import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -56,6 +54,7 @@ import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
 import io.github.sashirestela.openai.domain.chat.ChatRequest;
 import io.github.sashirestela.openai.domain.chat.ChatRequest.Modality;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.ChatHistory;
@@ -88,15 +87,10 @@ public final class AiChatConsole implements AutoCloseable {
     this.connection = requireNonNull(connection, "No connection provided");
 
     functionExecutor = SimpleOpenAiUtility.toolsList();
+    service = SimpleOpenAiUtility.newService(commandOptions);
 
-    final HttpClient httpClient =
-        HttpClient.newBuilder()
-            .connectTimeout(Duration.ofSeconds(commandOptions.getTimeout()))
-            .build();
-    service =
-        SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).httpClient(httpClient).build();
-
-    queryService = new QueryService(service);
+    final EmbeddingService embeddingService = new EmbeddingService(service);
+    queryService = new QueryService(embeddingService);
     queryService.addTables(catalog.getTables());
 
     useMetadata = commandOptions.isUseMetadata();
@@ -139,9 +133,7 @@ public final class AiChatConsole implements AutoCloseable {
       if (useMetadata) {
         final Collection<String> chatMessages = queryService.query(prompt);
         final List<SystemMessage> systemMessages =
-            chatMessages.stream()
-                .map(message -> SystemMessage.of(message))
-                .collect(Collectors.toList());
+            chatMessages.stream().map(SystemMessage::of).collect(Collectors.toList());
         messages.addAll(systemMessages);
       }
 

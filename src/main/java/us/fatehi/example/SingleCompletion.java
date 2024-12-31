@@ -51,16 +51,16 @@ public class SingleCompletion {
     final String answer = assistant.chat(question);
     System.out.println(answer);
 
-    EmbeddingModel embeddingModel =
+    final EmbeddingModel embeddingModel =
         OpenAiEmbeddingModel.builder()
             .apiKey(OPENAI_API_KEY)
             .modelName("text-embedding-3-small")
             .build();
 
-    String text = "Your text here";
-    Response<Embedding> response = embeddingModel.embed(text);
+    final String text = "Your text here";
+    final Response<Embedding> response = embeddingModel.embed(text);
 
-    Embedding embedding = response.content();
+    final Embedding embedding = response.content();
     System.out.println("Embedding: " + embedding);
   }
 }

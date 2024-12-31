@@ -42,6 +42,7 @@ import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.test.utility.crawl.LightTable;
+import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
 
@@ -58,7 +59,8 @@ public class QueryServiceTest {
     this.table = table;
 
     service = AITestUtility.mockAiService(new ArrayList<>(Collections.singletonList(0.5)));
-    queryService = new QueryService(service);
+    final EmbeddingService embeddingService = new EmbeddingService(service);
+    queryService = new QueryService(embeddingService);
   }
 
   @Test

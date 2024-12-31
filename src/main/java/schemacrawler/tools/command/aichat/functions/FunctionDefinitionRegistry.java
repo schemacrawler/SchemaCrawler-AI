@@ -98,6 +98,20 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return "Function Definitions";
   }
 
+  @Override
+  public Collection<PropertyName> getRegisteredPlugins() {
+    final Collection<PropertyName> registeredPlugins = new ArrayList<>();
+    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
+      registeredPlugins.add(
+          new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
+    }
+    return registeredPlugins;
+  }
+
+  public boolean hasFunctionDefinition(final String functionName) {
+    return functionDefinitionRegistry.containsKey(functionName);
+  }
+
   public Optional<FunctionDefinition<?>> lookupFunctionDefinition(final String functionName) {
     requireNotBlank(functionName, "No function name provided");
 
@@ -117,20 +131,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
       return Optional.empty();
     }
     return Optional.of(functionDefinitionToCall);
-  }
-
-  @Override
-  public Collection<PropertyName> getRegisteredPlugins() {
-    final Collection<PropertyName> registeredPlugins = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      registeredPlugins.add(
-          new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
-    }
-    return registeredPlugins;
-  }
-
-  public boolean hasFunctionDefinition(final String functionName) {
-    return functionDefinitionRegistry.containsKey(functionName);
   }
 
   /*

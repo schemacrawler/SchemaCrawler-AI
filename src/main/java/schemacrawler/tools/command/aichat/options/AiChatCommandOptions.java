@@ -38,15 +38,16 @@ public class AiChatCommandOptions implements CommandOptions {
   private static final int DEFAULT_TIMEOUT = 10;
   private static final int MAXIMUM_TIMEOUT = 180;
 
+  private static boolean inIntegerRange(final int value, final int min, final int max) {
+    return value > min && value <= max;
+  }
+
   private final String apiKey;
   private final String model;
   private final int timeout;
   private final int context;
-  private final boolean useMetadata;
 
-  private static boolean inIntegerRange(final int value, final int min, final int max) {
-    return value > min && value <= max;
-  }
+  private final boolean useMetadata;
 
   public AiChatCommandOptions(
       final String apiKey,
