@@ -55,7 +55,7 @@ public class AiChatUtility {
 
   private static final Logger LOGGER = Logger.getLogger(AiChatUtility.class.getCanonicalName());
 
-  public static List<ToolSpecification> newToolSpecifications() throws Exception {
+  public static List<ToolSpecification> toolsList() throws Exception {
 
     final List<ToolSpecification> chatFunctions = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :

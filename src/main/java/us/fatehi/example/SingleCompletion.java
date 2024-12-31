@@ -29,7 +29,7 @@ public class SingleCompletion {
                 true) // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
             .build();
 
-    final List<ToolSpecification> toolSpecifications = AiChatUtility.newToolSpecifications();
+    final List<ToolSpecification> toolSpecifications = AiChatUtility.toolsList();
     final ToolExecutor exeuctor = new AiChatToolExecutor();
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final ToolSpecification toolSpecification : toolSpecifications) {

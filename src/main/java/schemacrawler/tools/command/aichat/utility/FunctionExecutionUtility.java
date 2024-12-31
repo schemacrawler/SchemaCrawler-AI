@@ -94,7 +94,7 @@ public class FunctionExecutionUtility {
     }
   }
 
-  public static <P extends FunctionParameters> P instantiateParameters(
+  private static <P extends FunctionParameters> P instantiateParameters(
       final String arguments, final Class<P> parametersClass) throws Exception {
 
     final String functionArguments;

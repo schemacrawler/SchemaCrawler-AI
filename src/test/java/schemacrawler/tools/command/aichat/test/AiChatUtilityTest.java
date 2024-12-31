@@ -41,7 +41,7 @@ public class AiChatUtilityTest {
 
   @Test
   public void utility() throws Exception {
-    final FunctionExecutor functionExecutor = AiChatUtility.newFunctionExecutor();
+    final FunctionExecutor functionExecutor = AiChatUtility.toolsList();
     assertThat(functionExecutor, is(not(nullValue())));
     assertThat(functionExecutor.getToolFunctions(), hasSize(6));
   }

@@ -85,7 +85,7 @@ public final class AiChatConsole implements AutoCloseable {
     this.catalog = requireNonNull(catalog, "No catalog provided");
     this.connection = requireNonNull(connection, "No connection provided");
 
-    functionExecutor = AiChatUtility.newFunctionExecutor();
+    functionExecutor = AiChatUtility.toolsList();
 
     final HttpClient httpClient =
         HttpClient.newBuilder()

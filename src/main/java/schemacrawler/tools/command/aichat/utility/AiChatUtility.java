@@ -59,7 +59,7 @@ public class AiChatUtility {
     return false;
   }
 
-  public static FunctionExecutor newFunctionExecutor() {
+  public static FunctionExecutor toolsList() {
 
     final List<FunctionDef> chatFunctions = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
