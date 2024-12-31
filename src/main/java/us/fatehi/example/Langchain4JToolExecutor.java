@@ -4,7 +4,7 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
 
-public final class AiChatToolExecutor implements ToolExecutor {
+public final class Langchain4JToolExecutor implements ToolExecutor {
   @Override
   public String execute(final ToolExecutionRequest toolExecutionRequest, final Object memoryId) {
     final String functionName = toolExecutionRequest.name();

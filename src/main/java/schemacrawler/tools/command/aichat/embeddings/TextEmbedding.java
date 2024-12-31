@@ -45,12 +45,6 @@ public final class TextEmbedding {
     embeddingVector = new ArrayRealVector();
   }
 
-  public TextEmbedding(final String text, final long tokenCount, final double[] embedding) {
-    this.text = text;
-    this.tokenCount = tokenCount;
-    embeddingVector = new ArrayRealVector(embedding);
-  }
-
   public TextEmbedding(final String text, final long tokenCount, final List<Double> embedding) {
     this.text = text;
     this.tokenCount = tokenCount;
@@ -67,5 +61,16 @@ public final class TextEmbedding {
 
   public long getTokenCount() {
     return tokenCount;
+  }
+
+  @Override
+  public String toString() {
+    return "TextEmbedding [text="
+        + text
+        + ", tokenCount="
+        + tokenCount
+        + ", dimension="
+        + embeddingVector.getDimension()
+        + "]";
   }
 }

@@ -5,15 +5,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.output.Response;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
+import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
+import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
 
 public class SingleCompletion {
 
@@ -34,7 +32,7 @@ public class SingleCompletion {
             .build();
 
     final List<ToolSpecification> toolSpecifications = Langchain4JUtility.toolsList();
-    final ToolExecutor exeuctor = new AiChatToolExecutor();
+    final ToolExecutor exeuctor = new Langchain4JToolExecutor();
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final ToolSpecification toolSpecification : toolSpecifications) {
       toolSpecificationsMap.put(toolSpecification, exeuctor);
@@ -51,16 +49,9 @@ public class SingleCompletion {
     final String answer = assistant.chat(question);
     System.out.println(answer);
 
-    final EmbeddingModel embeddingModel =
-        OpenAiEmbeddingModel.builder()
-            .apiKey(OPENAI_API_KEY)
-            .modelName("text-embedding-3-small")
-            .build();
-
     final String text = "Your text here";
-    final Response<Embedding> response = embeddingModel.embed(text);
-
-    final Embedding embedding = response.content();
+    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(OPENAI_API_KEY);
+    final TextEmbedding embedding = embeddingService.embed(text);
     System.out.println("Embedding: " + embedding);
   }
 }
