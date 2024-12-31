@@ -29,7 +29,6 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -45,6 +44,7 @@ import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddedTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
+import schemacrawler.tools.command.aichat.embeddings.ListRealVector;
 import schemacrawler.tools.command.aichat.embeddings.TableEmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
 
@@ -67,15 +67,15 @@ public class TableEmbeddingServiceTest {
   @Test
   public void testGetEmbeddedTable() {
 
-    final List<Double> embedding = Arrays.asList(1.0, 2.0, 3.0);
+    final List<Double> embedding = Arrays.asList(1D, 2D, 3D);
     final TextEmbedding textEmbedding = mock(TextEmbedding.class);
-    when(textEmbedding.getEmbedding()).thenReturn(embedding);
+    when(textEmbedding.getEmbeddingVector()).thenReturn(new ListRealVector(embedding));
     when(mockService.embed(anyString())).thenReturn(textEmbedding);
 
     final EmbeddedTable result = tableEmbeddingService.embedTable(table);
 
     assertThat(result, is(notNullValue()));
-    assertThat(result.getEmbedding().getEmbedding(), contains(1.0, 2.0, 3.0));
+    assertThat(result.getEmbedding().getEmbeddingVector().getL1Norm(), is(6D));
   }
 
   @Test

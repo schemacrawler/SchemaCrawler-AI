@@ -39,7 +39,7 @@ public final class TextEmbedding {
 
   private final String text;
   private final long tokenCount;
-  private final ListRealVector embeddingVector;
+  private final RealVector embeddingVector;
 
   public TextEmbedding(final String text) {
     this.text = requireNonNull(text, "No text provided");
@@ -61,10 +61,6 @@ public final class TextEmbedding {
     this.text = requireNonNull(text, "No text provided");
     tokenCount = embeddingResult.getUsage().getPromptTokens();
     embeddingVector = new ListRealVector(embedding);
-  }
-
-  public List<Double> getEmbedding() {
-    return embeddingVector.getEmbedding();
   }
 
   public RealVector getEmbeddingVector() {

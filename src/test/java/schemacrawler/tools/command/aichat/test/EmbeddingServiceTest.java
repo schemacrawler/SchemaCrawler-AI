@@ -30,7 +30,6 @@ package schemacrawler.tools.command.aichat.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +46,7 @@ public class EmbeddingServiceTest {
 
   @BeforeEach
   void setUp() {
-    expectedEmbedding = new ArrayList<>(Collections.singletonList(0.5));
+    expectedEmbedding = Collections.singletonList(0.5);
     service = AITestUtility.mockAiService(expectedEmbedding);
     embeddingService = new EmbeddingService(service);
   }
@@ -67,8 +66,8 @@ public class EmbeddingServiceTest {
   void testEmbeddingWithValidText() {
     final String text = "example text";
 
-    final List<Double> actualEmbedding = embeddingService.embed(text).getEmbedding();
+    final double l1Norm = embeddingService.embed(text).getEmbeddingVector().getL1Norm();
 
-    assertThat(actualEmbedding, is(expectedEmbedding));
+    assertThat(l1Norm, is(expectedEmbedding.get(0)));
   }
 }

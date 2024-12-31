@@ -86,19 +86,19 @@ public class EmbeddedTableTest {
 
     final List<Double> embeddings1 = Collections.singletonList(0.25);
     textEmbedding = mock(TextEmbedding.class);
-    when(textEmbedding.getEmbedding()).thenReturn(embeddings1);
+    when(textEmbedding.getEmbeddingVector()).thenReturn(new ListRealVector(embeddings1));
     embeddedTable.setEmbedding(textEmbedding);
 
     assertThat(embeddedTable.hasEmbedding(), is(true));
-    assertThat(embeddedTable.getEmbedding().getEmbedding(), is(embeddings1));
+    assertThat(embeddedTable.getEmbedding().getEmbeddingVector().getL1Norm(), is(0.25));
 
     final List<Double> embeddings2 = Collections.singletonList(0.75);
     textEmbedding = mock(TextEmbedding.class);
-    when(textEmbedding.getEmbedding()).thenReturn(embeddings2);
+    when(textEmbedding.getEmbeddingVector()).thenReturn(new ListRealVector(embeddings2));
     embeddedTable.setEmbedding(textEmbedding);
 
     assertThat(embeddedTable.hasEmbedding(), is(true));
-    assertThat(embeddedTable.getEmbedding().getEmbedding(), is(embeddings2));
+    assertThat(embeddedTable.getEmbedding().getEmbeddingVector().getL1Norm(), is(0.75));
 
     embeddedTable.setEmbedding(null);
 
