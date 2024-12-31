@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.utility;
+package schemacrawler.tools.command.simpleopenai.utility;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -16,7 +16,7 @@ import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import schemacrawler.test.utility.TestOutputStream;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
 
 public class SimpleOpenAiUtilityTest {
 
@@ -25,23 +25,23 @@ public class SimpleOpenAiUtilityTest {
     final TestOutputStream stream = new TestOutputStream();
     final PrintStream out = new PrintStream(stream);
 
-    assertThrows(NullPointerException.class, () -> SimpleOpenAiUtility.printResponse(null, out));
+    assertThrows(NullPointerException.class, () -> SimpleOpenAIUtility.printResponse(null, out));
     assertThrows(
         NullPointerException.class,
-        () -> SimpleOpenAiUtility.printResponse(Collections.emptyList(), null));
+        () -> SimpleOpenAIUtility.printResponse(Collections.emptyList(), null));
 
     final List<ChatMessage> completions =
         Arrays.asList(
             AssistantMessage.of("Well how are you?"),
             AssistantMessage.of("I am glad to hear that"));
-    SimpleOpenAiUtility.printResponse(completions, out);
+    SimpleOpenAIUtility.printResponse(completions, out);
     out.flush();
     assertThat(stream.getContents(), containsString("I am glad to hear that"));
   }
 
   @Test
   public void utility() throws Exception {
-    final FunctionExecutor functionExecutor = SimpleOpenAiUtility.toolsList();
+    final FunctionExecutor functionExecutor = SimpleOpenAIUtility.toolsList();
     assertThat(functionExecutor, is(not(nullValue())));
     assertThat(functionExecutor.getToolFunctions(), hasSize(6));
   }

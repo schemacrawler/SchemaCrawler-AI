@@ -49,10 +49,10 @@ import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
-public class SimpleOpenAiUtility {
+public class SimpleOpenAIUtility {
 
   private static final Logger LOGGER =
-      Logger.getLogger(SimpleOpenAiUtility.class.getCanonicalName());
+      Logger.getLogger(SimpleOpenAIUtility.class.getCanonicalName());
 
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
@@ -115,7 +115,7 @@ public class SimpleOpenAiUtility {
     return new FunctionExecutor(chatFunctions);
   }
 
-  private SimpleOpenAiUtility() {
+  private SimpleOpenAIUtility() {
     // Prevent instantiation
   }
 }

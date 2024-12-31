@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
-import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility.isExitCondition;
-import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility.printResponse;
+import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility.isExitCondition;
+import static schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility.printResponse;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -57,9 +57,9 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.utility.ChatHistory;
 import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAiUtility;
+import schemacrawler.tools.command.simpleopenai.utility.ChatHistory;
+import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
 import us.fatehi.utility.string.StringFormat;
 
 public final class AiChatConsole implements AutoCloseable {
@@ -86,8 +86,8 @@ public final class AiChatConsole implements AutoCloseable {
     this.catalog = requireNonNull(catalog, "No catalog provided");
     this.connection = requireNonNull(connection, "No connection provided");
 
-    functionExecutor = SimpleOpenAiUtility.toolsList();
-    service = SimpleOpenAiUtility.newService(commandOptions);
+    functionExecutor = SimpleOpenAIUtility.toolsList();
+    service = SimpleOpenAIUtility.newService(commandOptions);
 
     final EmbeddingService embeddingService = new EmbeddingService(service);
     queryService = new QueryService(embeddingService);
