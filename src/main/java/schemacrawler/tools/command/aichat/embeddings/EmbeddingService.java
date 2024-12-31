@@ -28,7 +28,9 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.embeddings;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
@@ -62,7 +64,16 @@ public final class EmbeddingService {
               .build();
       final Embedding<EmbeddingFloat> embeddingResult =
           service.embeddings().create(embeddingRequest).get();
-      return new TextEmbedding(text, embeddingResult);
+      long tokenCount = embeddingResult.getUsage().getPromptTokens();
+      final List<EmbeddingFloat> data = embeddingResult.getData();
+      final List<Double> embedding;
+      if (data != null && data.size() == 1) {
+        embedding = data.get(0).getEmbedding();
+      } else {
+        embedding = new ArrayList<>();
+      }
+
+      return new TextEmbedding(text, tokenCount, embedding);
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Could not embed text"));
     }
