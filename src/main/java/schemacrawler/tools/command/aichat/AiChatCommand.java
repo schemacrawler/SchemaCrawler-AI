@@ -30,7 +30,8 @@ package schemacrawler.tools.command.aichat;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import io.github.sashirestela.openai.SimpleOpenAI;
+import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
@@ -50,7 +51,10 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   @Override
   public void checkAvailability() throws RuntimeException {
     LOGGER.log(Level.FINE, "Looking for OPENAI_API_KEY environmental variable");
-    SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).build();
+    String apiKey = commandOptions.getApiKey();
+    if (isBlank(apiKey)) {
+      throw new SchemaCrawlerException("OPENAI_API_KEY not provided");
+    }
   }
 
   @Override

@@ -28,26 +28,15 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.utility;
 
-import java.io.PrintStream;
 import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.requireNotBlank;
-import io.github.sashirestela.openai.common.function.FunctionDef;
-import io.github.sashirestela.openai.common.function.FunctionExecutor;
-import io.github.sashirestela.openai.domain.chat.ChatMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ChatRole;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.ToolMessage;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 import schemacrawler.tools.command.aichat.FunctionReturn;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
@@ -102,60 +91,6 @@ public class FunctionExecutionUtility {
           new StringFormat(
               "Could not call function with arguments: %s(%s)", functionName, arguments));
       return e.getMessage();
-    }
-  }
-
-  public static boolean inIntegerRange(final int value, final int min, final int max) {
-    return value > min && value <= max;
-  }
-
-  public static boolean isExitCondition(final List<ChatMessage> completions) {
-    requireNonNull(completions, "No completions provided");
-    for (final ChatMessage c : completions) {
-      if (c.getRole() == ChatRole.TOOL && c.toString().contains("Thank you")) {
-        return true;
-      }
-    }
-    return false;
-  }
-
-  public static FunctionExecutor newFunctionExecutor() {
-
-    final List<FunctionDef> chatFunctions = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
-
-      final FunctionDef chatFunction =
-          FunctionDef.builder()
-              .name(functionDefinition.getName())
-              .description(functionDefinition.getDescription())
-              .functionalClass(functionDefinition.getParametersClass())
-              .strict(Boolean.FALSE)
-              .build();
-      chatFunctions.add(chatFunction);
-    }
-    return new FunctionExecutor(chatFunctions);
-  }
-
-  /**
-   * Print AI chat API response.
-   *
-   * @param completions Chat completions
-   * @param out Output stream to print to
-   */
-  public static void printResponse(final List<ChatMessage> completions, final PrintStream out) {
-    requireNonNull(out, "No ouput stream provided");
-    requireNonNull(completions, "No completions provided");
-    for (final ChatMessage chatMessage : completions) {
-      if (chatMessage instanceof final ToolMessage toolMessage) {
-        out.println(toolMessage.getContent());
-      }
-      if (chatMessage instanceof final AssistantMessage assistantMessage) {
-        out.println(assistantMessage.getContent());
-      }
     }
   }
 

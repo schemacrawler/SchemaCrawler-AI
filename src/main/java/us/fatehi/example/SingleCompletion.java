@@ -4,31 +4,18 @@ import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
-import schemacrawler.tools.command.aichat.utility.FunctionExecutionUtility;
 
 public class SingleCompletion {
 
   interface Assistant {
 
     String chat(String userMessage);
-  }
-
-  private static final class SimpleToolExecutor implements ToolExecutor {
-    @Override
-    public String execute(final ToolExecutionRequest toolExecutionRequest, final Object memoryId) {
-      String functionName = toolExecutionRequest.name();
-      String arguments = toolExecutionRequest.arguments();
-      System.out.printf(
-          "id=%s, name=%s, args=%s%n", toolExecutionRequest.id(), functionName, arguments);
-      return FunctionExecutionUtility.execute(functionName, arguments, null, null);
-    }
   }
 
   public static void main(final String[] args) throws Exception {
@@ -43,7 +30,7 @@ public class SingleCompletion {
             .build();
 
     final List<ToolSpecification> toolSpecifications = AiChatUtility.newToolSpecifications();
-    final ToolExecutor exeuctor = new SimpleToolExecutor();
+    final ToolExecutor exeuctor = new AiChatToolExecutor();
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final ToolSpecification toolSpecification : toolSpecifications) {
       toolSpecificationsMap.put(toolSpecification, exeuctor);
