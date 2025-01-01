@@ -26,10 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
  */
 
-package schemacrawler.tools.command.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,10 +38,7 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
@@ -80,22 +76,9 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     requireNonNull(connection, "No connection provided");
 
     toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
+    chatMemory = OpenAIModelFactory.newChatMemory(commandOptions);
 
-    chatMemory =
-        TokenWindowChatMemory.builder()
-            .maxTokens(8_000, new OpenAiTokenizer(commandOptions.getModel()))
-            .build();
-
-    final ChatLanguageModel model =
-        OpenAiChatModel.builder()
-            .apiKey(commandOptions.getApiKey())
-            .modelName(commandOptions.getModel())
-            .temperature(0.2)
-            .timeout(Duration.ofSeconds(commandOptions.getTimeout()))
-            // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
-            .strictTools(true)
-            .build();
-
+    final ChatLanguageModel model = OpenAIModelFactory.newChatLanguageModel(commandOptions);
     assistant =
         AiServices.builder(Assistant.class)
             .chatLanguageModel(model)
@@ -103,8 +86,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
             .chatMemory(chatMemory)
             .build();
 
-    final EmbeddingService embeddingService =
-        new Langchain4JEmbeddingService(commandOptions.getApiKey());
+    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(commandOptions);
     queryService = new QueryService(embeddingService);
     queryService.addTables(catalog.getTables());
 

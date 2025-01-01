@@ -1,4 +1,4 @@
-package schemacrawler.tools.command.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
 import java.util.logging.Level;
