@@ -33,6 +33,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -42,7 +43,10 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
+import static java.util.Objects.requireNonNull;
 import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.data.message.ChatMessage;
+import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
@@ -51,6 +55,7 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
+import schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
@@ -59,6 +64,21 @@ public class Langchain4JUtility {
 
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JUtility.class.getCanonicalName());
+
+  public static boolean isExitCondition(final List<ChatMessage> completions) {
+    requireNonNull(completions, "No completions provided");
+    final String exitFunctionName = new ExitFunctionDefinition().getName();
+    for (final ListIterator<ChatMessage> iterator = completions.listIterator(completions.size());
+        iterator.hasPrevious(); ) {
+      if (iterator.previous()
+          instanceof final ToolExecutionResultMessage toolExecutionResultMessage) {
+        if (toolExecutionResultMessage.toolName().equals(exitFunctionName)) {
+          return true;
+        }
+      }
+    }
+    return false;
+  }
 
   public static Map<ToolSpecification, ToolExecutor> toolsList(
       final Catalog catalog, final Connection connection) {

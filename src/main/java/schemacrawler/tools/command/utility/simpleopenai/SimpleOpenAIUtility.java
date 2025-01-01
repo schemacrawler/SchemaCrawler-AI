@@ -79,8 +79,8 @@ public class SimpleOpenAIUtility {
 
   public static boolean isExitCondition(final List<ChatMessage> completions) {
     requireNonNull(completions, "No completions provided");
-    for (final ChatMessage c : completions) {
-      if (c.getRole() == ChatRole.TOOL && c.toString().contains("Thank you")) {
+    for (final ChatMessage chatMessage : completions) {
+      if (chatMessage.getRole() == ChatRole.TOOL && chatMessage.toString().contains("Thank you")) {
         return true;
       }
     }

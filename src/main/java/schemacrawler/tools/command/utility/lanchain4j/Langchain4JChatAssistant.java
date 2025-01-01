@@ -125,6 +125,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     final TokenUsage tokenUsage = response.tokenUsage();
     LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
 
+    shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
+
     return response.content().text();
   }
 
