@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,10 +35,10 @@ import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
+import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
 
 public final class Langchain4JEmbeddingService implements EmbeddingService {
@@ -46,13 +46,10 @@ public final class Langchain4JEmbeddingService implements EmbeddingService {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JEmbeddingService.class.getCanonicalName());
 
-  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
-
   private final EmbeddingModel embeddingModel;
 
-  public Langchain4JEmbeddingService(final String apiKey) {
-    embeddingModel =
-        OpenAiEmbeddingModel.builder().apiKey(apiKey).modelName(TEXT_EMBEDDING_MODEL).build();
+  public Langchain4JEmbeddingService(final AiModelFactory modelFactory) {
+    embeddingModel = modelFactory.newEmbeddingModel();
   }
 
   @Override

@@ -26,10 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
  */
 
-package schemacrawler.tools.command.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
-import java.time.Duration;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -39,19 +38,18 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
 
 public class Langchain4JChatAssistant implements ChatAssistant {
@@ -79,23 +77,15 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     requireNonNull(catalog, "No catalog provided");
     requireNonNull(connection, "No connection provided");
 
+    final AiModelFactory modelFactory = AiModelFactoryUtility.chooseAiModelFactory(commandOptions);
+    if (modelFactory == null) {
+      throw new SchemaCrawlerException("No models found");
+    }
+
     toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
+    chatMemory = modelFactory.newChatMemory();
 
-    chatMemory =
-        TokenWindowChatMemory.builder()
-            .maxTokens(8_000, new OpenAiTokenizer(commandOptions.getModel()))
-            .build();
-
-    final ChatLanguageModel model =
-        OpenAiChatModel.builder()
-            .apiKey(commandOptions.getApiKey())
-            .modelName(commandOptions.getModel())
-            .temperature(0.2)
-            .timeout(Duration.ofSeconds(commandOptions.getTimeout()))
-            // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
-            .strictTools(true)
-            .build();
-
+    final ChatLanguageModel model = modelFactory.newChatLanguageModel();
     assistant =
         AiServices.builder(Assistant.class)
             .chatLanguageModel(model)
@@ -103,8 +93,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
             .chatMemory(chatMemory)
             .build();
 
-    final EmbeddingService embeddingService =
-        new Langchain4JEmbeddingService(commandOptions.getApiKey());
+    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(modelFactory);
     queryService = new QueryService(embeddingService);
     queryService.addTables(catalog.getTables());
 
