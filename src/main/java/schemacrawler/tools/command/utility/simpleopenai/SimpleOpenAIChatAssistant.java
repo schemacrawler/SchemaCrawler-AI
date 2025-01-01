@@ -67,7 +67,7 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
   private final FunctionExecutor functionExecutor;
   private final SimpleOpenAI service;
   private final QueryService queryService;
-  private final ChatHistory chatHistory;
+  private final ChatMemory chatMemory;
   private final boolean useMetadata;
   private final Catalog catalog;
   private final Connection connection;
@@ -83,6 +83,9 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
     this.connection = requireNonNull(connection, "No connection provided");
 
     functionExecutor = SimpleOpenAIUtility.toolsList();
+
+    chatMemory = new ChatMemory(commandOptions.getContext(), new ArrayList<>());
+
     service = SimpleOpenAIUtility.newService(commandOptions);
 
     final EmbeddingService embeddingService = new SimpleOpenAIEmbeddingService(service);
@@ -90,7 +93,6 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
     queryService.addTables(catalog.getTables());
 
     useMetadata = commandOptions.isUseMetadata();
-    chatHistory = new ChatHistory(commandOptions.getContext(), new ArrayList<>());
   }
 
   /**
@@ -105,9 +107,9 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
 
     try {
 
-      chatHistory.add(UserMessage.of(prompt));
+      chatMemory.add(UserMessage.of(prompt));
 
-      final List<ChatMessage> messages = chatHistory.toList();
+      final List<ChatMessage> messages = chatMemory.toList();
 
       if (useMetadata) {
         final Collection<String> chatMessages = queryService.query(prompt);
@@ -130,7 +132,7 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
       LOGGER.log(Level.INFO, new StringFormat("Token usage: %s", chatResponse.getUsage()));
       // Assume only one message was returned, since we asked for only one
       final ResponseMessage responseMessage = chatResponse.firstMessage();
-      chatHistory.add(responseMessage);
+      chatMemory.add(responseMessage);
 
       final List<ToolCall> toolCalls = responseMessage.getToolCalls();
       if (toolCalls != null && !toolCalls.isEmpty()) {
@@ -146,7 +148,7 @@ public final class SimpleOpenAIChatAssistant implements ChatAssistant {
                 functionCall.getName(), functionCall.getArguments(), catalog, connection);
         completions.add(ToolMessage.of(returnString, toolCall.getId()));
         // Add to chat history
-        chatHistory.add(ToolMessage.of(returnString, toolCall.getId()));
+        chatMemory.add(ToolMessage.of(returnString, toolCall.getId()));
       } else {
         completions.add(AssistantMessage.of(responseMessage.getContent()));
       }

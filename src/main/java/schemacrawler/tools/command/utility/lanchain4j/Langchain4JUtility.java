@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.utility.lanchain4j;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -35,6 +36,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -45,6 +47,8 @@ import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
 import dev.langchain4j.model.chat.request.json.JsonStringSchema;
+import dev.langchain4j.service.tool.ToolExecutor;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
@@ -56,29 +60,45 @@ public class Langchain4JUtility {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JUtility.class.getCanonicalName());
 
-  public static List<ToolSpecification> toolsList() throws Exception {
+  public static Map<ToolSpecification, ToolExecutor> toolsList(
+      final Catalog catalog, final Connection connection) {
 
-    final List<ToolSpecification> chatFunctions = new ArrayList<>();
+    final List<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
       if (functionDefinition.getFunctionType() != FunctionType.USER) {
         continue;
       }
 
-      final Class<?> parametersClass = functionDefinition.getParametersClass();
-      final Map<String, JsonNode> jsonSchema = jsonSchema(parametersClass);
-      final Map<String, JsonSchemaElement> properties = toProperties(jsonSchema);
-      final JsonObjectSchema parameters = JsonObjectSchema.builder().properties(properties).build();
+      try {
+        final Class<?> parametersClass = functionDefinition.getParametersClass();
+        final Map<String, JsonNode> jsonSchema = jsonSchema(parametersClass);
+        final Map<String, JsonSchemaElement> properties = toProperties(jsonSchema);
+        final JsonObjectSchema parameters =
+            JsonObjectSchema.builder().properties(properties).build();
 
-      final ToolSpecification toolSpecification =
-          ToolSpecification.builder()
-              .name(functionDefinition.getName())
-              .description(functionDefinition.getDescription())
-              .parameters(parameters)
-              .build();
-      chatFunctions.add(toolSpecification);
+        final ToolSpecification toolSpecification =
+            ToolSpecification.builder()
+                .name(functionDefinition.getName())
+                .description(functionDefinition.getDescription())
+                .parameters(parameters)
+                .build();
+        toolSpecifications.add(toolSpecification);
+      } catch (final Exception e) {
+        LOGGER.log(
+            Level.WARNING,
+            String.format("Could not load <%s>", functionDefinition.getFunctionName()),
+            e);
+      }
     }
-    return chatFunctions;
+
+    final ToolExecutor executor = new Langchain4JToolExecutor(catalog, connection);
+    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
+    for (final ToolSpecification toolSpecification : toolSpecifications) {
+      toolSpecificationsMap.put(toolSpecification, executor);
+    }
+
+    return toolSpecificationsMap;
   }
 
   private static Map<String, JsonNode> jsonSchema(final Class<?> parametersClass) throws Exception {
