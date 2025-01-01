@@ -29,6 +29,7 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.utility.lanchain4j;
 
 import java.sql.Connection;
+import java.time.Duration;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -89,8 +90,10 @@ public class Langchain4JChatAssistant implements ChatAssistant {
         OpenAiChatModel.builder()
             .apiKey(commandOptions.getApiKey())
             .modelName(commandOptions.getModel())
-            .strictTools(
-                true) // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
+            .temperature(0.2)
+            .timeout(Duration.ofSeconds(commandOptions.getTimeout()))
+            // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
+            .strictTools(true)
             .build();
 
     assistant =
