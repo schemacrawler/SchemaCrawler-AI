@@ -47,6 +47,11 @@ public final class LintFunctionExecutor
   }
 
   @Override
+  public boolean usesConnection() {
+    return true;
+  }
+
+  @Override
   protected Config createAdditionalConfig() {
     return new Config();
   }
@@ -74,10 +79,5 @@ public final class LintFunctionExecutor
   @Override
   protected Function<Catalog, Boolean> getResultsChecker() {
     return catalog -> !catalog.getTables().isEmpty();
-  }
-
-  @Override
-  public boolean usesConnection() {
-    return true;
   }
 }

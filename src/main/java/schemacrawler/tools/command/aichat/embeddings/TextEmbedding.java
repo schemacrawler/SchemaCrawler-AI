@@ -28,43 +28,27 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.embeddings;
 
-import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.math3.linear.ArrayRealVector;
 import org.apache.commons.math3.linear.RealVector;
 import static java.util.Objects.requireNonNull;
-import io.github.sashirestela.openai.domain.embedding.Embedding;
-import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
 
 public final class TextEmbedding {
 
   private final String text;
   private final long tokenCount;
-  private final ListRealVector embeddingVector;
+  private final RealVector embeddingVector;
 
   public TextEmbedding(final String text) {
     this.text = requireNonNull(text, "No text provided");
     tokenCount = 0;
-    embeddingVector = new ListRealVector();
+    embeddingVector = new ArrayRealVector();
   }
 
-  public TextEmbedding(final String text, final Embedding<EmbeddingFloat> embeddingResult) {
-    requireNonNull(embeddingResult, "No embedding result provided");
-
-    final List<EmbeddingFloat> data = embeddingResult.getData();
-    final List<Double> embedding;
-    if (data != null && data.size() == 1) {
-      embedding = data.get(0).getEmbedding();
-    } else {
-      embedding = new ArrayList<>();
-    }
-
-    this.text = requireNonNull(text, "No text provided");
-    tokenCount = embeddingResult.getUsage().getPromptTokens();
+  public TextEmbedding(final String text, final long tokenCount, final List<Double> embedding) {
+    this.text = text;
+    this.tokenCount = tokenCount;
     embeddingVector = new ListRealVector(embedding);
-  }
-
-  public List<Double> getEmbedding() {
-    return embeddingVector.getEmbedding();
   }
 
   public RealVector getEmbeddingVector() {
@@ -77,5 +61,16 @@ public final class TextEmbedding {
 
   public long getTokenCount() {
     return tokenCount;
+  }
+
+  @Override
+  public String toString() {
+    return "TextEmbedding [text="
+        + text
+        + ", tokenCount="
+        + tokenCount
+        + ", dimension="
+        + embeddingVector.getDimension()
+        + "]";
   }
 }

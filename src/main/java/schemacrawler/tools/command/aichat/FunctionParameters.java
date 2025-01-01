@@ -28,14 +28,4 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
-import io.github.sashirestela.openai.common.function.Functional;
-
-public interface FunctionParameters extends Functional {
-
-  @Override
-  default Object execute() {
-    throw new UnsupportedOperationException(
-        "Execute using executor on function definition; "
-            + "this method is provided for API compatibility");
-  }
-}
+public interface FunctionParameters {}

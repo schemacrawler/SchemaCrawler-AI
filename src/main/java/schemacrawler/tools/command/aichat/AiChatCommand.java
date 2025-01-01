@@ -28,10 +28,13 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
+import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import io.github.sashirestela.openai.SimpleOpenAI;
+import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.utility.lanchain4j.Langchain4JChatAssistant;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
@@ -50,13 +53,30 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   @Override
   public void checkAvailability() throws RuntimeException {
     LOGGER.log(Level.FINE, "Looking for OPENAI_API_KEY environmental variable");
-    SimpleOpenAI.builder().apiKey(commandOptions.getApiKey()).build();
+    final String apiKey = commandOptions.getApiKey();
+    if (isBlank(apiKey)) {
+      throw new SchemaCrawlerException("OPENAI_API_KEY not provided");
+    }
   }
 
   @Override
   public void execute() {
-    try (AiChatConsole aiChatConsole = new AiChatConsole(commandOptions, catalog, connection); ) {
-      aiChatConsole.console();
+    final String PROMPT = String.format("%nPrompt: ");
+    try (final ChatAssistant chatAssistant =
+            new Langchain4JChatAssistant(commandOptions, catalog, connection);
+        // new SimpleOpenAIChatAssistant(commandOptions, catalog, connection);
+        final Scanner scanner = new Scanner(System.in); ) {
+      while (true) {
+        System.out.print(PROMPT);
+        final String prompt = scanner.nextLine();
+        final String response = chatAssistant.chat(prompt);
+        System.out.println(response);
+        if (chatAssistant.shouldExit()) {
+          return;
+        }
+      }
+    } catch (final Exception e) {
+      throw new SchemaCrawlerException(e);
     }
   }
 

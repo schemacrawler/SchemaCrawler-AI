@@ -32,11 +32,14 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
+import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -107,6 +110,27 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
 
   public boolean hasFunctionDefinition(final String functionName) {
     return functionDefinitionRegistry.containsKey(functionName);
+  }
+
+  public Optional<FunctionDefinition<?>> lookupFunctionDefinition(final String functionName) {
+    requireNotBlank(functionName, "No function name provided");
+
+    FunctionDefinition<?> functionDefinitionToCall = null;
+    for (final FunctionDefinition<?> functionDefinition :
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+      if (functionDefinition.getFunctionType() != FunctionType.USER) {
+        continue;
+      }
+      if (functionDefinition.getName().equals(functionName)) {
+        functionDefinitionToCall = functionDefinition;
+        break;
+      }
+    }
+    if (functionDefinitionToCall == null) {
+      LOGGER.log(Level.INFO, new StringFormat("Function not found: %s", functionName));
+      return Optional.empty();
+    }
+    return Optional.of(functionDefinitionToCall);
   }
 
   /*

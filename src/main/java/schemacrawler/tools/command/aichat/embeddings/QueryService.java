@@ -34,9 +34,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
-import io.github.sashirestela.openai.SimpleOpenAI;
-import io.github.sashirestela.openai.domain.chat.ChatMessage;
-import io.github.sashirestela.openai.domain.chat.ChatMessage.SystemMessage;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.ConfigurationException;
 import us.fatehi.utility.IOUtility;
@@ -53,9 +50,8 @@ public final class QueryService {
   private final TableEmbeddingService tableEmbeddingService;
   private final TableSimilarityService tableSimilarityService;
 
-  public QueryService(final SimpleOpenAI service) {
-    requireNonNull(service, "No Open AI service provided");
-    final EmbeddingService embeddingService = new EmbeddingService(service);
+  public QueryService(final EmbeddingService embeddingService) {
+    requireNonNull(embeddingService, "No embedding service provided");
     tableEmbeddingService = new TableEmbeddingService(embeddingService);
     tableSimilarityService = new TableSimilarityService(embeddingService);
     metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
@@ -74,10 +70,16 @@ public final class QueryService {
     }
   }
 
-  public Collection<ChatMessage> query(final String prompt) {
+  /**
+   * Get a list of system messages that can provide background information for the AI agent.
+   *
+   * @param prompt User prompt
+   * @return System prompts and table metadata
+   */
+  public Collection<String> query(final String prompt) {
     LOGGER.log(Level.INFO, new StringFormat("Searching for tables matching prompt:%n%s", prompt));
 
-    final Collection<ChatMessage> messages = new ArrayList<>();
+    final Collection<String> messages = new ArrayList<>();
 
     final Collection<EmbeddedTable> matchedTables =
         tableSimilarityService.query(prompt, MAX_TOKENS);
@@ -86,10 +88,9 @@ public final class QueryService {
       return messages;
     }
 
-    messages.add(SystemMessage.of(metadataPriming));
+    messages.add(metadataPriming);
     for (final EmbeddedTable embeddedTable : matchedTables) {
-      final ChatMessage chatMessage = SystemMessage.of(embeddedTable.toJson());
-      messages.add(chatMessage);
+      messages.add(embeddedTable.toJson());
     }
     return messages;
   }
