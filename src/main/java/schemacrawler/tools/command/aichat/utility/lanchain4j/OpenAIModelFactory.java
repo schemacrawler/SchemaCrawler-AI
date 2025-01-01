@@ -59,7 +59,7 @@ public class OpenAIModelFactory implements AiModelFactory {
         return true;
       }
     }
-    return false;
+    return model.startsWith("gpt-");
   }
 
   @Override
