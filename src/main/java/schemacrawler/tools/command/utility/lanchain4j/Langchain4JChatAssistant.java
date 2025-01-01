@@ -31,15 +31,19 @@ package schemacrawler.tools.command.utility.lanchain4j;
 import java.sql.Connection;
 import java.util.Collection;
 import java.util.Map;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
+import dev.langchain4j.model.output.Response;
+import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
@@ -47,11 +51,12 @@ import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import us.fatehi.utility.string.StringFormat;
 
 public class Langchain4JChatAssistant implements ChatAssistant {
 
   interface Assistant {
-    String chat(String prompt);
+    Response<AiMessage> chat(String prompt);
   }
 
   private static final Logger LOGGER =
@@ -116,7 +121,11 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       chatMessages.stream().map(SystemMessage::from).forEach(message -> chatMemory.add(message));
     }
 
-    return assistant.chat(prompt);
+    final Response<AiMessage> response = assistant.chat(prompt);
+    final TokenUsage tokenUsage = response.tokenUsage();
+    LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
+
+    return response.content().text();
   }
 
   @Override
