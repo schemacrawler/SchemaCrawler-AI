@@ -38,7 +38,7 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
 
 public final class Langchain4JEmbeddingService implements EmbeddingService {
@@ -46,12 +46,10 @@ public final class Langchain4JEmbeddingService implements EmbeddingService {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JEmbeddingService.class.getCanonicalName());
 
-  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
-
   private final EmbeddingModel embeddingModel;
 
-  public Langchain4JEmbeddingService(final AiChatCommandOptions commandOptions) {
-    embeddingModel = OpenAIModelFactory.newEmbeddingModel(commandOptions);
+  public Langchain4JEmbeddingService(final AiModelFactory modelFactory) {
+    embeddingModel = modelFactory.newEmbeddingModel();
   }
 
   @Override

@@ -35,43 +35,57 @@ import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
+import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import us.fatehi.utility.UtilityMarker;
+import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 
-@UtilityMarker
-public class OpenAIModelFactory {
+public class OpenAIModelFactory implements AiModelFactory {
 
-  public static ChatLanguageModel newChatLanguageModel(final AiChatCommandOptions commandOptions) {
-    requireNonNull(commandOptions, "No AI Chat options provided");
+  private final AiChatCommandOptions aiChatCommandOptions;
+
+  public OpenAIModelFactory(final AiChatCommandOptions commandOptions) {
+    aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
+  }
+
+  @Override
+  public boolean isSupported() {
+    final String model = aiChatCommandOptions.getModel();
+    for (final OpenAiChatModelName openAiChatModelName : OpenAiChatModelName.values()) {
+      if (openAiChatModelName.name().equals(model)) {
+        return true;
+      }
+    }
+    return false;
+  }
+
+  @Override
+  public ChatLanguageModel newChatLanguageModel() {
     return OpenAiChatModel.builder()
-        .apiKey(commandOptions.getApiKey())
-        .modelName(commandOptions.getModel())
+        .apiKey(aiChatCommandOptions.getApiKey())
+        .modelName(aiChatCommandOptions.getModel())
         .temperature(0.2)
-        .timeout(Duration.ofSeconds(commandOptions.getTimeout()))
+        .timeout(Duration.ofSeconds(aiChatCommandOptions.getTimeout()))
         // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
         .strictTools(true)
         .build();
   }
 
-  public static ChatMemory newChatMemory(final AiChatCommandOptions commandOptions) {
-    requireNonNull(commandOptions, "No AI Chat options provided");
+  @Override
+  public ChatMemory newChatMemory() {
     return TokenWindowChatMemory.builder()
-        .maxTokens(8_000, new OpenAiTokenizer(commandOptions.getModel()))
+        .maxTokens(8_000, new OpenAiTokenizer(aiChatCommandOptions.getModel()))
         .build();
   }
 
-  public static EmbeddingModel newEmbeddingModel(final AiChatCommandOptions commandOptions) {
-    requireNonNull(commandOptions, "No AI Chat options provided");
+  @Override
+  public EmbeddingModel newEmbeddingModel() {
+    requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
     return OpenAiEmbeddingModel.builder()
-        .apiKey(commandOptions.getApiKey())
+        .apiKey(aiChatCommandOptions.getApiKey())
         .modelName(TEXT_EMBEDDING_MODEL)
         .build();
-  }
-
-  private OpenAIModelFactory() {
-    // Prevent instantiation
   }
 }

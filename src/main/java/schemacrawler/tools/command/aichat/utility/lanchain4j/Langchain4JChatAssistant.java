@@ -44,10 +44,12 @@ import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.service.AiServices;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
 
 public class Langchain4JChatAssistant implements ChatAssistant {
@@ -75,10 +77,15 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     requireNonNull(catalog, "No catalog provided");
     requireNonNull(connection, "No connection provided");
 
-    toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
-    chatMemory = OpenAIModelFactory.newChatMemory(commandOptions);
+    final AiModelFactory modelFactory = AiModelFactoryUtility.chooseAiModelFactory(commandOptions);
+    if (modelFactory == null) {
+      throw new SchemaCrawlerException("No models found");
+    }
 
-    final ChatLanguageModel model = OpenAIModelFactory.newChatLanguageModel(commandOptions);
+    toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
+    chatMemory = modelFactory.newChatMemory();
+
+    final ChatLanguageModel model = modelFactory.newChatLanguageModel();
     assistant =
         AiServices.builder(Assistant.class)
             .chatLanguageModel(model)
@@ -86,7 +93,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
             .chatMemory(chatMemory)
             .build();
 
-    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(commandOptions);
+    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(modelFactory);
     queryService = new QueryService(embeddingService);
     queryService.addTables(catalog.getTables());
 
