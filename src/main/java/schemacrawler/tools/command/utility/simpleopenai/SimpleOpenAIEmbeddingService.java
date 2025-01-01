@@ -26,33 +26,34 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package us.fatehi.example;
+package schemacrawler.tools.command.utility.simpleopenai;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.requireNotBlank;
-import dev.langchain4j.data.embedding.Embedding;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.output.Response;
+import io.github.sashirestela.openai.SimpleOpenAI;
+import io.github.sashirestela.openai.domain.embedding.Embedding;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingFloat;
+import io.github.sashirestela.openai.domain.embedding.EmbeddingRequest;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
 import us.fatehi.utility.string.StringFormat;
 
-public final class Langchain4JEmbeddingService implements EmbeddingService {
+public final class SimpleOpenAIEmbeddingService implements EmbeddingService {
 
   private static final Logger LOGGER =
-      Logger.getLogger(Langchain4JEmbeddingService.class.getCanonicalName());
+      Logger.getLogger(SimpleOpenAIEmbeddingService.class.getCanonicalName());
 
   private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
 
-  private final EmbeddingModel embeddingModel;
+  private final SimpleOpenAI service;
 
-  public Langchain4JEmbeddingService(final String apiKey) {
-    embeddingModel =
-        OpenAiEmbeddingModel.builder().apiKey(apiKey).modelName(TEXT_EMBEDDING_MODEL).build();
+  public SimpleOpenAIEmbeddingService(final SimpleOpenAI service) {
+    this.service = requireNonNull(service, "No Open AI service provided");
   }
 
   @Override
@@ -60,14 +61,23 @@ public final class Langchain4JEmbeddingService implements EmbeddingService {
     requireNotBlank(text, "No text provided");
 
     try {
-      final Response<Embedding> response = embeddingModel.embed(text);
-      final long tokenCount = response.tokenUsage().totalTokenCount();
-      final List<Double> embeddeding = new ArrayList<>();
-      final float[] vector = response.content().vector();
-      for (final float f : vector) {
-        embeddeding.add((double) f);
+      final EmbeddingRequest embeddingRequest =
+          EmbeddingRequest.builder()
+              .model(TEXT_EMBEDDING_MODEL)
+              .input(Collections.singletonList(text))
+              .build();
+      final Embedding<EmbeddingFloat> embeddingResult =
+          service.embeddings().create(embeddingRequest).get();
+      final long tokenCount = embeddingResult.getUsage().getPromptTokens();
+      final List<EmbeddingFloat> data = embeddingResult.getData();
+      final List<Double> embedding;
+      if (data != null && data.size() == 1) {
+        embedding = data.get(0).getEmbedding();
+      } else {
+        embedding = new ArrayList<>();
       }
-      return new TextEmbedding(text, tokenCount, embeddeding);
+
+      return new TextEmbedding(text, tokenCount, embedding);
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Could not embed text"));
     }

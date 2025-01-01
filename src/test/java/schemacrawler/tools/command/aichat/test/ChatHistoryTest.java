@@ -7,7 +7,7 @@ import java.util.List;
 import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.UserMessage;
-import schemacrawler.tools.command.simpleopenai.utility.ChatHistory;
+import schemacrawler.tools.command.utility.simpleopenai.ChatHistory;
 
 public class ChatHistoryTest {
 

@@ -37,7 +37,7 @@ import org.junit.jupiter.api.Test;
 import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
+import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIEmbeddingService;
 
 public class EmbeddingServiceTest {
 

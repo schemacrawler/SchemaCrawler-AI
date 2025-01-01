@@ -45,7 +45,7 @@ import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIEmbeddingService;
+import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIEmbeddingService;
 
 public class QueryServiceTest {
 

@@ -1,4 +1,4 @@
-package us.fatehi.example;
+package schemacrawler.tools.command.utility.lanchain4j;
 
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;

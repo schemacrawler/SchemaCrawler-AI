@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package us.fatehi.example;
+package schemacrawler.tools.command.utility.lanchain4j;
 
 import java.util.ArrayList;
 import java.util.HashMap;

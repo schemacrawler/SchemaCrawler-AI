@@ -1,4 +1,4 @@
-package us.fatehi.example;
+package schemacrawler.tools.command.utility.lanchain4j;
 
 import static dev.langchain4j.model.openai.OpenAiChatModelName.GPT_4_O_MINI;
 import java.util.HashMap;

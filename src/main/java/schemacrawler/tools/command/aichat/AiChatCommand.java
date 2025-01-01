@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIChatAssistant;
+import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIChatAssistant;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 

@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.simpleopenai.utility;
+package schemacrawler.tools.command.utility.simpleopenai;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;

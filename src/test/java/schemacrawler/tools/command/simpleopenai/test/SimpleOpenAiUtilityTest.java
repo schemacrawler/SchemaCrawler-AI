@@ -17,7 +17,7 @@ import io.github.sashirestela.openai.common.function.FunctionExecutor;
 import io.github.sashirestela.openai.domain.chat.ChatMessage;
 import io.github.sashirestela.openai.domain.chat.ChatMessage.AssistantMessage;
 import schemacrawler.test.utility.TestOutputStream;
-import schemacrawler.tools.command.simpleopenai.utility.SimpleOpenAIUtility;
+import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIUtility;
 
 public class SimpleOpenAiUtilityTest {
 
