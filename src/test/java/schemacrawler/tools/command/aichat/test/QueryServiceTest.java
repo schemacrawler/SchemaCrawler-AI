@@ -34,33 +34,30 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import io.github.sashirestela.openai.SimpleOpenAI;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
-import schemacrawler.tools.command.aichat.test.utility.AITestUtility;
-import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIEmbeddingService;
+import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
 
 public class QueryServiceTest {
 
-  private SimpleOpenAI service;
   private QueryService queryService;
   private Table table;
 
   @BeforeEach
   public void setUp() {
+
     final LightTable table = new LightTable(new SchemaReference("schema_name", ""), "table_name");
     table.addColumn("column_name");
     this.table = table;
 
-    service = AITestUtility.mockAiService(new ArrayList<>(Collections.singletonList(0.5)));
-    final EmbeddingService embeddingService = new SimpleOpenAIEmbeddingService(service);
+    final EmbeddingService embeddingService = text -> new TextEmbedding(text);
+
     queryService = new QueryService(embeddingService);
   }
 

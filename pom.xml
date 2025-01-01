@@ -37,6 +37,7 @@
       <artifactId>schemacrawler-lint</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j</artifactId>
@@ -44,19 +45,10 @@
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-anthropic</artifactId>
-      <version>1.0.0-alpha1</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-open-ai</artifactId>
       <version>1.0.0-alpha1</version>
     </dependency>
-    <dependency>
-      <groupId>io.github.sashirestela</groupId>
-      <artifactId>simple-openai</artifactId>
-      <version>3.13.0</version>
-    </dependency>
+
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-core</artifactId>
