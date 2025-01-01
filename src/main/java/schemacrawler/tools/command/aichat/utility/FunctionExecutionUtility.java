@@ -29,17 +29,15 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility;
 
 import java.sql.Connection;
-import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 import schemacrawler.tools.command.aichat.FunctionReturn;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.string.StringFormat;
 
@@ -49,52 +47,39 @@ public class FunctionExecutionUtility {
   private static final Logger LOGGER =
       Logger.getLogger(FunctionExecutionUtility.class.getCanonicalName());
 
-  public static <P extends FunctionParameters> String execute(
-      final String functionName,
-      final String arguments,
+  public static <P extends FunctionParameters> String executeFunction(
+      final FunctionDefinition<P> functionDefinition,
+      final P arguments,
       final Catalog catalog,
       final Connection connection) {
-    requireNotBlank(functionName, "No function name provided");
-    requireNotBlank(arguments, "No function arguments provided");
+    requireNonNull(functionDefinition, "No function definition provided");
+    requireNonNull(arguments, "No function arguments provided");
 
     try {
-      // Look up function definition
-      final Optional<FunctionDefinition<?>> lookedupFunctionDefinition =
-          FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-              .lookupFunctionDefinition(functionName);
-      final FunctionDefinition<P> functionDefinitionToCall;
-      if (lookedupFunctionDefinition.isEmpty()) {
-        return "";
-      }
-      functionDefinitionToCall = (FunctionDefinition<P>) lookedupFunctionDefinition.get();
-
-      // Build parameters
-      final Class<P> parametersClass = functionDefinitionToCall.getParametersClass();
-      final P parameters = instantiateParameters(arguments, parametersClass);
-
-      // Execute function
       FunctionReturn functionReturn;
       final schemacrawler.tools.command.aichat.FunctionExecutor<P> functionExecutor =
-          functionDefinitionToCall.newExecutor();
-      functionExecutor.configure(parameters);
+          functionDefinition.newExecutor();
+      functionExecutor.configure(arguments);
       functionExecutor.initialize();
       functionExecutor.setCatalog(catalog);
       if (functionExecutor.usesConnection()) {
         functionExecutor.setConnection(connection);
       }
       functionReturn = functionExecutor.call();
-      return functionReturn.get();
+      final String returnValue = functionReturn.get();
+      return returnValue;
     } catch (final Exception e) {
       LOGGER.log(
           Level.INFO,
           e,
           new StringFormat(
-              "Could not call function with arguments: %s(%s)", functionName, arguments));
+              "Could not call function with arguments: %s(%s)",
+              functionDefinition.getFunctionName(), arguments));
       return e.getMessage();
     }
   }
 
-  private static <P extends FunctionParameters> P instantiateParameters(
+  public static <P extends FunctionParameters> P instantiateArguments(
       final String arguments, final Class<P> parametersClass) throws Exception {
 
     final String functionArguments;
