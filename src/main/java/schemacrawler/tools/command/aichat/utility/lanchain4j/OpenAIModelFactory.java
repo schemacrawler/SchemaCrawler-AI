@@ -43,6 +43,8 @@ import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtili
 
 public class OpenAIModelFactory implements AiModelFactory {
 
+  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
+
   private final AiChatCommandOptions aiChatCommandOptions;
 
   public OpenAIModelFactory(final AiChatCommandOptions commandOptions) {
@@ -82,7 +84,6 @@ public class OpenAIModelFactory implements AiModelFactory {
   @Override
   public EmbeddingModel newEmbeddingModel() {
     requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
-    final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
     return OpenAiEmbeddingModel.builder()
         .apiKey(aiChatCommandOptions.getApiKey())
         .modelName(TEXT_EMBEDDING_MODEL)
