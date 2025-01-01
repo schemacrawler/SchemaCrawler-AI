@@ -31,10 +31,10 @@ public class SingleCompletion {
             .build();
 
     final List<ToolSpecification> toolSpecifications = Langchain4JUtility.toolsList();
-    final ToolExecutor exeuctor = new Langchain4JToolExecutor();
+    final ToolExecutor executor = new Langchain4JToolExecutor();
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final ToolSpecification toolSpecification : toolSpecifications) {
-      toolSpecificationsMap.put(toolSpecification, exeuctor);
+      toolSpecificationsMap.put(toolSpecification, executor);
     }
 
     final Assistant assistant =

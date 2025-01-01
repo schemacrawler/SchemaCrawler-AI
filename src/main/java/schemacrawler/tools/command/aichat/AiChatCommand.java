@@ -68,7 +68,8 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
       while (true) {
         System.out.print(PROMPT);
         final String prompt = scanner.nextLine();
-        chatAssistant.chat(prompt);
+        final String response = chatAssistant.chat(prompt);
+        System.out.println(response);
         if (chatAssistant.shouldExit()) {
           return;
         }
