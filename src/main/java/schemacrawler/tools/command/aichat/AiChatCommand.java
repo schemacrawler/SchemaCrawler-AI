@@ -34,7 +34,7 @@ import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.utility.simpleopenai.SimpleOpenAIChatAssistant;
+import schemacrawler.tools.command.utility.lanchain4j.Langchain4JChatAssistant;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
@@ -62,17 +62,19 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   @Override
   public void execute() {
     final String PROMPT = String.format("%nPrompt: ");
-    try (final SimpleOpenAIChatAssistant aiChatConsole =
-            new SimpleOpenAIChatAssistant(commandOptions, catalog, connection);
+    try (final ChatAssistant chatAssistant = new Langchain4JChatAssistant();
+        // new SimpleOpenAIChatAssistant(commandOptions, catalog, connection);
         final Scanner scanner = new Scanner(System.in); ) {
       while (true) {
         System.out.print(PROMPT);
         final String prompt = scanner.nextLine();
-        aiChatConsole.chat(prompt);
-        if (aiChatConsole.shouldExit()) {
+        chatAssistant.chat(prompt);
+        if (chatAssistant.shouldExit()) {
           return;
         }
       }
+    } catch (final Exception e) {
+      throw new SchemaCrawlerException(e);
     }
   }
 

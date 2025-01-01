@@ -60,7 +60,8 @@ import us.fatehi.utility.string.StringFormat;
 
 public final class SimpleOpenAIChatAssistant implements ChatAssistant {
 
-  private static final Logger LOGGER = Logger.getLogger(SimpleOpenAIChatAssistant.class.getCanonicalName());
+  private static final Logger LOGGER =
+      Logger.getLogger(SimpleOpenAIChatAssistant.class.getCanonicalName());
 
   private final AiChatCommandOptions commandOptions;
   private final FunctionExecutor functionExecutor;
