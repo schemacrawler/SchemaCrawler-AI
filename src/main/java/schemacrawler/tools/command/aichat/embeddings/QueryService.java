@@ -33,10 +33,8 @@ import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Table;
-import schemacrawler.schemacrawler.exceptions.ConfigurationException;
-import us.fatehi.utility.IOUtility;
+import schemacrawler.tools.command.serialize.model.TableDocument;
 import us.fatehi.utility.string.ObjectToStringFormat;
 import us.fatehi.utility.string.StringFormat;
 
@@ -46,7 +44,6 @@ public final class QueryService {
 
   private static final int MAX_TOKENS = 8_000; // Do not make this too small
 
-  private final String metadataPriming;
   private final TableEmbeddingService tableEmbeddingService;
   private final TableSimilarityService tableSimilarityService;
 
@@ -54,10 +51,6 @@ public final class QueryService {
     requireNonNull(embeddingService, "No embedding service provided");
     tableEmbeddingService = new TableEmbeddingService(embeddingService);
     tableSimilarityService = new TableSimilarityService(embeddingService);
-    metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
-    if (isBlank(metadataPriming)) {
-      throw new ConfigurationException("Could not load metadata priming text");
-    }
   }
 
   public void addTables(final Collection<Table> tables) {
@@ -76,22 +69,21 @@ public final class QueryService {
    * @param prompt User prompt
    * @return System prompts and table metadata
    */
-  public Collection<String> query(final String prompt) {
+  public Collection<TableDocument> query(final String prompt) {
     LOGGER.log(Level.INFO, new StringFormat("Searching for tables matching prompt:%n%s", prompt));
 
-    final Collection<String> messages = new ArrayList<>();
+    final Collection<TableDocument> tableDocuments = new ArrayList<>();
 
     final Collection<EmbeddedTable> matchedTables =
         tableSimilarityService.query(prompt, MAX_TOKENS);
     LOGGER.log(Level.CONFIG, new ObjectToStringFormat("Tables matching prompt", matchedTables));
     if (matchedTables.isEmpty()) {
-      return messages;
+      return tableDocuments;
     }
 
-    messages.add(metadataPriming);
     for (final EmbeddedTable embeddedTable : matchedTables) {
-      messages.add(embeddedTable.toJson());
+      tableDocuments.add(embeddedTable.getTableDocument());
     }
-    return messages;
+    return tableDocuments;
   }
 }

@@ -29,7 +29,6 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.test;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import java.util.ArrayList;
@@ -43,6 +42,7 @@ import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
+import schemacrawler.tools.command.serialize.model.TableDocument;
 
 public class QueryServiceTest {
 
@@ -66,10 +66,9 @@ public class QueryServiceTest {
     final String prompt = "test prompt";
     queryService.addTables(Arrays.asList(table));
 
-    final List<String> messages = new ArrayList<>(queryService.query(prompt));
+    final List<TableDocument> messages = new ArrayList<>(queryService.query(prompt));
 
-    assertThat(messages, hasSize(2));
-    assertThat(messages.get(0), startsWith("You are a helpful assistant"));
-    assertThat(messages.get(1), containsString("table_name"));
+    assertThat(messages, hasSize(1));
+    assertThat(messages.get(0).toJson(), containsString("table_name"));
   }
 }

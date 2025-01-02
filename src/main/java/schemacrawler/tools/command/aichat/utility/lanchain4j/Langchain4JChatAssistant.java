@@ -29,7 +29,6 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
-import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -46,10 +45,9 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
-import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
-import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
+import us.fatehi.utility.IOUtility;
 import us.fatehi.utility.string.StringFormat;
 
 public class Langchain4JChatAssistant implements ChatAssistant {
@@ -63,10 +61,9 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
   private final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap;
   private final Assistant assistant;
-  private final QueryService queryService;
   private final ChatMemory chatMemory;
-  private final boolean useMetadata;
   private boolean shouldExit;
+  private final String metadataPriming;
 
   public Langchain4JChatAssistant(
       final AiChatCommandOptions commandOptions,
@@ -77,6 +74,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     requireNonNull(catalog, "No catalog provided");
     requireNonNull(connection, "No connection provided");
 
+    metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
+
     final AiModelFactory modelFactory = AiModelFactoryUtility.chooseAiModelFactory(commandOptions);
     if (modelFactory == null) {
       throw new SchemaCrawlerException("No models found");
@@ -86,18 +85,15 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     chatMemory = modelFactory.newChatMemory();
 
     final ChatLanguageModel model = modelFactory.newChatLanguageModel();
+    final CatalogContentRetriever contentRetriever =
+        new CatalogContentRetriever(commandOptions, catalog);
     assistant =
         AiServices.builder(Assistant.class)
             .chatLanguageModel(model)
             .tools(toolSpecificationsMap)
             .chatMemory(chatMemory)
+            .contentRetriever(contentRetriever)
             .build();
-
-    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(modelFactory);
-    queryService = new QueryService(embeddingService);
-    queryService.addTables(catalog.getTables());
-
-    useMetadata = commandOptions.isUseMetadata();
   }
 
   /**
@@ -107,19 +103,19 @@ public class Langchain4JChatAssistant implements ChatAssistant {
    */
   @Override
   public String chat(final String prompt) {
+    try {
+      chatMemory.add(SystemMessage.from(metadataPriming));
 
-    if (useMetadata) {
-      final Collection<String> chatMessages = queryService.query(prompt);
-      chatMessages.stream().map(SystemMessage::from).forEach(message -> chatMemory.add(message));
+      final Response<AiMessage> response = assistant.chat(prompt);
+      final TokenUsage tokenUsage = response.tokenUsage();
+      LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
+
+      shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
+
+      return response.content().text();
+    } catch (final Exception e) {
+      return String.format("{ \"exception\"=\"%s\" }", e.getMessage());
     }
-
-    final Response<AiMessage> response = assistant.chat(prompt);
-    final TokenUsage tokenUsage = response.tokenUsage();
-    LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
-
-    shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
-
-    return response.content().text();
   }
 
   @Override

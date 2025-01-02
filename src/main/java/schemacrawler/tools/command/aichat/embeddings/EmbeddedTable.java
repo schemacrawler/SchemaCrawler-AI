@@ -49,6 +49,10 @@ public final class EmbeddedTable implements NamedObject {
     tableDocument = CompactCatalogUtility.getTableDocument(table, false);
   }
 
+  public TableDocument getTableDocument() {
+    return tableDocument;
+  }
+
   @Override
   public int compareTo(final NamedObject object) {
     return table.compareTo(object);
