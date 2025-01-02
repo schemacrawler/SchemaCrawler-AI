@@ -53,11 +53,12 @@ public class CatalogContentRetriever implements ContentRetriever {
     final Collection<TableDocument> tableDocuments = queryService.query(query.text());
     for (final TableDocument tableDocument : tableDocuments) {
       final Metadata metadata = new Metadata();
-      metadata.put("table", tableDocument.getTableName());
+      metadata.put("table-name", tableDocument.getTableName());
       metadata.put("table-schema", Utility.trimToEmpty(tableDocument.getSchema()));
       final TextSegment textSegment = TextSegment.from(tableDocument.toJson(), metadata);
       contents.add(Content.from(textSegment));
     }
+    System.err.print(String.format("Retrieving %s tables%n", contents.size() - 1));
     return contents;
   }
 

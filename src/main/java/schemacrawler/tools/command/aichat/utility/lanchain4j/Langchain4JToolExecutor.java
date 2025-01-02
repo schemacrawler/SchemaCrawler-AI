@@ -35,6 +35,9 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
         Level.INFO,
         new StringFormat(
             "id=%s, name=%s, args=%s%n", toolExecutionRequest.id(), functionName, arguments));
+    System.err.print(
+        String.format(
+            "id=%s, name=%s, args=%s%n", toolExecutionRequest.id(), functionName, arguments));
 
     requireNotBlank(functionName, "No function name provided");
     requireNotBlank(arguments, "No function arguments provided");
