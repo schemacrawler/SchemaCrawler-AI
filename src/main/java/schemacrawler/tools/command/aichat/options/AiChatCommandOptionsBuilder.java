@@ -39,7 +39,7 @@ public final class AiChatCommandOptionsBuilder
         ConfigOptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions> {
 
   private static final int DEFAULT_CONTEXT = 10;
-  private static final int DEFAULT_TIMEOUT = 10;
+  private static final int DEFAULT_TIMEOUT = 60;
 
   public static AiChatCommandOptionsBuilder builder() {
     return new AiChatCommandOptionsBuilder();
