@@ -29,14 +29,12 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
-import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
-import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.output.Response;
@@ -46,8 +44,6 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
-import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
-import schemacrawler.tools.command.aichat.embeddings.QueryService;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
@@ -63,9 +59,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
   private final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap;
   private final Assistant assistant;
-  private final QueryService queryService;
   private final ChatMemory chatMemory;
-  private final boolean useMetadata;
   private boolean shouldExit;
 
   public Langchain4JChatAssistant(
@@ -91,13 +85,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
             .chatLanguageModel(model)
             .tools(toolSpecificationsMap)
             .chatMemory(chatMemory)
+            .contentRetriever(new CatalogContentRetriever(commandOptions, catalog))
             .build();
-
-    final EmbeddingService embeddingService = new Langchain4JEmbeddingService(modelFactory);
-    queryService = new QueryService(embeddingService);
-    queryService.addTables(catalog.getTables());
-
-    useMetadata = commandOptions.isUseMetadata();
   }
 
   /**
@@ -107,11 +96,6 @@ public class Langchain4JChatAssistant implements ChatAssistant {
    */
   @Override
   public String chat(final String prompt) {
-
-    if (useMetadata) {
-      final Collection<String> chatMessages = queryService.query(prompt);
-      chatMessages.stream().map(SystemMessage::from).forEach(message -> chatMemory.add(message));
-    }
 
     final Response<AiMessage> response = assistant.chat(prompt);
     final TokenUsage tokenUsage = response.tokenUsage();
