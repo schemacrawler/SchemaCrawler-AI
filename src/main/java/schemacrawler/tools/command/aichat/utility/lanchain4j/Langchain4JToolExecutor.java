@@ -33,8 +33,8 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
     final String arguments = toolExecutionRequest.arguments();
     LOGGER.log(
         Level.INFO,
-        new StringFormat(
-            "id=%s, name=%s, args=%s%n", toolExecutionRequest.id(), functionName, arguments));
+        new StringFormat(String.format("Executing <%s> with <%s> %n", functionName, arguments)));
+    System.err.print(String.format("Executing <%s> with <%s> %n", functionName, arguments));
 
     requireNotBlank(functionName, "No function name provided");
     requireNotBlank(arguments, "No function arguments provided");
