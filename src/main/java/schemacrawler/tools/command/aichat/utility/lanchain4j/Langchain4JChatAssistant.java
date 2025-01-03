@@ -57,7 +57,6 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
 
-  private final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap;
   private final Assistant assistant;
   private final ChatMemory chatMemory;
   private boolean shouldExit;
@@ -76,10 +75,10 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       throw new SchemaCrawlerException("No models found");
     }
 
-    toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
     chatMemory = modelFactory.newChatMemory();
 
     final ChatLanguageModel model = modelFactory.newChatLanguageModel();
+    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = Langchain4JUtility.toolsList(catalog, connection);
     assistant =
         AiServices.builder(Assistant.class)
             .chatLanguageModel(model)
