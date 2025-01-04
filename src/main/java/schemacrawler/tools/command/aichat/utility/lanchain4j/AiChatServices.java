@@ -29,30 +29,23 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.Map;
 import static java.util.Objects.requireNonNull;
-import dev.langchain4j.data.message.AiMessage;
+import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.output.Response;
-import dev.langchain4j.model.output.TokenUsage;
+import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.service.AiServices;
+import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
-import us.fatehi.utility.string.StringFormat;
+import us.fatehi.utility.UtilityMarker;
 
-public class Langchain4JChatAssistant implements ChatAssistant {
+@UtilityMarker
+public final class AiChatServices {
 
-  private static final Logger LOGGER =
-      Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
-
-  private final AiChatService assistant;
-  private final ChatMemory chatMemory;
-  private boolean shouldExit;
-
-  public Langchain4JChatAssistant(
+  public static AiChatService aiChatServiceFrom(
       final AiChatCommandOptions commandOptions,
       final Catalog catalog,
       final Connection connection) {
@@ -66,32 +59,32 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       throw new SchemaCrawlerException("No models found");
     }
 
-    chatMemory = modelFactory.newChatMemory();
-    assistant = AiChatServices.aiChatServiceFrom(commandOptions, catalog, connection);
+    final ChatMemory chatMemory = modelFactory.newChatMemory();
+
+    final ChatLanguageModel model = modelFactory.newChatLanguageModel();
+    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap =
+        Langchain4JUtility.toolsList(catalog, connection);
+
+    final AiChatService aiChatService;
+
+    if (commandOptions.isUseMetadata()) {
+      final CatalogContentRetriever contentRetriever =
+          new CatalogContentRetriever(commandOptions, catalog);
+      aiChatService =
+          AiServices.builder(AiChatService.class)
+              .chatLanguageModel(model)
+              .chatMemory(chatMemory)
+              .tools(toolSpecificationsMap)
+              .contentRetriever(contentRetriever)
+              .build();
+    } else {
+      aiChatService = new NoMetadataAiChatService(model, chatMemory, toolSpecificationsMap);
+    }
+
+    return aiChatService;
   }
 
-  /**
-   * Send prompt to AI chat API and get completions.
-   *
-   * @param prompt Input prompt.
-   */
-  @Override
-  public String chat(final String prompt) {
-
-    final Response<AiMessage> response = assistant.chat(prompt);
-    final TokenUsage tokenUsage = response.tokenUsage();
-    LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
-
-    shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
-
-    return response.content().text();
-  }
-
-  @Override
-  public void close() {}
-
-  @Override
-  public boolean shouldExit() {
-    return shouldExit;
+  private AiChatServices() {
+    // Prevent instantiation
   }
 }
