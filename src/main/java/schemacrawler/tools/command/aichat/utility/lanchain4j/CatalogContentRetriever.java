@@ -6,6 +6,7 @@ import java.util.List;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.query.Query;
@@ -34,7 +35,8 @@ public class CatalogContentRetriever implements ContentRetriever {
 
     final boolean useMetadata = commandOptions.isUseMetadata();
     if (useMetadata) {
-      final EmbeddingService embeddingService = new Langchain4JEmbeddingService(modelFactory);
+      final EmbeddingModel newEmbeddingModel = modelFactory.newEmbeddingModel();
+      final EmbeddingService embeddingService = new Langchain4JEmbeddingService(newEmbeddingModel);
       queryService = new QueryService(embeddingService);
       queryService.addTables(catalog.getTables());
     } else {
@@ -50,10 +52,10 @@ public class CatalogContentRetriever implements ContentRetriever {
       return contents;
     }
     final Collection<String> tableDocuments = queryService.query(query.text());
+    System.err.print(String.format("Retrieving %s tables%n", tableDocuments.size()));
     for (final String tableDocument : tableDocuments) {
       contents.add(Content.from(tableDocument));
     }
-    System.err.print(String.format("Retrieving %s tables%n", contents.size() - 1));
     return contents;
   }
 

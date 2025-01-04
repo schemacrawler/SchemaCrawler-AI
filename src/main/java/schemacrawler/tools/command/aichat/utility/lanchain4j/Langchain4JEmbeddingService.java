@@ -32,13 +32,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import dev.langchain4j.data.embedding.Embedding;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import schemacrawler.tools.command.aichat.embeddings.EmbeddingService;
 import schemacrawler.tools.command.aichat.embeddings.TextEmbedding;
-import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.string.StringFormat;
 
 public final class Langchain4JEmbeddingService implements EmbeddingService {
@@ -48,8 +48,8 @@ public final class Langchain4JEmbeddingService implements EmbeddingService {
 
   private final EmbeddingModel embeddingModel;
 
-  public Langchain4JEmbeddingService(final AiModelFactory modelFactory) {
-    embeddingModel = modelFactory.newEmbeddingModel();
+  public Langchain4JEmbeddingService(final EmbeddingModel embeddingModel) {
+    this.embeddingModel = requireNonNull(embeddingModel, "No embedding model provided");
   }
 
   @Override

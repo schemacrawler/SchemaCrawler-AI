@@ -29,6 +29,7 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.functions;
 
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -48,7 +49,12 @@ public class DatabaseObjectListFunctionParameters implements FunctionParameters 
   }
 
   @JsonPropertyDescription(
-      "Type of database object to list, like tables, routines (that is, functions and stored procedures), schemas (that is, catalogs), sequences, or synonyms.")
+      """
+      Type of database object to list, like tables (including views),
+      routines (that is, functions and stored procedures),
+      schemas (that is, catalogs), sequences, or synonyms.
+      """)
+  @JsonProperty(defaultValue = "ALL", required = true)
   private DatabaseObjectType databaseObjectType;
 
   public DatabaseObjectType getDatabaseObjectType() {

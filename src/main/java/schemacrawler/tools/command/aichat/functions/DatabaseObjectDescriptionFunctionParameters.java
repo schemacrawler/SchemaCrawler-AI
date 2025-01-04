@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -46,11 +47,20 @@ public class DatabaseObjectDescriptionFunctionParameters implements FunctionPara
     ;
   }
 
-  @JsonPropertyDescription("Name of database object to describe.")
+  @JsonPropertyDescription(
+      """
+      Name of database object to describe.
+      Use an empty string if all database objects are requested.
+      """)
+  @JsonProperty(defaultValue = "", required = false)
   private String databaseObjectName;
 
   @JsonPropertyDescription(
-      "Indicates what details of database objects to show - sequences, synonyms, or routines (that is, stored procedures or functions).")
+      """
+      Indicates the type of database objects to show - sequences, synonyms,
+      or routines (that is, stored procedures or functions).
+      """)
+  @JsonProperty(defaultValue = "NONE", required = true)
   private DatabaseObjectsScope databaseObjectsScope;
 
   public String getDatabaseObjectName() {

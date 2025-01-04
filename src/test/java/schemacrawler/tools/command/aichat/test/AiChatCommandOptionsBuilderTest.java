@@ -80,7 +80,7 @@ public class AiChatCommandOptionsBuilderTest {
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
 
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(10));
+    assertThat(optionsBuilder.toOptions().getTimeout(), is(60));
     optionsBuilder.withTimeout(20);
     assertThat(optionsBuilder.toOptions().getTimeout(), is(20));
     optionsBuilder.withTimeout(0);

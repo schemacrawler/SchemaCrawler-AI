@@ -14,7 +14,7 @@ Optional, defaults to 'gpt-4o-mini'
 
 timeout
 Number of seconds to timeout a request if no response is received
-Optional, defaults to 10
+Optional, defaults to 60
 
 context
 Number of chat messages (not tokens) to maintain as chat context
