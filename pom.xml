@@ -73,7 +73,7 @@
     <dependency>
       <groupId>com.fasterxml.jackson.module</groupId>
       <artifactId>jackson-module-jsonSchema</artifactId>
-      <scope>provided</scope>
+      <!-- <scope>provided</scope> -->
     </dependency>
 
     <dependency>
