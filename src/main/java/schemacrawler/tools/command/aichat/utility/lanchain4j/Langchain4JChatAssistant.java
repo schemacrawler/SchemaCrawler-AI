@@ -30,6 +30,7 @@ package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -45,6 +46,7 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.rag.content.Content;
@@ -92,7 +94,13 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     model = modelFactory.newChatLanguageModel();
     chatMemory = modelFactory.newChatMemory();
 
-    contentRetriever = new CatalogContentRetriever(aiChatOptions, catalog);
+    final boolean useMetadata = aiChatOptions.isUseMetadata();
+    if (useMetadata) {
+      final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
+      contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);
+    } else {
+      contentRetriever = query -> Collections.emptyList();
+    }
 
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap =
         Langchain4JUtility.toolsList(catalog, connection);
