@@ -33,7 +33,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Set;
@@ -43,10 +42,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import static java.util.Objects.requireNonNull;
 import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.data.message.ChatMessage;
-import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
 import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
@@ -55,7 +51,6 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
-import schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
@@ -65,8 +60,25 @@ public class Langchain4JUtility {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JUtility.class.getCanonicalName());
 
-  public static Map<ToolSpecification, ToolExecutor> toolsList(
+  public static Map<String, ToolExecutor> toolExecutors(
       final Catalog catalog, final Connection connection) {
+
+    final Map<String, ToolExecutor> toolSpecificationsMap = new HashMap<>();
+    for (final FunctionDefinition<?> functionDefinition :
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+      if (functionDefinition.getFunctionType() != FunctionType.USER) {
+        continue;
+      }
+      final String functionName = functionDefinition.getName();
+
+      final ToolExecutor executor = new Langchain4JToolExecutor(functionName, catalog, connection);
+      toolSpecificationsMap.put(functionName, executor);
+    }
+
+    return toolSpecificationsMap;
+  }
+
+  public static List<ToolSpecification> tools() {
 
     final List<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
@@ -91,20 +103,11 @@ public class Langchain4JUtility {
         toolSpecifications.add(toolSpecification);
       } catch (final Exception e) {
         LOGGER.log(
-            Level.WARNING,
-            String.format("Could not load <%s>", functionDefinition.getFunctionName()),
-            e);
+            Level.WARNING, String.format("Could not load <%s>", functionDefinition.getName()), e);
       }
     }
 
-    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
-    for (final ToolSpecification toolSpecification : toolSpecifications) {
-      final ToolExecutor executor =
-          new Langchain4JToolExecutor(toolSpecification.name(), catalog, connection);
-      toolSpecificationsMap.put(toolSpecification, executor);
-    }
-
-    return toolSpecificationsMap;
+    return toolSpecifications;
   }
 
   private static Map<String, JsonNode> jsonSchema(final Class<?> parametersClass) throws Exception {

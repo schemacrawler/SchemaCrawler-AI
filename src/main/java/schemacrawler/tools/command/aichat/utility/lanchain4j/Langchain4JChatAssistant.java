@@ -31,10 +31,8 @@ package schemacrawler.tools.command.aichat.utility.lanchain4j;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
@@ -102,14 +100,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       contentRetriever = query -> Collections.emptyList();
     }
 
-    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap =
-        Langchain4JUtility.toolsList(catalog, connection);
-    toolSpecifications = new ArrayList<>(toolSpecificationsMap.keySet());
-    toolExecutors = new HashMap<>();
-    for (final Entry<ToolSpecification, ToolExecutor> toolSpecification :
-        toolSpecificationsMap.entrySet()) {
-      toolExecutors.put(toolSpecification.getKey().name(), toolSpecification.getValue());
-    }
+    toolSpecifications = Langchain4JUtility.tools();
+    toolExecutors = Langchain4JUtility.toolExecutors(catalog, connection);
 
     metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
   }

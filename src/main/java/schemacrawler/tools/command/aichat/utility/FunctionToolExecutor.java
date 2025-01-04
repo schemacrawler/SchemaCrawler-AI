@@ -73,7 +73,7 @@ public final class FunctionToolExecutor {
     if (functionDefinition == null) {
       return "unspecified-function";
     }
-    return functionDefinition.getFunctionName().getName();
+    return functionDefinition.getName();
   }
 
   @Override
@@ -103,7 +103,7 @@ public final class FunctionToolExecutor {
           e,
           new StringFormat(
               "Could not call function with arguments: %s(%s)",
-              functionDefinition.getFunctionName(), arguments));
+              functionDefinition.getName(), arguments));
       return e.getMessage();
     }
   }
