@@ -56,7 +56,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
             "timeout",
             Integer.class,
             "Number of seconds to timeout a request if no response is received",
-            "Optional, defaults to 10")
+            "Optional, defaults to 60")
         .addOption(
             "context",
             Integer.class,
