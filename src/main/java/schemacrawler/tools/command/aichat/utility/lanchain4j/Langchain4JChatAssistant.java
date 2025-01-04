@@ -62,7 +62,7 @@ import us.fatehi.utility.string.StringFormat;
 public class Langchain4JChatAssistant implements ChatAssistant {
 
   private static final AiMessage TOOL_CALL_MEMORY_MESSAGE =
-      AiMessage.from("(Information on tool calls is redacted for security purposes.)");
+      AiMessage.from("(Information on tool calls is redacted for security reasons.)");
 
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
@@ -121,12 +121,12 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       messages.add(0, systemMessage);
 
       // Call the AI service
-      final Response<AiMessage> responseMessage = model.generate(messages, toolSpecifications);
-      final TokenUsage tokenUsage = responseMessage.tokenUsage();
+      final Response<AiMessage> response = model.generate(messages, toolSpecifications);
+      final TokenUsage tokenUsage = response.tokenUsage();
       LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
 
-      final AiMessage aiMessage = responseMessage.content();
-      final String response;
+      final AiMessage aiMessage = response.content();
+      final String answer;
       if (aiMessage.hasToolExecutionRequests()) {
         final StringBuilder buffer = new StringBuilder();
         final List<ToolExecutionRequest> executionRequests = aiMessage.toolExecutionRequests();
@@ -136,16 +136,16 @@ public class Langchain4JChatAssistant implements ChatAssistant {
           buffer.append(toolExecutionResult);
         }
         chatMemory.add(TOOL_CALL_MEMORY_MESSAGE);
-        response = buffer.toString();
+        answer = buffer.toString();
       } else {
         // If no tools need to be executed, return as-is
         chatMemory.add(aiMessage);
-        response = aiMessage.text();
+        answer = aiMessage.text();
       }
 
       shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
 
-      return response;
+      return answer;
 
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Exception handling prompt:%n%s", prompt));
