@@ -139,7 +139,9 @@ public class Langchain4JChatAssistant implements ChatAssistant {
         final StringBuilder buffer = new StringBuilder();
         final List<ToolExecutionRequest> executionRequests = aiMessage.toolExecutionRequests();
         for (final ToolExecutionRequest toolExecutionRequest : executionRequests) {
-          final ToolExecutor toolExecutor = toolExecutors.get(toolExecutionRequest.name());
+          final String functionName = toolExecutionRequest.name();
+          shouldExit = !shouldExit && functionName.startsWith("exit");
+          final ToolExecutor toolExecutor = toolExecutors.get(functionName);
           final String toolExecutionResult = toolExecutor.execute(toolExecutionRequest, null);
           buffer.append(toolExecutionResult);
         }
@@ -150,8 +152,6 @@ public class Langchain4JChatAssistant implements ChatAssistant {
         chatMemory.add(aiMessage);
         answer = aiMessage.text();
       }
-
-      shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
 
       return answer;
 

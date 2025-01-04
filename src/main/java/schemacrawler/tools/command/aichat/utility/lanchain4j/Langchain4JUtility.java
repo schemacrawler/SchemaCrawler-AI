@@ -65,21 +65,6 @@ public class Langchain4JUtility {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JUtility.class.getCanonicalName());
 
-  public static boolean isExitCondition(final List<ChatMessage> completions) {
-    requireNonNull(completions, "No completions provided");
-    final String exitFunctionName = new ExitFunctionDefinition().getName();
-    for (final ListIterator<ChatMessage> iterator = completions.listIterator(completions.size());
-        iterator.hasPrevious(); ) {
-      if (iterator.previous()
-          instanceof final ToolExecutionResultMessage toolExecutionResultMessage) {
-        if (toolExecutionResultMessage.toolName().equals(exitFunctionName)) {
-          return true;
-        }
-      }
-    }
-    return false;
-  }
-
   public static Map<ToolSpecification, ToolExecutor> toolsList(
       final Catalog catalog, final Connection connection) {
 
