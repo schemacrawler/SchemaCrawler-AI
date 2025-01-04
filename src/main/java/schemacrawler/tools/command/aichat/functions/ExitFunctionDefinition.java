@@ -32,7 +32,10 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoP
 
   @Override
   public String getDescription() {
-    return "Called when the user is done with their research, wants to end the chat session.";
+    return """
+        Indicate when the user is done with their research,
+        wants to end the chat session.
+        """;
   }
 
   @Override

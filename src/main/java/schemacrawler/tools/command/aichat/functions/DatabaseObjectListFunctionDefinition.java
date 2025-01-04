@@ -33,8 +33,10 @@ public final class DatabaseObjectListFunctionDefinition
 
   @Override
   public String getDescription() {
-    return "Lists database objects like tables, routines "
-        + "(that is, functions and stored procedures), sequences, or synonyms.";
+    return """
+        List database objects like tables, routines
+        (that is, functions and stored procedures), sequences, or synonyms.
+        """;
   }
 
   @Override

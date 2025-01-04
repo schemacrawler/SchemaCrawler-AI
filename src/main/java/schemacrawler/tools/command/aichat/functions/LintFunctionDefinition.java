@@ -33,9 +33,11 @@ public final class LintFunctionDefinition
 
   @Override
   public String getDescription() {
-    return "Lint database schemas. "
-        + "Find design issues with specific tables, or with the entire database."
-        + "Find problems with database design, such as no indexes on foreign keys.";
+    return """
+        Lint database schemas.
+        Find design issues with specific tables, or with the entire database.
+        Find problems with database design, such as no indexes on foreign keys.
+        """;
   }
 
   @Override

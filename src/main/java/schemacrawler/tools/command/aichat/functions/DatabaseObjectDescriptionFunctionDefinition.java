@@ -33,8 +33,10 @@ public final class DatabaseObjectDescriptionFunctionDefinition
 
   @Override
   public String getDescription() {
-    return "Gets the details and description of database objects like routines "
-        + "(that is, functions and stored procedures), sequences, or synonyms.";
+    return """
+        Get the details and description of database objects like routines
+        (that is, functions and stored procedures), sequences, or synonyms.
+        """;
   }
 
   @Override
