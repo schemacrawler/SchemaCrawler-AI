@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,11 +48,20 @@ public class TableDecriptionFunctionParameters implements FunctionParameters {
     TRIGGERS;
   }
 
-  @JsonPropertyDescription("Name of database table or view to describe.")
+  @JsonPropertyDescription(
+      """
+      Name of database table or view to describe.
+      Use an empty string if all tables are requested.
+      """)
+  @JsonProperty(defaultValue = "", required = false)
   private String tableName;
 
   @JsonPropertyDescription(
-      "Indicates what details of the database table or view to show - columns, primary key, indexes, foreign keys, or triggers.")
+      """
+      Indicates what details of the database table or view to show -
+      columns, primary key, indexes, foreign keys, or triggers.
+      """)
+  @JsonProperty(defaultValue = "DEFAULT", required = true)
   private TableDescriptionScope descriptionScope;
 
   public TableDescriptionScope getDescriptionScope() {

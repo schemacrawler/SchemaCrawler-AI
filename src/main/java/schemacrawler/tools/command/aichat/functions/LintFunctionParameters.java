@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -38,7 +39,12 @@ import schemacrawler.tools.command.aichat.FunctionParameters;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public class LintFunctionParameters implements FunctionParameters {
 
-  @JsonPropertyDescription("Name of database table for which to find design issues.")
+  @JsonPropertyDescription(
+      """
+      Name of database table for which to find design issues.
+      Use an empty string if all tables are requested.
+      """)
+  @JsonProperty(defaultValue = "", required = false)
   private String tableName;
 
   public String getTableName() {

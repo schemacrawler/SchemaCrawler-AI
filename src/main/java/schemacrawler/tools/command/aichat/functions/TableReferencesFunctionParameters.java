@@ -45,12 +45,21 @@ public class TableReferencesFunctionParameters implements FunctionParameters {
     CHILD;
   }
 
-  @JsonPropertyDescription("Name of database table for which to show references.")
-  @JsonProperty(required = true)
+  @JsonPropertyDescription(
+      """
+      Name of database table for which to show references.
+      Use an empty string if all tables are requested.
+      """)
+  @JsonProperty(defaultValue = "", required = false)
   private String tableName;
 
   @JsonPropertyDescription(
-      "The type of related tables requested - either child tables or parent tables, or both types (all relationships).")
+      """
+      The type of related tables requested -
+      either child tables or parent tables, or both types
+      (all relationships).
+      """)
+  @JsonProperty(defaultValue = "ALL", required = true)
   private TableReferenceType tableReferenceType;
 
   public String getTableName() {
