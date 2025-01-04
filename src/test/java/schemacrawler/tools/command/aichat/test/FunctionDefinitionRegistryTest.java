@@ -70,12 +70,12 @@ public class FunctionDefinitionRegistryTest {
     assertThat(
         names,
         containsInAnyOrder(
-            "table-decription-function-definition",
-            "database-object-list-function-definition",
-            "table-references-function-definition",
-            "exit-function-definition",
-            "database-object-description-function-definition",
-            "lint-function-definition"));
+            "table-decription",
+            "database-object-list",
+            "table-references",
+            "exit",
+            "database-object-description",
+            "lint"));
   }
 
   @Test
