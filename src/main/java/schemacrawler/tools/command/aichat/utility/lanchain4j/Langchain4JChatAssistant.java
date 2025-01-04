@@ -149,7 +149,6 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Exception handling prompt:%n%s", prompt));
-      e.printStackTrace(System.err);
       return "There was a problem. Please try again.";
     }
   }

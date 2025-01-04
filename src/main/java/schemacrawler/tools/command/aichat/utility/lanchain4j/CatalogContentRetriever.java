@@ -36,7 +36,6 @@ public class CatalogContentRetriever implements ContentRetriever {
     final List<Content> contents = new ArrayList<>();
     contents.add(databaseInfoContent);
     final Collection<String> tableDocuments = queryService.query(query.text());
-    System.err.print(String.format("Retrieving %s tables%n", tableDocuments.size()));
     for (final String tableDocument : tableDocuments) {
       contents.add(Content.from(tableDocument));
     }

@@ -48,7 +48,6 @@ public final class FunctionToolExecutor {
         Level.INFO,
         new StringFormat(
             String.format("Executing <%s> with <%s> %n", functionName, argumentsString)));
-    System.err.print(String.format("Executing <%s> with <%s> %n", functionName, argumentsString));
 
     if (functionDefinition == null) {
       return "";
