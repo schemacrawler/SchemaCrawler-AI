@@ -112,9 +112,10 @@ public class Langchain4JUtility {
       }
     }
 
-    final ToolExecutor executor = new Langchain4JToolExecutor(catalog, connection);
     final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final ToolSpecification toolSpecification : toolSpecifications) {
+      final ToolExecutor executor =
+          new Langchain4JToolExecutor(toolSpecification.name(), catalog, connection);
       toolSpecificationsMap.put(toolSpecification, executor);
     }
 

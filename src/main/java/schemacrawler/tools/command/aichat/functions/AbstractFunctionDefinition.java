@@ -43,7 +43,9 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public final String getName() {
-    return new KebabCaseStrategy().translate(this.getClass().getSimpleName());
+    return new KebabCaseStrategy()
+        .translate(this.getClass().getSimpleName())
+        .replace("-function-definition", "");
   }
 
   @Override
