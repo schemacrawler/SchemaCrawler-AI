@@ -29,12 +29,15 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.functions;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
+
+  private String toString;
 
   @JsonIgnore
   @Override
@@ -43,15 +46,33 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public final String getName() {
-    return new KebabCaseStrategy().translate(this.getClass().getSimpleName());
+    return new KebabCaseStrategy()
+        .translate(this.getClass().getSimpleName())
+        .replace("-function-definition", "");
   }
 
   @Override
   public String toString() {
-    return String.format(
-        "function %s(%s)%n\"%s\"",
-        getName(),
-        new KebabCaseStrategy().translate(getParametersClass().getSimpleName()),
-        getDescription());
+    buildToString();
+    return toString;
+  }
+
+  private void buildToString() {
+    if (toString != null) {
+      return;
+    }
+
+    String parameters;
+    try {
+      final FunctionParameters parametersObject =
+          getParametersClass().getDeclaredConstructor().newInstance();
+      parameters = new ObjectMapper().writeValueAsString(parametersObject);
+    } catch (final Exception e) {
+      parameters =
+          new KebabCaseStrategy()
+              .translate(getParametersClass().getSimpleName())
+              .replace("-function-parameters", "");
+    }
+    toString = String.format("function %s%n\"%s\"%n%s", getName(), getDescription(), parameters);
   }
 }

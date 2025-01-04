@@ -33,8 +33,10 @@ public final class TableDecriptionFunctionDefinition
 
   @Override
   public String getDescription() {
-    return "Gets the details and description of database tables or views, "
-        + "including columns, foreign keys, indexes and triggers.";
+    return """
+        Get the details and description of database tables or views,
+        including columns, foreign keys, indexes and triggers.
+        """;
   }
 
   @Override

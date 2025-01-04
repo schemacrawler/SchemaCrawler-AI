@@ -30,10 +30,9 @@ package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.sql.Connection;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
@@ -45,6 +44,7 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.rag.content.Content;
@@ -62,7 +62,7 @@ import us.fatehi.utility.string.StringFormat;
 public class Langchain4JChatAssistant implements ChatAssistant {
 
   private static final AiMessage TOOL_CALL_MEMORY_MESSAGE =
-      AiMessage.from("(Information on tool calls is redacted for security purposes.)");
+      AiMessage.from("(Information on tool calls is redacted for security reasons.)");
 
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
@@ -92,16 +92,16 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     model = modelFactory.newChatLanguageModel();
     chatMemory = modelFactory.newChatMemory();
 
-    contentRetriever = new CatalogContentRetriever(aiChatOptions, catalog);
-
-    final Map<ToolSpecification, ToolExecutor> toolSpecificationsMap =
-        Langchain4JUtility.toolsList(catalog, connection);
-    toolSpecifications = new ArrayList<>(toolSpecificationsMap.keySet());
-    toolExecutors = new HashMap<>();
-    for (final Entry<ToolSpecification, ToolExecutor> toolSpecification :
-        toolSpecificationsMap.entrySet()) {
-      toolExecutors.put(toolSpecification.getKey().name(), toolSpecification.getValue());
+    final boolean useMetadata = aiChatOptions.isUseMetadata();
+    if (useMetadata) {
+      final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
+      contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);
+    } else {
+      contentRetriever = query -> Collections.emptyList();
     }
+
+    toolSpecifications = Langchain4JUtility.tools();
+    toolExecutors = Langchain4JUtility.toolExecutors(catalog, connection);
 
     metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
   }
@@ -121,31 +121,31 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       messages.add(0, systemMessage);
 
       // Call the AI service
-      final Response<AiMessage> responseMessage = model.generate(messages, toolSpecifications);
-      final TokenUsage tokenUsage = responseMessage.tokenUsage();
+      final Response<AiMessage> response = model.generate(messages, toolSpecifications);
+      final TokenUsage tokenUsage = response.tokenUsage();
       LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
 
-      final AiMessage aiMessage = responseMessage.content();
-      final String response;
+      final AiMessage aiMessage = response.content();
+      final String answer;
       if (aiMessage.hasToolExecutionRequests()) {
         final StringBuilder buffer = new StringBuilder();
         final List<ToolExecutionRequest> executionRequests = aiMessage.toolExecutionRequests();
         for (final ToolExecutionRequest toolExecutionRequest : executionRequests) {
-          final ToolExecutor toolExecutor = toolExecutors.get(toolExecutionRequest.name());
+          final String functionName = toolExecutionRequest.name();
+          shouldExit = !shouldExit && functionName.startsWith("exit");
+          final ToolExecutor toolExecutor = toolExecutors.get(functionName);
           final String toolExecutionResult = toolExecutor.execute(toolExecutionRequest, null);
           buffer.append(toolExecutionResult);
         }
         chatMemory.add(TOOL_CALL_MEMORY_MESSAGE);
-        response = buffer.toString();
+        answer = buffer.toString();
       } else {
         // If no tools need to be executed, return as-is
         chatMemory.add(aiMessage);
-        response = aiMessage.text();
+        answer = aiMessage.text();
       }
 
-      shouldExit = Langchain4JUtility.isExitCondition(chatMemory.messages());
-
-      return response;
+      return answer;
 
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Exception handling prompt:%n%s", prompt));
