@@ -52,10 +52,10 @@ public class CatalogContentRetriever implements ContentRetriever {
       return contents;
     }
     final Collection<String> tableDocuments = queryService.query(query.text());
+    System.err.print(String.format("Retrieving %s tables%n", tableDocuments.size()));
     for (final String tableDocument : tableDocuments) {
       contents.add(Content.from(tableDocument));
     }
-    System.err.print(String.format("Retrieving %s tables%n", contents.size() - 1));
     return contents;
   }
 
