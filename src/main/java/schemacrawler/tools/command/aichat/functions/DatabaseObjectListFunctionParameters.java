@@ -38,7 +38,16 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class DatabaseObjectListFunctionParameters implements FunctionParameters {
+public record DatabaseObjectListFunctionParameters(
+    @JsonPropertyDescription(
+            """
+        Type of database object to list, like tables (including views),
+        routines (that is, functions and stored procedures),
+        schemas (that is, catalogs), sequences, or synonyms.
+        """)
+        @JsonProperty(defaultValue = "ALL", required = true)
+        DatabaseObjectType databaseObjectType)
+    implements FunctionParameters {
 
   public enum DatabaseObjectType {
     ALL,
@@ -48,24 +57,10 @@ public class DatabaseObjectListFunctionParameters implements FunctionParameters 
     SYNONYMS;
   }
 
-  @JsonPropertyDescription(
-      """
-      Type of database object to list, like tables (including views),
-      routines (that is, functions and stored procedures),
-      schemas (that is, catalogs), sequences, or synonyms.
-      """)
-  @JsonProperty(defaultValue = "ALL", required = true)
-  private DatabaseObjectType databaseObjectType;
-
-  public DatabaseObjectType getDatabaseObjectType() {
+  public DatabaseObjectListFunctionParameters {
     if (databaseObjectType == null) {
-      return ALL;
+      databaseObjectType = ALL;
     }
-    return databaseObjectType;
-  }
-
-  public void setDatabaseObjectType(final DatabaseObjectType databaseObjectType) {
-    this.databaseObjectType = databaseObjectType;
   }
 
   @Override
@@ -73,7 +68,7 @@ public class DatabaseObjectListFunctionParameters implements FunctionParameters 
     try {
       return new ObjectMapper().writeValueAsString(this);
     } catch (final JsonProcessingException e) {
-      return super.toString();
+      return "";
     }
   }
 }

@@ -87,12 +87,12 @@ public class RefilterTest {
 
   @Test
   public void refilterTest(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args1 = new DatabaseObjectListFunctionParameters();
-    args1.setDatabaseObjectType(SEQUENCES);
+    final DatabaseObjectListFunctionParameters args1 =
+        new DatabaseObjectListFunctionParameters(SEQUENCES);
     databaseObjects(testContext.testMethodFullName() + ".sequences", args1);
 
-    final DatabaseObjectListFunctionParameters args2 = new DatabaseObjectListFunctionParameters();
-    args2.setDatabaseObjectType(TABLES);
+    final DatabaseObjectListFunctionParameters args2 =
+        new DatabaseObjectListFunctionParameters(TABLES);
     databaseObjects(testContext.testMethodFullName() + ".tables", args2);
   }
 

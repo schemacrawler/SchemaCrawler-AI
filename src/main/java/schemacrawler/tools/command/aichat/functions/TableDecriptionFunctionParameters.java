@@ -37,7 +37,22 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class TableDecriptionFunctionParameters implements FunctionParameters {
+public record TableDecriptionFunctionParameters(
+    @JsonPropertyDescription(
+            """
+        Name of database table or view to describe.
+        Use an empty string if all tables are requested.
+        """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableName,
+    @JsonPropertyDescription(
+            """
+        Indicates what details of the database table or view to show -
+        columns, primary key, indexes, foreign keys, or triggers.
+        """)
+        @JsonProperty(defaultValue = "DEFAULT", required = true)
+        TableDescriptionScope descriptionScope)
+    implements FunctionParameters {
 
   public enum TableDescriptionScope {
     DEFAULT,
@@ -48,39 +63,13 @@ public class TableDecriptionFunctionParameters implements FunctionParameters {
     TRIGGERS;
   }
 
-  @JsonPropertyDescription(
-      """
-      Name of database table or view to describe.
-      Use an empty string if all tables are requested.
-      """)
-  @JsonProperty(defaultValue = "", required = false)
-  private String tableName;
-
-  @JsonPropertyDescription(
-      """
-      Indicates what details of the database table or view to show -
-      columns, primary key, indexes, foreign keys, or triggers.
-      """)
-  @JsonProperty(defaultValue = "DEFAULT", required = true)
-  private TableDescriptionScope descriptionScope;
-
-  public TableDescriptionScope getDescriptionScope() {
-    if (descriptionScope == null) {
-      return TableDescriptionScope.DEFAULT;
+  public TableDecriptionFunctionParameters {
+    if (tableName == null || tableName.isBlank()) {
+      tableName = "";
     }
-    return descriptionScope;
-  }
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public void setDescriptionScope(final TableDescriptionScope descriptionScope) {
-    this.descriptionScope = descriptionScope;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
+    if (descriptionScope == null) {
+      descriptionScope = TableDescriptionScope.DEFAULT;
+    }
   }
 
   @Override
@@ -88,7 +77,7 @@ public class TableDecriptionFunctionParameters implements FunctionParameters {
     try {
       return new ObjectMapper().writeValueAsString(this);
     } catch (final JsonProcessingException e) {
-      return super.toString();
+      return "";
     }
   }
 }

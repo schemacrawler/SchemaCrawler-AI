@@ -70,8 +70,7 @@ public class DatabaseObjectListFunctionTest {
 
   @Test
   public void all(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ALL);
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
     databaseObjects(testContext, args);
   }
 
@@ -98,36 +97,35 @@ public class DatabaseObjectListFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ALL);
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
     assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
   }
 
   @Test
   public void routines(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(ROUTINES);
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(ROUTINES);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void sequences(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(SEQUENCES);
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(SEQUENCES);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void synonyms(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(SYNONYMS);
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(SYNONYMS);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void tables(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters();
-    args.setDatabaseObjectType(TABLES);
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(TABLES);
     databaseObjects(testContext, args);
   }
 

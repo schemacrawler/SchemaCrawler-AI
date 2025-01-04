@@ -28,6 +28,9 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
-public class NoParameters implements FunctionParameters {}
+@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+public record NoParameters() implements FunctionParameters {}

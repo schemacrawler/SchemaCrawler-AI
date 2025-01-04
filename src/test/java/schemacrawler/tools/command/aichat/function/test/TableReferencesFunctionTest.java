@@ -34,6 +34,8 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters.TableReferenceType.CHILD;
+import static schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters.TableReferenceType.PARENT;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,7 +57,6 @@ import schemacrawler.tools.command.aichat.FunctionExecutor;
 import schemacrawler.tools.command.aichat.FunctionReturn;
 import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters;
-import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters.TableReferenceType;
 
 @WithTestDatabase
 @ResolveTestContext
@@ -66,9 +67,8 @@ public class TableReferencesFunctionTest {
 
   @Test
   public void childrenForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("BOOKS");
-    args.setTableReferenceType(TableReferenceType.CHILD);
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("BOOKS", CHILD);
     referencesForTable(testContext, args);
   }
 
@@ -95,39 +95,37 @@ public class TableReferencesFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("BOOKS");
-    args.setTableReferenceType(TableReferenceType.CHILD);
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("BOOKS", CHILD);
     assertThat(
         args.toString(), is("{\"table-name\":\"BOOKS\",\"table-reference-type\":\"CHILD\"}"));
   }
 
   @Test
   public void parentsForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("BOOKAUTHORS");
-    args.setTableReferenceType(TableReferenceType.PARENT);
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("BOOKAUTHORS", PARENT);
     referencesForTable(testContext, args);
   }
 
   @Test
   public void referencesForTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("BOOKS");
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("BOOKS", null);
     referencesForTable(testContext, args);
   }
 
   @Test
   public void referencesForUnknownTable(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("NOT_A_TABLE");
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("NOT_A_TABLE", null);
     referencesForTable(testContext, args);
   }
 
   @Test
   public void referencesForView(final TestContext testContext) throws Exception {
-    final TableReferencesFunctionParameters args = new TableReferencesFunctionParameters();
-    args.setTableName("AuthorsList");
+    final TableReferencesFunctionParameters args =
+        new TableReferencesFunctionParameters("AuthorsList", null);
     referencesForTable(testContext, args);
   }
 

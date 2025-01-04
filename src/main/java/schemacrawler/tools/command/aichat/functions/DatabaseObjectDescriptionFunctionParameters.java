@@ -37,49 +37,37 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class DatabaseObjectDescriptionFunctionParameters implements FunctionParameters {
+public record DatabaseObjectDescriptionFunctionParameters(
+    @JsonPropertyDescription(
+            """
+        Name of database object to describe.
+        Use an empty string if all database objects are requested.
+        """)
+        @JsonProperty(defaultValue = "", required = false)
+        String databaseObjectName,
+    @JsonPropertyDescription(
+            """
+        Indicates the type of database objects to show - sequences, synonyms,
+        or routines (that is, stored procedures or functions).
+        """)
+        @JsonProperty(defaultValue = "NONE", required = true)
+        DatabaseObjectsScope databaseObjectsScope)
+    implements FunctionParameters {
 
   public enum DatabaseObjectsScope {
     NONE,
     SEQUENCES,
     SYNONYMS,
-    ROUTINES,
-    ;
+    ROUTINES;
   }
 
-  @JsonPropertyDescription(
-      """
-      Name of database object to describe.
-      Use an empty string if all database objects are requested.
-      """)
-  @JsonProperty(defaultValue = "", required = false)
-  private String databaseObjectName;
-
-  @JsonPropertyDescription(
-      """
-      Indicates the type of database objects to show - sequences, synonyms,
-      or routines (that is, stored procedures or functions).
-      """)
-  @JsonProperty(defaultValue = "NONE", required = true)
-  private DatabaseObjectsScope databaseObjectsScope;
-
-  public String getDatabaseObjectName() {
-    return databaseObjectName;
-  }
-
-  public DatabaseObjectsScope getDatabaseObjectsScope() {
-    if (databaseObjectsScope == null) {
-      return DatabaseObjectsScope.NONE;
+  public DatabaseObjectDescriptionFunctionParameters {
+    if (databaseObjectName == null || databaseObjectName.isBlank()) {
+      databaseObjectName = "";
     }
-    return databaseObjectsScope;
-  }
-
-  public void setDatabaseObjectName(final String databaseObjectName) {
-    this.databaseObjectName = databaseObjectName;
-  }
-
-  public void setDatabaseObjectsScope(final DatabaseObjectsScope databaseObjectsScope) {
-    this.databaseObjectsScope = databaseObjectsScope;
+    if (databaseObjectsScope == null) {
+      databaseObjectsScope = DatabaseObjectsScope.NONE;
+    }
   }
 
   @Override
@@ -87,7 +75,7 @@ public class DatabaseObjectDescriptionFunctionParameters implements FunctionPara
     try {
       return new ObjectMapper().writeValueAsString(this);
     } catch (final JsonProcessingException e) {
-      return super.toString();
+      return "";
     }
   }
 }

@@ -37,7 +37,23 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class TableReferencesFunctionParameters implements FunctionParameters {
+public record TableReferencesFunctionParameters(
+    @JsonPropertyDescription(
+            """
+        Name of database table for which to show references.
+        Use an empty string if all tables are requested.
+        """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableName,
+    @JsonPropertyDescription(
+            """
+        The type of related tables requested -
+        either child tables or parent tables, or both types
+        (all relationships).
+        """)
+        @JsonProperty(defaultValue = "ALL", required = true)
+        TableReferenceType tableReferenceType)
+    implements FunctionParameters {
 
   public enum TableReferenceType {
     ALL,
@@ -45,40 +61,13 @@ public class TableReferencesFunctionParameters implements FunctionParameters {
     CHILD;
   }
 
-  @JsonPropertyDescription(
-      """
-      Name of database table for which to show references.
-      Use an empty string if all tables are requested.
-      """)
-  @JsonProperty(defaultValue = "", required = false)
-  private String tableName;
-
-  @JsonPropertyDescription(
-      """
-      The type of related tables requested -
-      either child tables or parent tables, or both types
-      (all relationships).
-      """)
-  @JsonProperty(defaultValue = "ALL", required = true)
-  private TableReferenceType tableReferenceType;
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public TableReferenceType getTableReferenceType() {
-    if (tableReferenceType == null) {
-      return TableReferenceType.ALL;
+  public TableReferencesFunctionParameters {
+    if (tableName == null || tableName.isBlank()) {
+      tableName = "";
     }
-    return tableReferenceType;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
-  }
-
-  public void setTableReferenceType(final TableReferenceType tableReferenceType) {
-    this.tableReferenceType = tableReferenceType;
+    if (tableReferenceType == null) {
+      tableReferenceType = TableReferenceType.ALL;
+    }
   }
 
   @Override
@@ -86,7 +75,7 @@ public class TableReferencesFunctionParameters implements FunctionParameters {
     try {
       return new ObjectMapper().writeValueAsString(this);
     } catch (final JsonProcessingException e) {
-      return super.toString();
+      return "";
     }
   }
 }

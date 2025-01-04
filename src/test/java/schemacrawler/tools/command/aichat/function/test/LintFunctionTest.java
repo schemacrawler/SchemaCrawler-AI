@@ -67,7 +67,7 @@ public class LintFunctionTest {
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
   public void lintAllTables(final TestContext testContext, final Connection connection)
       throws Exception {
-    final LintFunctionParameters args = new LintFunctionParameters();
+    final LintFunctionParameters args = new LintFunctionParameters(null);
     lintTable(testContext, args, connection);
   }
 
@@ -75,8 +75,7 @@ public class LintFunctionTest {
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
   public void lintTable(final TestContext testContext, final Connection connection)
       throws Exception {
-    final LintFunctionParameters args = new LintFunctionParameters();
-    args.setTableName("AUTHORS");
+    final LintFunctionParameters args = new LintFunctionParameters("AUTHORS");
     lintTable(testContext, args, connection);
   }
 
@@ -84,8 +83,7 @@ public class LintFunctionTest {
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
   public void lintUnknownTable(final TestContext testContext, final Connection connection)
       throws Exception {
-    final LintFunctionParameters args = new LintFunctionParameters();
-    args.setTableName("NOT_A_TABLE");
+    final LintFunctionParameters args = new LintFunctionParameters("NOT_A_TABLE");
     lintTable(testContext, args, connection);
   }
 

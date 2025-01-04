@@ -69,51 +69,42 @@ public class DatabaseObjectDescriptionFunctionTest {
   @Test
   public void describeAllRoutines(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(ROUTINES);
+        new DatabaseObjectDescriptionFunctionParameters(null, ROUTINES);
     describeDatabaseObject(testContext, args);
   }
 
   @Test
   public void describeNone(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
+        new DatabaseObjectDescriptionFunctionParameters(null, null);
     describeDatabaseObject(testContext, args);
   }
 
   @Test
   public void describeRoutines(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(ROUTINES);
-    args.setDatabaseObjectName("CUSTOMADD");
+        new DatabaseObjectDescriptionFunctionParameters("CUSTOMADD", ROUTINES);
     describeDatabaseObject(testContext, args);
   }
 
   @Test
   public void describeSequences(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(SEQUENCES);
-    args.setDatabaseObjectName("PUBLISHER_ID_SEQ");
+        new DatabaseObjectDescriptionFunctionParameters("PUBLISHER_ID_SEQ", SEQUENCES);
     describeDatabaseObject(testContext, args);
   }
 
   @Test
   public void describeSynonyms(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(SYNONYMS);
-    args.setDatabaseObjectName("PUBLICATIONS");
+        new DatabaseObjectDescriptionFunctionParameters("PUBLICATIONS", SYNONYMS);
     describeDatabaseObject(testContext, args);
   }
 
   @Test
   public void describeUnknownDatabaseObject(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(SYNONYMS);
-    args.setDatabaseObjectName("NOT_A SYNONYM");
+        new DatabaseObjectDescriptionFunctionParameters("NOT_A SYNONYM", SYNONYMS);
     describeDatabaseObject(testContext, args);
   }
 
@@ -141,11 +132,10 @@ public class DatabaseObjectDescriptionFunctionTest {
   @Test
   public void parameters(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
-        new DatabaseObjectDescriptionFunctionParameters();
-    args.setDatabaseObjectsScope(ROUTINES);
+        new DatabaseObjectDescriptionFunctionParameters(null, ROUTINES);
     assertThat(
         args.toString(),
-        is("{\"database-object-name\":null,\"database-objects-scope\":\"ROUTINES\"}"));
+        is("{\"database-object-name\":\"\",\"database-objects-scope\":\"ROUTINES\"}"));
   }
 
   private void describeDatabaseObject(

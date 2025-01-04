@@ -49,13 +49,13 @@ public final class TableReferencesFunctionExecutor
 
     final Optional<Table> firstMatchedTable =
         catalog.getTables().stream()
-            .filter(table -> table.getName().matches("(?i)" + commandOptions.getTableName()))
+            .filter(table -> table.getName().matches("(?i)" + commandOptions.tableName()))
             .findFirst();
 
     if (firstMatchedTable.isPresent()) {
       final Table table = firstMatchedTable.get();
       final TableReferencesFormatter formatter =
-          new TableReferencesFormatter(table, commandOptions.getTableReferenceType());
+          new TableReferencesFormatter(table, commandOptions.tableReferenceType());
       return () -> formatter.format();
     }
     return new NoResultsReturn();

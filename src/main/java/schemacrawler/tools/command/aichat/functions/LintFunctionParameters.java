@@ -37,22 +37,20 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public class LintFunctionParameters implements FunctionParameters {
+public record LintFunctionParameters(
+    @JsonPropertyDescription(
+            """
+        Name of database table for which to find design issues.
+        Use an empty string if all tables are requested.
+        """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableName)
+    implements FunctionParameters {
 
-  @JsonPropertyDescription(
-      """
-      Name of database table for which to find design issues.
-      Use an empty string if all tables are requested.
-      """)
-  @JsonProperty(defaultValue = "", required = false)
-  private String tableName;
-
-  public String getTableName() {
-    return tableName;
-  }
-
-  public void setTableName(final String tableName) {
-    this.tableName = tableName;
+  public LintFunctionParameters {
+    if (tableName == null || tableName.isBlank()) {
+      tableName = "";
+    }
   }
 
   @Override
@@ -60,7 +58,7 @@ public class LintFunctionParameters implements FunctionParameters {
     try {
       return new ObjectMapper().writeValueAsString(this);
     } catch (final JsonProcessingException e) {
-      return super.toString();
+      return "";
     }
   }
 }

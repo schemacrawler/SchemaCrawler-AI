@@ -53,7 +53,7 @@ public final class DatabaseObjectListFunctionExecutor
 
   @Override
   protected Config createAdditionalConfig() {
-    final DatabaseObjectType databaseObjectType = commandOptions.getDatabaseObjectType();
+    final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
     if (databaseObjectType != ALL) {
       if (databaseObjectType != TABLES) {
@@ -75,7 +75,7 @@ public final class DatabaseObjectListFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final DatabaseObjectType databaseObjectType = commandOptions.getDatabaseObjectType();
+    final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     if (databaseObjectType != TABLES && databaseObjectType != ALL) {
       limitOptionsBuilder.includeTables(new ExcludeAll());
@@ -101,7 +101,7 @@ public final class DatabaseObjectListFunctionExecutor
 
   @Override
   protected Function<Catalog, Boolean> getResultsChecker() {
-    final DatabaseObjectType databaseObjectType = commandOptions.getDatabaseObjectType();
+    final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     switch (databaseObjectType) {
       case TABLES:
         return catalog -> !catalog.getTables().isEmpty();

@@ -56,7 +56,7 @@ public final class TableDecriptionFunctionExecutor
 
   @Override
   protected Config createAdditionalConfig() {
-    final TableDescriptionScope scope = commandOptions.getDescriptionScope();
+    final TableDescriptionScope scope = commandOptions.descriptionScope();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
     if (scope != DEFAULT) {
       if (scope != COLUMNS) {
@@ -87,7 +87,7 @@ public final class TableDecriptionFunctionExecutor
             .includeSynonyms(new ExcludeAll())
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.getTableName());
+    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

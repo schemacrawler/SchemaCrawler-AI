@@ -34,6 +34,11 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
+import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
+import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -55,7 +60,6 @@ import schemacrawler.tools.command.aichat.FunctionExecutor;
 import schemacrawler.tools.command.aichat.FunctionReturn;
 import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters;
-import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope;
 
 @WithTestDatabase
 @ResolveTestContext
@@ -66,68 +70,64 @@ public class TableDescriptionFunctionTest {
 
   @Test
   public void describeAllTables(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters(null, null);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTable(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("AUTHORS");
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("AUTHORS", null);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTableColumns(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("ΒΙΒΛΊΑ");
-    args.setDescriptionScope(TableDescriptionScope.COLUMNS);
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("ΒΙΒΛΊΑ", COLUMNS);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTableForeignKeys(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("BOOKAUTHORS");
-    args.setDescriptionScope(TableDescriptionScope.FOREIGN_KEYS);
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("BOOKAUTHORS", FOREIGN_KEYS);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTableIndexes(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("BOOKAUTHORS");
-    args.setDescriptionScope(TableDescriptionScope.INDEXES);
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("BOOKAUTHORS", INDEXES);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTablePrimaryKey(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("AUTHORS");
-    args.setDescriptionScope(TableDescriptionScope.PRIMARY_KEY);
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("AUTHORS", PRIMARY_KEY);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeTableTriggers(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("AUTHORS");
-    args.setDescriptionScope(TableDescriptionScope.TRIGGERS);
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("AUTHORS", TRIGGERS);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeUnknownTable(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("NOT_A_TABLE");
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("NOT_A_TABLE", null);
     describeTable(testContext, args);
   }
 
   @Test
   public void describeView(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("AuthorsList");
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("AuthorsList", null);
     describeTable(testContext, args);
   }
 
@@ -154,8 +154,8 @@ public class TableDescriptionFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args = new TableDecriptionFunctionParameters();
-    args.setTableName("AUTHORS");
+    final TableDecriptionFunctionParameters args =
+        new TableDecriptionFunctionParameters("AUTHORS", null);
     assertThat(
         args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":\"DEFAULT\"}"));
   }
