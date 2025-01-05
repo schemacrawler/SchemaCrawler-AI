@@ -71,6 +71,8 @@ public class OpenAIModelFactory implements AiModelFactory {
         .timeout(Duration.ofSeconds(aiChatCommandOptions.getTimeout()))
         // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
         .strictTools(true)
+        .logRequests(true)
+        .logResponses(true)
         .build();
   }
 
