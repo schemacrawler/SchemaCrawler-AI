@@ -73,6 +73,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private final Map<String, ToolExecutor> toolExecutors;
   private final ContentRetriever contentRetriever;
   private final String metadataPriming;
+  private final int chatContextWindowSize;
   private boolean shouldExit;
 
   public Langchain4JChatAssistant(
@@ -88,6 +89,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     if (modelFactory == null) {
       throw new SchemaCrawlerException("No models found");
     }
+
+    chatContextWindowSize = aiChatOptions.getContext();
 
     model = modelFactory.newChatLanguageModel();
     chatMemory = modelFactory.newChatMemory();
@@ -116,7 +119,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     try {
       chatMemory.add(UserMessage.from(prompt));
-      final List<ChatMessage> messages = new ArrayList<>(chatMemory.messages());
+      final List<ChatMessage> messages = getChatContext();
       final SystemMessage systemMessage = createSystemMessage(prompt);
       messages.add(0, systemMessage);
 
@@ -171,5 +174,13 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     }
 
     return SystemMessage.from(buffer.toString());
+  }
+
+  private List<ChatMessage> getChatContext() {
+    final List<ChatMessage> messages = new ArrayList<>(chatMemory.messages());
+    final int size = messages.size();
+    final int startIndex = Math.max(0, size - chatContextWindowSize);
+    final List<ChatMessage> chatContext = messages.subList(startIndex, size);
+    return new ArrayList<>(chatContext);
   }
 }

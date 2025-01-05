@@ -66,6 +66,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
             "use-metadata",
             Boolean.class,
             "Allow sharing of database metadata with AI model to enhance chat responses",
+            "This is useful if you would like help with SQL queries",
             "Optional, defaults to false");
     return pluginCommand;
   }

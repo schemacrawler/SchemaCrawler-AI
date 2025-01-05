@@ -44,7 +44,7 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   private static final Logger LOGGER = Logger.getLogger(AiChatCommand.class.getName());
 
   static final PropertyName COMMAND =
-      new PropertyName("aichat", "SchemaCrawler AI chat integration");
+      new PropertyName("aichat", "Chat with an AI agent that has access to your schema");
 
   protected AiChatCommand() {
     super(COMMAND);
