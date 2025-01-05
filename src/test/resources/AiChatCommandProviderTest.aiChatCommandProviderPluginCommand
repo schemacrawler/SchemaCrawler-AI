@@ -1,6 +1,6 @@
 command:aichat
 
-** SchemaCrawler AI chat integration
+** Chat with an AI agent that has access to your schema
 
 api-key
 OpenAI API key
@@ -22,6 +22,7 @@ Optional, defaults to 10
 
 use-metadata
 Allow sharing of database metadata with AI model to enhance chat responses
+This is useful if you would like help with SQL queries
 Optional, defaults to false
 
 Add command options to the `execute` command in the SchemaCrawler Shell
