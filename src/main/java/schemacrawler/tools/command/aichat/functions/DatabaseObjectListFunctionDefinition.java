@@ -36,7 +36,9 @@ public final class DatabaseObjectListFunctionDefinition
     return """
         List database objects like tables, routines
         (that is, functions and stored procedures), sequences, or synonyms.
-        """;
+        """
+        .stripIndent()
+        .replace("\n", "");
   }
 
   @Override

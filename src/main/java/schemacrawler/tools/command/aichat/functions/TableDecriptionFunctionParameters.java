@@ -41,6 +41,7 @@ public record TableDecriptionFunctionParameters(
     @JsonPropertyDescription(
             """
         Name of database table or view to describe.
+        Can be a regular expression.
         Use an empty string if all tables are requested.
         """)
         @JsonProperty(defaultValue = "", required = false)

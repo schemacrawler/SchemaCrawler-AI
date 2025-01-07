@@ -41,6 +41,7 @@ public record TableReferencesFunctionParameters(
     @JsonPropertyDescription(
             """
         Name of database table for which to show references.
+        Can be a regular expression.
         Use an empty string if all tables are requested.
         """)
         @JsonProperty(defaultValue = "", required = false)

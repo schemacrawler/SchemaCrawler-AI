@@ -36,7 +36,9 @@ public final class DatabaseObjectDescriptionFunctionDefinition
     return """
         Get the details and description of database objects like routines
         (that is, functions and stored procedures), sequences, or synonyms.
-        """;
+        """
+        .stripIndent()
+        .replace("\n", "");
   }
 
   @Override

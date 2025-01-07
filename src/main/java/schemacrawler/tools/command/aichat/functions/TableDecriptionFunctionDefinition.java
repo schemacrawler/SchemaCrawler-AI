@@ -36,7 +36,9 @@ public final class TableDecriptionFunctionDefinition
     return """
         Get the details and description of database tables or views,
         including columns, foreign keys, indexes and triggers.
-        """;
+        """
+        .stripIndent()
+        .replace("\n", "");
   }
 
   @Override

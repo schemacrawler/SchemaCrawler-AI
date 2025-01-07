@@ -36,6 +36,7 @@ import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;
 
@@ -53,7 +54,8 @@ public final class LintFunctionExecutor
 
   @Override
   protected Config createAdditionalConfig() {
-    return new Config();
+    final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
+    return schemaTextOptionsBuilder.noInfo().toConfig();
   }
 
   @Override

@@ -35,7 +35,9 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoP
     return """
         Indicate when the user is done with their research,
         wants to end the chat session.
-        """;
+        """
+        .stripIndent()
+        .replace("\n", "");
   }
 
   @Override

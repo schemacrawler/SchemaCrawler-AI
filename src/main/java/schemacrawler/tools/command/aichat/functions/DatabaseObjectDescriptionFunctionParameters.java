@@ -41,6 +41,7 @@ public record DatabaseObjectDescriptionFunctionParameters(
     @JsonPropertyDescription(
             """
         Name of database object to describe.
+        Can be a regular expression.
         Use an empty string if all database objects are requested.
         """)
         @JsonProperty(defaultValue = "", required = false)

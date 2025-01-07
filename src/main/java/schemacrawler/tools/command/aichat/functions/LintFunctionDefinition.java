@@ -37,7 +37,9 @@ public final class LintFunctionDefinition
         Lint database schemas.
         Find design issues with specific tables, or with the entire database.
         Find problems with database design, such as no indexes on foreign keys.
-        """;
+        """
+        .stripIndent()
+        .replace("\n", "");
   }
 
   @Override
