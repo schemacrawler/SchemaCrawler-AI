@@ -45,8 +45,8 @@ public class AiChatCommandProviderTest {
     config.put("api-key", "api-key");
     final AiChatCommand command = commandProvider.newSchemaCrawlerCommand("aichat", config);
     final AiChatCommandOptions commandOptions = command.getCommandOptions();
-    assertThat(commandOptions.getApiKey(), is("api-key"));
-    assertThat(commandOptions.getModel(), startsWith("gpt-4o-mini"));
+    assertThat(commandOptions.apiKey(), is("api-key"));
+    assertThat(commandOptions.model(), startsWith("gpt-4o-mini"));
   }
 
   @Test

@@ -73,11 +73,11 @@ public final class AiChatCommandOptionsBuilder
   @Override
   public AiChatCommandOptionsBuilder fromOptions(final AiChatCommandOptions options) {
     if (options != null) {
-      apiKey = options.getApiKey();
-      model = options.getModel();
-      timeout = options.getTimeout();
-      context = options.getContext();
-      useMetadata = options.isUseMetadata();
+      apiKey = options.apiKey();
+      model = options.model();
+      timeout = options.timeout();
+      context = options.context();
+      useMetadata = options.useMetadata();
     }
     return this;
   }

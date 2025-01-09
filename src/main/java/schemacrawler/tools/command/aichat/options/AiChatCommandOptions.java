@@ -31,67 +31,33 @@ package schemacrawler.tools.command.aichat.options;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.tools.executable.CommandOptions;
 
-public class AiChatCommandOptions implements CommandOptions {
+public record AiChatCommandOptions(
+  String apiKey,
+  String model,
+  int timeout,
+  int context,
+  boolean useMetadata
+) implements CommandOptions {
 
   private static final int DEFAULT_CONTEXT = 10;
   private static final int MAXIMUM_CONTEXT = 50;
   private static final int DEFAULT_TIMEOUT = 10;
   private static final int MAXIMUM_TIMEOUT = 180;
 
+  public AiChatCommandOptions {
+    apiKey = requireNotBlank(apiKey, "No OpenAI API key provided");
+    model = requireNotBlank(model, "No AI model provided");
+
+    if (!inIntegerRange(timeout, -1, MAXIMUM_TIMEOUT)) {
+      timeout = DEFAULT_TIMEOUT;
+    }
+
+    if (!inIntegerRange(context, 0, MAXIMUM_CONTEXT)) {
+      context = DEFAULT_CONTEXT;
+    }
+  }
+
   private static boolean inIntegerRange(final int value, final int min, final int max) {
     return value > min && value <= max;
-  }
-
-  private final String apiKey;
-  private final String model;
-  private final int timeout;
-  private final int context;
-
-  private final boolean useMetadata;
-
-  public AiChatCommandOptions(
-      final String apiKey,
-      final String model,
-      final int timeout,
-      final int context,
-      final boolean useMetadata) {
-
-    this.apiKey = requireNotBlank(apiKey, "No OpenAI API key provided");
-
-    this.model = requireNotBlank(model, "No AI model provided");
-
-    if (inIntegerRange(timeout, -1, MAXIMUM_TIMEOUT)) {
-      this.timeout = timeout;
-    } else {
-      this.timeout = DEFAULT_TIMEOUT;
-    }
-
-    if (inIntegerRange(context, 0, MAXIMUM_CONTEXT)) {
-      this.context = context;
-    } else {
-      this.context = DEFAULT_CONTEXT;
-    }
-
-    this.useMetadata = useMetadata;
-  }
-
-  public String getApiKey() {
-    return apiKey;
-  }
-
-  public int getContext() {
-    return context;
-  }
-
-  public String getModel() {
-    return model;
-  }
-
-  public int getTimeout() {
-    return timeout;
-  }
-
-  public boolean isUseMetadata() {
-    return useMetadata;
   }
 }

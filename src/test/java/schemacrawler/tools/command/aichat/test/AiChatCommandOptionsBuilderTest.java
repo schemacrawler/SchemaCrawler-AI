@@ -19,20 +19,20 @@ public class AiChatCommandOptionsBuilderTest {
 
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
 
     optionsBuilder.withApiKey(null);
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
 
     optionsBuilder.withApiKey("\t");
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
 
     optionsBuilder.withApiKey("new-api-key");
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("new-api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("new-api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
   }
 
   @Test
@@ -41,15 +41,15 @@ public class AiChatCommandOptionsBuilderTest {
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
 
-    assertThat(optionsBuilder.toOptions().getContext(), is(10));
+    assertThat(optionsBuilder.toOptions().context(), is(10));
     optionsBuilder.withContext(20);
-    assertThat(optionsBuilder.toOptions().getContext(), is(20));
+    assertThat(optionsBuilder.toOptions().context(), is(20));
     optionsBuilder.withContext(0);
-    assertThat(optionsBuilder.toOptions().getContext(), is(10));
+    assertThat(optionsBuilder.toOptions().context(), is(10));
     optionsBuilder.withContext(500);
-    assertThat(optionsBuilder.toOptions().getContext(), is(10));
+    assertThat(optionsBuilder.toOptions().context(), is(10));
     optionsBuilder.withContext(-2);
-    assertThat(optionsBuilder.toOptions().getContext(), is(10));
+    assertThat(optionsBuilder.toOptions().context(), is(10));
   }
 
   @Test
@@ -62,16 +62,16 @@ public class AiChatCommandOptionsBuilderTest {
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
 
     optionsBuilder.withModel(null);
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
 
     optionsBuilder.withModel("\t");
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), startsWith("gpt-4o-mini"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), startsWith("gpt-4o-mini"));
 
     optionsBuilder.withModel("new-model");
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), is("new-model"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), is("new-model"));
   }
 
   @Test
@@ -80,15 +80,15 @@ public class AiChatCommandOptionsBuilderTest {
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
 
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(60));
+    assertThat(optionsBuilder.toOptions().timeout(), is(60));
     optionsBuilder.withTimeout(20);
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(20));
+    assertThat(optionsBuilder.toOptions().timeout(), is(20));
     optionsBuilder.withTimeout(0);
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(0));
+    assertThat(optionsBuilder.toOptions().timeout(), is(0));
     optionsBuilder.withTimeout(500);
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(10));
+    assertThat(optionsBuilder.toOptions().timeout(), is(10));
     optionsBuilder.withTimeout(-2);
-    assertThat(optionsBuilder.toOptions().getTimeout(), is(10));
+    assertThat(optionsBuilder.toOptions().timeout(), is(10));
   }
 
   @Test
@@ -97,11 +97,11 @@ public class AiChatCommandOptionsBuilderTest {
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
 
-    assertThat(optionsBuilder.toOptions().isUseMetadata(), is(false));
+    assertThat(optionsBuilder.toOptions().useMetadata(), is(false));
     optionsBuilder.withUseMetadata(true);
-    assertThat(optionsBuilder.toOptions().isUseMetadata(), is(true));
+    assertThat(optionsBuilder.toOptions().useMetadata(), is(true));
     optionsBuilder.withUseMetadata(false);
-    assertThat(optionsBuilder.toOptions().isUseMetadata(), is(false));
+    assertThat(optionsBuilder.toOptions().useMetadata(), is(false));
   }
 
   @Test
@@ -112,8 +112,8 @@ public class AiChatCommandOptionsBuilderTest {
     config.put("api-key", "api-key");
     final AiChatCommandOptions options =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
-    assertThat(options.getApiKey(), is("api-key"));
-    assertThat(options.getModel(), startsWith("gpt-4o-mini"));
+    assertThat(options.apiKey(), is("api-key"));
+    assertThat(options.model(), startsWith("gpt-4o-mini"));
 
     // Have both keys
     config = new Config();
@@ -121,16 +121,16 @@ public class AiChatCommandOptionsBuilderTest {
     config.put("api-key:env", "api-key-env");
     final AiChatCommandOptions options2 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
-    assertThat(options2.getApiKey(), is("api-key"));
-    assertThat(options2.getModel(), startsWith("gpt-4o-mini"));
+    assertThat(options2.apiKey(), is("api-key"));
+    assertThat(options2.model(), startsWith("gpt-4o-mini"));
 
     config = new Config();
     config.put("api-key:env", "api-key-env");
     System.setProperty("api-key-env", "api-key");
     final AiChatCommandOptions options3 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
-    assertThat(options3.getApiKey(), is("api-key"));
-    assertThat(options3.getModel(), startsWith("gpt-4o-mini"));
+    assertThat(options3.apiKey(), is("api-key"));
+    assertThat(options3.model(), startsWith("gpt-4o-mini"));
 
     // Have both keys, with api-key blank
     config = new Config();
@@ -138,8 +138,8 @@ public class AiChatCommandOptionsBuilderTest {
     config.put("api-key:env", "api-key-env");
     final AiChatCommandOptions options4 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
-    assertThat(options4.getApiKey(), is("api-key"));
-    assertThat(options4.getModel(), startsWith("gpt-4o-mini"));
+    assertThat(options4.apiKey(), is("api-key"));
+    assertThat(options4.model(), startsWith("gpt-4o-mini"));
 
     // No value for environmental variable
     final Config config1 = new Config();
@@ -160,8 +160,8 @@ public class AiChatCommandOptionsBuilderTest {
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key").withModel("model").toOptions();
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().fromOptions(options);
-    assertThat(optionsBuilder.toOptions().getApiKey(), is("api-key"));
-    assertThat(optionsBuilder.toOptions().getModel(), is("model"));
+    assertThat(optionsBuilder.toOptions().apiKey(), is("api-key"));
+    assertThat(optionsBuilder.toOptions().model(), is("model"));
 
     // With null options
     assertThrows(

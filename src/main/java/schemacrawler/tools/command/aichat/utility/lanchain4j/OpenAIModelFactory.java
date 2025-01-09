@@ -53,7 +53,7 @@ public class OpenAIModelFactory implements AiModelFactory {
 
   @Override
   public boolean isSupported() {
-    final String model = aiChatCommandOptions.getModel();
+    final String model = aiChatCommandOptions.model();
     for (final OpenAiChatModelName openAiChatModelName : OpenAiChatModelName.values()) {
       if (openAiChatModelName.name().equals(model)) {
         return true;
@@ -65,10 +65,10 @@ public class OpenAIModelFactory implements AiModelFactory {
   @Override
   public ChatLanguageModel newChatLanguageModel() {
     return OpenAiChatModel.builder()
-        .apiKey(aiChatCommandOptions.getApiKey())
-        .modelName(aiChatCommandOptions.getModel())
+        .apiKey(aiChatCommandOptions.apiKey())
+        .modelName(aiChatCommandOptions.model())
         .temperature(0.2)
-        .timeout(Duration.ofSeconds(aiChatCommandOptions.getTimeout()))
+        .timeout(Duration.ofSeconds(aiChatCommandOptions.timeout()))
         // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
         .strictTools(true)
         .logRequests(true)
@@ -79,7 +79,7 @@ public class OpenAIModelFactory implements AiModelFactory {
   @Override
   public ChatMemory newChatMemory() {
     return TokenWindowChatMemory.builder()
-        .maxTokens(8_000, new OpenAiTokenizer(aiChatCommandOptions.getModel()))
+        .maxTokens(8_000, new OpenAiTokenizer(aiChatCommandOptions.model()))
         .build();
   }
 
@@ -87,7 +87,7 @@ public class OpenAIModelFactory implements AiModelFactory {
   public EmbeddingModel newEmbeddingModel() {
     requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     return OpenAiEmbeddingModel.builder()
-        .apiKey(aiChatCommandOptions.getApiKey())
+        .apiKey(aiChatCommandOptions.apiKey())
         .modelName(TEXT_EMBEDDING_MODEL)
         .build();
   }
