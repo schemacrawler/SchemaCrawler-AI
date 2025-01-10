@@ -48,6 +48,12 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
   public PluginCommand getCommandLineCommand() {
     final PluginCommand pluginCommand = newPluginCommand(AiChatCommand.COMMAND);
     pluginCommand
+        .addOption(
+            "ai-provider",
+            String.class,
+            "AI provider",
+            "One of openai, github, azure-openai",
+            "Optional, defaults to openai")
         .addOption("api-key", String.class, "OpenAI API key")
         .addOption(
             "api-key:env", String.class, "OpenAI API key, from an environmental variable value")

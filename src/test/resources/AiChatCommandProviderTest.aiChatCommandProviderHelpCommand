@@ -2,6 +2,11 @@ command:aichat
 
 ** Chat with an AI agent that has access to your schema
 
+ai-provider
+AI provider
+One of openai, github, azure-openai
+Optional, defaults to openai
+
 api-key
 OpenAI API key
 
