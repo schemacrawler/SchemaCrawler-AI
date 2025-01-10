@@ -54,6 +54,24 @@ public record AiChatCommandOptions(
     }
   }
 
+  @Override
+  public String toString() {
+    final StringBuilder builder = new StringBuilder();
+    builder
+        .append("AiChatCommandOptions [aiProvider=")
+        .append(aiProvider)
+        .append(", model=")
+        .append(model)
+        .append(", timeout=")
+        .append(timeout)
+        .append(", context=")
+        .append(context)
+        .append(", useMetadata=")
+        .append(useMetadata)
+        .append("]");
+    return builder.toString();
+  }
+
   private static boolean inIntegerRange(final int value, final int min, final int max) {
     return value > min && value <= max;
   }
