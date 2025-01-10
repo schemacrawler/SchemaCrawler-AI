@@ -32,12 +32,8 @@ import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.tools.executable.CommandOptions;
 
 public record AiChatCommandOptions(
-  String apiKey,
-  String model,
-  int timeout,
-  int context,
-  boolean useMetadata
-) implements CommandOptions {
+    String aiProvider, String apiKey, String model, int timeout, int context, boolean useMetadata)
+    implements CommandOptions {
 
   private static final int DEFAULT_CONTEXT = 10;
   private static final int MAXIMUM_CONTEXT = 50;
@@ -45,6 +41,7 @@ public record AiChatCommandOptions(
   private static final int MAXIMUM_TIMEOUT = 180;
 
   public AiChatCommandOptions {
+    aiProvider = requireNotBlank(aiProvider, "No AI provider provided");
     apiKey = requireNotBlank(apiKey, "No OpenAI API key provided");
     model = requireNotBlank(model, "No AI model provided");
 

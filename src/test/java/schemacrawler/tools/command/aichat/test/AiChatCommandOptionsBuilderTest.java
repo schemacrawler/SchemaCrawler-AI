@@ -12,6 +12,27 @@ import schemacrawler.tools.options.Config;
 public class AiChatCommandOptionsBuilderTest {
 
   @Test
+  public void aiChatCommandOptionsAiProvider() {
+
+    assertThrows(
+        IllegalArgumentException.class, () -> AiChatCommandOptionsBuilder.builder().toOptions());
+
+    final AiChatCommandOptionsBuilder optionsBuilder =
+        AiChatCommandOptionsBuilder.builder().withApiKey("api-key");
+
+    assertThat(optionsBuilder.toOptions().aiProvider(), is("openai"));
+
+    optionsBuilder.withAiProvider(null);
+    assertThat(optionsBuilder.toOptions().aiProvider(), is("openai"));
+
+    optionsBuilder.withAiProvider("\t");
+    assertThat(optionsBuilder.toOptions().aiProvider(), is("openai"));
+
+    optionsBuilder.withAiProvider("provider-2");
+    assertThat(optionsBuilder.toOptions().aiProvider(), is("provider-2"));
+  }
+
+  @Test
   public void aiChatCommandOptionsBuilderApiKey() {
 
     assertThrows(
