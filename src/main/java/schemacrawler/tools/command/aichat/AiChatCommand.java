@@ -52,10 +52,10 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
 
   @Override
   public void checkAvailability() throws RuntimeException {
-    LOGGER.log(Level.FINE, "Looking for OPENAI_API_KEY environmental variable");
+    LOGGER.log(Level.FINE, "Looking for API key");
     final String apiKey = commandOptions.apiKey();
     if (isBlank(apiKey)) {
-      throw new SchemaCrawlerException("OPENAI_API_KEY not provided");
+      throw new SchemaCrawlerException("API key not provided");
     }
   }
 
