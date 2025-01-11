@@ -31,11 +31,9 @@ package schemacrawler.tools.command.aichat.functions;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -96,17 +94,17 @@ public final class DatabaseObjectDescriptionFunctionExecutor
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
+  protected boolean hasResults() {
     final DatabaseObjectsScope scope = commandOptions.databaseObjectsScope();
     switch (scope) {
       case SEQUENCES:
-        return catalog -> !catalog.getSequences().isEmpty();
+        return !catalog.getSequences().isEmpty();
       case SYNONYMS:
-        return catalog -> !catalog.getSynonyms().isEmpty();
+        return !catalog.getSynonyms().isEmpty();
       case ROUTINES:
-        return catalog -> !catalog.getRoutines().isEmpty();
+        return !catalog.getRoutines().isEmpty();
       default:
-        return catalog -> false;
+        return false;
     }
   }
 }

@@ -30,10 +30,8 @@ package schemacrawler.tools.command.aichat.functions;
 
 import java.io.StringWriter;
 import java.util.Collection;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.command.aichat.FunctionParameters;
@@ -58,7 +56,6 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   public FunctionReturn call() {
 
     final SchemaCrawlerExecutable executable = createExecutable();
-    final Function<Catalog, Boolean> resultsChecker = getResultsChecker();
     // Execute and generate output
     final StringWriter writer = new StringWriter();
     final OutputOptions outputOptions =
@@ -68,7 +65,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     executable.setCatalog(catalog);
     executable.execute();
 
-    if (!resultsChecker.apply(executable.getCatalog())) {
+    if (!hasResults()) {
       return new NoResultsReturn();
     }
     return () -> writer.toString();
@@ -80,7 +77,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
 
   protected abstract String getCommand();
 
-  protected abstract Function<Catalog, Boolean> getResultsChecker();
+  protected abstract boolean hasResults();
 
   protected Pattern makeNameInclusionPattern(final String name) {
     if (isBlank(name)) {

@@ -33,9 +33,7 @@ import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFun
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
-import java.util.function.Function;
 import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -100,23 +98,22 @@ public final class DatabaseObjectListFunctionExecutor
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
+  protected boolean hasResults() {
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     switch (databaseObjectType) {
       case TABLES:
-        return catalog -> !catalog.getTables().isEmpty();
+        return !catalog.getTables().isEmpty();
       case ROUTINES:
-        return catalog -> !catalog.getRoutines().isEmpty();
+        return !catalog.getRoutines().isEmpty();
       case SEQUENCES:
-        return catalog -> !catalog.getSequences().isEmpty();
+        return !catalog.getSequences().isEmpty();
       case SYNONYMS:
-        return catalog -> !catalog.getSynonyms().isEmpty();
+        return !catalog.getSynonyms().isEmpty();
       default:
-        return catalog ->
-            (!catalog.getTables().isEmpty()
-                || !catalog.getRoutines().isEmpty()
-                || !catalog.getSequences().isEmpty()
-                || !catalog.getSynonyms().isEmpty());
+        return !catalog.getTables().isEmpty()
+            || !catalog.getRoutines().isEmpty()
+            || !catalog.getSequences().isEmpty()
+            || !catalog.getSynonyms().isEmpty();
     }
   }
 }

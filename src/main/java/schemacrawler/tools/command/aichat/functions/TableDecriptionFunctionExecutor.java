@@ -34,10 +34,8 @@ import static schemacrawler.tools.command.aichat.functions.TableDecriptionFuncti
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -101,7 +99,9 @@ public final class TableDecriptionFunctionExecutor
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
-    return catalog -> !catalog.getTables().isEmpty();
+  protected boolean hasResults() {
+    final boolean hasTables = !catalog.getTables().isEmpty();
+
+    return !catalog.getTables().isEmpty();
   }
 }

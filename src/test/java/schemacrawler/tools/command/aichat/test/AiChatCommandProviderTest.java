@@ -4,11 +4,16 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static schemacrawler.test.utility.FileHasContent.classpathResource;
+import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
+import static schemacrawler.test.utility.FileHasContent.outputOf;
+import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.PluginCommandTestUtility;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
+import schemacrawler.test.utility.TestWriter;
 import schemacrawler.tools.command.aichat.AiChatCommand;
 import schemacrawler.tools.command.aichat.AiChatCommandProvider;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
@@ -50,19 +55,14 @@ public class AiChatCommandProviderTest {
   }
 
   @Test
-  public void pluginCommand() {
+  public void pluginCommand(final TestContext testContext) throws IOException {
     final AiChatCommandProvider commandProvider = new AiChatCommandProvider();
+    final TestWriter testout = new TestWriter();
+    try (final TestWriter out = testout) {
+      out.write(commandProvider.getCommandLineCommand().toString());
+    }
     assertThat(
-        commandProvider.getCommandLineCommand().toString(),
-        is(
-            "PluginCommand[name='aichat', options=["
-                + "PluginCommandOption[name='api-key', valueClass=java.lang.String], "
-                + "PluginCommandOption[name='api-key:env', valueClass=java.lang.String], "
-                + "PluginCommandOption[name='model', valueClass=java.lang.String], "
-                + "PluginCommandOption[name='timeout', valueClass=java.lang.Integer], "
-                + "PluginCommandOption[name='context', valueClass=java.lang.Integer], "
-                + "PluginCommandOption[name='use-metadata', valueClass=java.lang.Boolean]"
-                + "]]"));
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 
   @Test
