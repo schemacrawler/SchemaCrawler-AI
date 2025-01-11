@@ -69,7 +69,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     executable.execute();
 
     if (!resultsChecker.apply(executable.getCatalog())) {
-      return () -> "There were no matching results for your query.";
+      return new NoResultsReturn();
     }
     return () -> writer.toString();
   }
