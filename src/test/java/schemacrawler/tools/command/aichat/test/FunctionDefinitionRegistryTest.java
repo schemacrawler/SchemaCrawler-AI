@@ -62,7 +62,7 @@ public class FunctionDefinitionRegistryTest {
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
 
-    assertThat(functionDefinitions, hasSize(6));
+    assertThat(functionDefinitions, hasSize(5));
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
@@ -71,7 +71,6 @@ public class FunctionDefinitionRegistryTest {
         containsInAnyOrder(
             "table-decription",
             "database-object-list",
-            "table-references",
             "exit",
             "database-object-description",
             "lint"));
@@ -82,7 +81,7 @@ public class FunctionDefinitionRegistryTest {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
-    assertThat(functions, hasSize(6));
+    assertThat(functions, hasSize(5));
     assertThat(
         functions.stream()
             .map(function -> function.getClass().getSimpleName())
