@@ -9,7 +9,7 @@
       <version>16.25.1</version>
    </parent>
    <artifactId>schemacrawler-ai</artifactId>
-   <version>16.25.1-2</version>
+   <version>16.25.1-3</version>
    <packaging>jar</packaging>
    <name>SchemaCrawler AI</name>
    <description>Integrates SchemaCrawler with AI chat services.</description>
@@ -144,7 +144,7 @@
                   </goals>
                   <configuration>
                      <source>21</source>
-                     <doctitle>SchemaCrawler AI 16.25.1-2</doctitle>
+                     <doctitle>SchemaCrawler AI 16.25.1-3</doctitle>
                   </configuration>
                </execution>
             </executions>
