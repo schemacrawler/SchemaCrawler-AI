@@ -59,4 +59,9 @@ public final class TableSimilarity implements Comparable<TableSimilarity> {
   public EmbeddedTable getTable() {
     return table;
   }
+
+  @Override
+  public String toString() {
+    return String.format("%01.4f - %s", similarity, table.getFullName());
+  }
 }
