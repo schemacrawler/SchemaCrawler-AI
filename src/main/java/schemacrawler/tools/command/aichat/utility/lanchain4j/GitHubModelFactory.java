@@ -59,11 +59,11 @@ public class GitHubModelFactory implements AiModelFactory {
     }
     final String model = aiChatCommandOptions.model();
     for (final GitHubModelsChatModelName openAiChatModelName : GitHubModelsChatModelName.values()) {
-      if (openAiChatModelName.name().equals(model)) {
+      if (openAiChatModelName.toString().equals(model)) {
         return true;
       }
     }
-    return model.startsWith("gpt-");
+    return false;
   }
 
   @Override

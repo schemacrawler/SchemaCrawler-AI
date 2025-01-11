@@ -60,7 +60,7 @@ public class OpenAIModelFactory implements AiModelFactory {
     }
     final String model = aiChatCommandOptions.model();
     for (final OpenAiChatModelName openAiChatModelName : OpenAiChatModelName.values()) {
-      if (openAiChatModelName.name().equals(model)) {
+      if (openAiChatModelName.toString().equals(model)) {
         return true;
       }
     }
