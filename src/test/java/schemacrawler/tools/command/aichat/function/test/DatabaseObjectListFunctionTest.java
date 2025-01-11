@@ -96,7 +96,7 @@ public class DatabaseObjectListFunctionTest {
   }
 
   @Test
-  public void parameters(final TestContext testContext) throws Exception {
+  public void parameters() throws Exception {
     final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
     assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
   }

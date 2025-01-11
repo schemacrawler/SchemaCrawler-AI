@@ -31,9 +31,6 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
 import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
@@ -52,10 +49,8 @@ import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
-import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
 import schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters;
 
@@ -70,42 +65,42 @@ public class DatabaseObjectDescriptionFunctionTest {
   public void describeAllRoutines(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters(null, ROUTINES);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @Test
   public void describeNone(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters(null, null);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, false);
   }
 
   @Test
   public void describeRoutines(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("CUSTOMADD", ROUTINES);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @Test
   public void describeSequences(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("PUBLISHER_ID_SEQ", SEQUENCES);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @Test
   public void describeSynonyms(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("PUBLICATIONS", SYNONYMS);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @Test
   public void describeUnknownDatabaseObject(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("NOT_A SYNONYM", SYNONYMS);
-    describeDatabaseObject(testContext, args);
+    describeDatabaseObject(testContext, args, false);
   }
 
   @BeforeAll
@@ -139,22 +134,14 @@ public class DatabaseObjectDescriptionFunctionTest {
   }
 
   private void describeDatabaseObject(
-      final TestContext testContext, final DatabaseObjectDescriptionFunctionParameters args)
+      final TestContext testContext,
+      final DatabaseObjectDescriptionFunctionParameters args,
+      final boolean hasResults)
       throws Exception {
 
     final DatabaseObjectDescriptionFunctionDefinition functionDefinition =
         new DatabaseObjectDescriptionFunctionDefinition();
-
-    final TestWriter testout = new TestWriter();
-    try (final TestWriter out = testout) {
-      final FunctionExecutor<DatabaseObjectDescriptionFunctionParameters> executor =
-          functionDefinition.newExecutor();
-      executor.configure(args);
-      executor.setCatalog(catalog);
-      final FunctionReturn functionReturn = executor.call();
-      out.write(functionReturn.get());
-    }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
+    FunctionExecutionTestUtility.assertFunctionExecution(
+        testContext, functionDefinition, args, catalog, null, hasResults);
   }
 }

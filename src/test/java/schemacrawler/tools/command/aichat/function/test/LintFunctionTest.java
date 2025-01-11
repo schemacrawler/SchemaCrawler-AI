@@ -28,11 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.function.test;
 
-import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -48,11 +44,9 @@ import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
-import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
 import schemacrawler.tools.command.aichat.functions.LintFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.LintFunctionParameters;
 
@@ -68,7 +62,7 @@ public class LintFunctionTest {
   public void lintAllTables(final TestContext testContext, final Connection connection)
       throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters(null);
-    lintTable(testContext, args, connection);
+    lintTable(testContext, args, connection, true);
   }
 
   @Test
@@ -76,7 +70,7 @@ public class LintFunctionTest {
   public void lintTable(final TestContext testContext, final Connection connection)
       throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters("AUTHORS");
-    lintTable(testContext, args, connection);
+    lintTable(testContext, args, connection, true);
   }
 
   @Test
@@ -84,7 +78,7 @@ public class LintFunctionTest {
   public void lintUnknownTable(final TestContext testContext, final Connection connection)
       throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters("NOT_A_TABLE");
-    lintTable(testContext, args, connection);
+    lintTable(testContext, args, connection, false);
   }
 
   @BeforeAll
@@ -109,23 +103,14 @@ public class LintFunctionTest {
   }
 
   private void lintTable(
-      final TestContext testContext, final LintFunctionParameters args, final Connection connection)
+      final TestContext testContext,
+      final LintFunctionParameters args,
+      final Connection connection,
+      final boolean hasResults)
       throws Exception {
 
     final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
-
-    final TestWriter testout = new TestWriter();
-    try (final TestWriter out = testout) {
-      final FunctionExecutor<LintFunctionParameters> executor = functionDefinition.newExecutor();
-      executor.configure(args);
-      executor.setCatalog(catalog);
-      if (executor.usesConnection()) {
-        executor.setConnection(connection);
-      }
-      final FunctionReturn functionReturn = executor.call();
-      out.write(functionReturn.get());
-    }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
+    FunctionExecutionTestUtility.assertFunctionExecution(
+        testContext, functionDefinition, args, catalog, connection, hasResults);
   }
 }

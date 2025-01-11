@@ -34,10 +34,12 @@ import static schemacrawler.tools.command.aichat.functions.TableDecriptionFuncti
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
-import java.util.function.Function;
+import java.util.Collection;
+import java.util.List;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
+import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -101,7 +103,44 @@ public final class TableDecriptionFunctionExecutor
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
-    return catalog -> !catalog.getTables().isEmpty();
+  protected boolean hasResults() {
+    final Collection<Table> tables = catalog.getTables();
+    if (tables.isEmpty()) {
+      return false;
+    }
+    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.tableName());
+    final List<Table> greppedTables =
+        tables.stream()
+            .filter(table -> grepTablesPattern.matcher(table.getFullName()).matches())
+            .collect(Collectors.toList());
+    final TableDescriptionScope scope = commandOptions.descriptionScope();
+    boolean hasResults = false;
+    for (final Table table : greppedTables) {
+      hasResults = hasData(table, scope);
+      if (hasResults) {
+        break;
+      }
+    }
+    return hasResults;
+  }
+
+  private boolean hasData(final Table table, final TableDescriptionScope scope) {
+    if (table == null) {
+      return false;
+    }
+    return switch (scope) {
+      case COLUMNS:
+        yield !table.getColumns().isEmpty();
+      case PRIMARY_KEY:
+        yield table.hasPrimaryKey();
+      case FOREIGN_KEYS:
+        yield table.hasForeignKeys();
+      case INDEXES:
+        yield !table.getIndexes().isEmpty();
+      case TRIGGERS:
+        yield !table.getTriggers().isEmpty();
+      default:
+        yield true;
+    };
   }
 }

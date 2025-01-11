@@ -4,14 +4,14 @@ command:aichat
 
 ai-provider
 AI provider
-One of openai, github-models, azure-openai
+One of openai, github-models
 Optional, defaults to openai
 
 api-key
-OpenAI API key
+AI provider's API key
 
 api-key:env
-OpenAI API key, from an environmental variable value
+Environmental variable name, that has the AI provider's API key
 
 model
 AI chat model

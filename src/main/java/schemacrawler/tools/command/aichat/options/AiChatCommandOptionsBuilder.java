@@ -170,9 +170,15 @@ public final class AiChatCommandOptionsBuilder
   }
 
   private String getApiKey(final Config config) {
+    final String envVariableDefaultName =
+        switch (aiProvider) {
+          case "openai" -> "OPENAI_API_KEY";
+          case "github-models" -> "GITHUB_TOKEN";
+          default -> "OPENAI_API_KEY";
+        };
     String apiKey = config.getStringValue("api-key", null);
     if (isBlank(apiKey)) {
-      final String apikeyVar = config.getStringValue("api-key:env", "OPENAI_API_KEY");
+      final String apikeyVar = config.getStringValue("api-key:env", envVariableDefaultName);
       if (!isBlank(apikeyVar)) {
         apiKey = PropertiesUtility.getSystemConfigurationProperty(apikeyVar, null);
       }

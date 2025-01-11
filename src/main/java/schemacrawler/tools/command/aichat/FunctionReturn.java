@@ -30,4 +30,5 @@ package schemacrawler.tools.command.aichat;
 
 import java.util.function.Supplier;
 
+// NOTE: This class reserves the space to return an object instead of a string in the future
 public interface FunctionReturn extends Supplier<String> {}

@@ -28,10 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
-import java.util.function.Function;
 import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -79,7 +77,7 @@ public final class LintFunctionExecutor
   }
 
   @Override
-  protected Function<Catalog, Boolean> getResultsChecker() {
-    return catalog -> !catalog.getTables().isEmpty();
+  protected boolean hasResults() {
+    return !catalog.getTables().isEmpty();
   }
 }
