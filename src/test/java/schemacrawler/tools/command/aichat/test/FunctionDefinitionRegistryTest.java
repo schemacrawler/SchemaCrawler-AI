@@ -69,11 +69,11 @@ public class FunctionDefinitionRegistryTest {
     assertThat(
         names,
         containsInAnyOrder(
-            "table-decription",
             "database-object-list",
-            "exit",
             "database-object-description",
-            "lint"));
+            "table-decription",
+            "lint",
+            "exit"));
   }
 
   @Test
