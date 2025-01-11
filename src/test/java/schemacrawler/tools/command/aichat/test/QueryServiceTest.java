@@ -56,7 +56,7 @@ public class QueryServiceTest {
     table.addColumn("column_name");
     this.table = table;
 
-    final EmbeddingService embeddingService = text -> new TextEmbedding(text);
+    final EmbeddingService embeddingService = TextEmbedding::new;
 
     queryService = new QueryService(embeddingService);
   }

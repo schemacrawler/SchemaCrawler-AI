@@ -54,6 +54,7 @@ public record AiChatCommandOptions(
     }
   }
 
+  // NOTE: Do not expose the API key
   @Override
   public String toString() {
     final StringBuilder builder = new StringBuilder();

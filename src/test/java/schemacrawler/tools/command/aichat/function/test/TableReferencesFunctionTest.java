@@ -31,9 +31,6 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters.TableReferenceType.CHILD;
 import static schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters.TableReferenceType.PARENT;
 import java.sql.Connection;
@@ -51,10 +48,8 @@ import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
-import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
 import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionParameters;
 
@@ -69,7 +64,7 @@ public class TableReferencesFunctionTest {
   public void childrenForTable(final TestContext testContext) throws Exception {
     final TableReferencesFunctionParameters args =
         new TableReferencesFunctionParameters("BOOKS", CHILD);
-    referencesForTable(testContext, args);
+    referencesForTable(testContext, args, true);
   }
 
   @BeforeAll
@@ -105,47 +100,40 @@ public class TableReferencesFunctionTest {
   public void parentsForTable(final TestContext testContext) throws Exception {
     final TableReferencesFunctionParameters args =
         new TableReferencesFunctionParameters("BOOKAUTHORS", PARENT);
-    referencesForTable(testContext, args);
+    referencesForTable(testContext, args, true);
   }
 
   @Test
   public void referencesForTable(final TestContext testContext) throws Exception {
     final TableReferencesFunctionParameters args =
         new TableReferencesFunctionParameters("BOOKS", null);
-    referencesForTable(testContext, args);
+    referencesForTable(testContext, args, true);
   }
 
   @Test
   public void referencesForUnknownTable(final TestContext testContext) throws Exception {
     final TableReferencesFunctionParameters args =
         new TableReferencesFunctionParameters("NOT_A_TABLE", null);
-    referencesForTable(testContext, args);
+    referencesForTable(testContext, args, false);
   }
 
   @Test
   public void referencesForView(final TestContext testContext) throws Exception {
     final TableReferencesFunctionParameters args =
         new TableReferencesFunctionParameters("AuthorsList", null);
-    referencesForTable(testContext, args);
+    referencesForTable(testContext, args, true);
   }
 
   private void referencesForTable(
-      final TestContext testContext, final TableReferencesFunctionParameters args)
+      final TestContext testContext,
+      final TableReferencesFunctionParameters args,
+      final boolean hasResults)
       throws Exception {
 
     final TableReferencesFunctionDefinition functionDefinition =
         new TableReferencesFunctionDefinition();
 
-    final TestWriter testout = new TestWriter();
-    try (final TestWriter out = testout) {
-      final FunctionExecutor<TableReferencesFunctionParameters> executor =
-          functionDefinition.newExecutor();
-      executor.configure(args);
-      executor.setCatalog(catalog);
-      final FunctionReturn functionReturn = executor.call();
-      out.write(functionReturn.get());
-    }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
+    FunctionExecutionTestUtility.assertFunctionExecution(
+        testContext, functionDefinition, args, catalog, null, hasResults);
   }
 }

@@ -52,11 +52,13 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
             "ai-provider",
             String.class,
             "AI provider",
-            "One of openai, github-models, azure-openai",
+            "One of openai, github-models",
             "Optional, defaults to openai")
-        .addOption("api-key", String.class, "OpenAI API key")
+        .addOption("api-key", String.class, "AI provider's API key")
         .addOption(
-            "api-key:env", String.class, "OpenAI API key, from an environmental variable value")
+            "api-key:env",
+            String.class,
+            "Environmental variable name, that has the AI provider's API key")
         .addOption("model", String.class, "AI chat model", "Optional, defaults to 'gpt-4o-mini'")
         .addOption(
             "timeout",
