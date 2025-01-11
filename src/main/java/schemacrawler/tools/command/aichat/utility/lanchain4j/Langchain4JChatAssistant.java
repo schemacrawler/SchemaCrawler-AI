@@ -149,8 +149,8 @@ public class Langchain4JChatAssistant implements ChatAssistant {
         chatMemory.add(TOOL_CALL_MEMORY_MESSAGE);
       } else {
         // If no tools need to be executed, return as-is
-        chatMemory.add(aiMessage);
         answer = aiMessage.text();
+        chatMemory.add(aiMessage);
       }
 
       return answer;
