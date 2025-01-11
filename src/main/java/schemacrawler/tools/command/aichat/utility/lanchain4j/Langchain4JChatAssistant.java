@@ -90,12 +90,12 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       throw new SchemaCrawlerException("No models found");
     }
 
-    chatContextWindowSize = aiChatOptions.getContext();
+    chatContextWindowSize = aiChatOptions.context();
 
     model = modelFactory.newChatLanguageModel();
     chatMemory = modelFactory.newChatMemory();
 
-    final boolean useMetadata = aiChatOptions.isUseMetadata();
+    final boolean useMetadata = aiChatOptions.useMetadata();
     if (useMetadata) {
       final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
       contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);

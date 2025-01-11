@@ -45,6 +45,7 @@ public final class AiChatCommandOptionsBuilder
     return new AiChatCommandOptionsBuilder();
   }
 
+  private String aiProvider;
   private String apiKey;
   private String model;
   private int timeout;
@@ -52,6 +53,7 @@ public final class AiChatCommandOptionsBuilder
   private boolean useMetadata;
 
   private AiChatCommandOptionsBuilder() {
+    aiProvider = "openai";
     model = "gpt-4o-mini";
     context = DEFAULT_CONTEXT;
     timeout = DEFAULT_TIMEOUT;
@@ -60,6 +62,7 @@ public final class AiChatCommandOptionsBuilder
   @Override
   public AiChatCommandOptionsBuilder fromConfig(final Config config) {
     if (config != null) {
+      aiProvider = config.getStringValue("ai-provider", aiProvider);
       apiKey = getApiKey(config);
       model = config.getStringValue("model", model);
       timeout = config.getIntegerValue("timeout", DEFAULT_TIMEOUT);
@@ -73,11 +76,12 @@ public final class AiChatCommandOptionsBuilder
   @Override
   public AiChatCommandOptionsBuilder fromOptions(final AiChatCommandOptions options) {
     if (options != null) {
-      apiKey = options.getApiKey();
-      model = options.getModel();
-      timeout = options.getTimeout();
-      context = options.getContext();
-      useMetadata = options.isUseMetadata();
+      aiProvider = options.aiProvider();
+      apiKey = options.apiKey();
+      model = options.model();
+      timeout = options.timeout();
+      context = options.context();
+      useMetadata = options.useMetadata();
     }
     return this;
   }
@@ -90,7 +94,20 @@ public final class AiChatCommandOptionsBuilder
 
   @Override
   public AiChatCommandOptions toOptions() {
-    return new AiChatCommandOptions(apiKey, model, timeout, context, useMetadata);
+    return new AiChatCommandOptions(aiProvider, apiKey, model, timeout, context, useMetadata);
+  }
+
+  /**
+   * Use the provided AI provider is it is not blank.
+   *
+   * @param aiProvider AI provider.
+   * @return Self.
+   */
+  public AiChatCommandOptionsBuilder withAiProvider(final String aiProvider) {
+    if (!isBlank(aiProvider)) {
+      this.aiProvider = aiProvider;
+    }
+    return this;
   }
 
   /**
