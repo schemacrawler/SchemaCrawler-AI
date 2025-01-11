@@ -48,6 +48,8 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
+  private static final int NUM_FUNCTIONS = 5;
+
   @Test
   public void name() {
     final FunctionDefinitionRegistry registry =
@@ -62,7 +64,7 @@ public class FunctionDefinitionRegistryTest {
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
 
-    assertThat(functionDefinitions, hasSize(5));
+    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
@@ -81,7 +83,7 @@ public class FunctionDefinitionRegistryTest {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
-    assertThat(functions, hasSize(5));
+    assertThat(functions, hasSize(NUM_FUNCTIONS));
     assertThat(
         functions.stream()
             .map(function -> function.getClass().getSimpleName())
