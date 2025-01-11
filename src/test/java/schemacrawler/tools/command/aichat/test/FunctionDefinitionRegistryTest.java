@@ -44,7 +44,6 @@ import schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.functions.LintFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.TableReferencesFunctionDefinition;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
@@ -91,7 +90,6 @@ public class FunctionDefinitionRegistryTest {
         containsInAnyOrder(
             DatabaseObjectListFunctionDefinition.class.getSimpleName(),
             TableDecriptionFunctionDefinition.class.getSimpleName(),
-            TableReferencesFunctionDefinition.class.getSimpleName(),
             DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),
             ExitFunctionDefinition.class.getSimpleName()));
