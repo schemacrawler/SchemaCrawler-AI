@@ -29,27 +29,29 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.utility.lanchain4j;
 
 import java.time.Duration;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 import static java.util.Objects.requireNonNull;
+import dev.langchain4j.data.embedding.Embedding;
+import dev.langchain4j.data.segment.TextSegment;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.memory.chat.TokenWindowChatMemory;
+import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.ChatLanguageModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiChatModel;
-import dev.langchain4j.model.openai.OpenAiChatModelName;
-import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
+import dev.langchain4j.model.output.Response;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.property.PropertyName;
 
-public class OpenAIModelFactory implements AiModelFactory {
+public class AnthropicModelFactory implements AiModelFactory {
 
-  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
-
-  private final PropertyName aiProvider = new PropertyName("openai", "OpenAI");
+  private final PropertyName aiProvider = new PropertyName("anthropic", "Anthropic");
   private final AiChatCommandOptions aiChatCommandOptions;
 
-  public OpenAIModelFactory(final AiChatCommandOptions commandOptions) {
+  public AnthropicModelFactory(final AiChatCommandOptions commandOptions) {
     aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
   }
 
@@ -59,23 +61,21 @@ public class OpenAIModelFactory implements AiModelFactory {
       return false;
     }
     final String model = aiChatCommandOptions.model();
-    for (final OpenAiChatModelName modelName : OpenAiChatModelName.values()) {
+    for (final AnthropicChatModelName modelName : AnthropicChatModelName.values()) {
       if (modelName.toString().equals(model)) {
         return true;
       }
     }
-    return model.startsWith("gpt-");
+    return false;
   }
 
   @Override
   public ChatLanguageModel newChatLanguageModel() {
-    return OpenAiChatModel.builder()
+    return AnthropicChatModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
         .modelName(aiChatCommandOptions.model())
         .temperature(0.2)
         .timeout(Duration.ofSeconds(aiChatCommandOptions.timeout()))
-        // https://docs.langchain4j.dev/integrations/language-models/open-ai#structured-outputs-for-tools
-        .strictTools(true)
         .logRequests(true)
         .logResponses(true)
         .build();
@@ -83,17 +83,25 @@ public class OpenAIModelFactory implements AiModelFactory {
 
   @Override
   public ChatMemory newChatMemory() {
-    return TokenWindowChatMemory.builder()
-        .maxTokens(8_000, new OpenAiTokenizer(aiChatCommandOptions.model()))
-        .build();
+    return MessageWindowChatMemory.withMaxMessages(aiChatCommandOptions.context());
   }
 
   @Override
   public EmbeddingModel newEmbeddingModel() {
-    return OpenAiEmbeddingModel.builder()
-        .apiKey(aiChatCommandOptions.apiKey())
-        .modelName(TEXT_EMBEDDING_MODEL)
-        .build();
+    return new EmbeddingModel() {
+
+      @Override
+      public Response<List<Embedding>> embedAll(final List<TextSegment> textSegments) {
+        if (textSegments == null || textSegments.isEmpty()) {
+          return new Response(Collections.emptyList());
+        }
+
+        final Embedding embedding = new Embedding(new float[] {0f});
+        final Embedding[] embeddings = new Embedding[textSegments.size()];
+        Arrays.fill(embeddings, embedding);
+        return new Response(Arrays.asList(embeddings));
+      }
+    };
   }
 
   @Override

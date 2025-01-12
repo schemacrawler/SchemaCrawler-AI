@@ -83,7 +83,6 @@ public class GitHubModelFactory implements AiModelFactory {
 
   @Override
   public EmbeddingModel newEmbeddingModel() {
-    requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     return GitHubModelsEmbeddingModel.builder()
         .gitHubToken(aiChatCommandOptions.apiKey())
         .modelName(TEXT_EMBEDDING_MODEL)

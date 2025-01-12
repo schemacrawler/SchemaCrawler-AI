@@ -72,7 +72,7 @@ public class DatabaseObjectDescriptionFunctionTest {
   public void describeNone(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters(null, null);
-    describeDatabaseObject(testContext, args, false);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @Test
@@ -100,7 +100,7 @@ public class DatabaseObjectDescriptionFunctionTest {
   public void describeUnknownDatabaseObject(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("NOT_A SYNONYM", SYNONYMS);
-    describeDatabaseObject(testContext, args, false);
+    describeDatabaseObject(testContext, args, true);
   }
 
   @BeforeAll

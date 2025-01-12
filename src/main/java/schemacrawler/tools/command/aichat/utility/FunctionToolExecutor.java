@@ -45,9 +45,7 @@ public final class FunctionToolExecutor {
   public String execute(final String argumentsString) {
     final String functionName = getFunctionName();
     LOGGER.log(
-        Level.INFO,
-        new StringFormat(
-            String.format("Executing <%s> with <%s> %n", functionName, argumentsString)));
+        Level.INFO, new StringFormat("Executing <%s> with <%s> %n", functionName, argumentsString));
 
     if (functionDefinition == null) {
       return "";
