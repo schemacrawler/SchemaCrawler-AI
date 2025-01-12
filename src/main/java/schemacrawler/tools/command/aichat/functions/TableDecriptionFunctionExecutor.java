@@ -136,9 +136,9 @@ public final class TableDecriptionFunctionExecutor
       case FOREIGN_KEYS:
         yield table.hasForeignKeys();
       case INDEXES:
-        yield !table.getIndexes().isEmpty();
+        yield table.hasIndexes();
       case TRIGGERS:
-        yield !table.getTriggers().isEmpty();
+        yield table.hasTriggers();
       default:
         yield true;
     };
