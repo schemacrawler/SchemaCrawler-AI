@@ -4,7 +4,7 @@ command:aichat
 
 ai-provider
 AI provider
-One of openai, github-models
+One of openai, anthropic, github-models
 Optional, defaults to openai
 
 api-key

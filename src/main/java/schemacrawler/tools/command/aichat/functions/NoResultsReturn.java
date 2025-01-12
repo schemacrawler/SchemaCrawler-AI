@@ -34,6 +34,6 @@ public class NoResultsReturn implements FunctionReturn {
 
   @Override
   public String get() {
-    return "";
+    return "There were no matching results for your query.";
   }
 }

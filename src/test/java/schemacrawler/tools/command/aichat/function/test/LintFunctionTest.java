@@ -78,7 +78,7 @@ public class LintFunctionTest {
   public void lintUnknownTable(final TestContext testContext, final Connection connection)
       throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters("NOT_A_TABLE");
-    lintTable(testContext, args, connection, false);
+    lintTable(testContext, args, connection, true);
   }
 
   @BeforeAll

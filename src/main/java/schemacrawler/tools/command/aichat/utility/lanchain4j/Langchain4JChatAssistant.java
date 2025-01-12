@@ -41,7 +41,6 @@ import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
 import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
-import dev.langchain4j.data.message.ToolExecutionResultMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
@@ -141,11 +140,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
           final String toolExecutionResult = toolExecutor.execute(toolExecutionRequest, null);
           buffer.append(toolExecutionResult);
         }
-        if (buffer.isEmpty()) {
-          answer = handleNoResults(aiMessage);
-        } else {
-          answer = buffer.toString();
-        }
+        answer = buffer.toString();
         chatMemory.add(TOOL_CALL_MEMORY_MESSAGE);
       } else {
         // If no tools need to be executed, return as-is
@@ -157,6 +152,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, e, new StringFormat("Exception handling prompt:%n%s", prompt));
+      e.printStackTrace();
       return "There was a problem. Please try again.";
     }
   }
@@ -187,18 +183,5 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     final int startIndex = Math.max(0, size - chatContextWindowSize);
     final List<ChatMessage> chatContext = messages.subList(startIndex, size);
     return new ArrayList<>(chatContext);
-  }
-
-  private String handleNoResults(final AiMessage aiMessage) {
-    final List<ChatMessage> messages = getChatContext();
-    messages.add(aiMessage);
-    final List<ToolExecutionRequest> executionRequests = aiMessage.toolExecutionRequests();
-    for (final ToolExecutionRequest toolExecutionRequest : executionRequests) {
-      final ToolExecutionResultMessage toolExecutionResultMessage =
-          ToolExecutionResultMessage.from(toolExecutionRequest, "No results");
-      messages.add(toolExecutionResultMessage);
-    }
-    final Response<AiMessage> response = model.generate(messages);
-    return response.content().text();
   }
 }

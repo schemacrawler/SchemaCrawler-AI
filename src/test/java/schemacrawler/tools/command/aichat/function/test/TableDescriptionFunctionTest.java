@@ -116,7 +116,7 @@ public class TableDescriptionFunctionTest {
   public void describeUnknownTable(final TestContext testContext) throws Exception {
     final TableDecriptionFunctionParameters args =
         new TableDecriptionFunctionParameters("NOT_A_TABLE", null);
-    describeTable(testContext, args, false);
+    describeTable(testContext, args, true);
   }
 
   @Test

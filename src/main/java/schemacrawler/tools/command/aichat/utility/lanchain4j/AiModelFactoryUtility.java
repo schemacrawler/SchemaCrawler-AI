@@ -53,7 +53,9 @@ public class AiModelFactoryUtility {
       final AiChatCommandOptions aiChatCommandOptions) {
     requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     final AiModelFactory[] modelFactories = {
-      new OpenAIModelFactory(aiChatCommandOptions), new GitHubModelFactory(aiChatCommandOptions)
+      new OpenAIModelFactory(aiChatCommandOptions),
+      new GitHubModelFactory(aiChatCommandOptions),
+      new AnthropicModelFactory(aiChatCommandOptions)
     };
     for (final AiModelFactory aiModelFactory : modelFactories) {
       if (aiModelFactory.isSupported()) {
