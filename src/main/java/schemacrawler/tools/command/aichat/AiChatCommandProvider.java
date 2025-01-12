@@ -52,7 +52,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
             "ai-provider",
             String.class,
             "AI provider",
-            "One of openai, github-models",
+            "One of openai, anthropic, github-models",
             "Optional, defaults to openai")
         .addOption("api-key", String.class, "AI provider's API key")
         .addOption(

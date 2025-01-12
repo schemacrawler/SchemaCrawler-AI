@@ -173,6 +173,7 @@ public final class AiChatCommandOptionsBuilder
     final String envVariableDefaultName =
         switch (aiProvider) {
           case "openai" -> "OPENAI_API_KEY";
+          case "anthropic" -> "ANTHROPIC_API_KEY";
           case "github-models" -> "GITHUB_TOKEN";
           default -> "OPENAI_API_KEY";
         };
