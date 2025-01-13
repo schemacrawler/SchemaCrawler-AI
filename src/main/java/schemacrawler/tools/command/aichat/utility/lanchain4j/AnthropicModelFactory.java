@@ -93,13 +93,13 @@ public class AnthropicModelFactory implements AiModelFactory {
       @Override
       public Response<List<Embedding>> embedAll(final List<TextSegment> textSegments) {
         if (textSegments == null || textSegments.isEmpty()) {
-          return new Response(Collections.emptyList());
+          return new Response<>(Collections.emptyList());
         }
 
         final Embedding embedding = new Embedding(new float[] {0f});
         final Embedding[] embeddings = new Embedding[textSegments.size()];
         Arrays.fill(embeddings, embedding);
-        return new Response(Arrays.asList(embeddings));
+        return new Response<>(Arrays.asList(embeddings));
       }
     };
   }
