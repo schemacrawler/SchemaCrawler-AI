@@ -18,13 +18,20 @@
       <outputDirectory>.</outputDirectory>
       <useProjectArtifact>false</useProjectArtifact>
       <unpack>false</unpack>
+	  <useTransitiveFiltering>false</useTransitiveFiltering>
       <scope>runtime</scope>
       <excludes>
         <exclude>org.slf4j:*</exclude>
-        <exclude>commons-dbutils:*</exclude>
-		<exclude>com.fasterxml.jackson.core:*</exclude>
+		<exclude>org.junit.platform:*</exclude>
+		<exclude>org.junit.jupiter:*</exclude>
+		<exclude>org.opentest4j:*</exclude>
+		<exclude>com.fasterxml.jackson.*:*</exclude>
+		<exclude>org.yaml:*</exclude>
+		<exclude>javax.validation:*</exclude>
+		<exclude>com.azure:azure-core-test</exclude>
+		<exclude>org.apache.ant:*</exclude>
         <exclude>us.fatehi:*</exclude>
       </excludes>
-    </dependencySet>
+    </dependencySet>	
   </dependencySets>
 </assembly>

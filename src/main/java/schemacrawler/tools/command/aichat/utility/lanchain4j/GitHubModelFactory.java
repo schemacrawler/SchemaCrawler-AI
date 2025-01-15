@@ -53,6 +53,11 @@ public class GitHubModelFactory implements AiModelFactory {
   }
 
   @Override
+  public boolean hasEmbeddingModel() {
+    return true;
+  }
+
+  @Override
   public boolean isSupported() {
     if (!aiChatCommandOptions.aiProvider().equals(aiProvider.getName())) {
       return false;
