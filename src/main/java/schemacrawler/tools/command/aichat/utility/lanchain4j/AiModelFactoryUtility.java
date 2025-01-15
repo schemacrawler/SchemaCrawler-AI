@@ -40,6 +40,8 @@ public class AiModelFactoryUtility {
 
   interface AiModelFactory {
 
+    boolean hasEmbeddingModel();
+
     boolean isSupported();
 
     ChatLanguageModel newChatLanguageModel();

@@ -97,8 +97,12 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     final boolean useMetadata = aiChatOptions.useMetadata();
     if (useMetadata) {
-      final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
-      contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);
+      if (modelFactory.hasEmbeddingModel()) {
+        final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
+        contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);
+      } else {
+        contentRetriever = new FullTextCatalogContentRetriever(catalog);
+      }
     } else {
       contentRetriever = query -> Collections.emptyList();
     }
@@ -171,7 +175,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
     buffer.append(metadataPriming).append("\n");
     final List<Content> contents = contentRetriever.retrieve(Query.from(prompt));
     for (final Content content : contents) {
-      buffer.append(content.textSegment().text()).append("\n");
+      buffer.append("\n").append(content.textSegment().text());
     }
 
     return SystemMessage.from(buffer.toString());
