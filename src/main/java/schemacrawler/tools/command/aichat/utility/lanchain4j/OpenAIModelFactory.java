@@ -37,14 +37,13 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
+import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.model.openai.OpenAiTokenizer;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.property.PropertyName;
 
 public class OpenAIModelFactory implements AiModelFactory {
-
-  private static final String TEXT_EMBEDDING_MODEL = "text-embedding-3-small";
 
   private final PropertyName aiProvider = new PropertyName("openai", "OpenAI");
   private final AiChatCommandOptions aiChatCommandOptions;
@@ -95,9 +94,10 @@ public class OpenAIModelFactory implements AiModelFactory {
 
   @Override
   public EmbeddingModel newEmbeddingModel() {
+    final String embeddingModelName = OpenAiEmbeddingModelName.TEXT_EMBEDDING_3_SMALL.toString();
     return OpenAiEmbeddingModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
-        .modelName(TEXT_EMBEDDING_MODEL)
+        .modelName(embeddingModelName)
         .build();
   }
 
