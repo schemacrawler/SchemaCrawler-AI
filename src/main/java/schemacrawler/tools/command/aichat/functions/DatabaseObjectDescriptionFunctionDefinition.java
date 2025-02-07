@@ -38,7 +38,7 @@ public final class DatabaseObjectDescriptionFunctionDefinition
         (that is, functions and stored procedures), sequences, or synonyms.
         """
         .stripIndent()
-        .replace("\n", "");
+        .replace("\n", " ");
   }
 
   @Override

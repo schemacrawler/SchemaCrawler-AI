@@ -6,17 +6,18 @@ import org.apache.lucene.store.Directory;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.data.document.Metadata;
 import dev.langchain4j.data.segment.TextSegment;
+import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
+import dev.langchain4j.rag.content.retriever.lucene.DirectoryFactory;
+import dev.langchain4j.rag.content.retriever.lucene.LuceneContentRetriever;
+import dev.langchain4j.rag.content.retriever.lucene.LuceneEmbeddingStore;
 import dev.langchain4j.rag.query.Query;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
 import schemacrawler.tools.command.serialize.model.TableDocument;
-import us.fatehi.search.DirectoryFactory;
-import us.fatehi.search.LuceneContentRetriever;
-import us.fatehi.search.LuceneIndexer;
 
 public class FullTextCatalogContentRetriever implements ContentRetriever {
 
@@ -25,22 +26,23 @@ public class FullTextCatalogContentRetriever implements ContentRetriever {
 
   private final LuceneContentRetriever fullTextCatalogRetriever;
 
-  public FullTextCatalogContentRetriever(final Catalog catalog) {
+  public FullTextCatalogContentRetriever(final EmbeddingModel embeddingModel, final Catalog catalog) {
     requireNonNull(catalog, "No catalog provided");
 
     final Directory tempDirectory = DirectoryFactory.tempDirectory();
-    final LuceneIndexer luceneIndexer = new LuceneIndexer(tempDirectory);
+    final LuceneEmbeddingStore luceneIndexer = LuceneEmbeddingStore.builder().directory(tempDirectory).build();
     final TextSegment databaseInfoContent = getDatabaseInfoContent(catalog);
-    luceneIndexer.addContent(databaseInfoContent);
+    luceneIndexer.add(databaseInfoContent);
     for (final Table table : catalog.getTables()) {
       final TableDocument tableDocument = CompactCatalogUtility.getTableDocument(table, false);
-      luceneIndexer.addContent(TextSegment.from(tableDocument.toJson()));
+      luceneIndexer.add(TextSegment.from(tableDocument.toJson()));
     }
 
     fullTextCatalogRetriever =
         LuceneContentRetriever.builder()
             .directory(tempDirectory)
-            .matchUntilTopN()
+            .embeddingModel(embeddingModel)
+            .matchUntilMaxResults()
             .maxTokens(5_000)
             .build();
   }

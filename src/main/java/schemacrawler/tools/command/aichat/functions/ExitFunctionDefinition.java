@@ -34,10 +34,10 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoP
   public String getDescription() {
     return """
         Indicate when the user is done with their research,
-        wants to end the chat session.
+        and wants to end the chat session.
         """
         .stripIndent()
-        .replace("\n", "");
+        .replace("\n", " ");
   }
 
   @Override

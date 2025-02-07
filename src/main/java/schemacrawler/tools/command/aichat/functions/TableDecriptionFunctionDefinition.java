@@ -38,7 +38,7 @@ public final class TableDecriptionFunctionDefinition
         including columns, foreign keys, indexes and triggers.
         """
         .stripIndent()
-        .replace("\n", "");
+        .replace("\n", " ");
   }
 
   @Override

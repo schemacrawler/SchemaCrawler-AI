@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
@@ -97,12 +98,13 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     final boolean useMetadata = aiChatOptions.useMetadata();
     if (useMetadata) {
+      final EmbeddingModel embeddingModel;
       if (modelFactory.hasEmbeddingModel()) {
-        final EmbeddingModel embeddingModel = modelFactory.newEmbeddingModel();
-        contentRetriever = new CatalogContentRetriever(embeddingModel, catalog);
+        embeddingModel = modelFactory.newEmbeddingModel();
       } else {
-        contentRetriever = new FullTextCatalogContentRetriever(catalog);
+        embeddingModel = null;
       }
+      contentRetriever = new FullTextCatalogContentRetriever(embeddingModel, catalog);
     } else {
       contentRetriever = query -> Collections.emptyList();
     }
@@ -122,6 +124,9 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   public String chat(final String prompt) {
 
     try {
+      if (isBlank(prompt)) {
+        return "";
+      }
       chatMemory.add(UserMessage.from(prompt));
       final List<ChatMessage> messages = getChatContext();
       final SystemMessage systemMessage = createSystemMessage(prompt);
