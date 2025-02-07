@@ -26,11 +26,13 @@ public class FullTextCatalogContentRetriever implements ContentRetriever {
 
   private final LuceneContentRetriever fullTextCatalogRetriever;
 
-  public FullTextCatalogContentRetriever(final EmbeddingModel embeddingModel, final Catalog catalog) {
+  public FullTextCatalogContentRetriever(
+      final EmbeddingModel embeddingModel, final Catalog catalog) {
     requireNonNull(catalog, "No catalog provided");
 
     final Directory tempDirectory = DirectoryFactory.tempDirectory();
-    final LuceneEmbeddingStore luceneIndexer = LuceneEmbeddingStore.builder().directory(tempDirectory).build();
+    final LuceneEmbeddingStore luceneIndexer =
+        LuceneEmbeddingStore.builder().directory(tempDirectory).build();
     final TextSegment databaseInfoContent = getDatabaseInfoContent(catalog);
     luceneIndexer.add(databaseInfoContent);
     for (final Table table : catalog.getTables()) {
