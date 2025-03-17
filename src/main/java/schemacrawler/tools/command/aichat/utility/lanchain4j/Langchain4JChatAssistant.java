@@ -45,8 +45,9 @@ import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.request.ChatRequest;
+import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.output.Response;
 import dev.langchain4j.model.output.TokenUsage;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
@@ -133,11 +134,13 @@ public class Langchain4JChatAssistant implements ChatAssistant {
       messages.add(0, systemMessage);
 
       // Call the AI service
-      final Response<AiMessage> response = model.generate(messages, toolSpecifications);
+      final ChatRequest chatRequest =
+          ChatRequest.builder().messages(messages).toolSpecifications(toolSpecifications).build();
+      final ChatResponse response = model.chat(chatRequest);
       final TokenUsage tokenUsage = response.tokenUsage();
       LOGGER.log(Level.INFO, new StringFormat("%s", tokenUsage));
 
-      final AiMessage aiMessage = response.content();
+      final AiMessage aiMessage = response.aiMessage();
       final String answer;
       if (aiMessage.hasToolExecutionRequests()) {
         final StringBuilder buffer = new StringBuilder();
