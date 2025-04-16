@@ -92,7 +92,7 @@ public class Langchain4JUtility {
         final Map<String, JsonNode> jsonSchema = jsonSchema(parametersClass);
         final Map<String, JsonSchemaElement> properties = toProperties(jsonSchema);
         final JsonObjectSchema parameters =
-            JsonObjectSchema.builder().properties(properties).build();
+            JsonObjectSchema.builder().addProperties(properties).build();
 
         final ToolSpecification toolSpecification =
             ToolSpecification.builder()
