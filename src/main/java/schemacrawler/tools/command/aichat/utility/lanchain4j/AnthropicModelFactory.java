@@ -35,7 +35,7 @@ import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
 import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
@@ -70,7 +70,7 @@ public class AnthropicModelFactory implements AiModelFactory {
   }
 
   @Override
-  public ChatLanguageModel newChatLanguageModel() {
+  public ChatModel newChatModel() {
     return AnthropicChatModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
         .modelName(aiChatCommandOptions.model())

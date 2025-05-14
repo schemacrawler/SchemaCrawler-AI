@@ -44,7 +44,7 @@ import dev.langchain4j.data.message.ChatMessage;
 import dev.langchain4j.data.message.SystemMessage;
 import dev.langchain4j.data.message.UserMessage;
 import dev.langchain4j.memory.ChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.chat.request.ChatRequest;
 import dev.langchain4j.model.chat.response.ChatResponse;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -69,7 +69,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
 
-  private final ChatLanguageModel model;
+  private final ChatModel model;
   private final ChatMemory chatMemory;
   private final List<ToolSpecification> toolSpecifications;
   private final Map<String, ToolExecutor> toolExecutors;
@@ -94,7 +94,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
     chatContextWindowSize = aiChatOptions.context();
 
-    model = modelFactory.newChatLanguageModel();
+    model = modelFactory.newChatModel();
     chatMemory = modelFactory.newChatMemory();
 
     final boolean useMetadata = aiChatOptions.useMetadata();

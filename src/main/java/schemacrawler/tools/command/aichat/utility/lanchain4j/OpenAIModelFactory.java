@@ -32,13 +32,13 @@ import java.time.Duration;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiChatModel;
 import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
-import dev.langchain4j.model.openai.OpenAiTokenizer;
+import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.utility.lanchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.property.PropertyName;
@@ -72,7 +72,7 @@ public class OpenAIModelFactory implements AiModelFactory {
   }
 
   @Override
-  public ChatLanguageModel newChatLanguageModel() {
+  public ChatModel newChatModel() {
     return OpenAiChatModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
         .modelName(aiChatCommandOptions.model())
@@ -88,7 +88,7 @@ public class OpenAIModelFactory implements AiModelFactory {
   @Override
   public ChatMemory newChatMemory() {
     return TokenWindowChatMemory.builder()
-        .maxTokens(8_000, new OpenAiTokenizer(aiChatCommandOptions.model()))
+        .maxTokens(8_000, new OpenAiTokenCountEstimator(aiChatCommandOptions.model()))
         .build();
   }
 

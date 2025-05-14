@@ -32,7 +32,7 @@ import java.time.Duration;
 import static java.util.Objects.requireNonNull;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
-import dev.langchain4j.model.chat.ChatLanguageModel;
+import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModelName;
@@ -70,7 +70,7 @@ public class GitHubModelFactory implements AiModelFactory {
   }
 
   @Override
-  public ChatLanguageModel newChatLanguageModel() {
+  public ChatModel newChatModel() {
     return GitHubModelsChatModel.builder()
         .gitHubToken(aiChatCommandOptions.apiKey())
         .modelName(aiChatCommandOptions.model())
