@@ -1,4 +1,4 @@
-package schemacrawler.tools.command.aichat.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.langchain4j;
 
 import java.sql.Connection;
 import static java.util.Objects.requireNonNull;

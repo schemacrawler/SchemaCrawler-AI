@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.utility.lanchain4j;
+package schemacrawler.tools.command.aichat.utility.langchain4j;
 
 import java.sql.Connection;
 import java.util.ArrayList;
