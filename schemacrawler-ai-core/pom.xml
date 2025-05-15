@@ -15,25 +15,6 @@
   <name>SchemaCrawler AI</name>
   <description>Integrates SchemaCrawler with AI chat services.</description>
 
-  <dependencyManagement>
-    <dependencies>
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-bom</artifactId>
-        <version>1.0.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-community</artifactId>
-        <version>1.0.0-beta5</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
-
   <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
@@ -50,28 +31,6 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-lint</artifactId>
-    </dependency>
-
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-community-lucene</artifactId>
-      <version>1.0.0-beta5</version>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-open-ai</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-github-models</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>dev.langchain4j</groupId>
-      <artifactId>langchain4j-anthropic</artifactId>
     </dependency>
 
     <dependency>
