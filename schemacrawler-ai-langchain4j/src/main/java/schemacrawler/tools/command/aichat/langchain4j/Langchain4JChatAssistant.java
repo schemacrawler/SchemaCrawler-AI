@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
  */
 
-package schemacrawler.tools.command.aichat.utility.langchain4j;
+package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -57,7 +57,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.utility.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.IOUtility;
 import us.fatehi.utility.string.StringFormat;
 

@@ -26,33 +26,33 @@ http://www.gnu.org/licenses/
 ========================================================================
  */
 
-package schemacrawler.tools.command.aichat.utility.langchain4j;
+package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.time.Duration;
 import static java.util.Objects.requireNonNull;
+import dev.langchain4j.exception.UnsupportedFeatureException;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.MessageWindowChatMemory;
+import dev.langchain4j.model.anthropic.AnthropicChatModel;
+import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.model.github.GitHubModelsChatModel;
-import dev.langchain4j.model.github.GitHubModelsChatModelName;
-import dev.langchain4j.model.github.GitHubModelsEmbeddingModel;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.utility.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.property.PropertyName;
 
-public class GitHubModelFactory implements AiModelFactory {
+public class AnthropicModelFactory implements AiModelFactory {
 
-  private final PropertyName aiProvider = new PropertyName("github-models", "GitHub Models");
+  private final PropertyName aiProvider = new PropertyName("anthropic", "Anthropic");
   private final AiChatCommandOptions aiChatCommandOptions;
 
-  public GitHubModelFactory(final AiChatCommandOptions commandOptions) {
+  public AnthropicModelFactory(final AiChatCommandOptions commandOptions) {
     aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
   }
 
   @Override
   public boolean hasEmbeddingModel() {
-    return true;
+    return false;
   }
 
   @Override
@@ -61,8 +61,8 @@ public class GitHubModelFactory implements AiModelFactory {
       return false;
     }
     final String model = aiChatCommandOptions.model();
-    for (final GitHubModelsChatModelName openAiChatModelName : GitHubModelsChatModelName.values()) {
-      if (openAiChatModelName.toString().equals(model)) {
+    for (final AnthropicChatModelName modelName : AnthropicChatModelName.values()) {
+      if (modelName.toString().equals(model)) {
         return true;
       }
     }
@@ -71,11 +71,13 @@ public class GitHubModelFactory implements AiModelFactory {
 
   @Override
   public ChatModel newChatModel() {
-    return GitHubModelsChatModel.builder()
-        .gitHubToken(aiChatCommandOptions.apiKey())
+    return AnthropicChatModel.builder()
+        .apiKey(aiChatCommandOptions.apiKey())
         .modelName(aiChatCommandOptions.model())
         .temperature(0.2)
         .timeout(Duration.ofSeconds(aiChatCommandOptions.timeout()))
+        .logRequests(true)
+        .logResponses(true)
         .build();
   }
 
@@ -86,11 +88,7 @@ public class GitHubModelFactory implements AiModelFactory {
 
   @Override
   public EmbeddingModel newEmbeddingModel() {
-    final String embeddingModelName = "text-embedding-3-small";
-    return GitHubModelsEmbeddingModel.builder()
-        .gitHubToken(aiChatCommandOptions.apiKey())
-        .modelName(embeddingModelName)
-        .build();
+    throw new UnsupportedFeatureException("Anthropic does not have embedding models");
   }
 
   @Override
