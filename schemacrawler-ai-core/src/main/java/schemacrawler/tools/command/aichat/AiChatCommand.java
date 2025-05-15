@@ -28,13 +28,15 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
+import java.sql.Connection;
 import java.util.Scanner;
+import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.utility.langchain4j.Langchain4JChatAssistant;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
@@ -62,15 +64,39 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   @Override
   public void execute() {
     final String PROMPT = String.format("%nPrompt: ");
-    try (final ChatAssistant chatAssistant =
-            new Langchain4JChatAssistant(commandOptions, catalog, connection);
-        final Scanner scanner = new Scanner(System.in); ) {
+
+    // Load ChatAssistant implementation using ServiceLoader
+    final ServiceLoader<ChatAssistant> serviceLoader = ServiceLoader.load(ChatAssistant.class);
+    ChatAssistant chatAssistant = null;
+
+    for (ChatAssistant assistant : serviceLoader) {
+      if (assistant != null) {
+        try {
+          // Initialize the assistant with our parameters
+          // This assumes the implementation has a constructor that takes these parameters
+          // or can be configured after instantiation
+          java.lang.reflect.Constructor<?> constructor =
+              assistant.getClass().getConstructor(AiChatCommandOptions.class, Catalog.class, Connection.class);
+          chatAssistant = (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
+          break;
+        } catch (Exception e) {
+          LOGGER.log(Level.WARNING, "Could not initialize chat assistant", e);
+        }
+      }
+    }
+
+    if (chatAssistant == null) {
+      throw new SchemaCrawlerException("No chat assistant implementation found");
+    }
+
+    try (final ChatAssistant assistant = chatAssistant;
+         final Scanner scanner = new Scanner(System.in)) {
       while (true) {
         System.out.print(PROMPT);
         final String prompt = scanner.nextLine();
-        final String response = chatAssistant.chat(prompt);
+        final String response = assistant.chat(prompt);
         System.out.println(response);
-        if (chatAssistant.shouldExit()) {
+        if (assistant.shouldExit()) {
           return;
         }
       }

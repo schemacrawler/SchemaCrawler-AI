@@ -51,6 +51,11 @@
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-lint</artifactId>
     </dependency>
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-ai-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
 
     <dependency>
       <groupId>dev.langchain4j</groupId>
