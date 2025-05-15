@@ -13,31 +13,19 @@
   <artifactId>schemacrawler-ai-parent</artifactId>
   <version>16.25.3-1</version>
   <packaging>pom</packaging>
-  <name>SchemaCrawler AI Parent</name>
-  <description>Parent project for SchemaCrawler AI modules</description>
+  <name>SchemaCrawler AI [Parent]</name>
+  <description>Free database schema discovery and comprehension tool</description>
 
   <properties>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <java.version>21</java.version>
+    <maven.compiler.source>21</maven.compiler.source>
+    <maven.compiler.target>21</maven.compiler.target>
     <schemacrawler.version>16.25.3</schemacrawler.version>
   </properties>
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-bom</artifactId>
-        <version>1.0.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>dev.langchain4j</groupId>
-        <artifactId>langchain4j-community</artifactId>
-        <version>1.0.0-beta5</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
 
       <!-- SchemaCrawler dependencies -->
       <dependency>
@@ -110,34 +98,9 @@
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
-          <version>3.14.0</version>
           <configuration>
             <release>21</release>
             <encoding>UTF-8</encoding>
-          </configuration>
-        </plugin>
-        <plugin>
-          <inherited>true</inherited>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-javadoc-plugin</artifactId>
-          <executions>
-            <execution>
-              <id>attach-javadocs</id>
-              <goals>
-                <goal>jar</goal>
-              </goals>
-              <configuration>
-                <release>21</release>
-                <doctitle>SchemaCrawler AI ${project.version}</doctitle>
-              </configuration>
-            </execution>
-          </executions>
-        </plugin>
-        <plugin>
-          <groupId>org.apache.maven.plugins</groupId>
-          <artifactId>maven-deploy-plugin</artifactId>
-          <configuration>
-            <skip>false</skip>
           </configuration>
         </plugin>
       </plugins>
