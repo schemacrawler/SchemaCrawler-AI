@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>us.fatehi</groupId>
+    <artifactId>schemacrawler-ai-parent</artifactId>
+    <version>16.25.3-1</version>
+    <relativePath>../schemacrawler-ai-parent</relativePath>
+  </parent>
+
+  <artifactId>schemacrawler-ai-extension</artifactId>
+  <packaging>jar</packaging>
+  <name>SchemaCrawler AI Extension</name>
+  <description>Extension module for SchemaCrawler AI service loader extensions.</description>
+
+  <dependencies>
+    <!-- Core module dependency -->
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-ai</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <!-- SchemaCrawler dependencies -->
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler</artifactId>
+    </dependency>
+
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-testdb</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+      </plugin>
+    </plugins>
+  </build>
+</project>
