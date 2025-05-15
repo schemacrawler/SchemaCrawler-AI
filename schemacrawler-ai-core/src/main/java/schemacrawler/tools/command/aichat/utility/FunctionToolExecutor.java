@@ -37,7 +37,7 @@ public final class FunctionToolExecutor {
       functionDefinition =
           (FunctionDefinition<FunctionParameters>) lookedupFunctionDefinition.get();
     } else {
-      LOGGER.log(Level.WARNING, new StringFormat("Function <> not found", functionName));
+      LOGGER.log(Level.WARNING, new StringFormat("Function <%s> not found", functionName));
       functionDefinition = null;
     }
   }
