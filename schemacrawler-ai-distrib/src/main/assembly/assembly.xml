@@ -12,6 +12,19 @@
       <unpack>false</unpack>
       <scope>system</scope>
     </dependencySet>
+    <!-- Include schemacrawler-ai modules -->
+    <dependencySet>
+      <outputDirectory>.</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <unpack>false</unpack>
+      <useTransitiveFiltering>false</useTransitiveFiltering>
+      <scope>runtime</scope>
+      <includes>
+        <include>us.fatehi:schemacrawler-ai-core</include>
+        <include>us.fatehi:schemacrawler-ai-langchain4j</include>
+        <include>us.fatehi:schemacrawler-ai-mcp</include>
+      </includes>
+    </dependencySet>
     <!-- Include only new depdencies from this project,
          not dependencies inherited from schemacrawler -->
     <dependencySet>
@@ -30,7 +43,15 @@
 		<exclude>javax.validation:*</exclude>
 		<exclude>com.azure:azure-core-test</exclude>
 		<exclude>org.apache.ant:*</exclude>
-        <exclude>us.fatehi:schemacrawler*</exclude>
+        <exclude>us.fatehi:schemacrawler</exclude>
+        <exclude>us.fatehi:schemacrawler-api</exclude>
+        <exclude>us.fatehi:schemacrawler-tools</exclude>
+        <exclude>us.fatehi:schemacrawler-commandline</exclude>
+        <exclude>us.fatehi:schemacrawler-offline</exclude>
+        <exclude>us.fatehi:schemacrawler-scripting</exclude>
+        <exclude>us.fatehi:schemacrawler-lint</exclude>
+        <exclude>us.fatehi:schemacrawler-testdb</exclude>
+        <exclude>us.fatehi:schemacrawler-ai-*</exclude>
       </excludes>
     </dependencySet>
   </dependencySets>
