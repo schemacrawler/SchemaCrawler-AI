@@ -30,7 +30,6 @@ package schemacrawler.tools.command.aichat;
 
 import java.sql.Connection;
 import java.util.Scanner;
-import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
@@ -65,32 +64,9 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
   public void execute() {
     final String PROMPT = String.format("%nPrompt: ");
 
-    // Load ChatAssistant implementation using ServiceLoader
-    final ServiceLoader<ChatAssistant> serviceLoader = ServiceLoader.load(ChatAssistant.class);
-    ChatAssistant chatAssistant = null;
-
-    for (final ChatAssistant assistant : serviceLoader) {
-      if (assistant != null) {
-        try {
-          // Initialize the assistant with our parameters
-          // This assumes the implementation has a constructor that takes these parameters
-          // or can be configured after instantiation
-          final java.lang.reflect.Constructor<?> constructor =
-              assistant
-                  .getClass()
-                  .getConstructor(AiChatCommandOptions.class, Catalog.class, Connection.class);
-          chatAssistant =
-              (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
-          break;
-        } catch (final Exception e) {
-          LOGGER.log(Level.WARNING, "Could not initialize chat assistant", e);
-        }
-      }
-    }
-
-    if (chatAssistant == null) {
-      throw new SchemaCrawlerException("No chat assistant implementation found");
-    }
+    // Load ChatAssistant implementation using ChatAssistantRegistry
+    final ChatAssistantRegistry registry = ChatAssistantRegistry.getChatAssistantRegistry();
+    final ChatAssistant chatAssistant = registry.newChatAssistant(commandOptions, catalog, connection);
 
     try (final ChatAssistant assistant = chatAssistant;
         final Scanner scanner = new Scanner(System.in)) {
