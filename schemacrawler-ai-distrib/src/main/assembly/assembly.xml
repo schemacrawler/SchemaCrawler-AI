@@ -1,0 +1,58 @@
+<assembly xmlns="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2"
+     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://maven.apache.org/plugins/maven-assembly-plugin/assembly/1.1.2
+               http://maven.apache.org/xsd/assembly-1.1.2.xsd">
+  <id>lib</id>
+  <includeBaseDirectory>false</includeBaseDirectory>
+  <dependencySets>
+    <!-- Include only the project artifact -->
+    <dependencySet>
+      <outputDirectory>.</outputDirectory>
+      <useProjectArtifact>true</useProjectArtifact>
+      <unpack>false</unpack>
+      <scope>system</scope>
+    </dependencySet>
+    <!-- Include schemacrawler-ai modules -->
+    <dependencySet>
+      <outputDirectory>.</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <unpack>false</unpack>
+      <useTransitiveFiltering>false</useTransitiveFiltering>
+      <scope>runtime</scope>
+      <includes>
+        <include>us.fatehi:schemacrawler-ai-core</include>
+        <include>us.fatehi:schemacrawler-ai-langchain4j</include>
+        <include>us.fatehi:schemacrawler-ai-mcp</include>
+      </includes>
+    </dependencySet>
+    <!-- Include only new depdencies from this project,
+         not dependencies inherited from schemacrawler -->
+    <dependencySet>
+      <outputDirectory>.</outputDirectory>
+      <useProjectArtifact>false</useProjectArtifact>
+      <unpack>false</unpack>
+	  <useTransitiveFiltering>false</useTransitiveFiltering>
+      <scope>runtime</scope>
+      <excludes>
+        <exclude>org.slf4j:*</exclude>
+		<exclude>org.junit.platform:*</exclude>
+		<exclude>org.junit.jupiter:*</exclude>
+		<exclude>org.opentest4j:*</exclude>
+		<exclude>com.fasterxml.jackson.*:*</exclude>
+		<exclude>org.yaml:*</exclude>
+		<exclude>javax.validation:*</exclude>
+		<exclude>com.azure:azure-core-test</exclude>
+		<exclude>org.apache.ant:*</exclude>
+        <exclude>us.fatehi:schemacrawler</exclude>
+        <exclude>us.fatehi:schemacrawler-api</exclude>
+        <exclude>us.fatehi:schemacrawler-tools</exclude>
+        <exclude>us.fatehi:schemacrawler-commandline</exclude>
+        <exclude>us.fatehi:schemacrawler-offline</exclude>
+        <exclude>us.fatehi:schemacrawler-scripting</exclude>
+        <exclude>us.fatehi:schemacrawler-lint</exclude>
+        <exclude>us.fatehi:schemacrawler-testdb</exclude>
+        <exclude>us.fatehi:schemacrawler-ai-*</exclude>
+      </excludes>
+    </dependencySet>
+  </dependencySets>
+</assembly>
