@@ -39,8 +39,8 @@ import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class OpenAIModelFactory implements AiModelFactory {
@@ -72,6 +72,13 @@ public class OpenAIModelFactory implements AiModelFactory {
   }
 
   @Override
+  public ChatMemory newChatMemory() {
+    return TokenWindowChatMemory.builder()
+        .maxTokens(8_000, new OpenAiTokenCountEstimator(aiChatCommandOptions.model()))
+        .build();
+  }
+
+  @Override
   public ChatModel newChatModel() {
     return OpenAiChatModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
@@ -82,13 +89,6 @@ public class OpenAIModelFactory implements AiModelFactory {
         .strictTools(true)
         .logRequests(true)
         .logResponses(true)
-        .build();
-  }
-
-  @Override
-  public ChatMemory newChatMemory() {
-    return TokenWindowChatMemory.builder()
-        .maxTokens(8_000, new OpenAiTokenCountEstimator(aiChatCommandOptions.model()))
         .build();
   }
 

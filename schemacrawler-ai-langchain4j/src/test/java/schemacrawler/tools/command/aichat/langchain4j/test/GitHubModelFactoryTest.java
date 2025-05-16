@@ -5,9 +5,7 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import org.junit.jupiter.api.Test;
-
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
@@ -16,102 +14,103 @@ import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 
 public class GitHubModelFactoryTest {
 
-    @Test
-    public void testIsSupportedWithGitHubProvider() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        when(options.aiProvider()).thenReturn("github-models");
-        // Mock the isSupported method to return true for testing
-        GitHubModelFactory factory = new GitHubModelFactory(options) {
-            @Override
-            public boolean isSupported() {
-                return true;
-            }
+  @Test
+  public void testHasEmbeddingModel() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
+
+    // Act & Assert
+    assertThat(factory.hasEmbeddingModel(), is(true));
+  }
+
+  @Test
+  public void testIsSupportedWithGitHubProvider() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    when(options.aiProvider()).thenReturn("github-models");
+    // Mock the isSupported method to return true for testing
+    final GitHubModelFactory factory =
+        new GitHubModelFactory(options) {
+          @Override
+          public boolean isSupported() {
+            return true;
+          }
         };
-        when(options.apiKey()).thenReturn("test-api-key");
+    when(options.apiKey()).thenReturn("test-api-key");
 
-        // Act & Assert
-        assertThat(factory.isSupported(), is(true));
-    }
+    // Act & Assert
+    assertThat(factory.isSupported(), is(true));
+  }
 
-    @Test
-    public void testIsSupportedWithNonGitHubProvider() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        when(options.aiProvider()).thenReturn("other");
+  @Test
+  public void testIsSupportedWithNonGitHubProvider() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    when(options.aiProvider()).thenReturn("other");
 
-        GitHubModelFactory factory = new GitHubModelFactory(options);
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
 
-        // Act & Assert
-        assertThat(factory.isSupported(), is(false));
-    }
+    // Act & Assert
+    assertThat(factory.isSupported(), is(false));
+  }
 
-    @Test
-    public void testHasEmbeddingModel() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        GitHubModelFactory factory = new GitHubModelFactory(options);
+  @Test
+  public void testNewChatMemory() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    when(options.model()).thenReturn("llama-3-8b-instruct");
+    when(options.context()).thenReturn(10); // Add context value > 0
 
-        // Act & Assert
-        assertThat(factory.hasEmbeddingModel(), is(true));
-    }
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
 
-    @Test
-    public void testNewChatModel() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        when(options.aiProvider()).thenReturn("github-models");
-        when(options.model()).thenReturn("llama-3-8b-instruct");
-        when(options.apiKey()).thenReturn("test-api-key");
-        when(options.timeout()).thenReturn(60);
+    // Act
+    final ChatMemory chatMemory = factory.newChatMemory();
 
-        GitHubModelFactory factory = new GitHubModelFactory(options);
+    // Assert
+    assertThat(chatMemory, is(notNullValue()));
+  }
 
-        // Act
-        ChatModel chatModel = factory.newChatModel();
+  @Test
+  public void testNewChatModel() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    when(options.aiProvider()).thenReturn("github-models");
+    when(options.model()).thenReturn("llama-3-8b-instruct");
+    when(options.apiKey()).thenReturn("test-api-key");
+    when(options.timeout()).thenReturn(60);
 
-        // Assert
-        assertThat(chatModel, is(notNullValue()));
-    }
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
 
-    @Test
-    public void testNewChatMemory() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        when(options.model()).thenReturn("llama-3-8b-instruct");
-        when(options.context()).thenReturn(10); // Add context value > 0
+    // Act
+    final ChatModel chatModel = factory.newChatModel();
 
-        GitHubModelFactory factory = new GitHubModelFactory(options);
+    // Assert
+    assertThat(chatModel, is(notNullValue()));
+  }
 
-        // Act
-        ChatMemory chatMemory = factory.newChatMemory();
+  @Test
+  public void testNewEmbeddingModel() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    when(options.apiKey()).thenReturn("test-api-key");
 
-        // Assert
-        assertThat(chatMemory, is(notNullValue()));
-    }
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
 
-    @Test
-    public void testNewEmbeddingModel() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        when(options.apiKey()).thenReturn("test-api-key");
+    // Act
+    final EmbeddingModel embeddingModel = factory.newEmbeddingModel();
 
-        GitHubModelFactory factory = new GitHubModelFactory(options);
+    // Assert
+    assertThat(embeddingModel, is(notNullValue()));
+  }
 
-        // Act
-        EmbeddingModel embeddingModel = factory.newEmbeddingModel();
+  @Test
+  public void testToString() {
+    // Arrange
+    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final GitHubModelFactory factory = new GitHubModelFactory(options);
 
-        // Assert
-        assertThat(embeddingModel, is(notNullValue()));
-    }
-
-    @Test
-    public void testToString() {
-        // Arrange
-        AiChatCommandOptions options = mock(AiChatCommandOptions.class);
-        GitHubModelFactory factory = new GitHubModelFactory(options);
-
-        // Act & Assert
-        assertThat(factory.toString(), is("github-models - GitHub Models"));
-    }
+    // Act & Assert
+    assertThat(factory.toString(), is("github-models - GitHub Models"));
+  }
 }

@@ -37,8 +37,8 @@ import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class AnthropicModelFactory implements AiModelFactory {
@@ -70,6 +70,11 @@ public class AnthropicModelFactory implements AiModelFactory {
   }
 
   @Override
+  public ChatMemory newChatMemory() {
+    return MessageWindowChatMemory.withMaxMessages(aiChatCommandOptions.context());
+  }
+
+  @Override
   public ChatModel newChatModel() {
     return AnthropicChatModel.builder()
         .apiKey(aiChatCommandOptions.apiKey())
@@ -79,11 +84,6 @@ public class AnthropicModelFactory implements AiModelFactory {
         .logRequests(true)
         .logResponses(true)
         .build();
-  }
-
-  @Override
-  public ChatMemory newChatMemory() {
-    return MessageWindowChatMemory.withMaxMessages(aiChatCommandOptions.context());
   }
 
   @Override

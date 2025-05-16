@@ -56,8 +56,8 @@ import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.ChatAssistant;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.IOUtility;
 import us.fatehi.utility.string.StringFormat;
 

@@ -44,9 +44,9 @@ public class AiModelFactoryUtility {
 
     boolean isSupported();
 
-    ChatModel newChatModel();
-
     ChatMemory newChatMemory();
+
+    ChatModel newChatModel();
 
     EmbeddingModel newEmbeddingModel();
   }

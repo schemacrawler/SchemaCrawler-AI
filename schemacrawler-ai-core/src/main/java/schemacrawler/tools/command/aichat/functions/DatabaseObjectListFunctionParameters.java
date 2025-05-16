@@ -41,10 +41,10 @@ import schemacrawler.tools.command.aichat.FunctionParameters;
 public record DatabaseObjectListFunctionParameters(
     @JsonPropertyDescription(
             """
-        Type of database object to list, like tables (including views),
-        routines (that is, functions and stored procedures),
-        schemas (that is, catalogs), sequences, or synonyms.
-        """)
+    Type of database object to list, like tables (including views),
+    routines (that is, functions and stored procedures),
+    schemas (that is, catalogs), sequences, or synonyms.
+    """)
         @JsonProperty(defaultValue = "ALL", required = true)
         DatabaseObjectType databaseObjectType)
     implements FunctionParameters {

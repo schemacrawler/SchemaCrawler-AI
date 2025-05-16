@@ -37,8 +37,8 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModelName;
 import dev.langchain4j.model.github.GitHubModelsEmbeddingModel;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class GitHubModelFactory implements AiModelFactory {
@@ -70,6 +70,11 @@ public class GitHubModelFactory implements AiModelFactory {
   }
 
   @Override
+  public ChatMemory newChatMemory() {
+    return MessageWindowChatMemory.withMaxMessages(aiChatCommandOptions.context());
+  }
+
+  @Override
   public ChatModel newChatModel() {
     return GitHubModelsChatModel.builder()
         .gitHubToken(aiChatCommandOptions.apiKey())
@@ -77,11 +82,6 @@ public class GitHubModelFactory implements AiModelFactory {
         .temperature(0.2)
         .timeout(Duration.ofSeconds(aiChatCommandOptions.timeout()))
         .build();
-  }
-
-  @Override
-  public ChatMemory newChatMemory() {
-    return MessageWindowChatMemory.withMaxMessages(aiChatCommandOptions.context());
   }
 
   @Override

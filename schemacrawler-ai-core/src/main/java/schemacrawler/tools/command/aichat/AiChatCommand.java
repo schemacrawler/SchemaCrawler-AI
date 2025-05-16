@@ -69,17 +69,20 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
     final ServiceLoader<ChatAssistant> serviceLoader = ServiceLoader.load(ChatAssistant.class);
     ChatAssistant chatAssistant = null;
 
-    for (ChatAssistant assistant : serviceLoader) {
+    for (final ChatAssistant assistant : serviceLoader) {
       if (assistant != null) {
         try {
           // Initialize the assistant with our parameters
           // This assumes the implementation has a constructor that takes these parameters
           // or can be configured after instantiation
-          java.lang.reflect.Constructor<?> constructor =
-              assistant.getClass().getConstructor(AiChatCommandOptions.class, Catalog.class, Connection.class);
-          chatAssistant = (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
+          final java.lang.reflect.Constructor<?> constructor =
+              assistant
+                  .getClass()
+                  .getConstructor(AiChatCommandOptions.class, Catalog.class, Connection.class);
+          chatAssistant =
+              (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
           break;
-        } catch (Exception e) {
+        } catch (final Exception e) {
           LOGGER.log(Level.WARNING, "Could not initialize chat assistant", e);
         }
       }
@@ -90,7 +93,7 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
     }
 
     try (final ChatAssistant assistant = chatAssistant;
-         final Scanner scanner = new Scanner(System.in)) {
+        final Scanner scanner = new Scanner(System.in)) {
       while (true) {
         System.out.print(PROMPT);
         final String prompt = scanner.nextLine();

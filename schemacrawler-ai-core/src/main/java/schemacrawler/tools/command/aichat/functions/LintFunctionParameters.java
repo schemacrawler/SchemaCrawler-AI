@@ -40,10 +40,10 @@ import schemacrawler.tools.command.aichat.FunctionParameters;
 public record LintFunctionParameters(
     @JsonPropertyDescription(
             """
-        Name of database table for which to find design issues.
-        Can be a regular expression.
-        Use an empty string if all tables are requested.
-        """)
+    Name of database table for which to find design issues.
+    Can be a regular expression.
+    Use an empty string if all tables are requested.
+    """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName)
     implements FunctionParameters {
