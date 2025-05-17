@@ -116,7 +116,7 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
         final Class<? extends ChatAssistant> chatAssistantClass = chatAssistant.getClass();
         LOGGER.log(
             Level.FINER,
-            String.format("Loading chat assistant, %s", chatAssistantClass.getName()));
+            String.format("Loading chat assistant <%s>", chatAssistantClass.getName()));
         chatAssistantClasses.add(chatAssistantClass);
       }
     } catch (final Exception e) {
