@@ -1,9 +1,12 @@
 package schemacrawler.tools.command.aichat.mcp;
 
+import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.annotation.Bean;
 
 /**
  * Spring Boot application for the SchemaCrawler AI MCP server.
@@ -16,14 +19,9 @@ public class SchemaCrawlerMCPServer {
     SpringApplication.run(SchemaCrawlerMCPServer.class, args);
   }
 
-  @Tool(name = "get-weather", description = "Get the weather in a city", returnDirect = true)
-  public String weather(@ToolParam(description = """
-    Name of the city, including state and country.
-    For example, Boston, MA, USA
-    """, required = true) final String city) {
-    String message = String.format("The weather in %s is sunny", city);
-    System.out.printf(">>> %s", message);
-    return message;
+  @Bean
+  public ToolCallbackProvider weatherTools(WeatherService weatherService) {
+    return MethodToolCallbackProvider.builder().toolObjects(weatherService).build();
   }
 
 }
