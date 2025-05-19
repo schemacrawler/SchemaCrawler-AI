@@ -26,9 +26,6 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat;
+package schemacrawler.tools.command.aichat.tools;
 
-import java.util.function.Supplier;
-
-// NOTE: This class reserves the space to return an object instead of a string in the future
-public interface FunctionReturn extends Supplier<String> {}
+public interface FunctionParameters {}

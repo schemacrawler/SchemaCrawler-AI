@@ -14,8 +14,8 @@ import org.junit.jupiter.api.Test;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JUtility;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 
 public class Langchain4JUtilityTest {
 
@@ -48,8 +48,8 @@ public class Langchain4JUtilityTest {
                 .filter(
                     fd ->
                         fd.getFunctionType()
-                            == schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType
-                                .USER)
+                            == schemacrawler.tools.command.aichat.tools.FunctionDefinition
+                                .FunctionType.USER)
                 .count();
 
     assertThat(toolExecutors.size(), is(userFunctionCount));

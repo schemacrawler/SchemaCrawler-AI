@@ -31,8 +31,8 @@ package schemacrawler.tools.command.aichat.functions;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {

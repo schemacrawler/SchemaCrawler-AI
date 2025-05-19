@@ -24,26 +24,13 @@ public class SchemaCrawlerMCPServer {
   public ToolCallbackProvider schemaCrawlerTools() {
     final List<ToolCallback> tools = SpringAIUtility.toolCallbacks(SpringAIUtility.tools());
     final ToolCallbackProvider toolCallbackProvider = ToolCallbackProvider.from(tools);
-    printTools(toolCallbackProvider);
     return toolCallbackProvider;
   }
 
   @Bean
   public ToolCallbackProvider weatherTools(final CommonService weatherService) {
     final MethodToolCallbackProvider toolCallbackProvider =
-      MethodToolCallbackProvider.builder().toolObjects(weatherService).build();
-    printTools(toolCallbackProvider);
+        MethodToolCallbackProvider.builder().toolObjects(weatherService).build();
     return toolCallbackProvider;
-  }
-
-  private void printTools(final ToolCallbackProvider toolCallbackProvider) {
-    List.of(toolCallbackProvider.getToolCallbacks())
-      .forEach(
-        toolCallback -> {
-          System.out.println(toolCallback.getToolDefinition().name());
-          System.out.println(toolCallback.getToolDefinition().description());
-          System.out.println(toolCallback.getToolDefinition().inputSchema());
-          System.out.println("----------------------------------------");
-        });
   }
 }

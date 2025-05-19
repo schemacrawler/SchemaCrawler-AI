@@ -8,11 +8,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionParameters;
-import schemacrawler.tools.command.aichat.FunctionReturn;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import us.fatehi.utility.string.StringFormat;
 
 public final class FunctionToolExecutor {

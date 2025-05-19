@@ -26,20 +26,14 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.tools;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Optional;
-import java.util.ServiceLoader;
+import java.util.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -93,6 +87,17 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return new ArrayList<>(functionDefinitionRegistry.values());
   }
 
+  public Collection<ToolSpecification> getToolSpecifications() {
+    final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
+    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
+      if (functionDefinition.getFunctionType() != FunctionDefinition.FunctionType.USER) {
+        continue;
+      }
+      toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
+    }
+    return toolSpecifications;
+  }
+
   @Override
   public String getName() {
     return "Function Definitions";
@@ -132,13 +137,4 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     }
     return Optional.of(functionDefinitionToCall);
   }
-
-  /*
-   * public FunctionExecutor newFunctionDefinition(final String functionName, final Object config) {
-   * requireNonNull(config, "No lint collector provided"); if (!hasFunctionDefinition(functionName))
-   * { LOGGER.log( Level.WARNING, new StringFormat("Could not instantiate function <%s>",
-   * functionName)); return something; } final FunctionDefinition<?> functionDefinition =
-   * functionDefinitionRegistry.get(functionName); return
-   * functionDefinition.newFunctionExecutor(config); }
-   */
 }

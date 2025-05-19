@@ -31,9 +31,9 @@ package schemacrawler.tools.command.aichat.functions;
 import java.util.UUID;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 import static java.util.Objects.requireNonNull;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionParameters;
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 

@@ -26,31 +26,32 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat;
+package schemacrawler.tools.command.aichat.tools;
 
-import static schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType.USER;
-import us.fatehi.utility.property.PropertyName;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public interface FunctionDefinition<P extends FunctionParameters> {
+import javax.validation.constraints.NotNull;
 
-  public enum FunctionType {
-    USER,
-    SYSTEM;
+public record ToolSpecification(
+    @NotNull String name, @NotNull String description, @NotNull ObjectNode parameters) {
+
+  public String getParametersAsString() {
+    return parameters.toPrettyString();
   }
 
-  String getDescription();
+  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
+  public JsonNode getToolSpecification() {
+    final ObjectNode toolSpecification = OBJECT_MAPPER.createObjectNode();
+    toolSpecification.put("name", name);
+    toolSpecification.put("description", description);
+    toolSpecification.put("parameters", parameters);
+    return toolSpecification;
   }
 
-  default FunctionType getFunctionType() {
-    return USER;
+  public String toString() {
+    return getToolSpecification().toPrettyString();
   }
-
-  String getName();
-
-  Class<P> getParametersClass();
-
-  FunctionExecutor<P> newExecutor();
 }

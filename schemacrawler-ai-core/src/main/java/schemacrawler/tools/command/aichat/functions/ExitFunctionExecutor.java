@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions;
 
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParameters> {

@@ -26,14 +26,31 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat;
+package schemacrawler.tools.command.aichat.tools;
 
-import java.util.UUID;
-import schemacrawler.tools.executable.Command;
+import static schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType.USER;
+import us.fatehi.utility.property.PropertyName;
 
-public interface FunctionExecutor<P extends FunctionParameters> extends Command<P, FunctionReturn> {
+public interface FunctionDefinition<P extends FunctionParameters> {
+
+  public enum FunctionType {
+    USER,
+    SYSTEM;
+  }
 
   String getDescription();
 
-  UUID getExecutorInstanceId();
+  default PropertyName getFunctionName() {
+    return new PropertyName(getName(), getDescription());
+  }
+
+  default FunctionType getFunctionType() {
+    return USER;
+  }
+
+  String getName();
+
+  Class<P> getParametersClass();
+
+  FunctionExecutor<P> newExecutor();
 }

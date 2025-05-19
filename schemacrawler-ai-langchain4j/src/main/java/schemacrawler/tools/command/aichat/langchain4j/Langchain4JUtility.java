@@ -31,17 +31,12 @@ package schemacrawler.tools.command.aichat.langchain4j;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
 import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
@@ -49,10 +44,12 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
 import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType;
 import us.fatehi.utility.UtilityMarker;
+
+import static schemacrawler.tools.command.aichat.tools.ToolUtility.extractParametersSchema;
 
 @UtilityMarker
 public class Langchain4JUtility {
@@ -89,8 +86,8 @@ public class Langchain4JUtility {
 
       try {
         final Class<?> parametersClass = functionDefinition.getParametersClass();
-        final Map<String, JsonNode> jsonSchema = jsonSchema(parametersClass);
-        final Map<String, JsonSchemaElement> properties = toProperties(jsonSchema);
+        final Map<String, JsonNode> parametersSchema = extractParametersSchema(parametersClass);
+        final Map<String, JsonSchemaElement> properties = toProperties(parametersSchema);
         final JsonObjectSchema parameters =
             JsonObjectSchema.builder().addProperties(properties).build();
 
@@ -108,25 +105,6 @@ public class Langchain4JUtility {
     }
 
     return toolSpecifications;
-  }
-
-  private static Map<String, JsonNode> jsonSchema(final Class<?> parametersClass) throws Exception {
-    final ObjectMapper mapper = new ObjectMapper();
-    final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
-    final JsonSchema schema = schemaGen.generateSchema(parametersClass);
-    final JsonNode schemaNode = mapper.valueToTree(schema);
-    final JsonNode properties = schemaNode.get("properties");
-    final Set<Entry<String, JsonNode>> namedProperties;
-    if (properties == null) {
-      namedProperties = new HashSet<>();
-    } else {
-      namedProperties = properties.properties();
-    }
-    final Map<String, JsonNode> propertiesMap = new HashMap<>();
-    for (final Entry<String, JsonNode> entry : namedProperties) {
-      propertiesMap.put(entry.getKey(), entry.getValue());
-    }
-    return propertiesMap;
   }
 
   private static Map<String, JsonSchemaElement> toProperties(
