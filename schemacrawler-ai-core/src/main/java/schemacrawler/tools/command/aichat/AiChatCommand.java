@@ -28,12 +28,10 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat;
 
-import java.sql.Connection;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
-import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
@@ -66,7 +64,8 @@ public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandO
 
     // Load ChatAssistant implementation using ChatAssistantRegistry
     final ChatAssistantRegistry registry = ChatAssistantRegistry.getChatAssistantRegistry();
-    final ChatAssistant chatAssistant = registry.newChatAssistant(commandOptions, catalog, connection);
+    final ChatAssistant chatAssistant =
+        registry.newChatAssistant(commandOptions, catalog, connection);
 
     try (final ChatAssistant assistant = chatAssistant;
         final Scanner scanner = new Scanner(System.in)) {
