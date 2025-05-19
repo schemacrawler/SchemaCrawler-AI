@@ -42,7 +42,6 @@ import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 /** Chat assistant registry for loading chat assistant implementations. */
 public final class ChatAssistantRegistry extends BasePluginRegistry {
@@ -74,7 +73,8 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
   public Collection<PropertyName> getRegisteredPlugins() {
     final List<PropertyName> assistants = new ArrayList<>();
     for (final Class<? extends ChatAssistant> chatAssistantClass : chatAssistantClasses) {
-      assistants.add(new PropertyName(chatAssistantClass.getSimpleName(), chatAssistantClass.getName()));
+      assistants.add(
+          new PropertyName(chatAssistantClass.getSimpleName(), chatAssistantClass.getName()));
     }
     Collections.sort(assistants);
     return assistants;
