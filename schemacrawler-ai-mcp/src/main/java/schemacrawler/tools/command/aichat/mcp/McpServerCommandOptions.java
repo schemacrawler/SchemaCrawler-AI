@@ -30,10 +30,8 @@ package schemacrawler.tools.command.aichat.mcp;
 
 import schemacrawler.tools.executable.CommandOptions;
 
-import static us.fatehi.utility.Utility.requireNotBlank;
 
-public record McpServerCommandOptions()
-    implements CommandOptions {
+public record McpServerCommandOptions() implements CommandOptions {
 
   public McpServerCommandOptions {
     // No options for this command

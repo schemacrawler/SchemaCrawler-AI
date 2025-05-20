@@ -9,8 +9,8 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * Service class for managing tool providers.
- * This class separates tool-related functionality to avoid circular dependencies.
+ * Service class for managing tool providers. This class separates tool-related functionality to
+ * avoid circular dependencies.
  */
 @Service
 public class ToolProviderService {

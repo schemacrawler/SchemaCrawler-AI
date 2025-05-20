@@ -29,8 +29,6 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.mcp;
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
 import schemacrawler.tools.executable.BaseCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
@@ -59,7 +57,7 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
 
     try {
       final McpServerCommandOptions options =
-        McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
+          McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
 
       final McpServerCommand scCommand = new McpServerCommand();
       scCommand.configure(options);

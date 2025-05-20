@@ -31,14 +31,11 @@ package schemacrawler.tools.command.aichat.mcp;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
-import us.fatehi.utility.PropertiesUtility;
 
-import static us.fatehi.utility.Utility.isBlank;
 
 public final class McpServerCommandOptionsBuilder
     implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
         ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
-
 
   public static McpServerCommandOptionsBuilder builder() {
     return new McpServerCommandOptionsBuilder();
