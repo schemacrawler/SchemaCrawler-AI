@@ -85,7 +85,7 @@ public final class ToolUtility {
     Objects.requireNonNull(functionDefinition, "Function definition must not be null");
     final String functionName = functionDefinition.getName();
     final String functionDescription = functionDefinition.getDescription();
-    final ObjectNode parameters = generateToolInput(functionDefinition.getParametersClass());
+    final ObjectNode parameters = generateParametersSchema(functionDefinition.getParametersClass());
     final ToolSpecification toolSpecification =
         new ToolSpecification(functionName, functionDescription, parameters);
     LOGGER.log(Level.FINE, String.format("Generated tool specification%n<%s>", toolSpecification));
@@ -93,7 +93,7 @@ public final class ToolUtility {
     return toolSpecification;
   }
 
-  private static ObjectNode generateToolInput(final Class<?> parametersClass) {
+  private static ObjectNode generateParametersSchema(final Class<?> parametersClass) {
     Objects.requireNonNull(parametersClass, "Parameters must not be null");
 
     final Map<String, JsonNode> parametersJsonSchema = extractParametersSchema(parametersClass);
