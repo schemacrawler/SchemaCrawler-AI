@@ -22,6 +22,11 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-ai-tools</artifactId>
+      <version>16.25.3-2</version>
+    </dependency>    
+    <dependency>
+      <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-scripting</artifactId>
     </dependency>
     <dependency>

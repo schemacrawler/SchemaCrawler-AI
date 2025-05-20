@@ -26,14 +26,14 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.tools;
 
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import java.util.UUID;
+import schemacrawler.tools.executable.Command;
 
-public class NoResultsReturn implements FunctionReturn {
+public interface FunctionExecutor<P extends FunctionParameters> extends Command<P, FunctionReturn> {
 
-  @Override
-  public String get() {
-    return "There were no matching results for your query.";
-  }
+  String getDescription();
+
+  UUID getExecutorInstanceId();
 }

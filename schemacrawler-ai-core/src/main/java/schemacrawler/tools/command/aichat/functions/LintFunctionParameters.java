@@ -34,7 +34,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import schemacrawler.tools.command.aichat.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record LintFunctionParameters(

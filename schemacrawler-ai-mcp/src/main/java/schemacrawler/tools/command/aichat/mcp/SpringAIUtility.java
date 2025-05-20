@@ -28,26 +28,17 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
-import com.fasterxml.jackson.module.jsonSchema.JsonSchemaGenerator;
-import com.github.victools.jsonschema.generator.SchemaVersion;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
-import org.springframework.ai.util.json.JsonParser;
 import org.springframework.lang.Nullable;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionDefinition.FunctionType;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
 
-import java.util.*;
-import java.util.Map.Entry;
-import java.util.logging.Level;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
 import java.util.logging.Logger;
 
 @UtilityMarker
@@ -71,80 +62,22 @@ public final class SpringAIUtility {
   public static List<ToolDefinition> tools() {
 
     final List<ToolDefinition> toolDefinitions = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition :
-      FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
+    for (final ToolSpecification toolSpecification :
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getToolSpecifications()) {
 
-      try {
-        final ToolDefinition toolDefinition =
+      final ToolDefinition toolDefinition =
           ToolDefinition.builder()
-            .name(functionDefinition.getName())
-            .description(functionDefinition.getDescription())
-            .inputSchema(generateToolInput(functionDefinition.getParametersClass()))
-            .build();
-        toolDefinitions.add(toolDefinition);
-      } catch (final Exception e) {
-        LOGGER.log(
-          Level.WARNING, String.format("Could not load <%s>", functionDefinition.getName()), e);
-      }
+              .name(toolSpecification.name())
+              .description(toolSpecification.description())
+              .inputSchema(toolSpecification.getParametersAsString())
+              .build();
+      toolDefinitions.add(toolDefinition);
     }
 
     return toolDefinitions;
   }
 
-  /**
-   * @see org.springframework.ai.util.json.schema.JsonSchemaGenerator
-   */
-  private static String generateToolInput(final Class<?> parametersClass) throws Exception {
-    Objects.requireNonNull(parametersClass, "Parameters must not be null");
-
-    final Map<String, JsonNode> parametersJsonSchema = jsonSchema(parametersClass);
-    final ObjectNode schema = JsonParser.getObjectMapper().createObjectNode();
-    schema.put("$schema", SchemaVersion.DRAFT_2020_12.getIdentifier());
-    schema.put("type", "object");
-
-    final List<String> required = new ArrayList<>();
-    final ObjectNode properties = schema.putObject("properties");
-    for (final Entry<String, JsonNode> parameter : parametersJsonSchema.entrySet()) {
-      final String parameterName = parameter.getKey();
-      final JsonNode parameterSchema = parameter.getValue();
-      if (parameterSchema.has("required") && parameterSchema.get("required").asBoolean()) {
-        ((ObjectNode) parameterSchema).remove("required");
-        required.add(parameterName);
-      }
-      properties.set(parameterName, parameterSchema);
-    }
-    final ArrayNode requiredArray = schema.putArray("required");
-    required.forEach(requiredArray::add);
-
-    schema.put("additionalProperties", false);
-
-    return schema.toPrettyString();
-  }
-
-  private static Map<String, JsonNode> jsonSchema(final Class<?> parametersClass) throws Exception {
-    final ObjectMapper mapper = new ObjectMapper();
-    final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
-    final JsonSchema schema = schemaGen.generateSchema(parametersClass);
-    final JsonNode schemaNode = mapper.valueToTree(schema);
-    final JsonNode properties = schemaNode.get("properties");
-    final Set<Entry<String, JsonNode>> namedProperties;
-    if (properties == null) {
-      namedProperties = new HashSet<>();
-    } else {
-      namedProperties = properties.properties();
-    }
-    final Map<String, JsonNode> propertiesMap = new HashMap<>();
-    for (final Entry<String, JsonNode> entry : namedProperties) {
-      propertiesMap.put(entry.getKey(), entry.getValue());
-    }
-    return propertiesMap;
-  }
-
-  public record SpringAIToolCallback(
-    ToolDefinition toolDefinition) implements ToolCallback {
+  public record SpringAIToolCallback(ToolDefinition toolDefinition) implements ToolCallback {
 
     public SpringAIToolCallback {
       Objects.requireNonNull(toolDefinition, "Tool definition must not be null");
@@ -158,9 +91,9 @@ public final class SpringAIUtility {
     @Override
     public String call(final String toolInput) {
       final String callMessage =
-        String.format(
-          "Call to <%s>%n%s%nTool was successfully executed with no return value.",
-          toolDefinition.name(), toolInput);
+          String.format(
+              "Call to <%s>%n%s%nTool was successfully executed with no return value.",
+              toolDefinition.name(), toolInput);
       System.out.println(callMessage);
       return callMessage;
     }

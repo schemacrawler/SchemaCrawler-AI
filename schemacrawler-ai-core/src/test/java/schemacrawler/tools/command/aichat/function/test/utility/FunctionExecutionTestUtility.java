@@ -38,10 +38,10 @@ import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
-import schemacrawler.tools.command.aichat.FunctionExecutor;
-import schemacrawler.tools.command.aichat.FunctionParameters;
-import schemacrawler.tools.command.aichat.FunctionReturn;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 
 public class FunctionExecutionTestUtility {
 

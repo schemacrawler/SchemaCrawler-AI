@@ -37,13 +37,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.FunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.functions.LintFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
