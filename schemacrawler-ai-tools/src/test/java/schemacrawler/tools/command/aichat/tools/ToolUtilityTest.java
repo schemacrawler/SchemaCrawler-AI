@@ -36,21 +36,15 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasKey;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-
 import java.util.Map;
 import java.util.UUID;
-
-import javax.validation.constraints.NotNull;
-
 import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.databind.JsonNode;
 
 public class ToolUtilityTest {
 
   // Sample parameter class for testing
   public static class TestParameters implements FunctionParameters {
-    @NotNull
     private String requiredParam;
     private String optionalParam;
 
@@ -95,12 +89,14 @@ public class ToolUtilityTest {
   public void testToToolSpecification() {
     // Create a mock FunctionDefinition
     @SuppressWarnings("unchecked")
-    final FunctionDefinition<TestParameters> mockFunctionDefinition = mock(FunctionDefinition.class);
+    final FunctionDefinition<TestParameters> mockFunctionDefinition =
+        mock(FunctionDefinition.class);
     when(mockFunctionDefinition.getName()).thenReturn("test-function");
     when(mockFunctionDefinition.getDescription()).thenReturn("Test function description");
     when(mockFunctionDefinition.getParametersClass()).thenReturn(TestParameters.class);
 
-    final ToolSpecification toolSpecification = ToolUtility.toToolSpecification(mockFunctionDefinition);
+    final ToolSpecification toolSpecification =
+        ToolUtility.toToolSpecification(mockFunctionDefinition);
 
     assertThat(toolSpecification, notNullValue());
     assertThat(toolSpecification.name(), is("test-function"));
@@ -115,7 +111,7 @@ public class ToolUtilityTest {
   }
 
   // Sample FunctionExecutor implementation for testing
-  private static abstract class TestFunctionExecutor implements FunctionExecutor<TestParameters> {
+  private abstract static class TestFunctionExecutor implements FunctionExecutor<TestParameters> {
     private final UUID executorId = UUID.randomUUID();
 
     @Override

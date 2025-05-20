@@ -111,13 +111,15 @@ public class FunctionDefinitionRegistryTest {
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
     if (!functionDefinitions.isEmpty()) {
       final String functionName = functionDefinitions.iterator().next().getName();
-      final Optional<FunctionDefinition<?>> functionDefinition = registry.lookupFunctionDefinition(functionName);
+      final Optional<FunctionDefinition<?>> functionDefinition =
+          registry.lookupFunctionDefinition(functionName);
       assertThat(functionDefinition.isPresent(), is(true));
       assertThat(functionDefinition.get().getName(), is(functionName));
     }
 
     // Test with a function name that should not exist
-    final Optional<FunctionDefinition<?>> nonExistentFunction = registry.lookupFunctionDefinition("non-existent-function");
+    final Optional<FunctionDefinition<?>> nonExistentFunction =
+        registry.lookupFunctionDefinition("non-existent-function");
     assertThat(nonExistentFunction.isPresent(), is(false));
   }
 }

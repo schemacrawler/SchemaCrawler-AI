@@ -38,7 +38,6 @@ import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
-
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -54,8 +53,31 @@ public final class ToolUtility {
   private static final Logger LOGGER = Logger.getLogger(ToolUtility.class.getCanonicalName());
   private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
-  private ToolUtility() {
-    // Prevent instantiation
+  public static Map<String, JsonNode> extractParametersSchema(final Class<?> parametersClass) {
+    try {
+      final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(OBJECT_MAPPER);
+      final JsonSchema schema = schemaGen.generateSchema(parametersClass);
+      final JsonNode schemaNode = OBJECT_MAPPER.valueToTree(schema);
+
+      return Optional.ofNullable(schemaNode.get("properties"))
+          .map(JsonNode::properties)
+          .map(
+              properties ->
+                  properties.stream()
+                      .collect(
+                          Collectors.toMap(
+                              Entry::getKey,
+                              Entry::getValue,
+                              (node1, node2) -> node1,
+                              HashMap::new)))
+          .orElseGet(HashMap::new);
+    } catch (final JsonMappingException e) {
+      LOGGER.log(
+          Level.WARNING,
+          String.format("Could create JSON schema for <%s>", parametersClass.getName()),
+          e);
+      return new HashMap<>();
+    }
   }
 
   public static ToolSpecification toToolSpecification(
@@ -98,30 +120,7 @@ public final class ToolUtility {
     return schema;
   }
 
-  public static Map<String, JsonNode> extractParametersSchema(final Class<?> parametersClass) {
-    try {
-      final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(OBJECT_MAPPER);
-      final JsonSchema schema = schemaGen.generateSchema(parametersClass);
-      final JsonNode schemaNode = OBJECT_MAPPER.valueToTree(schema);
-
-      return Optional.ofNullable(schemaNode.get("properties"))
-          .map(JsonNode::properties)
-          .map(
-              properties ->
-                  properties.stream()
-                      .collect(
-                          Collectors.toMap(
-                              Entry::getKey,
-                              Entry::getValue,
-                              (node1, node2) -> node1,
-                              HashMap::new)))
-          .orElseGet(HashMap::new);
-    } catch (JsonMappingException e) {
-      LOGGER.log(
-          Level.WARNING,
-          String.format("Could create JSON schema for <%s>", parametersClass.getName()),
-          e);
-      return new HashMap<>();
-    }
+  private ToolUtility() {
+    // Prevent instantiation
   }
 }

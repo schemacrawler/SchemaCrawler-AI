@@ -28,7 +28,12 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.tools;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.requireNotBlank;
@@ -87,17 +92,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return new ArrayList<>(functionDefinitionRegistry.values());
   }
 
-  public Collection<ToolSpecification> getToolSpecifications() {
-    final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      if (functionDefinition.getFunctionType() != FunctionDefinition.FunctionType.USER) {
-        continue;
-      }
-      toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
-    }
-    return toolSpecifications;
-  }
-
   @Override
   public String getName() {
     return "Function Definitions";
@@ -111,6 +105,17 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
           new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
     }
     return registeredPlugins;
+  }
+
+  public Collection<ToolSpecification> getToolSpecifications() {
+    final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
+    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
+      if (functionDefinition.getFunctionType() != FunctionDefinition.FunctionType.USER) {
+        continue;
+      }
+      toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
+    }
+    return toolSpecifications;
   }
 
   public boolean hasFunctionDefinition(final String functionName) {
