@@ -32,10 +32,8 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import javax.validation.constraints.NotNull;
-
 public record ToolSpecification(
-    @NotNull String name, @NotNull String description, @NotNull ObjectNode parameters) {
+    String name, String description, ObjectNode parameters) {
 
   public String getParametersAsString() {
     return parameters.toPrettyString();
@@ -47,10 +45,11 @@ public record ToolSpecification(
     final ObjectNode toolSpecification = OBJECT_MAPPER.createObjectNode();
     toolSpecification.put("name", name);
     toolSpecification.put("description", description);
-    toolSpecification.put("parameters", parameters);
+    toolSpecification.set("parameters", parameters);
     return toolSpecification;
   }
 
+  @Override
   public String toString() {
     return getToolSpecification().toPrettyString();
   }
