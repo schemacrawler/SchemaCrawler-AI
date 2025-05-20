@@ -31,17 +31,11 @@ package schemacrawler.tools.command.aichat.tools;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsInAnyOrder;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
-
 import org.junit.jupiter.api.Test;
-
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
@@ -65,7 +59,7 @@ public class FunctionDefinitionRegistryTest {
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
-    // assertThat(names.isEmpty(), is(false));
+    assertThat(names.isEmpty(), is(true));
   }
 
   @Test
@@ -76,7 +70,7 @@ public class FunctionDefinitionRegistryTest {
 
     assertThat(functions, notNullValue());
     // In a test environment, there might not be any function definitions
-    // assertThat(functions.isEmpty(), is(false));
+    assertThat(functions.isEmpty(), is(true));
   }
 
   @Test
