@@ -28,13 +28,12 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp;
 
+import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.executable.BaseCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
-
-import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
 
 /** SchemaCrawler command plug-in for AI chat. */
 public final class McpServerCommandProvider extends BaseCommandProvider {
@@ -69,6 +68,6 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
 
   @Override
   public boolean supportsOutputFormat(final String command, final OutputOptions outputOptions) {
-    return false;
+    return true;
   }
 }
