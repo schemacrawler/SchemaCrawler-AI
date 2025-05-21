@@ -2,8 +2,7 @@ package schemacrawler.tools.command.aichat.mcp;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-
+import schemacrawler.tools.command.aichat.mcp.SpringAIUtility;
 
 /**
  * Spring Boot application for the SchemaCrawler AI MCP server. This class enables the Spring AI MCP
@@ -12,8 +11,12 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 @SpringBootApplication
 public class SchemaCrawlerMcpServer {
 
-  public static void main(final String[] args) {
+  // Set isDryRun to true in a static initializer block so it's always set before any tests run
+  static {
     SpringAIUtility.isDryRun = true;
+  }
+
+  public static void main(final String[] args) {
     start();
   }
 
