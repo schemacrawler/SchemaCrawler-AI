@@ -10,7 +10,7 @@
     <relativePath>../schemacrawler-ai-parent</relativePath>
   </parent>
 
-  <artifactId>schemacrawler-ai-mcp</artifactId>
+  <artifactId>schemacrawler-ai-mcpserver</artifactId>
   <packaging>jar</packaging>
   <name>SchemaCrawler AI - MCP Server</name>
   <description>MCP server using Spring Boot AI</description>

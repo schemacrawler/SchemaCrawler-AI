@@ -33,7 +33,7 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-mcp</artifactId>
+      <artifactId>schemacrawler-ai-mcpserver</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
