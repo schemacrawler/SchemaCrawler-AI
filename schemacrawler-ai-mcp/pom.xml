@@ -6,7 +6,7 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-ai-parent</artifactId>
-    <version>16.25.3-2</version>
+    <version>16.25.3-3</version>
     <relativePath>../schemacrawler-ai-parent</relativePath>
   </parent>
 
