@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-ai-aggregator</artifactId>
-  <version>16.25.3-7</version>
+  <version>16.25.3-8</version>
   <packaging>pom</packaging>
   <name>SchemaCrawler AI [Aggregator]</name>
 
@@ -19,4 +19,15 @@
     <module>schemacrawler-ai-distrib</module>
   </modules>
 
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+    </plugins>  
+  </build>
 </project>
