@@ -103,6 +103,31 @@
             <encoding>UTF-8</encoding>
           </configuration>
         </plugin>
+      <plugin>
+        <inherited>true</inherited>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <release>21</release>
+              <quiet>true</quiet>
+              <show>public</show>
+              <detectOfflineLinks>true</detectOfflineLinks>
+              <additionalOptions>
+                <additionalOption>-Xdoclint:none</additionalOption>
+              </additionalOptions>
+              <bottom>Copyright © 2000-2025 {organizationName}. All
+                rights reserved.</bottom>
+              <doctitle>SchemaCrawler AI ${project.version}</doctitle>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>		
       </plugins>
     </pluginManagement>
   </build>
