@@ -28,14 +28,14 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp;
 
-import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
-import org.springframework.lang.Nullable;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
 
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -45,6 +45,7 @@ import java.util.logging.Logger;
 public final class SpringAIUtility {
 
   private static final Logger LOGGER = Logger.getLogger(SpringAIUtility.class.getCanonicalName());
+  public static boolean isDryRun = false;
 
   private SpringAIUtility() {
     // Prevent instantiation
@@ -52,9 +53,20 @@ public final class SpringAIUtility {
 
   public static List<ToolCallback> toolCallbacks(final List<ToolDefinition> tools) {
     Objects.requireNonNull(tools, "Tools must not be null");
+    final Catalog catalog;
+    final Connection connection;
+    if (isDryRun) {
+      catalog = null;
+      connection = null;
+    } else {
+      final ConnectionService connectionService = ConnectionService.getInstance();
+      catalog = connectionService.catalog();
+      connection = connectionService.connection();
+    }
+
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
     for (final ToolDefinition toolDefinition : tools) {
-      toolCallbacks.add(new SpringAIToolCallback(toolDefinition));
+      toolCallbacks.add(new SpringAIToolCallback(isDryRun, toolDefinition, catalog, connection));
     }
     return toolCallbacks;
   }
@@ -75,32 +87,5 @@ public final class SpringAIUtility {
     }
 
     return toolDefinitions;
-  }
-
-  public record SpringAIToolCallback(ToolDefinition toolDefinition) implements ToolCallback {
-
-    public SpringAIToolCallback {
-      Objects.requireNonNull(toolDefinition, "Tool definition must not be null");
-    }
-
-    @Override
-    public ToolDefinition getToolDefinition() {
-      return toolDefinition;
-    }
-
-    @Override
-    public String call(final String toolInput) {
-      final String callMessage =
-          String.format(
-              "Call to <%s>%n%s%nTool was successfully executed with no return value.",
-              toolDefinition.name(), toolInput);
-      System.out.println(callMessage);
-      return callMessage;
-    }
-
-    @Override
-    public String call(final String toolInput, @Nullable final ToolContext tooContext) {
-      return call(toolInput);
-    }
   }
 }

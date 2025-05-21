@@ -88,8 +88,11 @@ public final class ToolUtility {
     final ObjectNode parameters = generateParametersSchema(functionDefinition.getParametersClass());
     final ToolSpecification toolSpecification =
         new ToolSpecification(functionName, functionDescription, parameters);
-    LOGGER.log(Level.FINE, String.format("Generated tool specification%n<%s>", toolSpecification));
-    System.out.println(toolSpecification);
+    LOGGER.log(
+        Level.INFO,
+        String.format(
+            "Generated tool specification for <%s>%n%s",
+            toolSpecification.name(), toolSpecification));
     return toolSpecification;
   }
 
