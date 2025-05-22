@@ -42,12 +42,12 @@ import java.util.Objects;
 import java.util.logging.Logger;
 
 @UtilityMarker
-public final class SpringAIUtility {
+public final class SpringAIToolUtility {
 
-  private static final Logger LOGGER = Logger.getLogger(SpringAIUtility.class.getCanonicalName());
+  private static final Logger LOGGER = Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
   public static boolean isDryRun = false;
 
-  private SpringAIUtility() {
+  private SpringAIToolUtility() {
     // Prevent instantiation
   }
 

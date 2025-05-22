@@ -22,7 +22,7 @@ public class ToolProviderService {
    */
   @Bean
   public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolCallback> tools = SpringAIUtility.toolCallbacks(SpringAIUtility.tools());
+    final List<ToolCallback> tools = SpringAIToolUtility.toolCallbacks(SpringAIToolUtility.tools());
     return ToolCallbackProvider.from(tools);
   }
 

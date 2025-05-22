@@ -23,7 +23,7 @@
 		<include>us.fatehi:schemacrawler-ai-tools</include>
         <include>us.fatehi:schemacrawler-ai-core</include>
         <include>us.fatehi:schemacrawler-ai-langchain4j</include>
-        <include>us.fatehi:schemacrawler-ai-mcp</include>
+        <include>us.fatehi:schemacrawler-ai-mcpserver</include>
       </includes>
     </dependencySet>
     <!-- Include only new depdencies from this project,
