@@ -30,7 +30,6 @@ package schemacrawler.tools.command.aichat.mcp;
 
 import schemacrawler.tools.executable.CommandOptions;
 
-
 public record McpServerCommandOptions() implements CommandOptions {
 
   public McpServerCommandOptions {

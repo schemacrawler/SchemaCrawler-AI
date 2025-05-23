@@ -32,7 +32,6 @@ import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
 
-
 public final class McpServerCommandOptionsBuilder
     implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
         ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {

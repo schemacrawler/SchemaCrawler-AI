@@ -1,10 +1,8 @@
 package schemacrawler.tools.command.aichat.mcp;
 
-import schemacrawler.schema.Catalog;
-
 import java.sql.Connection;
-
 import static java.util.Objects.requireNonNull;
+import schemacrawler.schema.Catalog;
 
 /**
  * A singleton service that provides access to database connection resources. This class follows an
@@ -15,20 +13,20 @@ public class ConnectionService {
 
   private static final Object lock = new Object();
   private static volatile ConnectionService connectionService;
-  private final Catalog catalog;
-  private final Connection connection;
-  private final McpServerCommandOptions options;
 
   /**
-   * Private constructor to prevent direct instantiation. Use {@link
-   * #instantiate(McpServerCommandOptions, Catalog, Connection)} to initialize and {@link
-   * #getInstance()} to access the singleton instance.
+   * Gets the singleton instance of ConnectionService. The service must have been initialized with
+   * {@link #instantiate(McpServerCommandOptions, Catalog, Connection)} before this method is
+   * called.
+   *
+   * @return The singleton ConnectionService instance
+   * @throws IllegalStateException if the service has not been initialized
    */
-  private ConnectionService(
-      final McpServerCommandOptions options, final Catalog catalog, final Connection connection) {
-    this.catalog = requireNonNull(catalog, "No catalog provided");
-    this.connection = requireNonNull(connection, "No connection provided");
-    this.options = requireNonNull(options, "No options provided");
+  public static ConnectionService getInstance() {
+    if (connectionService == null) {
+      throw new IllegalStateException("ConnectionService has not been initialized yet");
+    }
+    return connectionService;
   }
 
   /**
@@ -50,19 +48,22 @@ public class ConnectionService {
     }
   }
 
+  private final Catalog catalog;
+
+  private final Connection connection;
+
+  private final McpServerCommandOptions options;
+
   /**
-   * Gets the singleton instance of ConnectionService. The service must have been initialized with
-   * {@link #instantiate(McpServerCommandOptions, Catalog, Connection)} before this method is
-   * called.
-   *
-   * @return The singleton ConnectionService instance
-   * @throws IllegalStateException if the service has not been initialized
+   * Private constructor to prevent direct instantiation. Use {@link
+   * #instantiate(McpServerCommandOptions, Catalog, Connection)} to initialize and {@link
+   * #getInstance()} to access the singleton instance.
    */
-  public static ConnectionService getInstance() {
-    if (connectionService == null) {
-      throw new IllegalStateException("ConnectionService has not been initialized yet");
-    }
-    return connectionService;
+  private ConnectionService(
+      final McpServerCommandOptions options, final Catalog catalog, final Connection connection) {
+    this.catalog = requireNonNull(catalog, "No catalog provided");
+    this.connection = requireNonNull(connection, "No connection provided");
+    this.options = requireNonNull(options, "No options provided");
   }
 
   public Catalog catalog() {

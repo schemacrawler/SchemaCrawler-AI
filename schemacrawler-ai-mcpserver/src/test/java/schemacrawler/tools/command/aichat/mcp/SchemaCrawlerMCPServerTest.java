@@ -2,6 +2,8 @@ package schemacrawler.tools.command.aichat.mcp;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +15,16 @@ import org.springframework.http.ResponseEntity;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SchemaCrawlerMCPServerTest {
+
+  @BeforeAll
+  public static void setDryRun() {
+    SpringAIToolUtility.isDryRun = true;
+  }
+
+  @AfterAll
+  public static void unsetDryRun() {
+    SpringAIToolUtility.isDryRun = false;
+  }
 
   @LocalServerPort private int port;
 

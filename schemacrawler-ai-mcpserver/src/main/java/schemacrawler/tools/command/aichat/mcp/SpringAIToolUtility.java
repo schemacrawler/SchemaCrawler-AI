@@ -28,6 +28,11 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp;
 
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.logging.Logger;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import schemacrawler.schema.Catalog;
@@ -35,21 +40,12 @@ import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
-import java.util.logging.Logger;
-
 @UtilityMarker
 public final class SpringAIToolUtility {
 
-  private static final Logger LOGGER = Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
+  private static final Logger LOGGER =
+      Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
   public static boolean isDryRun = false;
-
-  private SpringAIToolUtility() {
-    // Prevent instantiation
-  }
 
   public static List<ToolCallback> toolCallbacks(final List<ToolDefinition> tools) {
     Objects.requireNonNull(tools, "Tools must not be null");
@@ -87,5 +83,9 @@ public final class SpringAIToolUtility {
     }
 
     return toolDefinitions;
+  }
+
+  private SpringAIToolUtility() {
+    // Prevent instantiation
   }
 }

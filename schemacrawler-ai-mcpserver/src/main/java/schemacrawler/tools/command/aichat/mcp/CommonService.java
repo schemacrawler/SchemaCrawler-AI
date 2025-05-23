@@ -16,8 +16,8 @@ public class CommonService {
       @ToolParam(
               description =
                   """
-          Current date, as an ISO 8601 local date.
-          """,
+      Current date, as an ISO 8601 local date.
+      """,
               required = false)
           final String date) {
     System.out.printf("get-schemacrawler-version called with %s", date);

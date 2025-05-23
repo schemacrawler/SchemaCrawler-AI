@@ -1,5 +1,8 @@
 package schemacrawler.tools.command.aichat.mcp;
 
+import java.sql.Connection;
+import java.util.Objects;
+import java.util.logging.Logger;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
@@ -7,10 +10,6 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.utility.FunctionToolExecutor;
-
-import java.sql.Connection;
-import java.util.Objects;
-import java.util.logging.Logger;
 
 public final class SpringAIToolCallback implements ToolCallback {
 
@@ -36,11 +35,6 @@ public final class SpringAIToolCallback implements ToolCallback {
   }
 
   @Override
-  public ToolDefinition getToolDefinition() {
-    return toolDefinition;
-  }
-
-  @Override
   public String call(final String toolInput) {
     if (!StringUtils.hasText(toolInput)) {
       return "";
@@ -58,5 +52,10 @@ public final class SpringAIToolCallback implements ToolCallback {
   @Override
   public String call(final String toolInput, @Nullable final ToolContext tooContext) {
     return call(toolInput);
+  }
+
+  @Override
+  public ToolDefinition getToolDefinition() {
+    return toolDefinition;
   }
 }
