@@ -44,6 +44,7 @@
 		<exclude>javax.validation:*</exclude>
 		<exclude>com.azure:azure-core-test</exclude>
 		<exclude>org.apache.ant:*</exclude>
+		<exclude>ch.qos.logback:*</exclude>
         <exclude>us.fatehi:schemacrawler</exclude>
         <exclude>us.fatehi:schemacrawler-api</exclude>
         <exclude>us.fatehi:schemacrawler-tools</exclude>
