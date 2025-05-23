@@ -52,7 +52,6 @@ public class ConnectionService {
   private final Catalog catalog;
   private final Connection connection;
   private final McpServerCommandOptions options;
-  private boolean isDryRun = false;
 
   /**
    * Private constructor to prevent direct instantiation. Use {@link
