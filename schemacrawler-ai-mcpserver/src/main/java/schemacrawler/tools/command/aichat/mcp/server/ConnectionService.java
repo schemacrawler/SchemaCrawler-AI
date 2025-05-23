@@ -1,8 +1,9 @@
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.sql.Connection;
 import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.command.aichat.mcp.command.McpServerCommandOptions;
 
 /**
  * A singleton service that provides access to database connection resources. This class follows an
@@ -49,10 +50,9 @@ public class ConnectionService {
   }
 
   private final Catalog catalog;
-
   private final Connection connection;
-
   private final McpServerCommandOptions options;
+  private boolean isDryRun = false;
 
   /**
    * Private constructor to prevent direct instantiation. Use {@link

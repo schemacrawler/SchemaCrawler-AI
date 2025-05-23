@@ -13,6 +13,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import schemacrawler.tools.command.aichat.mcp.server.HealthController;
 
 @WebMvcTest(HealthController.class)
 @ContextConfiguration(classes = {HealthController.class})

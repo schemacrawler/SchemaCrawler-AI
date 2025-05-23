@@ -1,4 +1,4 @@
-package schemacrawler.tools.command.aichat.mcp.controller;
+package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;

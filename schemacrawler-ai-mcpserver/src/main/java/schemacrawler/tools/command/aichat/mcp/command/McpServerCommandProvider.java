@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.command.aichat.mcp.command;
 
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;

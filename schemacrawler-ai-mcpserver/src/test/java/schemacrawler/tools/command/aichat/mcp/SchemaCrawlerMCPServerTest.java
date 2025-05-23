@@ -12,18 +12,19 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
   public static void setDryRun() {
-    SpringAIToolUtility.isDryRun = true;
+    ConfigurationManager.getInstance().setDryRun(true);
   }
 
   @AfterAll
   public static void unsetDryRun() {
-    SpringAIToolUtility.isDryRun = false;
+    ConfigurationManager.getInstance().setDryRun(false);
   }
 
   @LocalServerPort private int port;

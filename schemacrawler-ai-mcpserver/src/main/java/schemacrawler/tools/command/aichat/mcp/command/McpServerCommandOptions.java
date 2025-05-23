@@ -26,44 +26,19 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.command.aichat.mcp.command;
 
-import schemacrawler.schemacrawler.OptionsBuilder;
-import schemacrawler.tools.options.Config;
-import schemacrawler.tools.options.ConfigOptionsBuilder;
+import schemacrawler.tools.executable.CommandOptions;
 
-public final class McpServerCommandOptionsBuilder
-    implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
-        ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
+public record McpServerCommandOptions() implements CommandOptions {
 
-  public static McpServerCommandOptionsBuilder builder() {
-    return new McpServerCommandOptionsBuilder();
-  }
-
-  private McpServerCommandOptionsBuilder() {
+  public McpServerCommandOptions {
     // No options for this command
   }
 
   @Override
-  public McpServerCommandOptionsBuilder fromConfig(final Config config) {
+  public String toString() {
     // No options for this command
-    return this;
-  }
-
-  @Override
-  public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
-    // No options for this command
-    return this;
-  }
-
-  @Override
-  public Config toConfig() {
-    // No options for this command
-    return new Config();
-  }
-
-  @Override
-  public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions();
+    return this.getClass().getName();
   }
 }

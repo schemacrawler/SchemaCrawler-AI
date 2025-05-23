@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -45,10 +45,11 @@ public final class SpringAIToolUtility {
 
   private static final Logger LOGGER =
       Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
-  public static boolean isDryRun = false;
 
   public static List<ToolCallback> toolCallbacks(final List<ToolDefinition> tools) {
     Objects.requireNonNull(tools, "Tools must not be null");
+
+    final boolean isDryRun = ConfigurationManager.getInstance().isDryRun();
     final Catalog catalog;
     final Connection connection;
     if (isDryRun) {

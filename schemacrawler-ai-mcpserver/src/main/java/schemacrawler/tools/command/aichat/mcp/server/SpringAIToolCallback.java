@@ -1,4 +1,4 @@
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.sql.Connection;
 import java.util.Objects;
