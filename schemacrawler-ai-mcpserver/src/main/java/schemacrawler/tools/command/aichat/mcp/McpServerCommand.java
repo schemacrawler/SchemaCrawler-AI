@@ -28,11 +28,10 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp;
 
-import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
-import us.fatehi.utility.property.PropertyName;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
+import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in. */
 public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCommandOptions> {
@@ -55,6 +54,7 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
   public void execute() {
     LOGGER.log(Level.FINE, "Starting MCP server");
     ConnectionService.instantiate(commandOptions, catalog, connection);
+    SpringAIToolUtility.isDryRun = false;
     SchemaCrawlerMcpServer.start();
   }
 
