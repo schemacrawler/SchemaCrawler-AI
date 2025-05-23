@@ -41,7 +41,7 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.4.5</version>
+        <version>3.5.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -86,6 +86,7 @@
 
   <build>
     <plugins>
+      <!--
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
@@ -94,9 +95,13 @@
             <goals>
               <goal>repackage</goal>
             </goals>
+            <configuration>
+              <attach>false</attach>
+            </configuration>
           </execution>
         </executions>
       </plugin>
+      -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
