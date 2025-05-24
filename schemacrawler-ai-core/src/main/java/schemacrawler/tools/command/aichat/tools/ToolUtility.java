@@ -109,10 +109,12 @@ public final class ToolUtility {
     for (final Entry<String, JsonNode> parameter : parametersJsonSchema.entrySet()) {
       final String parameterName = parameter.getKey();
       final JsonNode parameterSchema = parameter.getValue();
+      // Keep track of required parameters separately
       if (parameterSchema.has("required") && parameterSchema.get("required").asBoolean()) {
         ((ObjectNode) parameterSchema).remove("required");
         required.add(parameterName);
       }
+      // Set the parameters
       properties.set(parameterName, parameterSchema);
     }
     final ArrayNode requiredArray = schema.putArray("required");

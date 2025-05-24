@@ -6,7 +6,7 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.utility.FunctionToolExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionToolExecutor;
 
 public final class Langchain4JToolExecutor implements ToolExecutor {
 

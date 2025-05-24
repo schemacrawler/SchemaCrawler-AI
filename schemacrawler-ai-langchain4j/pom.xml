@@ -41,7 +41,7 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-tools</artifactId>
+      <artifactId>schemacrawler-ai-core</artifactId>
       <version>${project.version}</version>
     </dependency>
     <dependency>

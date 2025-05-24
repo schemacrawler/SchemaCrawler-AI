@@ -12,7 +12,6 @@
 
   <modules>
     <module>schemacrawler-ai-parent</module>
-    <module>schemacrawler-ai-tools</module>
     <module>schemacrawler-ai-core</module>
     <module>schemacrawler-ai-langchain4j</module>
     <module>schemacrawler-ai-mcpserver</module>

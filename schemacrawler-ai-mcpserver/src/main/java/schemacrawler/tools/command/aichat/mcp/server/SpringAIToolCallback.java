@@ -9,7 +9,7 @@ import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.utility.FunctionToolExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionToolExecutor;
 
 public final class SpringAIToolCallback implements ToolCallback {
 

@@ -15,12 +15,7 @@
   <name>SchemaCrawler AI Distribution</name>
   <description>Distribution module for SchemaCrawler AI</description>
 
-  <dependencies>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-tools</artifactId>
-      <version>${project.version}</version>
-    </dependency>  
+  <dependencies>  
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-core</artifactId>
