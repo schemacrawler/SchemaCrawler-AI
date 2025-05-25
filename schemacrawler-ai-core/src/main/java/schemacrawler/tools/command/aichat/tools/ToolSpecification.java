@@ -32,7 +32,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-public record ToolSpecification(String name, String description, ObjectNode parameters) {
+public record ToolSpecification(String name, String description, JsonNode parameters) {
 
   public String getParametersAsString() {
     return parameters.toPrettyString();

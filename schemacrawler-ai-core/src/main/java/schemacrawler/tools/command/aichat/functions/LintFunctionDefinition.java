@@ -39,7 +39,8 @@ public final class LintFunctionDefinition
         Find problems with database design, such as no indexes on foreign keys.
         """
         .stripIndent()
-        .replace("\n", " ");
+        .replace("\n", " ")
+        .trim();
   }
 
   @Override

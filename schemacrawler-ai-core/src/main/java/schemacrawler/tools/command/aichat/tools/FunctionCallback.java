@@ -14,9 +14,9 @@ import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
 /**
- * Allows tools to be called. The function callback has enough context to be able
- * to execute the tool. This class can be adapted into a framework class for
- * Spring Boot AI, LangChain4J, or other library.
+ * Allows tools to be called. The function callback has enough context to be able to execute the
+ * tool. This class can be adapted into a framework class for Spring Boot AI, LangChain4J, or other
+ * library.
  */
 public final class FunctionCallback {
 
@@ -29,8 +29,8 @@ public final class FunctionCallback {
   private final Connection connection;
 
   /**
-   * Function callbacks are created and registered ahead of time, with the
-   * required context that is needed to run them.
+   * Function callbacks are created and registered ahead of time, with the required context that is
+   * needed to run them.
    *
    * @param functionName Name of the function to execute.
    * @param catalog Database catalog.
