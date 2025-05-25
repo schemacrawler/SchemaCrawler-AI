@@ -29,36 +29,36 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.mcp.server;
 
 /**
- * Thread-safe singleton configuration manager for SchemaCrawler AI.
- * Manages configuration settings like isDryRun.
+ * Thread-safe singleton configuration manager for SchemaCrawler AI. Manages configuration settings
+ * like isDryRun.
  */
 public class ConfigurationManager {
 
-    private static final Object lock = new Object();
-    private static volatile ConfigurationManager instance;
+  private static final Object lock = new Object();
+  private static volatile ConfigurationManager instance;
 
-    private boolean isDryRun = false;
+  private boolean isDryRun = false;
 
-    private ConfigurationManager() {
-        // Private constructor to prevent direct instantiation
-    }
+  private ConfigurationManager() {
+    // Private constructor to prevent direct instantiation
+  }
 
-    public static ConfigurationManager getInstance() {
+  public static ConfigurationManager getInstance() {
+    if (instance == null) {
+      synchronized (lock) {
         if (instance == null) {
-            synchronized (lock) {
-                if (instance == null) {
-                    instance = new ConfigurationManager();
-                }
-            }
+          instance = new ConfigurationManager();
         }
-        return instance;
+      }
     }
+    return instance;
+  }
 
-    public boolean isDryRun() {
-        return isDryRun;
-    }
+  public boolean isDryRun() {
+    return isDryRun;
+  }
 
-    public void setDryRun(final boolean dryRun) {
-        this.isDryRun = dryRun;
-    }
+  public void setDryRun(final boolean dryRun) {
+    this.isDryRun = dryRun;
+  }
 }

@@ -40,14 +40,12 @@ public class ToolProviderService {
   }
 
   @Tool(
-    name = "get-schemacrawler-version",
-    description = "Gets the version of SchemaCrawler",
-    returnDirect = true)
+      name = "get-schemacrawler-version",
+      description = "Gets the version of SchemaCrawler",
+      returnDirect = true)
   public String getSchemaCrawlerVersion(
-    @ToolParam(
-      description = "Current date, as an ISO 8601 local date.",
-      required = false)
-    final String date) {
+      @ToolParam(description = "Current date, as an ISO 8601 local date.", required = false)
+          final String date) {
     System.out.printf("get-schemacrawler-version called with %s", date);
     return Version.about();
   }

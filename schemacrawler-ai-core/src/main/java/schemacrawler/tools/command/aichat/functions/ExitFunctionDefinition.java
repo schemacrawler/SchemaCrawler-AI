@@ -37,7 +37,8 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoP
         and wants to end the chat session.
         """
         .stripIndent()
-        .replace("\n", " ");
+        .replace("\n", " ")
+        .trim();
   }
 
   @Override

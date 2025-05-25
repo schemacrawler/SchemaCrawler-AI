@@ -59,7 +59,7 @@ public class FunctionDefinitionRegistryTest {
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
-    assertThat(names.isEmpty(), is(true));
+    assertThat(names.size(), is(5));
   }
 
   @Test
@@ -69,8 +69,7 @@ public class FunctionDefinitionRegistryTest {
     final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
 
     assertThat(functions, notNullValue());
-    // In a test environment, there might not be any function definitions
-    assertThat(functions.isEmpty(), is(true));
+    assertThat(functions.size(), is(5));
   }
 
   @Test

@@ -85,18 +85,14 @@ public final class ToolUtility {
     Objects.requireNonNull(functionDefinition, "Function definition must not be null");
     final String functionName = functionDefinition.getName();
     final String functionDescription = functionDefinition.getDescription();
-    final ObjectNode parameters = generateParametersSchema(functionDefinition.getParametersClass());
+    final JsonNode parameters = generateParametersSchema(functionDefinition.getParametersClass());
     final ToolSpecification toolSpecification =
         new ToolSpecification(functionName, functionDescription, parameters);
-    LOGGER.log(
-        Level.INFO,
-        String.format(
-            "Generated tool specification for <%s>%n%s",
-            toolSpecification.name(), toolSpecification));
+    LOGGER.log(Level.INFO, String.format("Generated tool specification%n%s", toolSpecification));
     return toolSpecification;
   }
 
-  private static ObjectNode generateParametersSchema(final Class<?> parametersClass) {
+  private static JsonNode generateParametersSchema(final Class<?> parametersClass) {
     Objects.requireNonNull(parametersClass, "Parameters must not be null");
 
     final Map<String, JsonNode> parametersJsonSchema = extractParametersSchema(parametersClass);
@@ -108,11 +104,19 @@ public final class ToolUtility {
     final ObjectNode properties = schema.putObject("properties");
     for (final Entry<String, JsonNode> parameter : parametersJsonSchema.entrySet()) {
       final String parameterName = parameter.getKey();
-      final JsonNode parameterSchema = parameter.getValue();
+      final ObjectNode parameterSchema = (ObjectNode) parameter.getValue();
+      // Clean description
+      if (parameterSchema.has("description")) {
+        final String parameterDescription =
+            parameterSchema.get("description").textValue().stripIndent().replace('\n', ' ').trim();
+        parameterSchema.put("description", parameterDescription);
+      }
+      // Keep track of required parameters separately
       if (parameterSchema.has("required") && parameterSchema.get("required").asBoolean()) {
-        ((ObjectNode) parameterSchema).remove("required");
+        parameterSchema.remove("required");
         required.add(parameterName);
       }
+      // Set the parameters
       properties.set(parameterName, parameterSchema);
     }
     final ArrayNode requiredArray = schema.putArray("required");
