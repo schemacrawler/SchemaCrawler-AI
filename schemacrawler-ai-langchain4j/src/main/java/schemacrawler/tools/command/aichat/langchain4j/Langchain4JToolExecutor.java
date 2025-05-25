@@ -6,15 +6,15 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.tools.FunctionToolExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionCallback;
 
 public final class Langchain4JToolExecutor implements ToolExecutor {
 
-  private final FunctionToolExecutor functionToolExecutor;
+  private final FunctionCallback functionToolExecutor;
 
   public Langchain4JToolExecutor(
       final String functionName, final Catalog catalog, final Connection connection) {
-    functionToolExecutor = new FunctionToolExecutor(functionName, catalog, connection);
+    functionToolExecutor = new FunctionCallback(functionName, catalog, connection);
   }
 
   @Override

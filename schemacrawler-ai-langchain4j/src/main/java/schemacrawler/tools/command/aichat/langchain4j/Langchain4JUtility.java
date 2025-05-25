@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
+import static schemacrawler.tools.command.aichat.tools.ToolUtility.extractParametersSchema;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -45,11 +46,9 @@ import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType;
+import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
-
-import static schemacrawler.tools.command.aichat.tools.ToolUtility.extractParametersSchema;
 
 @UtilityMarker
 public class Langchain4JUtility {
@@ -116,7 +115,7 @@ public class Langchain4JUtility {
       final String type = propertyNode.get("type").asText();
       final String description = propertyNode.get("description").asText();
       final JsonNode enumNode = propertyNode.get("enum");
-      JsonSchemaElement jsonSchemaElement;
+      final JsonSchemaElement jsonSchemaElement;
       if ("string".equals(type)) {
         if (enumNode == null) {
           jsonSchemaElement = JsonStringSchema.builder().description(description).build();

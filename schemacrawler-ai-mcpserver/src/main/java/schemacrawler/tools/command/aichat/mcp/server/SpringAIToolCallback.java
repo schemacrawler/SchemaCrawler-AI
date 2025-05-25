@@ -9,7 +9,7 @@ import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.tools.FunctionToolExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionCallback;
 
 public final class SpringAIToolCallback implements ToolCallback {
 
@@ -18,7 +18,7 @@ public final class SpringAIToolCallback implements ToolCallback {
 
   private final boolean isDryRun;
   private final ToolDefinition toolDefinition;
-  private final FunctionToolExecutor functionToolExecutor;
+  private final FunctionCallback functionToolExecutor;
 
   public SpringAIToolCallback(
       final boolean isDryRun,
@@ -28,7 +28,7 @@ public final class SpringAIToolCallback implements ToolCallback {
     this.isDryRun = isDryRun;
     this.toolDefinition = Objects.requireNonNull(toolDefinition, "No tool definition provided");
     if (!isDryRun) {
-      functionToolExecutor = new FunctionToolExecutor(toolDefinition.name(), catalog, connection);
+      functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog, connection);
     } else {
       functionToolExecutor = null;
     }

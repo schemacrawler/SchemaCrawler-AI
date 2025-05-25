@@ -4,22 +4,39 @@ import java.sql.Connection;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
+import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
-public final class FunctionToolExecutor {
+/**
+ * Allows tools to be called. The function callback has enough context to be able
+ * to execute the tool. This class can be adapted into a framework class for
+ * Spring Boot AI, LangChain4J, or other library.
+ */
+public final class FunctionCallback {
 
-  private static final Logger LOGGER =
-      Logger.getLogger(FunctionToolExecutor.class.getCanonicalName());
+  private static final Logger LOGGER = Logger.getLogger(FunctionCallback.class.getCanonicalName());
+
+  private static ObjectMapper objectMapper = new ObjectMapper();
 
   private FunctionDefinition<FunctionParameters> functionDefinition;
   private final Catalog catalog;
   private final Connection connection;
 
-  public FunctionToolExecutor(
+  /**
+   * Function callbacks are created and registered ahead of time, with the
+   * required context that is needed to run them.
+   *
+   * @param functionName Name of the function to execute.
+   * @param catalog Database catalog.
+   * @param connection A live connection to the database.
+   */
+  public FunctionCallback(
       final String functionName, final Catalog catalog, final Connection connection) {
     this.catalog = catalog;
     this.connection = connection;
@@ -37,10 +54,16 @@ public final class FunctionToolExecutor {
     }
   }
 
+  /**
+   * Execute the function, given arguments as a JSON string.
+   *
+   * @param argumentsString JSON string with arguments.
+   * @return Result of execution.
+   */
   public String execute(final String argumentsString) {
-    final String functionName = getFunctionName();
+    final PropertyName functionName = getFunctionName();
     LOGGER.log(
-        Level.INFO, new StringFormat("Executing <%s> with <%s> %n", functionName, argumentsString));
+        Level.INFO, new StringFormat("Executing%n%s", toObject(argumentsString).toPrettyString()));
 
     if (functionDefinition == null) {
       return "";
@@ -61,16 +84,24 @@ public final class FunctionToolExecutor {
     }
   }
 
-  public String getFunctionName() {
+  /**
+   * Name of the function to execute.
+   *
+   * @return Name and description of the function.
+   */
+  public PropertyName getFunctionName() {
+    final PropertyName functionName;
     if (functionDefinition == null) {
-      return "unspecified-function";
+      functionName = new PropertyName("unknown-function");
+    } else {
+      functionName = functionDefinition.getFunctionName();
     }
-    return functionDefinition.getName();
+    return functionName;
   }
 
   @Override
   public String toString() {
-    return getFunctionName();
+    return toObject(null).toPrettyString();
   }
 
   private String executeFunction(final FunctionParameters arguments) {
@@ -100,14 +131,14 @@ public final class FunctionToolExecutor {
     }
   }
 
-  private <P extends FunctionParameters> P instantiateArguments(final String arguments)
+  private <P extends FunctionParameters> P instantiateArguments(final String argumentsString)
       throws Exception {
     final Class<P> parametersClass = (Class<P>) functionDefinition.getParametersClass();
     final String functionArguments;
-    if (isBlank(arguments)) {
+    if (isBlank(argumentsString)) {
       functionArguments = "{}";
     } else {
-      functionArguments = arguments;
+      functionArguments = argumentsString;
     }
     final ObjectMapper objectMapper = new ObjectMapper();
     try {
@@ -123,5 +154,28 @@ public final class FunctionToolExecutor {
               parametersClass.getName(), functionArguments));
       return parametersClass.getDeclaredConstructor().newInstance();
     }
+  }
+
+  private ObjectNode toObject(final String argumentsString) {
+    final ObjectNode objectNode = objectMapper.createObjectNode();
+
+    final PropertyName functionName = getFunctionName();
+    objectNode.put("name", functionName.getName());
+    objectNode.put("description", functionName.getDescription());
+
+    try {
+      final String functionArguments;
+      if (isBlank(argumentsString)) {
+        functionArguments = "{}";
+      } else {
+        functionArguments = argumentsString;
+      }
+      final JsonNode arguments = objectMapper.readTree(functionArguments);
+      objectNode.set("arguments", arguments);
+    } catch (final Exception e) {
+      objectNode.set("arguments", objectMapper.createObjectNode());
+    }
+
+    return objectNode;
   }
 }
