@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
 public final class LintFunctionDefinition
     extends AbstractFunctionDefinition<LintFunctionParameters> {

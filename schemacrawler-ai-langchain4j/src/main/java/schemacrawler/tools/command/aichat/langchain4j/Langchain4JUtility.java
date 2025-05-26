@@ -46,7 +46,6 @@ import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
@@ -62,9 +61,6 @@ public class Langchain4JUtility {
     final Map<String, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final FunctionDefinition<?> functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
       final String functionName = functionDefinition.getName();
 
       final ToolExecutor executor = new Langchain4JToolExecutor(functionName, catalog, connection);
@@ -79,9 +75,6 @@ public class Langchain4JUtility {
     final List<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
 
       try {
         final Class<?> parametersClass = functionDefinition.getParametersClass();

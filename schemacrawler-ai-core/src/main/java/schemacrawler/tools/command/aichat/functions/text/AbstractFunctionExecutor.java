@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
 import java.util.UUID;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;

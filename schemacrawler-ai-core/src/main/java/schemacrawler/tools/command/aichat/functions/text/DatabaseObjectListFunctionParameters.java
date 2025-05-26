@@ -26,8 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,20 +38,28 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record LintFunctionParameters(
+public record DatabaseObjectListFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table for which to find design issues.
-    Can be a regular expression.
-    Use an empty string if all tables are requested.
+    Type of database object to list, like tables (including views),
+    routines (that is, functions and stored procedures),
+    schemas (that is, catalogs), sequences, or synonyms.
     """)
-        @JsonProperty(defaultValue = "", required = false)
-        String tableName)
+        @JsonProperty(defaultValue = "ALL", required = true)
+        DatabaseObjectType databaseObjectType)
     implements FunctionParameters {
 
-  public LintFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
-      tableName = "";
+  public enum DatabaseObjectType {
+    ALL,
+    TABLES,
+    ROUTINES,
+    SEQUENCES,
+    SYNONYMS;
+  }
+
+  public DatabaseObjectListFunctionParameters {
+    if (databaseObjectType == null) {
+      databaseObjectType = ALL;
     }
   }
 

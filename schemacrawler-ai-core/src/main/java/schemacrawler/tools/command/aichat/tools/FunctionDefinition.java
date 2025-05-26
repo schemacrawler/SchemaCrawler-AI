@@ -28,15 +28,10 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.tools;
 
-import static schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType.USER;
+import schemacrawler.schema.TypedObject;
 import us.fatehi.utility.property.PropertyName;
 
-public interface FunctionDefinition<P extends FunctionParameters> {
-
-  public enum FunctionType {
-    USER,
-    SYSTEM;
-  }
+public interface FunctionDefinition<P extends FunctionParameters> extends TypedObject<FunctionReturnType> {
 
   String getDescription();
 
@@ -44,13 +39,16 @@ public interface FunctionDefinition<P extends FunctionParameters> {
     return new PropertyName(getName(), getDescription());
   }
 
-  default FunctionType getFunctionType() {
-    return USER;
-  }
+  FunctionReturnType getFunctionReturnType();
 
   String getName();
 
   Class<P> getParametersClass();
 
   FunctionExecutor<P> newExecutor();
+
+  @Override
+  default FunctionReturnType getType() {
+    return getFunctionReturnType();
+  }
 }

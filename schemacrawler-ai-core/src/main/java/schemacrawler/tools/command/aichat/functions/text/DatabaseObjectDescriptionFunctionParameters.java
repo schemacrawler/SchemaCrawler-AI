@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -37,39 +37,37 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record TableDecriptionFunctionParameters(
+public record DatabaseObjectDescriptionFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table or view to describe.
+    Name of database object to describe.
     Can be a regular expression.
-    Use an empty string if all tables are requested.
+    Use an empty string if all database objects are requested.
     """)
         @JsonProperty(defaultValue = "", required = false)
-        String tableName,
+        String databaseObjectName,
     @JsonPropertyDescription(
             """
-        Indicates what details of the database table or view to show -
-        columns, primary key, indexes, foreign keys, or triggers.
+        Indicates the type of database objects to show - sequences, synonyms,
+        or routines (that is, stored procedures or functions).
         """)
-        @JsonProperty(defaultValue = "DEFAULT", required = true)
-        TableDescriptionScope descriptionScope)
+        @JsonProperty(defaultValue = "NONE", required = true)
+        DatabaseObjectsScope databaseObjectsScope)
     implements FunctionParameters {
 
-  public enum TableDescriptionScope {
-    DEFAULT,
-    COLUMNS,
-    PRIMARY_KEY,
-    INDEXES,
-    FOREIGN_KEYS,
-    TRIGGERS;
+  public enum DatabaseObjectsScope {
+    NONE,
+    SEQUENCES,
+    SYNONYMS,
+    ROUTINES;
   }
 
-  public TableDecriptionFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
-      tableName = "";
+  public DatabaseObjectDescriptionFunctionParameters {
+    if (databaseObjectName == null || databaseObjectName.isBlank()) {
+      databaseObjectName = "";
     }
-    if (descriptionScope == null) {
-      descriptionScope = TableDescriptionScope.DEFAULT;
+    if (databaseObjectsScope == null) {
+      databaseObjectsScope = DatabaseObjectsScope.NONE;
     }
   }
 

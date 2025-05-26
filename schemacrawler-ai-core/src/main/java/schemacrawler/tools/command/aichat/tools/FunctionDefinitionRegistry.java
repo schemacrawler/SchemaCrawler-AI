@@ -38,7 +38,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinition.FunctionType;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -110,9 +109,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   public Collection<ToolSpecification> getToolSpecifications() {
     final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      if (functionDefinition.getFunctionType() != FunctionDefinition.FunctionType.USER) {
-        continue;
-      }
       toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
     }
     return toolSpecifications;
@@ -128,9 +124,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     FunctionDefinition<?> functionDefinitionToCall = null;
     for (final FunctionDefinition<?> functionDefinition :
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
-      if (functionDefinition.getFunctionType() != FunctionType.USER) {
-        continue;
-      }
       if (functionDefinition.getName().equals(functionName)) {
         functionDefinitionToCall = functionDefinition;
         break;

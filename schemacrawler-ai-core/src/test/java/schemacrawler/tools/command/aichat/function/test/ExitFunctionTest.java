@@ -40,8 +40,8 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.NoParameters;
+import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.NoParameters;
 import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 

@@ -26,16 +26,18 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-public final class TableDecriptionFunctionDefinition
-    extends AbstractFunctionDefinition<TableDecriptionFunctionParameters> {
+public final class DatabaseObjectDescriptionFunctionDefinition
+    extends AbstractFunctionDefinition<DatabaseObjectDescriptionFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Get the details and description of database tables or views,
-        including columns, foreign keys, indexes and triggers.
+        Get the details and description of database objects like
+        tables (all types, including views),
+        routines (that is, functions and stored procedures),
+        sequences, or synonyms.
         """
         .stripIndent()
         .replace("\n", " ")
@@ -43,12 +45,12 @@ public final class TableDecriptionFunctionDefinition
   }
 
   @Override
-  public Class<TableDecriptionFunctionParameters> getParametersClass() {
-    return TableDecriptionFunctionParameters.class;
+  public Class<DatabaseObjectDescriptionFunctionParameters> getParametersClass() {
+    return DatabaseObjectDescriptionFunctionParameters.class;
   }
 
   @Override
-  public TableDecriptionFunctionExecutor newExecutor() {
-    return new TableDecriptionFunctionExecutor(getFunctionName());
+  public DatabaseObjectDescriptionFunctionExecutor newExecutor() {
+    return new DatabaseObjectDescriptionFunctionExecutor(getFunctionName());
   }
 }

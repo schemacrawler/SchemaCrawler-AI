@@ -26,15 +26,16 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoParameters> {
+public final class DatabaseObjectListFunctionDefinition
+    extends AbstractFunctionDefinition<DatabaseObjectListFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Indicate when the user is done with their research,
-        and wants to end the chat session.
+        List database objects like tables, routines
+        (that is, functions and stored procedures), sequences, or synonyms.
         """
         .stripIndent()
         .replace("\n", " ")
@@ -42,12 +43,12 @@ public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoP
   }
 
   @Override
-  public Class<NoParameters> getParametersClass() {
-    return NoParameters.class;
+  public Class<DatabaseObjectListFunctionParameters> getParametersClass() {
+    return DatabaseObjectListFunctionParameters.class;
   }
 
   @Override
-  public ExitFunctionExecutor newExecutor() {
-    return new ExitFunctionExecutor(getFunctionName());
+  public DatabaseObjectListFunctionExecutor newExecutor() {
+    return new DatabaseObjectListFunctionExecutor(getFunctionName());
   }
 }

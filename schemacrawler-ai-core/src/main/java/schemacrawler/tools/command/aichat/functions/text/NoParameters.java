@@ -26,14 +26,11 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
-public class NoResultsReturn implements FunctionReturn {
-
-  @Override
-  public String get() {
-    return "There were no matching results for your query.";
-  }
-}
+@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+public record NoParameters() implements FunctionParameters {}
