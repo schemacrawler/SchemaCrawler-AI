@@ -4,7 +4,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionDefinition;
 
 public class AbstractFunctionDefinitionTest {
 

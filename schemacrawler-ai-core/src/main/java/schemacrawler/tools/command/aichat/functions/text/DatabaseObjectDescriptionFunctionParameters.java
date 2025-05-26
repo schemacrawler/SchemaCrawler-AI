@@ -48,8 +48,10 @@ public record DatabaseObjectDescriptionFunctionParameters(
         String databaseObjectName,
     @JsonPropertyDescription(
             """
-        Indicates the type of database objects to show - sequences, synonyms,
-        or routines (that is, stored procedures or functions).
+        Indicates the type of database objects to show - like
+        tables (all types, including views),
+        routines (that is, functions and stored procedures),
+        sequences, or synonyms.
         """)
         @JsonProperty(defaultValue = "NONE", required = true)
         DatabaseObjectsScope databaseObjectsScope)
@@ -57,9 +59,10 @@ public record DatabaseObjectDescriptionFunctionParameters(
 
   public enum DatabaseObjectsScope {
     NONE,
+    TABLES,
+    ROUTINES,
     SEQUENCES,
-    SYNONYMS,
-    ROUTINES;
+    SYNONYMS;
   }
 
   public DatabaseObjectDescriptionFunctionParameters {

@@ -26,14 +26,14 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.command.aichat.functions.json;
 
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.DEFAULT;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.DEFAULT;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.util.Collection;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -44,7 +44,8 @@ import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope;
+import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope;
+import schemacrawler.tools.command.aichat.functions.text.AbstractExecutableFunctionExecutor;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;

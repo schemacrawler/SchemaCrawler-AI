@@ -31,11 +31,11 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -53,8 +53,8 @@ import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
-import schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.text.TableDecriptionFunctionParameters;
+import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext

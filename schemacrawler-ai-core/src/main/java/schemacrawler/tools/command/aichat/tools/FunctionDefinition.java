@@ -31,7 +31,8 @@ package schemacrawler.tools.command.aichat.tools;
 import schemacrawler.schema.TypedObject;
 import us.fatehi.utility.property.PropertyName;
 
-public interface FunctionDefinition<P extends FunctionParameters> extends TypedObject<FunctionReturnType> {
+public interface FunctionDefinition<P extends FunctionParameters>
+    extends TypedObject<FunctionReturnType> {
 
   String getDescription();
 

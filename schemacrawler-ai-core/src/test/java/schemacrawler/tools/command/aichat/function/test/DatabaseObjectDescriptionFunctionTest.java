@@ -34,10 +34,12 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -65,6 +67,13 @@ public class DatabaseObjectDescriptionFunctionTest {
   public void describeAllRoutines(final TestContext testContext) throws Exception {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters(null, ROUTINES);
+    describeDatabaseObject(testContext, args, true);
+  }
+
+  @Test
+  public void describeAllTables(final TestContext testContext) throws Exception {
+    final DatabaseObjectDescriptionFunctionParameters args =
+        new DatabaseObjectDescriptionFunctionParameters(null, TABLES);
     describeDatabaseObject(testContext, args, true);
   }
 
@@ -111,9 +120,10 @@ public class DatabaseObjectDescriptionFunctionTest {
     final LimitOptionsBuilder limitOptionsBuilder =
         LimitOptionsBuilder.builder()
             .includeSchemas(new RegularExpressionExclusionRule(".*\\.FOR_LINT"))
+            .includeTables(new IncludeAll())
+            .includeAllRoutines()
             .includeAllSynonyms()
-            .includeAllSequences()
-            .includeAllRoutines();
+            .includeAllSequences();
     final LoadOptionsBuilder loadOptionsBuilder =
         LoadOptionsBuilder.builder().withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum());
     final SchemaCrawlerOptions schemaCrawlerOptions =

@@ -26,7 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.command.aichat.functions.json;
+
+import schemacrawler.tools.command.aichat.functions.text.AbstractFunctionDefinition;
 
 public final class TableDecriptionFunctionDefinition
     extends AbstractFunctionDefinition<TableDecriptionFunctionParameters> {
