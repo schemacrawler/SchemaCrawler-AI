@@ -34,7 +34,7 @@ public final class ListFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        List database objects like tables, routines
+        List names of database objects like tables, routines
         (that is, functions and stored procedures), sequences, or synonyms.
         Returns JSON data.
         """

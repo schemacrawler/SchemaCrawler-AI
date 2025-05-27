@@ -113,6 +113,7 @@ public final class ListFunctionExecutor
       }
       final ObjectNode objectNode = mapper.createObjectNode();
       objectNode.put("schema", databaseObject.getSchema().getFullName());
+      objectNode.put("name", databaseObject.getName());
       if (databaseObject instanceof TypedObject typedObject) {
         objectNode.put("type", typedObject.getType().toString());
       } else {
