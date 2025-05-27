@@ -35,7 +35,7 @@ public final class DescribeTablesFunctionDefinition
   public String getDescription() {
     return """
         Get the details and description of database tables or views,
-        including columns, foreign keys, indexes and triggers.
+        including columns, primary key, foreign keys, indexes and triggers.
         This could return a lot of information if not limited by a
         parameter specifying one or more tables
         Returns data as a JSON object.

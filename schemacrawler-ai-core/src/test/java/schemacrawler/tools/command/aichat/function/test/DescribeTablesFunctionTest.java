@@ -32,6 +32,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import java.util.List;
@@ -98,7 +99,7 @@ public class DescribeTablesFunctionTest {
   @Test
   public void describeTablePrimaryKey(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("AUTHORS", null);
+        new DescribeTablesFunctionParameters("AUTHORS", List.of(PRIMARY_KEY));
     describeTable(testContext, args, true);
   }
 

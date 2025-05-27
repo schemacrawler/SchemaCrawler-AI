@@ -41,8 +41,7 @@ import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DescribeTablesFunctionParameters(
-    @JsonPropertyDescription(
-            """
+    @JsonPropertyDescription("""
     Name of database table or view to describe.
     Can be a regular expression, matching the fully qualified
     table name (including the schema).
@@ -52,20 +51,20 @@ public record DescribeTablesFunctionParameters(
     """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName,
-    @JsonPropertyDescription(
-            """
-        Indicates what details of the database table or view to return -
-        columns, primary key, foreign keys, indexes, triggers, attributes,
-        and table definition. Columns, primary key, foreign key references
-        to other tables, and remarks or comments are always returned.
-        The other details can be requested. The results could be large.
-        """)
+    @JsonPropertyDescription("""
+    Indicates what details of the database table or view to return -
+    columns, primary key, foreign keys, indexes, triggers, attributes,
+    and table definition. Columns, foreign key references
+    to other tables, and remarks or comments are always returned.
+    The other details can be requested. The results could be large.
+    """)
         @JsonProperty(required = false)
         Collection<TableDescriptionScope> descriptionScope)
     implements FunctionParameters {
 
   public enum TableDescriptionScope {
     DEFAULT(null),
+    PRIMARY_KEY(AdditionalTableDetails.PRIMARY_KEY),
     INDEXES(AdditionalTableDetails.INDEXES),
     TRIGGERS(AdditionalTableDetails.TRIGGERS),
     ATTRIBUTES(AdditionalTableDetails.ATTRIBUTES),
