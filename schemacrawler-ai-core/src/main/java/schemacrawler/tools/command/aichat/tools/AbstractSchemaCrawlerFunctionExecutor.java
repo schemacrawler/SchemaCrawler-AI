@@ -26,23 +26,40 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions.json;
+package schemacrawler.tools.command.aichat.tools;
 
+import java.util.Collection;
+import java.util.regex.Pattern;
+import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.command.aichat.tools.AbstractSchemaCrawlerFunctionExecutor;
-import schemacrawler.tools.command.aichat.tools.FunctionParameters;
-import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
-public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
-    extends AbstractSchemaCrawlerFunctionExecutor<P> {
+public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionParameters>
+    extends AbstractFunctionExecutor<P> {
 
-  protected AbstractJsonFunctionExecutor(final PropertyName functionName) {
+  protected AbstractSchemaCrawlerFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 
-  protected final void refilterCatalog() {
-    final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
-    MetaDataUtility.reduceCatalog(catalog, options);
+  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+
+  protected Pattern makeNameInclusionPattern(final String name) {
+    if (isBlank(name)) {
+      return Pattern.compile(".*");
+    }
+    final boolean hasDefaultSchema = hasDefaultSchema();
+    return Pattern.compile(String.format(".*%s(?i)%s(?-i)", hasDefaultSchema ? "" : "\\.", name));
+  }
+
+  private boolean hasDefaultSchema() {
+    final Collection<Schema> schemas = catalog.getSchemas();
+    final int schemaCount = schemas.size();
+    for (final Schema schema : schemas) {
+      if (isBlank(schema.getFullName()) && schemaCount == 1) {
+        return true;
+      }
+    }
+    return false;
   }
 }

@@ -48,20 +48,64 @@ public class ToolUtilityTest {
     private String requiredParam;
     private String optionalParam;
 
+    public String getOptionalParam() {
+      return optionalParam;
+    }
+
     public String getRequiredParam() {
       return requiredParam;
+    }
+
+    public void setOptionalParam(String optionalParam) {
+      this.optionalParam = optionalParam;
     }
 
     public void setRequiredParam(String requiredParam) {
       this.requiredParam = requiredParam;
     }
+  }
 
-    public String getOptionalParam() {
-      return optionalParam;
+  // Sample FunctionExecutor implementation for testing
+  private abstract static class TestFunctionExecutor implements FunctionExecutor<TestParameters> {
+    private final UUID executorId = UUID.randomUUID();
+
+    @Override
+    public void configure(TestParameters parameters) {
+      // Do nothing for test
     }
 
-    public void setOptionalParam(String optionalParam) {
-      this.optionalParam = optionalParam;
+    public void execute() {
+      // Do nothing for test
+    }
+
+    @Override
+    public schemacrawler.schema.Catalog getCatalog() {
+      return null;
+    }
+
+    @Override
+    public java.sql.Connection getConnection() {
+      return null;
+    }
+
+    @Override
+    public String getDescription() {
+      return "Test executor";
+    }
+
+    @Override
+    public UUID getExecutorInstanceId() {
+      return executorId;
+    }
+
+    @Override
+    public void initialize() {
+      // Do nothing for test
+    }
+
+    @Override
+    public void setConnection(java.sql.Connection connection) {
+      // Do nothing for test
     }
   }
 
@@ -108,49 +152,5 @@ public class ToolUtilityTest {
     assertThat(parametersString, containsString("object"));
     assertThat(parametersString, containsString("properties"));
     assertThat(parametersString, containsString("requiredParam"));
-  }
-
-  // Sample FunctionExecutor implementation for testing
-  private abstract static class TestFunctionExecutor implements FunctionExecutor<TestParameters> {
-    private final UUID executorId = UUID.randomUUID();
-
-    @Override
-    public String getDescription() {
-      return "Test executor";
-    }
-
-    @Override
-    public UUID getExecutorInstanceId() {
-      return executorId;
-    }
-
-    @Override
-    public void configure(TestParameters parameters) {
-      // Do nothing for test
-    }
-
-    public void execute() {
-      // Do nothing for test
-    }
-
-    @Override
-    public void setConnection(java.sql.Connection connection) {
-      // Do nothing for test
-    }
-
-    @Override
-    public void initialize() {
-      // Do nothing for test
-    }
-
-    @Override
-    public schemacrawler.schema.Catalog getCatalog() {
-      return null;
-    }
-
-    @Override
-    public java.sql.Connection getConnection() {
-      return null;
-    }
   }
 }

@@ -28,7 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-public final class ExitFunctionDefinition extends AbstractFunctionDefinition<NoParameters> {
+public final class ExitFunctionDefinition extends AbstractTextFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {

@@ -66,8 +66,7 @@ public class DescribeTablesFunctionTest {
 
   @Test
   public void describeAllTables(final TestContext testContext) throws Exception {
-    final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters(null, null);
+    final DescribeTablesFunctionParameters args = new DescribeTablesFunctionParameters(null, null);
     describeTable(testContext, args, true);
   }
 
@@ -152,8 +151,7 @@ public class DescribeTablesFunctionTest {
   public void parameters(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
-    assertThat(
-        args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":\"DEFAULT\"}"));
+    assertThat(args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
   }
 
   private void describeTable(

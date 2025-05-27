@@ -29,7 +29,7 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.functions.text;
 
 public final class DatabaseObjectDescriptionFunctionDefinition
-    extends AbstractFunctionDefinition<DatabaseObjectDescriptionFunctionParameters> {
+    extends AbstractTextFunctionDefinition<DatabaseObjectDescriptionFunctionParameters> {
 
   @Override
   public String getDescription() {

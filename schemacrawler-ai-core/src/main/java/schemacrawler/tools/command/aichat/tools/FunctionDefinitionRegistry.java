@@ -106,10 +106,12 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return registeredPlugins;
   }
 
-  public Collection<ToolSpecification> getToolSpecifications() {
+  public Collection<ToolSpecification> getToolSpecifications(final FunctionReturnType returnType) {
     final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
+      if (functionDefinition.getFunctionReturnType() == returnType) {
+        toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
+      }
     }
     return toolSpecifications;
   }

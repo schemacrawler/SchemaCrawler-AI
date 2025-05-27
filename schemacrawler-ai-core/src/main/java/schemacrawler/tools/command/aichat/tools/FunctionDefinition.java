@@ -46,10 +46,10 @@ public interface FunctionDefinition<P extends FunctionParameters>
 
   Class<P> getParametersClass();
 
-  FunctionExecutor<P> newExecutor();
-
   @Override
   default FunctionReturnType getType() {
     return getFunctionReturnType();
   }
+
+  FunctionExecutor<P> newExecutor();
 }

@@ -28,6 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import schemacrawler.tools.command.serialize.model.CatalogDocument;
 import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
@@ -44,5 +46,11 @@ public final class DescribeTablesFunctionExecutor
   public FunctionReturn call() throws Exception {
     final CatalogDocument catalogDocument = CompactCatalogUtility.createCatalogDocument(catalog);
     return () -> catalogDocument.toString();
+  }
+
+  @Override
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final SchemaCrawlerOptions options = SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
+    return options;
   }
 }

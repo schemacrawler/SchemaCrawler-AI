@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
+import schemacrawler.tools.command.aichat.tools.AbstractFunctionExecutor;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 

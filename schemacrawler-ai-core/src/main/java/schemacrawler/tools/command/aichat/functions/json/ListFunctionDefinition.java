@@ -28,17 +28,15 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
-public final class DescribeTablesFunctionDefinition
-    extends AbstractJsonFunctionDefinition<DescribeTablesFunctionParameters> {
+public final class ListFunctionDefinition
+    extends AbstractJsonFunctionDefinition<ListFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Get the details and description of database tables or views,
-        including columns, foreign keys, indexes and triggers.
-        This could return a lot of information if not limited by a
-        parameter specifying one or more tables
-        Returns data as a JSON object.
+        List database objects like tables, routines
+        (that is, functions and stored procedures), sequences, or synonyms.
+        Returns JSON data.
         """
         .stripIndent()
         .replace("\n", " ")
@@ -46,12 +44,12 @@ public final class DescribeTablesFunctionDefinition
   }
 
   @Override
-  public Class<DescribeTablesFunctionParameters> getParametersClass() {
-    return DescribeTablesFunctionParameters.class;
+  public Class<ListFunctionParameters> getParametersClass() {
+    return ListFunctionParameters.class;
   }
 
   @Override
-  public DescribeTablesFunctionExecutor newExecutor() {
-    return new DescribeTablesFunctionExecutor(getFunctionName());
+  public ListFunctionExecutor newExecutor() {
+    return new ListFunctionExecutor(getFunctionName());
   }
 }

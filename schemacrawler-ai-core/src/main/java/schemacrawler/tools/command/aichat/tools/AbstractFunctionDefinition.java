@@ -26,14 +26,11 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.command.aichat.tools;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
-import schemacrawler.tools.command.aichat.tools.FunctionParameters;
-import schemacrawler.tools.command.aichat.tools.FunctionReturnType;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
@@ -43,12 +40,6 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public abstract String getDescription();
-
-  @JsonIgnore
-  @Override
-  public FunctionReturnType getFunctionReturnType() {
-    return FunctionReturnType.TEXT;
-  }
 
   @JsonIgnore
   @Override
