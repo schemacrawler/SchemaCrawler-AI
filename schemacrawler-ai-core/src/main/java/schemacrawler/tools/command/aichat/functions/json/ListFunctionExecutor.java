@@ -38,6 +38,7 @@ import java.util.Collection;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Sequence;
@@ -112,7 +113,10 @@ public final class ListFunctionExecutor
         continue;
       }
       final ObjectNode objectNode = mapper.createObjectNode();
-      objectNode.put("schema", databaseObject.getSchema().getFullName());
+      final String schemaName = databaseObject.getSchema().getFullName();
+      if (!isBlank(schemaName)) {
+        objectNode.put("schema", schemaName);
+      }
       objectNode.put("name", databaseObject.getName());
       if (databaseObject instanceof TypedObject typedObject) {
         objectNode.put("type", typedObject.getType().toString());

@@ -31,10 +31,7 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import java.util.List;
@@ -80,14 +77,14 @@ public class DescribeTablesFunctionTest {
   @Test
   public void describeTableColumns(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("ΒΙΒΛΊΑ", List.of(COLUMNS));
+        new DescribeTablesFunctionParameters("ΒΙΒΛΊΑ", null);
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTableForeignKeys(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("BOOKAUTHORS", List.of(FOREIGN_KEYS));
+        new DescribeTablesFunctionParameters("BOOKAUTHORS", null);
     describeTable(testContext, args, true);
   }
 
@@ -101,7 +98,7 @@ public class DescribeTablesFunctionTest {
   @Test
   public void describeTablePrimaryKey(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("AUTHORS", List.of(PRIMARY_KEY));
+        new DescribeTablesFunctionParameters("AUTHORS", null);
     describeTable(testContext, args, true);
   }
 

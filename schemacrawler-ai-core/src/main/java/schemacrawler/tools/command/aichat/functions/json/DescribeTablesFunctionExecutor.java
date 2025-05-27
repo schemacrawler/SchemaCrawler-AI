@@ -28,9 +28,18 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.DEFAULT;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.regex.Pattern;
+import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.schemacrawler.GrepOptionsBuilder;
+import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 import schemacrawler.tools.command.serialize.model.CatalogDocument;
 import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
 import us.fatehi.utility.property.PropertyName;
@@ -44,13 +53,40 @@ public final class DescribeTablesFunctionExecutor
 
   @Override
   public FunctionReturn call() throws Exception {
-    final CatalogDocument catalogDocument = CompactCatalogUtility.createCatalogDocument(catalog);
+    refilterCatalog();
+
+    final Collection<AdditionalTableDetails> tableDetails = getTableDetails();
+    final CatalogDocument catalogDocument =
+        new CompactCatalogUtility()
+            .withAdditionalTableDetails(tableDetails)
+            .createCatalogDocument(catalog);
     return () -> catalogDocument.toString();
+  }
+
+  private Collection<AdditionalTableDetails> getTableDetails() {
+    final Collection<AdditionalTableDetails> tableDetails = new ArrayList<>();
+    final Collection<TableDescriptionScope> descriptionScopes = commandOptions.descriptionScope();
+    for (final TableDescriptionScope descriptionScope : descriptionScopes) {
+      if (descriptionScope == null || descriptionScope == DEFAULT) {
+        continue;
+      }
+      tableDetails.add(descriptionScope.toAdditionalTableDetails());
+    }
+    return tableDetails;
   }
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final SchemaCrawlerOptions options = SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
-    return options;
+    final LimitOptionsBuilder limitOptionsBuilder =
+        LimitOptionsBuilder.builder()
+            .includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll())
+            .includeRoutines(new ExcludeAll());
+    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.tableName());
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
+    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+        .withLimitOptions(limitOptionsBuilder.toOptions())
+        .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 }

@@ -1,6 +1,7 @@
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Logger;
 import org.apache.lucene.store.Directory;
 import static java.util.Objects.requireNonNull;
@@ -16,6 +17,7 @@ import dev.langchain4j.rag.query.Query;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Table;
+import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
 import schemacrawler.tools.command.serialize.model.TableDocument;
 
@@ -31,12 +33,16 @@ public class FullTextCatalogContentRetriever implements ContentRetriever {
     requireNonNull(catalog, "No catalog provided");
 
     final Directory tempDirectory = DirectoryFactory.tempDirectory();
+    final Map<AdditionalTableDetails, Boolean> allTableDetails = TableDocument.allTableDetails();
     final LuceneEmbeddingStore luceneIndexer =
         LuceneEmbeddingStore.builder().directory(tempDirectory).build();
     final TextSegment databaseInfoContent = getDatabaseInfoContent(catalog);
     luceneIndexer.add(databaseInfoContent);
     for (final Table table : catalog.getTables()) {
-      final TableDocument tableDocument = CompactCatalogUtility.getTableDocument(table, false);
+      final TableDocument tableDocument =
+          new CompactCatalogUtility()
+              .withAdditionalTableDetails(allTableDetails)
+              .getTableDocument(table);
       luceneIndexer.add(TextSegment.from(tableDocument.toJson()));
     }
 
