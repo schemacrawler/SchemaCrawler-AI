@@ -28,6 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,12 +39,14 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record TableDecriptionFunctionParameters(
+public record DescribeTablesFunctionParameters(
     @JsonPropertyDescription(
             """
     Name of database table or view to describe.
     Can be a regular expression.
     Use an empty string if all tables are requested.
+    If not specified, show all tables, but the results
+    could be big.
     """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName,
@@ -50,13 +54,14 @@ public record TableDecriptionFunctionParameters(
             """
         Indicates what details of the database table or view to show -
         columns, primary key, indexes, foreign keys, or triggers.
+        If not specified, show all details, but the results
+        could be big.
         """)
-        @JsonProperty(defaultValue = "DEFAULT", required = true)
-        TableDescriptionScope descriptionScope)
+        @JsonProperty(defaultValue = "DEFAULT", required = false)
+        Collection<TableDescriptionScope> descriptionScope)
     implements FunctionParameters {
 
   public enum TableDescriptionScope {
-    DEFAULT,
     COLUMNS,
     PRIMARY_KEY,
     INDEXES,
@@ -64,12 +69,12 @@ public record TableDecriptionFunctionParameters(
     TRIGGERS;
   }
 
-  public TableDecriptionFunctionParameters {
+  public DescribeTablesFunctionParameters {
     if (tableName == null || tableName.isBlank()) {
       tableName = "";
     }
     if (descriptionScope == null) {
-      descriptionScope = TableDescriptionScope.DEFAULT;
+      descriptionScope = new ArrayList<>();
     }
   }
 

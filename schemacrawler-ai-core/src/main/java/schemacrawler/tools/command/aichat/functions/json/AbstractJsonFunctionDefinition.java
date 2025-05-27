@@ -35,7 +35,7 @@ import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 import schemacrawler.tools.command.aichat.tools.FunctionReturnType;
 
-public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
+public abstract class AbstractJsonFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
 
   private String toString;

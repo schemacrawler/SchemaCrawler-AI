@@ -28,29 +28,21 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
-import schemacrawler.tools.command.aichat.functions.text.AbstractFunctionDefinition;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.command.serialize.model.CatalogDocument;
+import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
+import us.fatehi.utility.property.PropertyName;
 
-public final class TableDecriptionFunctionDefinition
-    extends AbstractFunctionDefinition<TableDecriptionFunctionParameters> {
+public final class DescribeTablesFunctionExecutor
+    extends AbstractJsonFunctionExecutor<DescribeTablesFunctionParameters> {
 
-  @Override
-  public String getDescription() {
-    return """
-        Get the details and description of database tables or views,
-        including columns, foreign keys, indexes and triggers.
-        """
-        .stripIndent()
-        .replace("\n", " ")
-        .trim();
+  protected DescribeTablesFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override
-  public Class<TableDecriptionFunctionParameters> getParametersClass() {
-    return TableDecriptionFunctionParameters.class;
-  }
-
-  @Override
-  public TableDecriptionFunctionExecutor newExecutor() {
-    return new TableDecriptionFunctionExecutor(getFunctionName());
+  public FunctionReturn call() throws Exception {
+    final CatalogDocument catalogDocument = CompactCatalogUtility.createCatalogDocument(catalog);
+    return () -> catalogDocument.toString();
   }
 }

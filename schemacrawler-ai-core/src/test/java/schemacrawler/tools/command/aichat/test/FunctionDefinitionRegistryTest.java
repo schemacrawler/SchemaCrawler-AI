@@ -37,7 +37,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
@@ -90,7 +90,7 @@ public class FunctionDefinitionRegistryTest {
             .collect(Collectors.toList()),
         containsInAnyOrder(
             DatabaseObjectListFunctionDefinition.class.getSimpleName(),
-            TableDecriptionFunctionDefinition.class.getSimpleName(),
+            DescribeTablesFunctionDefinition.class.getSimpleName(),
             DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),
             ExitFunctionDefinition.class.getSimpleName()));

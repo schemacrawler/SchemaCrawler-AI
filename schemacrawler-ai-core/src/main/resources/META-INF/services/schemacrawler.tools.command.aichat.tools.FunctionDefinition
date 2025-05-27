@@ -1,4 +1,4 @@
-schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionDefinition
+schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition
 schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition
 schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition
 schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition

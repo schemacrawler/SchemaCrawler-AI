@@ -31,12 +31,13 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.COLUMNS;
-import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
-import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters.TableDescriptionScope.TRIGGERS;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.COLUMNS;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.FOREIGN_KEYS;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
+import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -53,76 +54,76 @@ import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
-import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.TableDecriptionFunctionParameters;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class TableDescriptionFunctionTest {
+public class DescribeTablesFunctionTest {
 
   private Catalog catalog;
 
   @Test
   public void describeAllTables(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters(null, null);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters(null, null);
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTable(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("AUTHORS", null);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AUTHORS", null);
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTableColumns(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("ΒΙΒΛΊΑ", COLUMNS);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("ΒΙΒΛΊΑ", List.of(COLUMNS));
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTableForeignKeys(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("BOOKAUTHORS", FOREIGN_KEYS);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("BOOKAUTHORS", List.of(FOREIGN_KEYS));
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTableIndexes(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("BOOKAUTHORS", INDEXES);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("BOOKAUTHORS", List.of(INDEXES));
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTablePrimaryKey(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("AUTHORS", PRIMARY_KEY);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AUTHORS", List.of(PRIMARY_KEY));
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeTableTriggers(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("AUTHORS", TRIGGERS);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AUTHORS", List.of(TRIGGERS));
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeUnknownTable(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("NOT_A_TABLE", null);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("NOT_A_TABLE", null);
     describeTable(testContext, args, true);
   }
 
   @Test
   public void describeView(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("AuthorsList", null);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AuthorsList", null);
     describeTable(testContext, args, true);
   }
 
@@ -149,20 +150,20 @@ public class TableDescriptionFunctionTest {
 
   @Test
   public void parameters(final TestContext testContext) throws Exception {
-    final TableDecriptionFunctionParameters args =
-        new TableDecriptionFunctionParameters("AUTHORS", null);
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AUTHORS", null);
     assertThat(
         args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":\"DEFAULT\"}"));
   }
 
   private void describeTable(
       final TestContext testContext,
-      final TableDecriptionFunctionParameters args,
+      final DescribeTablesFunctionParameters args,
       final boolean hasResults)
       throws Exception {
 
-    final TableDecriptionFunctionDefinition functionDefinition =
-        new TableDecriptionFunctionDefinition();
+    final DescribeTablesFunctionDefinition functionDefinition =
+        new DescribeTablesFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
         testContext, functionDefinition, args, catalog, null, hasResults);
   }
