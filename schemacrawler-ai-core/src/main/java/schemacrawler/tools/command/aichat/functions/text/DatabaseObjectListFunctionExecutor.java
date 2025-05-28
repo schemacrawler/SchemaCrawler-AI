@@ -28,16 +28,16 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType;
+import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;

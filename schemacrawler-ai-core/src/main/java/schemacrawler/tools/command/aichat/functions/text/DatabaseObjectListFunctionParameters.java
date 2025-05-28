@@ -28,13 +28,14 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
@@ -48,14 +49,6 @@ public record DatabaseObjectListFunctionParameters(
         @JsonProperty(defaultValue = "ALL", required = true)
         DatabaseObjectType databaseObjectType)
     implements FunctionParameters {
-
-  public enum DatabaseObjectType {
-    ALL,
-    TABLES,
-    ROUTINES,
-    SEQUENCES,
-    SYNONYMS;
-  }
 
   public DatabaseObjectListFunctionParameters {
     if (databaseObjectType == null) {
