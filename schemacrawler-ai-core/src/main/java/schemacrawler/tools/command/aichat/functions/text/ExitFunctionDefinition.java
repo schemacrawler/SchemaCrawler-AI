@@ -26,30 +26,28 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.tools;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import schemacrawler.schema.TypedObject;
-import us.fatehi.utility.property.PropertyName;
-
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
-
-  String getDescription();
-
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
-  }
-
-  FunctionReturnType getFunctionReturnType();
-
-  String getName();
-
-  Class<P> getParametersClass();
+public final class ExitFunctionDefinition extends AbstractTextFunctionDefinition<NoParameters> {
 
   @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
+  public String getDescription() {
+    return """
+        Indicate when the user is done with their research,
+        and wants to end the chat session.
+        """
+        .stripIndent()
+        .replace("\n", " ")
+        .trim();
   }
 
-  FunctionExecutor<P> newExecutor();
+  @Override
+  public Class<NoParameters> getParametersClass() {
+    return NoParameters.class;
+  }
+
+  @Override
+  public ExitFunctionExecutor newExecutor() {
+    return new ExitFunctionExecutor(getFunctionName());
+  }
 }

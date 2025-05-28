@@ -26,11 +26,19 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import schemacrawler.tools.command.aichat.tools.AbstractFunctionDefinition;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.aichat.tools.FunctionReturnType;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record NoParameters() implements FunctionParameters {}
+public abstract class AbstractTextFunctionDefinition<P extends FunctionParameters>
+    extends AbstractFunctionDefinition<P> {
+
+  @JsonIgnore
+  @Override
+  public final FunctionReturnType getFunctionReturnType() {
+    return FunctionReturnType.TEXT;
+  }
+}

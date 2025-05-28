@@ -26,30 +26,23 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.tools;
+package schemacrawler.tools.command.aichat.functions.json;
 
-import schemacrawler.schema.TypedObject;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.tools.command.aichat.tools.AbstractSchemaCrawlerFunctionExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
+public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
+    extends AbstractSchemaCrawlerFunctionExecutor<P> {
 
-  String getDescription();
-
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
+  protected AbstractJsonFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
-  FunctionReturnType getFunctionReturnType();
-
-  String getName();
-
-  Class<P> getParametersClass();
-
-  @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
+  protected final void refilterCatalog() {
+    final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
+    MetaDataUtility.reduceCatalog(catalog, options);
   }
-
-  FunctionExecutor<P> newExecutor();
 }

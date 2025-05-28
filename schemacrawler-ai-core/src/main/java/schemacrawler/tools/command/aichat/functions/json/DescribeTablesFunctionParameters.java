@@ -26,8 +26,10 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.json;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -35,41 +37,57 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record TableDecriptionFunctionParameters(
-    @JsonPropertyDescription(
-            """
+public record DescribeTablesFunctionParameters(
+    @JsonPropertyDescription("""
     Name of database table or view to describe.
-    Can be a regular expression.
+    Can be a regular expression, matching the fully qualified
+    table name (including the schema).
     Use an empty string if all tables are requested.
+    If not specified, all tables will be returned, but the results
+    could be large.
     """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName,
-    @JsonPropertyDescription(
-            """
-        Indicates what details of the database table or view to show -
-        columns, primary key, indexes, foreign keys, or triggers.
-        """)
-        @JsonProperty(defaultValue = "DEFAULT", required = true)
-        TableDescriptionScope descriptionScope)
+    @JsonPropertyDescription("""
+    Indicates what details of the database table or view to return -
+    columns, primary key, foreign keys, indexes, triggers, attributes,
+    and table definition.
+    Columns, foreign key references to other tables, and remarks or comments
+    are always returned. The other details can be requested.
+    The results could be large.
+    """)
+        @JsonProperty(required = false)
+        Collection<TableDescriptionScope> descriptionScope)
     implements FunctionParameters {
 
   public enum TableDescriptionScope {
-    DEFAULT,
-    COLUMNS,
-    PRIMARY_KEY,
-    INDEXES,
-    FOREIGN_KEYS,
-    TRIGGERS;
+    DEFAULT(null),
+    PRIMARY_KEY(AdditionalTableDetails.PRIMARY_KEY),
+    INDEXES(AdditionalTableDetails.INDEXES),
+    TRIGGERS(AdditionalTableDetails.TRIGGERS),
+    ATTRIBUTES(AdditionalTableDetails.ATTRIBUTES),
+    DEFINIITION(AdditionalTableDetails.DEFINIITION);
+
+    private final AdditionalTableDetails additionalTableDetails;
+
+    TableDescriptionScope(final AdditionalTableDetails additionalTableDetails) {
+      this.additionalTableDetails = additionalTableDetails;
+    }
+
+    public AdditionalTableDetails toAdditionalTableDetails() {
+      return additionalTableDetails;
+    }
   }
 
-  public TableDecriptionFunctionParameters {
+  public DescribeTablesFunctionParameters {
     if (tableName == null || tableName.isBlank()) {
       tableName = "";
     }
     if (descriptionScope == null) {
-      descriptionScope = TableDescriptionScope.DEFAULT;
+      descriptionScope = new ArrayList<>();
     }
   }
 

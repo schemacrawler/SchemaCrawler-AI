@@ -45,11 +45,6 @@ public class Langchain4JUtilityTest {
             FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
                 .getFunctionDefinitions()
                 .stream()
-                .filter(
-                    fd ->
-                        fd.getFunctionType()
-                            == schemacrawler.tools.command.aichat.tools.FunctionDefinition
-                                .FunctionType.USER)
                 .count();
 
     assertThat(toolExecutors.size(), is(userFunctionCount));

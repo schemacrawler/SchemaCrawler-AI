@@ -26,29 +26,20 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-public final class DatabaseObjectDescriptionFunctionDefinition
-    extends AbstractFunctionDefinition<DatabaseObjectDescriptionFunctionParameters> {
+import schemacrawler.tools.command.aichat.tools.AbstractFunctionExecutor;
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import us.fatehi.utility.property.PropertyName;
 
-  @Override
-  public String getDescription() {
-    return """
-        Get the details and description of database objects like routines
-        (that is, functions and stored procedures), sequences, or synonyms.
-        """
-        .stripIndent()
-        .replace("\n", " ")
-        .trim();
+public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParameters> {
+
+  protected ExitFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override
-  public Class<DatabaseObjectDescriptionFunctionParameters> getParametersClass() {
-    return DatabaseObjectDescriptionFunctionParameters.class;
-  }
-
-  @Override
-  public DatabaseObjectDescriptionFunctionExecutor newExecutor() {
-    return new DatabaseObjectDescriptionFunctionExecutor(getFunctionName());
+  public FunctionReturn call() {
+    return () -> "Thank you for using SchemaCrawler with AI chat.";
   }
 }

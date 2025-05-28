@@ -26,18 +26,14 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
 import java.util.regex.Pattern;
-import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;
@@ -53,16 +49,32 @@ public final class DatabaseObjectDescriptionFunctionExecutor
   protected Config createAdditionalConfig() {
     final DatabaseObjectsScope scope = commandOptions.databaseObjectsScope();
     final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
-    if (scope != SEQUENCES) {
-      schemaTextOptionsBuilder.noSequences();
-    } // fall through - no else
-    if (scope != SYNONYMS) {
-      schemaTextOptionsBuilder.noSynonyms();
-    } // fall through - no else
-    if (scope != ROUTINES) {
-      schemaTextOptionsBuilder.noRoutines();
-    } // fall through - no else
+
     schemaTextOptionsBuilder.noInfo();
+    // First turn off output of all database objects
+    schemaTextOptionsBuilder.noTables();
+    schemaTextOptionsBuilder.noRoutines();
+    schemaTextOptionsBuilder.noSequences();
+    schemaTextOptionsBuilder.noSynonyms();
+
+    // Next, turn on the ones that are needed
+    switch (scope) {
+      case TABLES:
+        schemaTextOptionsBuilder.noTables(false);
+        break;
+      case ROUTINES:
+        schemaTextOptionsBuilder.noRoutines(false);
+        break;
+      case SEQUENCES:
+        schemaTextOptionsBuilder.noSequences(false);
+        break;
+      case SYNONYMS:
+        schemaTextOptionsBuilder.noSynonyms(false);
+        break;
+      default:
+        // No action
+    }
+
     return schemaTextOptionsBuilder.toConfig();
   }
 
@@ -73,16 +85,21 @@ public final class DatabaseObjectDescriptionFunctionExecutor
     final DatabaseObjectsScope scope = commandOptions.databaseObjectsScope();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     switch (scope) {
-      case SEQUENCES:
-        limitOptionsBuilder.includeSequences(new RegularExpressionInclusionRule(inclusionPattern));
-      case SYNONYMS:
-        limitOptionsBuilder.includeSynonyms(new RegularExpressionInclusionRule(inclusionPattern));
+      case TABLES:
+        limitOptionsBuilder.includeTables(new RegularExpressionInclusionRule(inclusionPattern));
+        break;
       case ROUTINES:
         limitOptionsBuilder.includeRoutines(new RegularExpressionInclusionRule(inclusionPattern));
+        break;
+      case SEQUENCES:
+        limitOptionsBuilder.includeSequences(new RegularExpressionInclusionRule(inclusionPattern));
+        break;
+      case SYNONYMS:
+        limitOptionsBuilder.includeSynonyms(new RegularExpressionInclusionRule(inclusionPattern));
+        break;
       default:
         // No action
     }
-    limitOptionsBuilder.includeTables(new ExcludeAll());
 
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
         .withLimitOptions(limitOptionsBuilder.toOptions());
@@ -97,12 +114,14 @@ public final class DatabaseObjectDescriptionFunctionExecutor
   protected boolean hasResults() {
     final DatabaseObjectsScope scope = commandOptions.databaseObjectsScope();
     switch (scope) {
+      case TABLES:
+        return !catalog.getTables().isEmpty();
+      case ROUTINES:
+        return !catalog.getRoutines().isEmpty();
       case SEQUENCES:
         return !catalog.getSequences().isEmpty();
       case SYNONYMS:
         return !catalog.getSynonyms().isEmpty();
-      case ROUTINES:
-        return !catalog.getRoutines().isEmpty();
       default:
         return false;
     }

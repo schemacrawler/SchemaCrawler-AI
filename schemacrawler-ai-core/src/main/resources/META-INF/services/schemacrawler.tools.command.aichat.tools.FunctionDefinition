@@ -1,5 +1,7 @@
-schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionDefinition
-schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition
-schemacrawler.tools.command.aichat.functions.DatabaseObjectDescriptionFunctionDefinition
-schemacrawler.tools.command.aichat.functions.LintFunctionDefinition
-schemacrawler.tools.command.aichat.functions.ExitFunctionDefinition
+schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition
+schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition
+schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition

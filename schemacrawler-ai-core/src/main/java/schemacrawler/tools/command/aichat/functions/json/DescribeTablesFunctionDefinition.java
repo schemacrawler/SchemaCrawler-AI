@@ -26,30 +26,32 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.tools;
+package schemacrawler.tools.command.aichat.functions.json;
 
-import schemacrawler.schema.TypedObject;
-import us.fatehi.utility.property.PropertyName;
-
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
-
-  String getDescription();
-
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
-  }
-
-  FunctionReturnType getFunctionReturnType();
-
-  String getName();
-
-  Class<P> getParametersClass();
+public final class DescribeTablesFunctionDefinition
+    extends AbstractJsonFunctionDefinition<DescribeTablesFunctionParameters> {
 
   @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
+  public String getDescription() {
+    return """
+        Get the details and description of database tables or views,
+        including columns, primary key, foreign keys, indexes and triggers.
+        This could return a lot of information if not limited by a
+        parameter specifying one or more tables.
+        Returns data as a JSON object.
+        """
+        .stripIndent()
+        .replace("\n", " ")
+        .trim();
   }
 
-  FunctionExecutor<P> newExecutor();
+  @Override
+  public Class<DescribeTablesFunctionParameters> getParametersClass() {
+    return DescribeTablesFunctionParameters.class;
+  }
+
+  @Override
+  public DescribeTablesFunctionExecutor newExecutor() {
+    return new DescribeTablesFunctionExecutor(getFunctionName());
+  }
 }

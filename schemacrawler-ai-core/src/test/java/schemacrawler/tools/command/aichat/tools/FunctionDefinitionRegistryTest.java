@@ -31,14 +31,87 @@ package schemacrawler.tools.command.aichat.tools;
 import static java.util.stream.Collectors.toList;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
+
+  private static final int NUM_FUNCTIONS = 7;
+  private static final int NUM_JSON_FUNCTIONS = 3;
+
+  @Test
+  public void name() {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    assertThat(registry.getName(), is("Function Definitions"));
+  }
+
+  @Test
+  public void registeredPlugins() {
+
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
+
+    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
+
+    final List<String> names =
+        functionDefinitions.stream().map(PropertyName::getName).collect(toList());
+    assertThat(
+        names,
+        containsInAnyOrder(
+            "database-object-list",
+            "database-object-description",
+            "lint",
+            "exit",
+            "describe-tables",
+            "describe-routines",
+            "list"));
+  }
+
+  @Test
+  public void testCommandPlugin() throws Exception {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
+    assertThat(functions, hasSize(NUM_FUNCTIONS));
+    assertThat(
+        functions.stream()
+            .map(function -> function.getClass().getSimpleName())
+            .collect(Collectors.toList()),
+        containsInAnyOrder(
+            DatabaseObjectListFunctionDefinition.class.getSimpleName(),
+            DescribeTablesFunctionDefinition.class.getSimpleName(),
+            DescribeRoutinesFunctionDefinition.class.getSimpleName(),
+            DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
+            ExitFunctionDefinition.class.getSimpleName(),
+            ListFunctionDefinition.class.getSimpleName()));
+  }
+
+  @Test
+  public void testGetFunctionDefinitions() {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
+
+    assertThat(functions, notNullValue());
+    assertThat(functions.size(), is(NUM_FUNCTIONS));
+  }
 
   @Test
   public void testGetName() {
@@ -54,31 +127,26 @@ public class FunctionDefinitionRegistryTest {
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
 
     assertThat(functionDefinitions, notNullValue());
-    // In a test environment, there might not be any registered plugins
-    // assertThat(functionDefinitions.isEmpty(), is(false));
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
-    assertThat(names.size(), is(5));
-  }
-
-  @Test
-  public void testGetFunctionDefinitions() {
-    final FunctionDefinitionRegistry registry =
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
-
-    assertThat(functions, notNullValue());
-    assertThat(functions.size(), is(5));
+    assertThat(names.size(), is(NUM_FUNCTIONS));
   }
 
   @Test
   public void testGetToolSpecifications() {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<ToolSpecification> toolSpecifications = registry.getToolSpecifications();
 
-    assertThat(toolSpecifications, notNullValue());
+    final Collection<ToolSpecification> textToolSpecifications =
+        registry.getToolSpecifications(FunctionReturnType.TEXT);
+    assertThat(textToolSpecifications, notNullValue());
+    assertThat(textToolSpecifications.size(), is(4));
+
+    final Collection<ToolSpecification> jsonToolSpecifications =
+        registry.getToolSpecifications(FunctionReturnType.JSON);
+    assertThat(jsonToolSpecifications, notNullValue());
+    assertThat(jsonToolSpecifications.size(), is(NUM_JSON_FUNCTIONS));
   }
 
   @Test

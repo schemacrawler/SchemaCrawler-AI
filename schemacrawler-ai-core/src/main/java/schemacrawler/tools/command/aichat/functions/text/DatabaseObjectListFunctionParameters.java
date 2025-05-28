@@ -26,8 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,37 +38,28 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record DatabaseObjectDescriptionFunctionParameters(
+public record DatabaseObjectListFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database object to describe.
-    Can be a regular expression.
-    Use an empty string if all database objects are requested.
+    Type of database object to list, like tables (including views),
+    routines (that is, functions and stored procedures),
+    schemas (that is, catalogs), sequences, or synonyms.
     """)
-        @JsonProperty(defaultValue = "", required = false)
-        String databaseObjectName,
-    @JsonPropertyDescription(
-            """
-        Indicates the type of database objects to show - sequences, synonyms,
-        or routines (that is, stored procedures or functions).
-        """)
-        @JsonProperty(defaultValue = "NONE", required = true)
-        DatabaseObjectsScope databaseObjectsScope)
+        @JsonProperty(defaultValue = "ALL", required = true)
+        DatabaseObjectType databaseObjectType)
     implements FunctionParameters {
 
-  public enum DatabaseObjectsScope {
-    NONE,
+  public enum DatabaseObjectType {
+    ALL,
+    TABLES,
+    ROUTINES,
     SEQUENCES,
-    SYNONYMS,
-    ROUTINES;
+    SYNONYMS;
   }
 
-  public DatabaseObjectDescriptionFunctionParameters {
-    if (databaseObjectName == null || databaseObjectName.isBlank()) {
-      databaseObjectName = "";
-    }
-    if (databaseObjectsScope == null) {
-      databaseObjectsScope = DatabaseObjectsScope.NONE;
+  public DatabaseObjectListFunctionParameters {
+    if (databaseObjectType == null) {
+      databaseObjectType = ALL;
     }
   }
 

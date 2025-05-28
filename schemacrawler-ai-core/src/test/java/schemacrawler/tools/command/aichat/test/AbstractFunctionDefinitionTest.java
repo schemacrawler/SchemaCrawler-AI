@@ -4,16 +4,17 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.functions.TableDecriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters;
 
 public class AbstractFunctionDefinitionTest {
 
   @Test
   public void properties() {
-    final TableDecriptionFunctionDefinition functionDefinition =
-        new TableDecriptionFunctionDefinition();
+    final DescribeTablesFunctionDefinition functionDefinition =
+        new DescribeTablesFunctionDefinition();
 
-    final String functionName = "table-decription";
+    final String functionName = "describe-tables";
     assertThat(functionDefinition.toString(), startsWith("function " + functionName));
 
     assertThat(functionDefinition.getName(), is(functionName));
@@ -22,6 +23,6 @@ public class AbstractFunctionDefinitionTest {
         startsWith("Get the details and description of database tables or views"));
     assertThat(
         functionDefinition.getParametersClass().getSimpleName(),
-        is("TableDecriptionFunctionParameters"));
+        is(DescribeTablesFunctionParameters.class.getSimpleName()));
   }
 }

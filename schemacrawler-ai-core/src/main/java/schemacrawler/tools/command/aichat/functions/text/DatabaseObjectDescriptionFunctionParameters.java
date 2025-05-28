@@ -26,7 +26,7 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -37,20 +37,40 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record LintFunctionParameters(
+public record DatabaseObjectDescriptionFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table for which to find design issues.
+    Name of database object to describe.
     Can be a regular expression.
-    Use an empty string if all tables are requested.
+    Use an empty string if all database objects are requested.
     """)
         @JsonProperty(defaultValue = "", required = false)
-        String tableName)
+        String databaseObjectName,
+    @JsonPropertyDescription(
+            """
+        Indicates the type of database objects to show - like
+        tables (all types, including views),
+        routines (that is, functions and stored procedures),
+        sequences, or synonyms.
+        """)
+        @JsonProperty(defaultValue = "NONE", required = true)
+        DatabaseObjectsScope databaseObjectsScope)
     implements FunctionParameters {
 
-  public LintFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
-      tableName = "";
+  public enum DatabaseObjectsScope {
+    NONE,
+    TABLES,
+    ROUTINES,
+    SEQUENCES,
+    SYNONYMS;
+  }
+
+  public DatabaseObjectDescriptionFunctionParameters {
+    if (databaseObjectName == null || databaseObjectName.isBlank()) {
+      databaseObjectName = "";
+    }
+    if (databaseObjectsScope == null) {
+      databaseObjectsScope = DatabaseObjectsScope.NONE;
     }
   }
 

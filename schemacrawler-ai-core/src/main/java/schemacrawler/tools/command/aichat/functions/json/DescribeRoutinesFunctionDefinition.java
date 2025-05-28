@@ -26,30 +26,33 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.tools;
+package schemacrawler.tools.command.aichat.functions.json;
 
-import schemacrawler.schema.TypedObject;
-import us.fatehi.utility.property.PropertyName;
-
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
-
-  String getDescription();
-
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
-  }
-
-  FunctionReturnType getFunctionReturnType();
-
-  String getName();
-
-  Class<P> getParametersClass();
+public final class DescribeRoutinesFunctionDefinition
+    extends AbstractJsonFunctionDefinition<DescribeRoutinesFunctionParameters> {
 
   @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
+  public String getDescription() {
+    return """
+        Get the details and description of database routine
+        (stored procedures or functions),
+        including parameters and return types.
+        This could return a lot of information if not limited by a
+        parameter specifying one or more routines.
+        Returns data as a JSON object.
+        """
+        .stripIndent()
+        .replace("\n", " ")
+        .trim();
   }
 
-  FunctionExecutor<P> newExecutor();
+  @Override
+  public Class<DescribeRoutinesFunctionParameters> getParametersClass() {
+    return DescribeRoutinesFunctionParameters.class;
+  }
+
+  @Override
+  public DescribeRoutinesFunctionExecutor newExecutor() {
+    return new DescribeRoutinesFunctionExecutor(getFunctionName());
+  }
 }

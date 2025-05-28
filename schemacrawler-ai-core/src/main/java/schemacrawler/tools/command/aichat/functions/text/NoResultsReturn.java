@@ -26,29 +26,14 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-public final class DatabaseObjectListFunctionDefinition
-    extends AbstractFunctionDefinition<DatabaseObjectListFunctionParameters> {
+import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 
-  @Override
-  public String getDescription() {
-    return """
-        List database objects like tables, routines
-        (that is, functions and stored procedures), sequences, or synonyms.
-        """
-        .stripIndent()
-        .replace("\n", " ")
-        .trim();
-  }
+public class NoResultsReturn implements FunctionReturn {
 
   @Override
-  public Class<DatabaseObjectListFunctionParameters> getParametersClass() {
-    return DatabaseObjectListFunctionParameters.class;
-  }
-
-  @Override
-  public DatabaseObjectListFunctionExecutor newExecutor() {
-    return new DatabaseObjectListFunctionExecutor(getFunctionName());
+  public String get() {
+    return "There were no matching results for your query.";
   }
 }

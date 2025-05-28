@@ -26,14 +26,11 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
 import java.io.StringWriter;
-import java.util.Collection;
-import java.util.regex.Pattern;
-import static us.fatehi.utility.Utility.isBlank;
-import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.tools.command.aichat.tools.AbstractSchemaCrawlerFunctionExecutor;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import schemacrawler.tools.command.aichat.utility.ConnectionDatabaseConnectionSource;
@@ -46,14 +43,14 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
-    extends AbstractFunctionExecutor<P> {
+    extends AbstractSchemaCrawlerFunctionExecutor<P> {
 
   protected AbstractExecutableFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 
   @Override
-  public FunctionReturn call() {
+  public final FunctionReturn call() {
 
     final SchemaCrawlerExecutable executable = createExecutable();
     // Execute and generate output
@@ -73,19 +70,9 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
 
   protected abstract Config createAdditionalConfig();
 
-  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
-
   protected abstract String getCommand();
 
   protected abstract boolean hasResults();
-
-  protected Pattern makeNameInclusionPattern(final String name) {
-    if (isBlank(name)) {
-      return Pattern.compile(".*");
-    }
-    final boolean hasDefaultSchema = hasDefaultSchema();
-    return Pattern.compile(String.format(".*%s(?i)%s(?-i)", hasDefaultSchema ? "" : "\\.", name));
-  }
 
   private SchemaCrawlerExecutable createExecutable() {
 
@@ -107,16 +94,5 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
 
     return executable;
-  }
-
-  private boolean hasDefaultSchema() {
-    final Collection<Schema> schemas = catalog.getSchemas();
-    final int schemaCount = schemas.size();
-    for (final Schema schema : schemas) {
-      if (isBlank(schema.getFullName()) && schemaCount == 1) {
-        return true;
-      }
-    }
-    return false;
   }
 }

@@ -26,18 +26,18 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType.TABLES;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.aichat.functions.DatabaseObjectListFunctionParameters.DatabaseObjectType;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionParameters.DatabaseObjectType;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;

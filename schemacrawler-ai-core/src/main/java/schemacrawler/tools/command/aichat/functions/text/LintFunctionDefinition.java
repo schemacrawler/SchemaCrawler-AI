@@ -26,30 +26,30 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.tools;
+package schemacrawler.tools.command.aichat.functions.text;
 
-import schemacrawler.schema.TypedObject;
-import us.fatehi.utility.property.PropertyName;
-
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
-
-  String getDescription();
-
-  default PropertyName getFunctionName() {
-    return new PropertyName(getName(), getDescription());
-  }
-
-  FunctionReturnType getFunctionReturnType();
-
-  String getName();
-
-  Class<P> getParametersClass();
+public final class LintFunctionDefinition
+    extends AbstractTextFunctionDefinition<LintFunctionParameters> {
 
   @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
+  public String getDescription() {
+    return """
+        Lint database schemas.
+        Find design issues with specific tables, or with the entire database.
+        Find problems with database design, such as no indexes on foreign keys.
+        """
+        .stripIndent()
+        .replace("\n", " ")
+        .trim();
   }
 
-  FunctionExecutor<P> newExecutor();
+  @Override
+  public Class<LintFunctionParameters> getParametersClass() {
+    return LintFunctionParameters.class;
+  }
+
+  @Override
+  public LintFunctionExecutor newExecutor() {
+    return new LintFunctionExecutor(getFunctionName());
+  }
 }

@@ -26,17 +26,17 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions;
+package schemacrawler.tools.command.aichat.functions.json;
 
-public final class LintFunctionDefinition
-    extends AbstractFunctionDefinition<LintFunctionParameters> {
+public final class ListFunctionDefinition
+    extends AbstractJsonFunctionDefinition<ListFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Lint database schemas.
-        Find design issues with specific tables, or with the entire database.
-        Find problems with database design, such as no indexes on foreign keys.
+        List names of database objects like tables, routines
+        (that is, functions and stored procedures), sequences, or synonyms.
+        Returns JSON data.
         """
         .stripIndent()
         .replace("\n", " ")
@@ -44,12 +44,12 @@ public final class LintFunctionDefinition
   }
 
   @Override
-  public Class<LintFunctionParameters> getParametersClass() {
-    return LintFunctionParameters.class;
+  public Class<ListFunctionParameters> getParametersClass() {
+    return ListFunctionParameters.class;
   }
 
   @Override
-  public LintFunctionExecutor newExecutor() {
-    return new LintFunctionExecutor(getFunctionName());
+  public ListFunctionExecutor newExecutor() {
+    return new ListFunctionExecutor(getFunctionName());
   }
 }

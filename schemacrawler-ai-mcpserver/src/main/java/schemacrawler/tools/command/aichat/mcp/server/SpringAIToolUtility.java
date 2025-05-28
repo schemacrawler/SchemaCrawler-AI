@@ -37,6 +37,7 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.command.aichat.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
 
@@ -72,7 +73,8 @@ public final class SpringAIToolUtility {
 
     final List<ToolDefinition> toolDefinitions = new ArrayList<>();
     for (final ToolSpecification toolSpecification :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getToolSpecifications()) {
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
+            .getToolSpecifications(FunctionReturnType.JSON)) {
 
       final ToolDefinition toolDefinition =
           ToolDefinition.builder()
