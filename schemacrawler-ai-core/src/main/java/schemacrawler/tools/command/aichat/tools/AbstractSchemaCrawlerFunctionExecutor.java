@@ -31,6 +31,7 @@ package schemacrawler.tools.command.aichat.tools;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.isRegularExpression;
 import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import us.fatehi.utility.property.PropertyName;
@@ -47,6 +48,9 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
   protected Pattern makeNameInclusionPattern(final String name) {
     if (isBlank(name)) {
       return Pattern.compile(".*");
+    }
+    if (isRegularExpression(name)) {
+      return Pattern.compile(name);
     }
     final boolean hasDefaultSchema = hasDefaultSchema();
     return Pattern.compile(String.format(".*%s(?i)%s(?-i)", hasDefaultSchema ? "" : "\\.", name));
