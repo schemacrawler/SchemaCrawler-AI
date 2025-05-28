@@ -41,7 +41,8 @@ import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DescribeTablesFunctionParameters(
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Name of database table or view to describe.
     Can be a regular expression, matching the fully qualified
     table name (including the schema).
@@ -51,7 +52,8 @@ public record DescribeTablesFunctionParameters(
     """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName,
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Indicates what details of the database table or view to return -
     columns, primary key, foreign keys, indexes, triggers, attributes,
     and table definition.

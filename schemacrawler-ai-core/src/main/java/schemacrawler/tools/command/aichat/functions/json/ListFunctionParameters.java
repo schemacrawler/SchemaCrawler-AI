@@ -40,7 +40,8 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListFunctionParameters(
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Type of database object to list, like tables (including views),
     routines (that is, stored procedures and functions),
     schemas (that is, catalogs), sequences, or synonyms.

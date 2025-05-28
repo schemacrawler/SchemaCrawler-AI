@@ -84,7 +84,8 @@ public final class DescribeRoutinesFunctionExecutor
             .includeSequences(new ExcludeAll())
             .includeRoutines(new IncludeAll())
             .includeTables(new ExcludeAll());
-    final Pattern grepRoutinesParametersPattern = makeNameInclusionPattern(commandOptions.routineName());
+    final Pattern grepRoutinesParametersPattern =
+        makeNameInclusionPattern(commandOptions.routineName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedRoutineParameters(grepRoutinesParametersPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

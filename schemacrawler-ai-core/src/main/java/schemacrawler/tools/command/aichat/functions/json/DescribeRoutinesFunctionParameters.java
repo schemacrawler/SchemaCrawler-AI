@@ -41,7 +41,8 @@ import schemacrawler.tools.command.serialize.model.AdditionalRoutineDetails;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DescribeRoutinesFunctionParameters(
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Name of database routine (stored procedure or function) to describe.
     Can be a regular expression, matching the fully qualified
     stored procedure or function name (including the schema).
@@ -51,7 +52,8 @@ public record DescribeRoutinesFunctionParameters(
     """)
         @JsonProperty(defaultValue = "", required = false)
         String routineName,
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Indicates what details of the database stored procedure or function
     to return - parameters (including return types), attributes,
     and routine definition.
