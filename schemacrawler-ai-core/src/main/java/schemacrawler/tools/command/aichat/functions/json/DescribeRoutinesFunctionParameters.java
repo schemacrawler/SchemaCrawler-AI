@@ -46,16 +46,16 @@ public record DescribeRoutinesFunctionParameters(
     Can be a regular expression, matching the fully qualified
     stored procedure or function name (including the schema).
     Use an empty string if all routines are requested.
-    If not specified, show all routines, but the results
+    If not specified, all routines are returned, but the results
     could be large.
     """)
         @JsonProperty(defaultValue = "", required = false)
         String routineName,
     @JsonPropertyDescription("""
-    Indicates what details of the database stored procedure or function to return -
-    parameters (including return types), attributes,
-    and routine definition. Parameters, return types, and remarks or comments
-    are always returned.
+    Indicates what details of the database stored procedure or function
+    to return - parameters (including return types), attributes,
+    and routine definition.
+    Parameters, return types, and remarks or comments are always returned.
     """)
         @JsonProperty(required = false)
         Collection<RoutineDescriptionScope> descriptionScope)
