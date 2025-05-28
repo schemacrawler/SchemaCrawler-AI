@@ -18,6 +18,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Table;
 import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
+import schemacrawler.tools.command.serialize.model.CatalogDocument;
 import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
 import schemacrawler.tools.command.serialize.model.TableDocument;
 
@@ -33,7 +34,7 @@ public class FullTextCatalogContentRetriever implements ContentRetriever {
     requireNonNull(catalog, "No catalog provided");
 
     final Directory tempDirectory = DirectoryFactory.tempDirectory();
-    final Map<AdditionalTableDetails, Boolean> allTableDetails = TableDocument.allTableDetails();
+    final Map<AdditionalTableDetails, Boolean> allTableDetails = CatalogDocument.allTableDetails();
     final LuceneEmbeddingStore luceneIndexer =
         LuceneEmbeddingStore.builder().directory(tempDirectory).build();
     final TextSegment databaseInfoContent = getDatabaseInfoContent(catalog);

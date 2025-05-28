@@ -39,6 +39,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
@@ -49,7 +50,8 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 6;
+  private static final int NUM_FUNCTIONS = 7;
+  private static final int NUM_JSON_FUNCTIONS = 3;
 
   @Test
   public void name() {
@@ -77,6 +79,7 @@ public class FunctionDefinitionRegistryTest {
             "lint",
             "exit",
             "describe-tables",
+            "describe-routines",
             "list"));
   }
 
@@ -93,6 +96,7 @@ public class FunctionDefinitionRegistryTest {
         containsInAnyOrder(
             DatabaseObjectListFunctionDefinition.class.getSimpleName(),
             DescribeTablesFunctionDefinition.class.getSimpleName(),
+            DescribeRoutinesFunctionDefinition.class.getSimpleName(),
             DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),
             ExitFunctionDefinition.class.getSimpleName(),
@@ -142,7 +146,7 @@ public class FunctionDefinitionRegistryTest {
     final Collection<ToolSpecification> jsonToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.JSON);
     assertThat(jsonToolSpecifications, notNullValue());
-    assertThat(jsonToolSpecifications.size(), is(2));
+    assertThat(jsonToolSpecifications.size(), is(NUM_JSON_FUNCTIONS));
   }
 
   @Test
