@@ -39,6 +39,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.tools.ToolSpecification;
+import schemacrawler.tools.command.aichat.tools.ToolUtility;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -70,22 +71,32 @@ public final class SpringAIToolUtility {
   }
 
   public static List<ToolDefinition> tools() {
-
+    final FunctionDefinitionRegistry functionDefinitionRegistry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final List<ToolDefinition> toolDefinitions = new ArrayList<>();
     for (final ToolSpecification toolSpecification :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-            .getToolSpecifications(FunctionReturnType.JSON)) {
-
-      final ToolDefinition toolDefinition =
-          ToolDefinition.builder()
-              .name(toolSpecification.name())
-              .description(toolSpecification.description())
-              .inputSchema(toolSpecification.getParametersAsString())
-              .build();
+        functionDefinitionRegistry.getToolSpecifications(FunctionReturnType.JSON)) {
+      final ToolDefinition toolDefinition = toToolDefinition(toolSpecification);
       toolDefinitions.add(toolDefinition);
     }
+    // Add lint function, in text, not JSON
+    final ToolDefinition lintDefinition =
+        toToolDefinition(
+            ToolUtility.toToolSpecification(
+                functionDefinitionRegistry.lookupFunctionDefinition("lint").get()));
+    toolDefinitions.add(lintDefinition);
 
     return toolDefinitions;
+  }
+
+  private static ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
+    final ToolDefinition toolDefinition =
+        ToolDefinition.builder()
+            .name(toolSpecification.name())
+            .description(toolSpecification.description())
+            .inputSchema(toolSpecification.getParametersAsString())
+            .build();
+    return toolDefinition;
   }
 
   private SpringAIToolUtility() {

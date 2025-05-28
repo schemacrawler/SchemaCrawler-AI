@@ -28,38 +28,32 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.ALL;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListFunctionParameters(
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Type of database object to list, like tables (including views),
     routines (that is, stored procedures and functions),
     schemas (that is, catalogs), sequences, or synonyms.
     If the parameter is not provided, all objects are listed.
     """)
         @JsonProperty(defaultValue = "ALL", required = false)
-        ListType listType)
+        DatabaseObjectType databaseObjectType)
     implements FunctionParameters {
 
-  public enum ListType {
-    ALL,
-    TABLES,
-    ROUTINES,
-    SEQUENCES,
-    SYNONYMS;
-  }
-
   public ListFunctionParameters {
-    if (listType == null) {
-      listType = ALL;
+    if (databaseObjectType == null) {
+      databaseObjectType = ALL;
     }
   }
 

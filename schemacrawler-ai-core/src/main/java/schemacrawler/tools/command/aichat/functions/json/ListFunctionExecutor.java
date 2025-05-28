@@ -28,11 +28,11 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.ALL;
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.ROUTINES;
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType.TABLES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -47,7 +47,7 @@ import schemacrawler.schema.TypedObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.aichat.functions.json.ListFunctionParameters.ListType;
+import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
@@ -63,17 +63,17 @@ public final class ListFunctionExecutor
     refilterCatalog();
 
     final Collection<DatabaseObject> databaseObjects = new ArrayList<>();
-    final ListType listType = commandOptions.listType();
-    if (listType == TABLES || listType == ALL) {
+    final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
+    if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {
       databaseObjects.addAll(catalog.getTables());
     } // fall through - no else
-    if (listType == ROUTINES || listType == ALL) {
+    if (databaseObjectType == ROUTINES || databaseObjectType == ALL) {
       databaseObjects.addAll(catalog.getRoutines());
     } // fall through - no else
-    if (listType == SEQUENCES || listType == ALL) {
+    if (databaseObjectType == SEQUENCES || databaseObjectType == ALL) {
       databaseObjects.addAll(catalog.getSequences());
     } // fall through - no else
-    if (listType == SYNONYMS || listType == ALL) {
+    if (databaseObjectType == SYNONYMS || databaseObjectType == ALL) {
       databaseObjects.addAll(catalog.getSynonyms());
     } // fall through - no else
 
@@ -82,18 +82,18 @@ public final class ListFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final ListType listType = commandOptions.listType();
+    final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
-    if (listType != TABLES && listType != ALL) {
+    if (databaseObjectType != TABLES && databaseObjectType != ALL) {
       limitOptionsBuilder.includeTables(new ExcludeAll());
     } // fall through - no else
-    if (listType != ROUTINES && listType == ALL) {
+    if (databaseObjectType != ROUTINES && databaseObjectType == ALL) {
       limitOptionsBuilder.includeAllRoutines();
     } // fall through - no else
-    if (listType == SEQUENCES || listType == ALL) {
+    if (databaseObjectType == SEQUENCES || databaseObjectType == ALL) {
       limitOptionsBuilder.includeAllSequences();
     } // fall through - no else
-    if (listType == SYNONYMS || listType == ALL) {
+    if (databaseObjectType == SYNONYMS || databaseObjectType == ALL) {
       limitOptionsBuilder.includeAllSynonyms();
     } // fall through - no else
 

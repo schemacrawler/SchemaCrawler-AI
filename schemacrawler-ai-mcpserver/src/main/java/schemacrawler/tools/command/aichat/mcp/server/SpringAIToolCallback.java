@@ -58,4 +58,10 @@ public final class SpringAIToolCallback implements ToolCallback {
   public ToolDefinition getToolDefinition() {
     return toolDefinition;
   }
+
+  @Override
+  public String toString() {
+    return toolDefinition.name();
+  }
+
 }
