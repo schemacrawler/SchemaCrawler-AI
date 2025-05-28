@@ -19,6 +19,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Schema;
 import schemacrawler.schema.Table;
+import schemacrawler.schema.TableType;
 import schemacrawler.tools.command.aichat.langchain4j.FullTextCatalogContentRetriever;
 
 public class FullTextCatalogContentRetrieverTest {
@@ -117,6 +118,7 @@ public class FullTextCatalogContentRetrieverTest {
     when(table1.getName()).thenReturn("TEST_TABLE");
     when(table1.getFullName()).thenReturn("PUBLIC.TEST_TABLE");
     when(table1.getRemarks()).thenReturn("Test table remarks");
+    when(table1.getTableType()).thenReturn(TableType.UNKNOWN);
     when(table1.getSchema()).thenReturn(schema);
 
     // Create mock catalog with tables
