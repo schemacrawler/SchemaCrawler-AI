@@ -63,5 +63,4 @@ public final class SpringAIToolCallback implements ToolCallback {
   public String toString() {
     return toolDefinition.name();
   }
-
 }

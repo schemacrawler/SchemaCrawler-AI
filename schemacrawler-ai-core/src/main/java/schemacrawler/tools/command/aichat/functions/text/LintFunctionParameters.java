@@ -38,7 +38,8 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record LintFunctionParameters(
-    @JsonPropertyDescription("""
+    @JsonPropertyDescription(
+            """
     Name of database table for which to find design issues.
     Can be a regular expression.
     Use an empty string if all tables are requested.
