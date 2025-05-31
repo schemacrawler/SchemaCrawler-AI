@@ -26,8 +26,9 @@ http://www.gnu.org/licenses/
 ========================================================================
 */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.command.aichat.functions.json;
 
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -37,20 +38,38 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record LintFunctionParameters(
+public record ListAcrossTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table for which to find design issues.
-    Can be a regular expression.
-    Use an empty string if all tables are requested.
+    Type of database object to list, like tables (including views),
+    routines (that is, stored procedures and functions),
+    schemas (that is, catalogs), sequences, or synonyms.
+    If the parameter is not provided, all objects are listed.
     """)
-        @JsonProperty(defaultValue = "", required = false)
-        String tableName)
+        @JsonProperty(defaultValue = "NONE", required = true)
+        DependantObjectType dependantObjectType)
     implements FunctionParameters {
 
-  public LintFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
-      tableName = "";
+  public ListAcrossTablesFunctionParameters {
+    if (dependantObjectType == null) {
+      dependantObjectType = NONE;
+    }
+  }
+
+  public enum DependantObjectType {
+    NONE(""),
+    INDEXES("index"),
+    FOREIGN_KEYS("foreign-key"),
+    TRIGGERS("trigger");
+
+    private final String nameAttribute;
+
+    private DependantObjectType(String nameAttribute) {
+      this.nameAttribute = nameAttribute;
+    }
+
+    public String nameAttribute() {
+      return nameAttribute;
     }
   }
 

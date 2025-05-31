@@ -87,7 +87,7 @@ public final class ListFunctionExecutor
     if (databaseObjectType != TABLES && databaseObjectType != ALL) {
       limitOptionsBuilder.includeTables(new ExcludeAll());
     } // fall through - no else
-    if (databaseObjectType != ROUTINES && databaseObjectType == ALL) {
+    if (databaseObjectType == ROUTINES || databaseObjectType == ALL) {
       limitOptionsBuilder.includeAllRoutines();
     } // fall through - no else
     if (databaseObjectType == SEQUENCES || databaseObjectType == ALL) {

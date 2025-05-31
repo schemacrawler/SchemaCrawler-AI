@@ -1,0 +1,12 @@
+spring:
+  main:
+    banner-mode: off
+management:
+  endpoints:
+    web:
+      exposure:
+        include: info
+server:
+  name: "SchemaCrawler MCP Server"
+  version: "v16.52.4"
+  heartbeat: true
