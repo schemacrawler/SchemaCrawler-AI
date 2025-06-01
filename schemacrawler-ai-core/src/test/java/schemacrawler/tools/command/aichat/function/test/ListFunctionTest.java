@@ -124,7 +124,7 @@ public class ListFunctionTest {
     final ListFunctionParameters args = new ListFunctionParameters(ALL, null);
     assertThat(
         args.toString(),
-        is("{\"table-name-regular-expression\":null,\"database-object-type\":\"ALL\"}"));
+        is("{\"database-object-type\":\"ALL\",\"table-name-regular-expression\":null}"));
   }
 
   @Test

@@ -115,7 +115,7 @@ public class ListAcrossTablesFunctionTest {
         new ListAcrossTablesFunctionParameters(NONE, null);
     assertThat(
         args.toString(),
-        is("{\"table-name-regular-expression\":null,\"dependant-object-type\":\"NONE\"}"));
+        is("{\"dependant-object-type\":\"NONE\",\"table-name-regular-expression\":null}"));
   }
 
   @Test

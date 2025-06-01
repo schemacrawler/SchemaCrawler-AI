@@ -43,8 +43,8 @@ import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 public record DescribeTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table or view to describe.
-    Is a regular expression, matching the fully qualified
+    Names of database tables or views to describe.
+    Should be specified as a regular expression, matching the fully qualified
     table name (including the schema).
     Use an empty string if all tables are requested.
     If not specified, all tables will be returned, but the results
@@ -58,7 +58,7 @@ public record DescribeTablesFunctionParameters(
     columns, primary key, foreign keys, indexes, triggers, attributes,
     and table definition.
     Columns, foreign key references to other tables, and remarks or comments
-    are always returned. The other details can be requested.
+    are always returned by default. The other details can be requested.
     The results could be large.
     """)
         @JsonProperty(required = false)
