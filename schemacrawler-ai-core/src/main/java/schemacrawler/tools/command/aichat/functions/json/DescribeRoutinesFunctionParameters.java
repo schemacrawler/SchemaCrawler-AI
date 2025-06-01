@@ -44,14 +44,14 @@ public record DescribeRoutinesFunctionParameters(
     @JsonPropertyDescription(
             """
     Name of database routine (stored procedure or function) to describe.
-    Can be a regular expression, matching the fully qualified
+    Is a regular expression matching the fully qualified
     stored procedure or function name (including the schema).
     Use an empty string if all routines are requested.
     If not specified, all routines are returned, but the results
     could be large.
     """)
         @JsonProperty(defaultValue = "", required = false)
-        String routineName,
+        String routineNameRegularExpression,
     @JsonPropertyDescription(
             """
     Indicates what details of the database stored procedure or function
@@ -80,8 +80,8 @@ public record DescribeRoutinesFunctionParameters(
   }
 
   public DescribeRoutinesFunctionParameters {
-    if (routineName == null || routineName.isBlank()) {
-      routineName = "";
+    if (routineNameRegularExpression == null || routineNameRegularExpression.isBlank()) {
+      routineNameRegularExpression = "";
     }
     if (descriptionScope == null) {
       descriptionScope = new ArrayList<>();

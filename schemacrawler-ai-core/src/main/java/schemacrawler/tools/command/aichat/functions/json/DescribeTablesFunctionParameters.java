@@ -44,14 +44,14 @@ public record DescribeTablesFunctionParameters(
     @JsonPropertyDescription(
             """
     Name of database table or view to describe.
-    Can be a regular expression, matching the fully qualified
+    Is a regular expression, matching the fully qualified
     table name (including the schema).
     Use an empty string if all tables are requested.
     If not specified, all tables will be returned, but the results
     could be large.
     """)
         @JsonProperty(defaultValue = "", required = false)
-        String tableName,
+        String tableNameRegularExpression,
     @JsonPropertyDescription(
             """
     Indicates what details of the database table or view to return -
@@ -86,8 +86,8 @@ public record DescribeTablesFunctionParameters(
   }
 
   public DescribeTablesFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
-      tableName = "";
+    if (tableNameRegularExpression == null || tableNameRegularExpression.isBlank()) {
+      tableNameRegularExpression = "";
     }
     if (descriptionScope == null) {
       descriptionScope = new ArrayList<>();

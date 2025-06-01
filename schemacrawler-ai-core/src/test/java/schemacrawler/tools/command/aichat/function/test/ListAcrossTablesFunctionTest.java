@@ -67,14 +67,14 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void foreignKeys(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(DependantObjectType.FOREIGN_KEYS);
+        new ListAcrossTablesFunctionParameters(null, DependantObjectType.FOREIGN_KEYS);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void indexes(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(DependantObjectType.INDEXES);
+        new ListAcrossTablesFunctionParameters(null, DependantObjectType.INDEXES);
     databaseObjects(testContext, args);
   }
 
@@ -101,21 +101,24 @@ public class ListAcrossTablesFunctionTest {
 
   @Test
   public void none(final TestContext testContext) throws Exception {
-    final ListAcrossTablesFunctionParameters args = new ListAcrossTablesFunctionParameters(null);
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(null, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void parameters() throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(DependantObjectType.NONE);
-    assertThat(args.toString(), is("{\"dependant-object-type\":\"NONE\"}"));
+        new ListAcrossTablesFunctionParameters(null, DependantObjectType.NONE);
+    assertThat(
+        args.toString(),
+        is("{\"table-name-regular-expression\":null,\"dependant-object-type\":\"NONE\"}"));
   }
 
   @Test
   public void triggers(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(DependantObjectType.TRIGGERS);
+        new ListAcrossTablesFunctionParameters(null, DependantObjectType.TRIGGERS);
     databaseObjects(testContext, args);
   }
 

@@ -41,6 +41,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
@@ -50,8 +51,8 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 7;
-  private static final int NUM_JSON_FUNCTIONS = 3;
+  private static final int NUM_FUNCTIONS = 8;
+  private static final int NUM_JSON_FUNCTIONS = 4;
 
   @Test
   public void name() {
@@ -80,7 +81,8 @@ public class FunctionDefinitionRegistryTest {
             "exit",
             "describe-tables",
             "describe-routines",
-            "list"));
+            "list",
+            "list-across-tables"));
   }
 
   @Test
@@ -100,7 +102,8 @@ public class FunctionDefinitionRegistryTest {
             DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),
             ExitFunctionDefinition.class.getSimpleName(),
-            ListFunctionDefinition.class.getSimpleName()));
+            ListFunctionDefinition.class.getSimpleName(),
+            ListAcrossTablesFunctionDefinition.class.getSimpleName()));
   }
 
   @Test

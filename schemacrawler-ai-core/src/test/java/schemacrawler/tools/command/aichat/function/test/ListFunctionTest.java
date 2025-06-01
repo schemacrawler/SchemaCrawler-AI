@@ -68,14 +68,8 @@ public class ListFunctionTest {
 
   private Catalog catalog;
 
-  @Test
-  public void all(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(ALL);
-    databaseObjects(testContext, args);
-  }
-
   @BeforeAll
-  public void loadCatalog(final Connection connection) throws Exception {
+  public void _loadCatalog(final Connection connection) throws Exception {
 
     final SchemaRetrievalOptions schemaRetrievalOptions = TestUtility.newSchemaRetrievalOptions();
 
@@ -96,32 +90,52 @@ public class ListFunctionTest {
   }
 
   @Test
+  public void all(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(null, ALL);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void dbRoutines(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(null, ROUTINES);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void dbSequences(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(null, SEQUENCES);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void dbSynonyms(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(null, SYNONYMS);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void dbTables(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(null, TABLES);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
   public void parameters() throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(ALL);
-    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
+    final ListFunctionParameters args = new ListFunctionParameters(null, ALL);
+    assertThat(
+        args.toString(),
+        is("{\"table-name-regular-expression\":null,\"database-object-type\":\"ALL\"}"));
   }
 
   @Test
-  public void routines(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(ROUTINES);
+  public void someRoutines(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters("CUSTOMADD", ROUTINES);
     databaseObjects(testContext, args);
   }
 
   @Test
-  public void sequences(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(SEQUENCES);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void synonyms(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(SYNONYMS);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void tables(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(TABLES);
+  public void someTables(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters("AUTHORS", TABLES);
     databaseObjects(testContext, args);
   }
 

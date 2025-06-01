@@ -157,7 +157,9 @@ public class DescribeTablesFunctionTest {
   public void parameters(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
-    assertThat(args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
+    assertThat(
+        args.toString(),
+        is("{\"table-name-regular-expression\":\"AUTHORS\",\"description-scope\":[]}"));
   }
 
   private void describeTable(
