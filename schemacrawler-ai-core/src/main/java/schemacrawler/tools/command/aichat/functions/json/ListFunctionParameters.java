@@ -41,15 +41,6 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListFunctionParameters(
     @JsonPropertyDescription(
-"""
-Name of database object to list.
-Is a regular expression, matching the fully qualified
-database object name (including the schema).
-Use an empty string if all database objects are requested.
-""")
-        @JsonProperty(defaultValue = "", required = false)
-        String tableNameRegularExpression,
-    @JsonPropertyDescription(
             """
     Type of database object to list, like tables (including views),
     routines (that is, stored procedures and functions),
@@ -57,7 +48,16 @@ Use an empty string if all database objects are requested.
     If the parameter is not provided, all database objects are listed.
     """)
         @JsonProperty(defaultValue = "ALL", required = false)
-        DatabaseObjectType databaseObjectType)
+        DatabaseObjectType databaseObjectType,
+    @JsonPropertyDescription(
+            """
+    Name of database object to list.
+    Is a regular expression, matching the fully qualified
+    database object name (including the schema).
+    Use an empty string if all database objects are requested.
+    """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableNameRegularExpression)
     implements FunctionParameters {
 
   public ListFunctionParameters {

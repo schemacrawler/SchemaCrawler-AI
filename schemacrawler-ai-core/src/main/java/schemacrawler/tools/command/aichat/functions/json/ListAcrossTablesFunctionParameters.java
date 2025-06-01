@@ -40,23 +40,23 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListAcrossTablesFunctionParameters(
     @JsonPropertyDescription(
-"""
-Name of database table for which dependant objects are described.
-Is a regular expression, matching the fully qualified
-table name (including the schema).
-Use an empty string if all tables are requested.
-If not specified, all tables will be returned, but the results
-could be large.
-""")
-        @JsonProperty(defaultValue = "", required = false)
-        String tableNameRegularExpression,
-    @JsonPropertyDescription(
             """
     Type of database table dependant objects, like indexes, foreign keys
     or triggers.
     """)
         @JsonProperty(defaultValue = "NONE", required = true)
-        DependantObjectType dependantObjectType)
+        DependantObjectType dependantObjectType,
+    @JsonPropertyDescription(
+            """
+    Name of database table for which dependant objects are described.
+    Is a regular expression, matching the fully qualified
+    table name (including the schema).
+    Use an empty string if all tables are requested.
+    If not specified, all tables will be returned, but the results
+    could be large.
+    """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableNameRegularExpression)
     implements FunctionParameters {
 
   public ListAcrossTablesFunctionParameters {

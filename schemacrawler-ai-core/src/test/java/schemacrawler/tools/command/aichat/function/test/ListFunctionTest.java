@@ -91,37 +91,37 @@ public class ListFunctionTest {
 
   @Test
   public void all(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, ALL);
+    final ListFunctionParameters args = new ListFunctionParameters(ALL, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void dbRoutines(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, ROUTINES);
+    final ListFunctionParameters args = new ListFunctionParameters(ROUTINES, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void dbSequences(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, SEQUENCES);
+    final ListFunctionParameters args = new ListFunctionParameters(SEQUENCES, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void dbSynonyms(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, SYNONYMS);
+    final ListFunctionParameters args = new ListFunctionParameters(SYNONYMS, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void dbTables(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, TABLES);
+    final ListFunctionParameters args = new ListFunctionParameters(TABLES, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void parameters() throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters(null, ALL);
+    final ListFunctionParameters args = new ListFunctionParameters(ALL, null);
     assertThat(
         args.toString(),
         is("{\"table-name-regular-expression\":null,\"database-object-type\":\"ALL\"}"));
@@ -129,13 +129,13 @@ public class ListFunctionTest {
 
   @Test
   public void someRoutines(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters("CUSTOMADD", ROUTINES);
+    final ListFunctionParameters args = new ListFunctionParameters(ROUTINES, "CUSTOMADD");
     databaseObjects(testContext, args);
   }
 
   @Test
   public void someTables(final TestContext testContext) throws Exception {
-    final ListFunctionParameters args = new ListFunctionParameters("AUTHORS", TABLES);
+    final ListFunctionParameters args = new ListFunctionParameters(TABLES, "AUTHORS");
     databaseObjects(testContext, args);
   }
 

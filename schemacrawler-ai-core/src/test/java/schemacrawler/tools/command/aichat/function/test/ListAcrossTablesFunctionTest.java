@@ -34,6 +34,10 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.FOREIGN_KEYS;
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -53,7 +57,6 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters;
-import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType;
 import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
 import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 
@@ -67,14 +70,14 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void foreignKeys(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(null, DependantObjectType.FOREIGN_KEYS);
+        new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void indexes(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(null, DependantObjectType.INDEXES);
+        new ListAcrossTablesFunctionParameters(INDEXES, null);
     databaseObjects(testContext, args);
   }
 
@@ -109,7 +112,7 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void parameters() throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(null, DependantObjectType.NONE);
+        new ListAcrossTablesFunctionParameters(NONE, null);
     assertThat(
         args.toString(),
         is("{\"table-name-regular-expression\":null,\"dependant-object-type\":\"NONE\"}"));
@@ -118,7 +121,7 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void triggers(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(null, DependantObjectType.TRIGGERS);
+        new ListAcrossTablesFunctionParameters(TRIGGERS, null);
     databaseObjects(testContext, args);
   }
 
