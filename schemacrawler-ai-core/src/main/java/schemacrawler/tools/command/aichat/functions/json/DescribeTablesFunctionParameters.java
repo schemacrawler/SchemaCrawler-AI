@@ -44,13 +44,13 @@ public record DescribeTablesFunctionParameters(
     @JsonPropertyDescription(
             """
     Name of database table or view to describe.
-    Can be a regular expression, matching the fully qualified
+    May be specified as a regular expression, matching the fully qualified
     table name (including the schema).
     Use an empty string if all tables are requested.
     If not specified, all tables will be returned, but the results
     could be large.
     """)
-        @JsonProperty(defaultValue = "", required = false)
+        @JsonProperty(required = false)
         String tableName,
     @JsonPropertyDescription(
             """
@@ -58,7 +58,7 @@ public record DescribeTablesFunctionParameters(
     columns, primary key, foreign keys, indexes, triggers, attributes,
     and table definition.
     Columns, foreign key references to other tables, and remarks or comments
-    are always returned. The other details can be requested.
+    are always returned by default. The other details can be requested.
     The results could be large.
     """)
         @JsonProperty(required = false)

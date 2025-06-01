@@ -1,0 +1,1 @@
+[{"schema":"PUBLIC.BOOKS","name":"AUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"AUTHORSLIST","type":"view"}]

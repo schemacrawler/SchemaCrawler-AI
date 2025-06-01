@@ -41,13 +41,22 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 public record ListAcrossTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Type of database object to list, like tables (including views),
-    routines (that is, stored procedures and functions),
-    schemas (that is, catalogs), sequences, or synonyms.
-    If the parameter is not provided, all objects are listed.
+    Type of database table dependant objects, like indexes, foreign keys
+    or triggers.
     """)
         @JsonProperty(defaultValue = "NONE", required = true)
-        DependantObjectType dependantObjectType)
+        DependantObjectType dependantObjectType,
+    @JsonPropertyDescription(
+            """
+    Name of database table for which dependant objects are described.
+    May be a regular expression, matching the fully qualified
+    table name (including the schema).
+    Use an empty string if all tables are requested.
+    If not specified, all tables will be returned, but the results
+    could be large.
+    """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableName)
     implements FunctionParameters {
 
   public ListAcrossTablesFunctionParameters {

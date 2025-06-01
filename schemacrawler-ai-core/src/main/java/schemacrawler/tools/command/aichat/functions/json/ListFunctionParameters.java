@@ -45,10 +45,19 @@ public record ListFunctionParameters(
     Type of database object to list, like tables (including views),
     routines (that is, stored procedures and functions),
     schemas (that is, catalogs), sequences, or synonyms.
-    If the parameter is not provided, all objects are listed.
+    If the parameter is not provided, all database objects are listed.
     """)
         @JsonProperty(defaultValue = "ALL", required = false)
-        DatabaseObjectType databaseObjectType)
+        DatabaseObjectType databaseObjectType,
+    @JsonPropertyDescription(
+            """
+    Name of database object to list.
+    Is a regular expression, matching the fully qualified
+    database object name (including the schema).
+    Use an empty string if all database objects are requested.
+    """)
+        @JsonProperty(defaultValue = "", required = false)
+        String tableName)
     implements FunctionParameters {
 
   public ListFunctionParameters {

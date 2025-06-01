@@ -30,12 +30,16 @@ package schemacrawler.tools.command.aichat.functions.json;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.DependantObject;
 import schemacrawler.schema.Table;
+import schemacrawler.schemacrawler.GrepOptionsBuilder;
+import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType;
@@ -77,7 +81,18 @@ public final class ListAcrossTablesFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
+    final LimitOptionsBuilder limitOptionsBuilder =
+        LimitOptionsBuilder.builder()
+            .includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll())
+            .includeRoutines(new ExcludeAll());
+    final Pattern grepTablesPattern =
+        makeNameInclusionPattern(commandOptions.tableName());
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
+    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+        .withLimitOptions(limitOptionsBuilder.toOptions())
+        .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
   private ArrayNode createTypedObjectsArray(

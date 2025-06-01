@@ -32,14 +32,13 @@ import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static us.fatehi.utility.Utility.isBlank;
-import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
@@ -82,19 +81,21 @@ public final class ListFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final Pattern databaseObjectPattern =
+        makeNameInclusionPattern(commandOptions.tableName());
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
-    if (databaseObjectType != TABLES && databaseObjectType != ALL) {
-      limitOptionsBuilder.includeTables(new ExcludeAll());
+    if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {
+      limitOptionsBuilder.includeTables(databaseObjectPattern);
     } // fall through - no else
     if (databaseObjectType == ROUTINES || databaseObjectType == ALL) {
-      limitOptionsBuilder.includeAllRoutines();
+      limitOptionsBuilder.includeRoutines(databaseObjectPattern);
     } // fall through - no else
     if (databaseObjectType == SEQUENCES || databaseObjectType == ALL) {
-      limitOptionsBuilder.includeAllSequences();
+      limitOptionsBuilder.includeSequences(databaseObjectPattern);
     } // fall through - no else
     if (databaseObjectType == SYNONYMS || databaseObjectType == ALL) {
-      limitOptionsBuilder.includeAllSynonyms();
+      limitOptionsBuilder.includeSynonyms(databaseObjectPattern);
     } // fall through - no else
 
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

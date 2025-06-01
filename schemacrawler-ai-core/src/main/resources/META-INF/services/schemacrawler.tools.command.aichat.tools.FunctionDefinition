@@ -1,5 +1,6 @@
 schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition
 schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition
+schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionDefinition
 schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition
 schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition
 schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition
