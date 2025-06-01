@@ -159,7 +159,7 @@ public class DescribeTablesFunctionTest {
         new DescribeTablesFunctionParameters("AUTHORS", null);
     assertThat(
         args.toString(),
-        is("{\"table-name-regular-expression\":\"AUTHORS\",\"description-scope\":[]}"));
+        is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
   }
 
   private void describeTable(

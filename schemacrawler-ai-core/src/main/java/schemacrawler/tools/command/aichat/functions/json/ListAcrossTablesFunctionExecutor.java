@@ -87,7 +87,7 @@ public final class ListAcrossTablesFunctionExecutor
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll());
     final Pattern grepTablesPattern =
-        makeNameInclusionPattern(commandOptions.tableNameRegularExpression());
+        makeNameInclusionPattern(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

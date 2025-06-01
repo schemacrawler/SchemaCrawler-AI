@@ -43,15 +43,15 @@ import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
 public record DescribeTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Names of database tables or views to describe.
-    Should be specified as a regular expression, matching the fully qualified
+    Name of database table or view to describe.
+    May be specified as a regular expression, matching the fully qualified
     table name (including the schema).
     Use an empty string if all tables are requested.
     If not specified, all tables will be returned, but the results
     could be large.
     """)
-        @JsonProperty(defaultValue = "", required = false)
-        String tableNameRegularExpression,
+        @JsonProperty(required = false)
+        String tableName,
     @JsonPropertyDescription(
             """
     Indicates what details of the database table or view to return -
@@ -86,8 +86,8 @@ public record DescribeTablesFunctionParameters(
   }
 
   public DescribeTablesFunctionParameters {
-    if (tableNameRegularExpression == null || tableNameRegularExpression.isBlank()) {
-      tableNameRegularExpression = "";
+    if (tableName == null || tableName.isBlank()) {
+      tableName = "";
     }
     if (descriptionScope == null) {
       descriptionScope = new ArrayList<>();

@@ -43,15 +43,15 @@ import schemacrawler.tools.command.serialize.model.AdditionalRoutineDetails;
 public record DescribeRoutinesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Names of database routines (stored procedure or function) to describe.
-    Should be specified as a regular expression matching the fully qualified
+    Name of database routine (stored procedure or function) to describe.
+    May be specified as a regular expression matching the fully qualified
     stored procedure or function names (including the schema).
     Use an empty string if all routines are requested.
     If not specified, all routines are returned, but the results
     could be large.
     """)
-        @JsonProperty(defaultValue = "", required = false)
-        String routineNameRegularExpression,
+        @JsonProperty(required = false)
+        String routineName,
     @JsonPropertyDescription(
             """
     Indicates what details of the database stored procedure or function
@@ -80,8 +80,8 @@ public record DescribeRoutinesFunctionParameters(
   }
 
   public DescribeRoutinesFunctionParameters {
-    if (routineNameRegularExpression == null || routineNameRegularExpression.isBlank()) {
-      routineNameRegularExpression = "";
+    if (routineName == null || routineName.isBlank()) {
+      routineName = "";
     }
     if (descriptionScope == null) {
       descriptionScope = new ArrayList<>();

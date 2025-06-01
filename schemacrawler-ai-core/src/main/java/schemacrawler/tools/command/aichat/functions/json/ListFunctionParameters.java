@@ -57,7 +57,7 @@ public record ListFunctionParameters(
     Use an empty string if all database objects are requested.
     """)
         @JsonProperty(defaultValue = "", required = false)
-        String tableNameRegularExpression)
+        String tableName)
     implements FunctionParameters {
 
   public ListFunctionParameters {
