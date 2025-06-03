@@ -122,9 +122,7 @@ public class ListFunctionTest {
   @Test
   public void parameters() throws Exception {
     final ListFunctionParameters args = new ListFunctionParameters(ALL, null);
-    assertThat(
-        args.toString(),
-        is("{\"database-object-type\":\"ALL\",\"table-name\":null}"));
+    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\",\"table-name\":null}"));
   }
 
   @Test

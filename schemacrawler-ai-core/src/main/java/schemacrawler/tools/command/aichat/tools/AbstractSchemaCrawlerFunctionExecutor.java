@@ -53,7 +53,8 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
       return Pattern.compile(name);
     }
     final boolean hasDefaultSchema = hasDefaultSchema();
-    return Pattern.compile(String.format("%s.*(?i)%s(?-i).*", hasDefaultSchema ? "" : ".*\\.", name));
+    return Pattern.compile(
+        String.format("%s.*(?i)%s(?-i).*", hasDefaultSchema ? "" : ".*\\.", name));
   }
 
   private boolean hasDefaultSchema() {

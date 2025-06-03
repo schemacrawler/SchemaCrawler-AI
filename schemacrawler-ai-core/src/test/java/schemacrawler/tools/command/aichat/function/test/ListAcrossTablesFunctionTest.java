@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.function.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasEntry;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
@@ -39,9 +39,12 @@ import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTables
 import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
 import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
 import java.sql.Connection;
+import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -70,14 +73,14 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void foreignKeys(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null);
+        new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void indexes(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(INDEXES, null);
+        new ListAcrossTablesFunctionParameters(INDEXES, null, null);
     databaseObjects(testContext, args);
   }
 
@@ -105,23 +108,28 @@ public class ListAcrossTablesFunctionTest {
   @Test
   public void none(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(null, null);
+        new ListAcrossTablesFunctionParameters(null, null, null);
     databaseObjects(testContext, args);
   }
 
   @Test
   public void parameters() throws Exception {
+
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(NONE, null);
-    assertThat(
-        args.toString(),
-        is("{\"dependant-object-type\":\"NONE\",\"table-name\":null}"));
+        new ListAcrossTablesFunctionParameters(NONE, null, null);
+
+    final Map<String, String> resultMap =
+        new ObjectMapper().readValue(args.toString(), new TypeReference<Map<String, String>>() {});
+
+    assertThat(resultMap, hasEntry("dependant-object-type", "NONE"));
+    assertThat(resultMap, hasEntry("dependant-object-name", null));
+    assertThat(resultMap, hasEntry("table-name", null));
   }
 
   @Test
   public void triggers(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(TRIGGERS, null);
+        new ListAcrossTablesFunctionParameters(TRIGGERS, null, null);
     databaseObjects(testContext, args);
   }
 

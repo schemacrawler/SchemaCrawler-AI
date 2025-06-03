@@ -41,16 +41,27 @@ import schemacrawler.tools.command.aichat.tools.FunctionParameters;
 public record ListAcrossTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-    Type of database table dependant objects, like indexes, foreign keys
-    or triggers.
+    Type of database table dependant objects, like columns, indexes,
+    foreign keys or triggers.
     """)
         @JsonProperty(defaultValue = "NONE", required = true)
         DependantObjectType dependantObjectType,
     @JsonPropertyDescription(
             """
+    Name of dependant object.
+    May be a regular expression, matching more than one object.
+    Use an empty string if all dependant objects are requested.
+    If not specified, all dependant objects will be returned,
+    but the results could be large.
+    """)
+        @JsonProperty(defaultValue = "", required = false)
+        String dependantObjectName,
+    @JsonPropertyDescription(
+            """
     Name of database table for which dependant objects are described.
     May be a regular expression, matching the fully qualified
-    table name (including the schema).
+    table name (including the schema), in which case, multiple tables
+    may be returned.
     Use an empty string if all tables are requested.
     If not specified, all tables will be returned, but the results
     could be large.
@@ -67,6 +78,7 @@ public record ListAcrossTablesFunctionParameters(
 
   public enum DependantObjectType {
     NONE(""),
+    COLUMNS("column"),
     INDEXES("index"),
     FOREIGN_KEYS("foreign-key"),
     TRIGGERS("trigger");

@@ -81,8 +81,7 @@ public final class ListFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final Pattern databaseObjectPattern =
-        makeNameInclusionPattern(commandOptions.tableName());
+    final Pattern databaseObjectPattern = makeNameInclusionPattern(commandOptions.tableName());
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {
