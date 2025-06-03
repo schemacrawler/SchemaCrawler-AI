@@ -34,6 +34,7 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.COLUMNS;
 import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.FOREIGN_KEYS;
 import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
 import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
@@ -70,22 +71,8 @@ public class ListAcrossTablesFunctionTest {
 
   private Catalog catalog;
 
-  @Test
-  public void foreignKeys(final TestContext testContext) throws Exception {
-    final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null, null);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void indexes(final TestContext testContext) throws Exception {
-    final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(INDEXES, null, null);
-    databaseObjects(testContext, args);
-  }
-
   @BeforeAll
-  public void loadCatalog(final Connection connection) throws Exception {
+  public void _loadCatalog(final Connection connection) throws Exception {
 
     final SchemaRetrievalOptions schemaRetrievalOptions = TestUtility.newSchemaRetrievalOptions();
 
@@ -103,6 +90,27 @@ public class ListAcrossTablesFunctionTest {
             .withLoadOptions(loadOptionsBuilder.toOptions());
 
     catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
+  }
+
+  @Test
+  public void columns(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(COLUMNS, null, null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void foreignKeys(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null, null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void indexes(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(INDEXES, null, null);
+    databaseObjects(testContext, args);
   }
 
   @Test
