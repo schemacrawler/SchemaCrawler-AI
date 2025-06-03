@@ -32,6 +32,9 @@ import java.util.Collection;
 import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.isRegularExpression;
+import schemacrawler.inclusionrule.IncludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import us.fatehi.utility.property.PropertyName;
@@ -45,15 +48,15 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
 
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
 
-  protected Pattern makeNameInclusionPattern(final String name) {
-    if (isBlank(name)) {
-      return Pattern.compile(".*");
+  protected InclusionRule makeInclusionRule(final String objectName) {
+    final InclusionRule inclusionRule;
+    if (isBlank(objectName)) {
+      inclusionRule = new IncludeAll();
+    } else {
+      final Pattern dependantObjectPattern = makeNameInclusionPattern(objectName);
+      inclusionRule = new RegularExpressionInclusionRule(dependantObjectPattern);
     }
-    if (isRegularExpression(name)) {
-      return Pattern.compile(name);
-    }
-    final boolean hasDefaultSchema = hasDefaultSchema();
-    return Pattern.compile(String.format("%s.*(?i)%s(?-i).*", hasDefaultSchema ? "" : ".*\\.", name));
+    return inclusionRule;
   }
 
   private boolean hasDefaultSchema() {
@@ -65,5 +68,17 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
       }
     }
     return false;
+  }
+
+  private Pattern makeNameInclusionPattern(final String name) {
+    if (isBlank(name)) {
+      throw new IllegalArgumentException("Blank name provided");
+    }
+    if (isRegularExpression(name)) {
+      return Pattern.compile(name);
+    }
+    final boolean hasDefaultSchema = hasDefaultSchema();
+    return Pattern.compile(
+        String.format("%s.*(?i)%s(?-i).*", hasDefaultSchema ? "" : ".*\\.", name));
   }
 }

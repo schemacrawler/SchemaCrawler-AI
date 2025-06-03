@@ -31,9 +31,9 @@ package schemacrawler.tools.command.aichat.functions.json;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionParameters.RoutineDescriptionScope.DEFAULT;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -84,8 +84,8 @@ public final class DescribeRoutinesFunctionExecutor
             .includeSequences(new ExcludeAll())
             .includeRoutines(new IncludeAll())
             .includeTables(new ExcludeAll());
-    final Pattern grepRoutinesParametersPattern =
-        makeNameInclusionPattern(commandOptions.routineName());
+    final InclusionRule grepRoutinesParametersPattern =
+        makeInclusionRule(commandOptions.routineName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedRoutineParameters(grepRoutinesParametersPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

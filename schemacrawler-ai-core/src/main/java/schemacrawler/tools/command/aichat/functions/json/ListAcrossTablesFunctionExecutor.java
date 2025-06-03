@@ -30,12 +30,12 @@ package schemacrawler.tools.command.aichat.functions.json;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.DependantObject;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
@@ -62,6 +62,9 @@ public final class ListAcrossTablesFunctionExecutor
 
     for (final Table table : catalog.getTables()) {
       switch (dependantObjectType) {
+        case COLUMNS:
+          dependantObjects.addAll(table.getColumns());
+          break;
         case INDEXES:
           dependantObjects.addAll(table.getIndexes());
           break;
@@ -81,13 +84,15 @@ public final class ListAcrossTablesFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+
+    final DependantObjectType dependantObjectType = commandOptions.dependantObjectType();
+    final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
+
     final LimitOptionsBuilder limitOptionsBuilder =
         LimitOptionsBuilder.builder()
             .includeSynonyms(new ExcludeAll())
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern =
-        makeNameInclusionPattern(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
@@ -98,6 +103,11 @@ public final class ListAcrossTablesFunctionExecutor
   private ArrayNode createTypedObjectsArray(
       final Collection<DependantObject<Table>> dependantObjects,
       final DependantObjectType dependantObjectType) {
+
+    final InclusionRule dependantObjectinclusionRule =
+        makeInclusionRule(commandOptions.dependantObjectName());
+    final InclusionRule tableInclusionRule = makeInclusionRule(commandOptions.tableName());
+
     final ObjectMapper mapper = new ObjectMapper();
     final ArrayNode list = mapper.createArrayNode();
     if (dependantObjects == null || dependantObjects.isEmpty()) {
@@ -107,9 +117,12 @@ public final class ListAcrossTablesFunctionExecutor
     final String nameAttribute = dependantObjectType.nameAttribute();
 
     for (final DependantObject<Table> dependantObject : dependantObjects) {
-      if (dependantObject == null) {
+      if (dependantObject == null
+          || !dependantObjectinclusionRule.test(dependantObject.getFullName())
+          || !tableInclusionRule.test(dependantObject.getParent().getFullName())) {
         continue;
       }
+
       final ObjectNode objectNode = mapper.createObjectNode();
       final String schemaName = dependantObject.getSchema().getFullName();
       if (!isBlank(schemaName)) {

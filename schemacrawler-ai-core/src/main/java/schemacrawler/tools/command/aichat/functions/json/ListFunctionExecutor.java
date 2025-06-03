@@ -34,11 +34,11 @@ import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQU
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static us.fatehi.utility.Utility.isBlank;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
@@ -81,8 +81,7 @@ public final class ListFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final Pattern databaseObjectPattern =
-        makeNameInclusionPattern(commandOptions.tableName());
+    final InclusionRule databaseObjectPattern = makeInclusionRule(commandOptions.tableName());
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {

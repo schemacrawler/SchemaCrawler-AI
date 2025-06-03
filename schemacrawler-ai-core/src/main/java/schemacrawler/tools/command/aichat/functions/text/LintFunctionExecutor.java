@@ -28,8 +28,8 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -63,7 +63,7 @@ public final class LintFunctionExecutor
             .includeSynonyms(new ExcludeAll())
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.tableName());
+    final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

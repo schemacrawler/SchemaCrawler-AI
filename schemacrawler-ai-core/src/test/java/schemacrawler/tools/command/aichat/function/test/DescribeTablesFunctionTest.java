@@ -70,6 +70,13 @@ public class DescribeTablesFunctionTest {
   }
 
   @Test
+  public void describeChildTables(final TestContext testContext) throws Exception {
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("BOOKS", List.of(CHILD_TABLES));
+    describeTable(testContext, args, true);
+  }
+
+  @Test
   public void describeTable(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
@@ -112,13 +119,6 @@ public class DescribeTablesFunctionTest {
   }
 
   @Test
-  public void describeChildTables(final TestContext testContext) throws Exception {
-    final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("BOOKS", List.of(CHILD_TABLES));
-    describeTable(testContext, args, true);
-  }
-
-  @Test
   public void describeUnknownTable(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("NOT_A_TABLE", null);
@@ -157,9 +157,7 @@ public class DescribeTablesFunctionTest {
   public void parameters(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
-    assertThat(
-        args.toString(),
-        is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
+    assertThat(args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
   }
 
   private void describeTable(

@@ -32,10 +32,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -55,8 +53,8 @@ public class ToolSpecificationTest {
     parameters = objectMapper.createObjectNode();
     parameters.put("type", "object");
 
-    ObjectNode properties = parameters.putObject("properties");
-    ObjectNode paramProperty = properties.putObject("param1");
+    final ObjectNode properties = parameters.putObject("properties");
+    final ObjectNode paramProperty = properties.putObject("param1");
     paramProperty.put("type", "string");
     paramProperty.put("description", "Test parameter");
 
