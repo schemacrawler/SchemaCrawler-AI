@@ -42,6 +42,7 @@ import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTables
 import java.sql.Connection;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -100,6 +101,29 @@ public class ListAcrossTablesFunctionTest {
   }
 
   @Test
+  public void columnsFilterIn(final TestContext testContext) throws Exception {
+    // PUBLICATIONDATE column
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(COLUMNS, "PUBLICATION", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void columnsFilterOut(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(COLUMNS, "NOT A COLUMN", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Disabled
+  @Test
+  public void columnsForTable(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(COLUMNS, null, "AUTHORS");
+    databaseObjects(testContext, args);
+  }
+
+  @Test
   public void foreignKeys(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
         new ListAcrossTablesFunctionParameters(FOREIGN_KEYS, null, null);
@@ -115,8 +139,9 @@ public class ListAcrossTablesFunctionTest {
 
   @Test
   public void indexesFilterIn(final TestContext testContext) throws Exception {
+    // U_PREVIOUSEDITION index
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(INDEXES, "U_PREVIOUSEDITION", null);
+        new ListAcrossTablesFunctionParameters(INDEXES, "U_PREVIOUS", null);
     databaseObjects(testContext, args);
   }
 
@@ -164,8 +189,9 @@ public class ListAcrossTablesFunctionTest {
 
   @Test
   public void triggersFilterIn(final TestContext testContext) throws Exception {
+    // TRG_AUTHORS trigger
     final ListAcrossTablesFunctionParameters args =
-        new ListAcrossTablesFunctionParameters(TRIGGERS, "TRG_AUTHORS", null);
+        new ListAcrossTablesFunctionParameters(TRIGGERS, "TRG_AUTH", null);
     databaseObjects(testContext, args);
   }
 
