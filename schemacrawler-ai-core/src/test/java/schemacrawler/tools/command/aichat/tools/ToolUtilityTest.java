@@ -37,7 +37,6 @@ import static org.hamcrest.Matchers.hasKey;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import java.util.Map;
-import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -56,56 +55,12 @@ public class ToolUtilityTest {
       return requiredParam;
     }
 
-    public void setOptionalParam(String optionalParam) {
+    public void setOptionalParam(final String optionalParam) {
       this.optionalParam = optionalParam;
     }
 
-    public void setRequiredParam(String requiredParam) {
+    public void setRequiredParam(final String requiredParam) {
       this.requiredParam = requiredParam;
-    }
-  }
-
-  // Sample FunctionExecutor implementation for testing
-  private abstract static class TestFunctionExecutor implements FunctionExecutor<TestParameters> {
-    private final UUID executorId = UUID.randomUUID();
-
-    @Override
-    public void configure(TestParameters parameters) {
-      // Do nothing for test
-    }
-
-    public void execute() {
-      // Do nothing for test
-    }
-
-    @Override
-    public schemacrawler.schema.Catalog getCatalog() {
-      return null;
-    }
-
-    @Override
-    public java.sql.Connection getConnection() {
-      return null;
-    }
-
-    @Override
-    public String getDescription() {
-      return "Test executor";
-    }
-
-    @Override
-    public UUID getExecutorInstanceId() {
-      return executorId;
-    }
-
-    @Override
-    public void initialize() {
-      // Do nothing for test
-    }
-
-    @Override
-    public void setConnection(java.sql.Connection connection) {
-      // Do nothing for test
     }
   }
 

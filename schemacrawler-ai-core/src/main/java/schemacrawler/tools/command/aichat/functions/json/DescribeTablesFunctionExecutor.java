@@ -31,8 +31,8 @@ package schemacrawler.tools.command.aichat.functions.json;
 import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.DEFAULT;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -82,7 +82,7 @@ public final class DescribeTablesFunctionExecutor
             .includeSynonyms(new ExcludeAll())
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll());
-    final Pattern grepTablesPattern = makeNameInclusionPattern(commandOptions.tableName());
+    final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()

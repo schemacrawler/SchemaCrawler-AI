@@ -42,7 +42,6 @@ import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTables
 import java.sql.Connection;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -115,7 +114,6 @@ public class ListAcrossTablesFunctionTest {
     databaseObjects(testContext, args);
   }
 
-  @Disabled
   @Test
   public void columnsForTable(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =

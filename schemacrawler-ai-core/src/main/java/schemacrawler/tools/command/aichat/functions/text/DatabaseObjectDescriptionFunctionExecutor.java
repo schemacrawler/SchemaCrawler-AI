@@ -28,8 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import java.util.regex.Pattern;
-import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -81,21 +80,21 @@ public final class DatabaseObjectDescriptionFunctionExecutor
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
 
-    final Pattern inclusionPattern = makeNameInclusionPattern(commandOptions.databaseObjectName());
+    final InclusionRule inclusionPattern = makeInclusionRule(commandOptions.databaseObjectName());
     final DatabaseObjectsScope scope = commandOptions.databaseObjectsScope();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
     switch (scope) {
       case TABLES:
-        limitOptionsBuilder.includeTables(new RegularExpressionInclusionRule(inclusionPattern));
+        limitOptionsBuilder.includeTables(inclusionPattern);
         break;
       case ROUTINES:
-        limitOptionsBuilder.includeRoutines(new RegularExpressionInclusionRule(inclusionPattern));
+        limitOptionsBuilder.includeRoutines(inclusionPattern);
         break;
       case SEQUENCES:
-        limitOptionsBuilder.includeSequences(new RegularExpressionInclusionRule(inclusionPattern));
+        limitOptionsBuilder.includeSequences(inclusionPattern);
         break;
       case SYNONYMS:
-        limitOptionsBuilder.includeSynonyms(new RegularExpressionInclusionRule(inclusionPattern));
+        limitOptionsBuilder.includeSynonyms(inclusionPattern);
         break;
       default:
         // No action

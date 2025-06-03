@@ -70,6 +70,13 @@ public class DescribeTablesFunctionTest {
   }
 
   @Test
+  public void describeChildTables(final TestContext testContext) throws Exception {
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("BOOKS", List.of(CHILD_TABLES));
+    describeTable(testContext, args, true);
+  }
+
+  @Test
   public void describeTable(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
@@ -108,13 +115,6 @@ public class DescribeTablesFunctionTest {
   public void describeTableTriggers(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", List.of(TRIGGERS));
-    describeTable(testContext, args, true);
-  }
-
-  @Test
-  public void describeChildTables(final TestContext testContext) throws Exception {
-    final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("BOOKS", List.of(CHILD_TABLES));
     describeTable(testContext, args, true);
   }
 
