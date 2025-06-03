@@ -114,6 +114,27 @@ public class ListAcrossTablesFunctionTest {
   }
 
   @Test
+  public void indexesFilterIn(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(INDEXES, "U_PREVIOUSEDITION", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void indexesFilterOut(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(INDEXES, "NOT AN INDEX", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void indexesForTable(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(INDEXES, null, "AUTHORS");
+    databaseObjects(testContext, args);
+  }
+
+  @Test
   public void none(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
         new ListAcrossTablesFunctionParameters(null, null, null);
@@ -138,6 +159,27 @@ public class ListAcrossTablesFunctionTest {
   public void triggers(final TestContext testContext) throws Exception {
     final ListAcrossTablesFunctionParameters args =
         new ListAcrossTablesFunctionParameters(TRIGGERS, null, null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void triggersFilterIn(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(TRIGGERS, "TRG_AUTHORS", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void triggersFilterOut(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(TRIGGERS, "NOT A TRIGGER", null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void triggersForTable(final TestContext testContext) throws Exception {
+    final ListAcrossTablesFunctionParameters args =
+        new ListAcrossTablesFunctionParameters(TRIGGERS, null, "AUTHORS");
     databaseObjects(testContext, args);
   }
 
