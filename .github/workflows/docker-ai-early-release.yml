@@ -1,0 +1,77 @@
+name: Build and Publish AI Early Release Docker Image
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - v[0-9]+.[0-9]+.[0-9]+
+      - v[0-9]+.[0-9]+.[0-9]+-[A-Z]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and Publish AI Early Release Docker Image
+    runs-on: ubuntu-latest
+    steps:
+
+# SETUP BUILD ENVIRONMENT
+    - id: prepare-maven-build
+      name: Prepare Maven build
+      uses: sualeh/prepare-maven-build@v1.4.0
+      with:
+        java-version: 21
+
+# BUILD FOR DISTRIBUTION
+    - id: checkout-schemacrawler-ai
+      name: Checkout SchemaCrawler-AI
+      uses: actions/checkout@v4
+      with:
+        repository: schemacrawler/SchemaCrawler-AI
+        path: SchemaCrawler-AI
+    - id: build-schemacrawler-ai
+      name: Build SchemaCrawler-AI for distribution
+      shell: bash
+      run: |
+        # Build SchemaCrawler-AI
+        cd SchemaCrawler-AI
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          clean install
+        cd ..
+        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
+        # DEBUG
+        pwd
+        ls -l ./extra-lib
+
+# BUILD AND PUBLISH DOCKER IMAGE
+    - id: setup-qemu
+      name: Setup QEMU
+      uses: docker/setup-qemu-action@v3
+
+    - id: setup-buildx
+      name: Setup Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Log into Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKER_USERNAME }}
+        password: ${{ secrets.DOCKER_PASSWORD }}
+
+    - name: Build and push AI early release Docker image
+      uses: docker/build-push-action@v6
+      with:
+        file: ./Dockerfile
+        context: .
+        platforms: |-
+          linux/amd64
+          linux/arm64
+        tags: |-
+          schemacrawler/schemacrawler:extra-latest-early-access-release
+        sbom: true
+        provenance: true
+        push: true
