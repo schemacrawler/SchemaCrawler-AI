@@ -34,7 +34,7 @@ public final class ListAcrossTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        List names of names of database objects like indexes, triggers,
+        List names of names of database objects like columns, indexes, triggers,
         and foreign keys for tables across the whole database.
         The corresponding tables are identified, and details can be
         obtained later by describing those tables.
