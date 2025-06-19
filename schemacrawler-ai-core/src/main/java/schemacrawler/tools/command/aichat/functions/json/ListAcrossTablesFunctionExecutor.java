@@ -85,7 +85,6 @@ public final class ListAcrossTablesFunctionExecutor
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
 
-    final DependantObjectType dependantObjectType = commandOptions.dependantObjectType();
     final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
 
     final LimitOptionsBuilder limitOptionsBuilder =

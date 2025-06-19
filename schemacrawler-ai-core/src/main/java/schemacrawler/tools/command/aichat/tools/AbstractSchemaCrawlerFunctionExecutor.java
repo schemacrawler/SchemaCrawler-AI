@@ -31,7 +31,6 @@ package schemacrawler.tools.command.aichat.tools;
 import java.util.Collection;
 import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.isRegularExpression;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
@@ -74,11 +73,9 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
     if (isBlank(name)) {
       throw new IllegalArgumentException("Blank name provided");
     }
-    if (isRegularExpression(name)) {
-      return Pattern.compile(name);
-    }
     final boolean hasDefaultSchema = hasDefaultSchema();
-    return Pattern.compile(
-        String.format("%s.*(?i)%s(?-i).*", hasDefaultSchema ? "" : ".*\\.", name));
+    final String pattern = String.format("%s.*%s.*", hasDefaultSchema ? "" : ".*\\.", name);
+    final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
+    return Pattern.compile(pattern, flags);
   }
 }

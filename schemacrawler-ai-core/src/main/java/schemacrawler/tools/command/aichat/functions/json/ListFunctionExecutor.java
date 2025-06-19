@@ -121,10 +121,10 @@ public final class ListFunctionExecutor
       if (databaseObject instanceof TypedObject typedObject) {
         objectNode.put("type", typedObject.getType().toString());
       } else {
-        if (databaseObject instanceof Sequence sequence) {
+        if (databaseObject instanceof Sequence) {
           objectNode.put("type", "sequence");
         }
-        if (databaseObject instanceof Synonym synonym) {
+        if (databaseObject instanceof Synonym) {
           objectNode.put("type", "synonym");
         }
       }
