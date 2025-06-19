@@ -53,7 +53,8 @@ public record ListFunctionParameters(
             """
     Name of database object to list.
     Is a regular expression, matching the fully qualified
-    database object name (including the schema).
+    database object name (including the schema). May match
+    more than one database object.
     Use an empty string if all database objects are requested.
     """)
         @JsonProperty(defaultValue = "", required = false)

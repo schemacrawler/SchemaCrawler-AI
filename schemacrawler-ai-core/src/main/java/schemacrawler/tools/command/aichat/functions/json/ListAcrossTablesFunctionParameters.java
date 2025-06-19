@@ -48,10 +48,12 @@ public record ListAcrossTablesFunctionParameters(
         DependantObjectType dependantObjectType,
     @JsonPropertyDescription(
             """
-    Name of dependant object.
-    May be a regular expression, matching more than one object.
+    Name of table dependant object.
+    May be a regular expression, matching the fully qualified
+    dependant object name (including the schema and table). May match
+    more than one dependant object.
     Use an empty string if all dependant objects are requested.
-    If not specified, all dependant objects will be returned,
+    If not specified, all table dependant objects will be returned,
     but the results could be large.
     """)
         @JsonProperty(defaultValue = "", required = false)
