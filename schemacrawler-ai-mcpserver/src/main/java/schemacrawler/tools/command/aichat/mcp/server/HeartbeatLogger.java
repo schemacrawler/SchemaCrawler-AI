@@ -8,6 +8,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import schemacrawler.Version;
 import us.fatehi.utility.string.StringFormat;
 
 @Component
@@ -30,12 +31,12 @@ public class HeartbeatLogger {
     }
 
     final String serverName = environment.getProperty("server.name", "SchemaCrawler MCP Server");
-    final String serverVersion = environment.getProperty("server.version", "");
+    final String serverVersion = Version.version().toString();
     final long uptime = ManagementFactory.getRuntimeMXBean().getUptime() / 1_000;
 
     LOGGER.log(
         Level.INFO,
         new StringFormat(
-            "Heartbeat: %s %s is running. Uptime %d seconds.", serverName, serverVersion, uptime));
+            "Heartbeat: %s (%s) is running. Uptime %d seconds.", serverName, serverVersion, uptime));
   }
 }
