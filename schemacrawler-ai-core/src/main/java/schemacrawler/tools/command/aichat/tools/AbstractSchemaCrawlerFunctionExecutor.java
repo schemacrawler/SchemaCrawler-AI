@@ -28,13 +28,11 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.tools;
 
-import java.util.Collection;
 import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
-import schemacrawler.schema.Schema;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import us.fatehi.utility.property.PropertyName;
 
@@ -58,23 +56,11 @@ public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionPa
     return inclusionRule;
   }
 
-  private boolean hasDefaultSchema() {
-    final Collection<Schema> schemas = catalog.getSchemas();
-    final int schemaCount = schemas.size();
-    for (final Schema schema : schemas) {
-      if (isBlank(schema.getFullName()) && schemaCount == 1) {
-        return true;
-      }
-    }
-    return false;
-  }
-
   private Pattern makeNameInclusionPattern(final String name) {
     if (isBlank(name)) {
       throw new IllegalArgumentException("Blank name provided");
     }
-    final boolean hasDefaultSchema = hasDefaultSchema();
-    final String pattern = String.format("%s.*%s.*", hasDefaultSchema ? "" : ".*\\.", name);
+    final String pattern = String.format(".*%s.*", name);
     final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
     return Pattern.compile(pattern, flags);
   }
