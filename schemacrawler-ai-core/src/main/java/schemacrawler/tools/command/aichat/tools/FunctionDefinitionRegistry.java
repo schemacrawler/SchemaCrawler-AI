@@ -52,8 +52,8 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   public static FunctionDefinitionRegistry getFunctionDefinitionRegistry() {
     if (functionDefinitionRegistrySingleton == null) {
       functionDefinitionRegistrySingleton = new FunctionDefinitionRegistry();
+      functionDefinitionRegistrySingleton.log();
     }
-    functionDefinitionRegistrySingleton.log();
     return functionDefinitionRegistrySingleton;
   }
 

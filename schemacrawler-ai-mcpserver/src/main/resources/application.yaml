@@ -8,5 +8,5 @@ management:
         include: info
 server:
   name: "SchemaCrawler MCP Server"
-  version: "v16.52.4"
+  version: "v16.26.2"
   heartbeat: true

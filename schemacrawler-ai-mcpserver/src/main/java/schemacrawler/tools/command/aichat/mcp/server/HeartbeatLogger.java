@@ -1,6 +1,7 @@
 package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.lang.management.ManagementFactory;
+import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.core.env.Environment;
@@ -21,9 +22,9 @@ public class HeartbeatLogger {
     this.environment = environment;
   }
 
-  @Scheduled(fixedRate = 10_000)
+  @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 30)
   public void logHeartbeat() {
-    final boolean heartbeat = Boolean.valueOf(environment.getProperty("server.heartbest", "false"));
+    final boolean heartbeat = Boolean.valueOf(environment.getProperty("server.heartbeat", "false"));
     if (!heartbeat) {
       return;
     }
