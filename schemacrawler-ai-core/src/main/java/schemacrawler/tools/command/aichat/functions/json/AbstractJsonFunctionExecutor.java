@@ -28,9 +28,12 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.functions.json;
 
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.command.aichat.tools.AbstractSchemaCrawlerFunctionExecutor;
 import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.command.aichat.utility.JsonUtility;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
@@ -44,5 +47,14 @@ public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
   protected final void refilterCatalog() {
     final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
     MetaDataUtility.reduceCatalog(catalog, options);
+  }
+
+  protected final ObjectNode wrapList(final ArrayNode list) {
+    final ObjectNode objectNode = JsonUtility.mapper.createObjectNode();
+    objectNode.put("db", catalog.getDatabaseInfo().getDatabaseProductName());
+    if (list != null) {
+      objectNode.set("list", list);
+    }
+    return objectNode;
   }
 }
