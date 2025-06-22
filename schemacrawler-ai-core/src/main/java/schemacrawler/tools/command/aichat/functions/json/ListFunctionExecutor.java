@@ -32,9 +32,9 @@ import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.command.aichat.utility.JsonUtility.mapper;
 import java.util.ArrayList;
 import java.util.Collection;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import static us.fatehi.utility.Utility.isBlank;
@@ -76,7 +76,11 @@ public final class ListFunctionExecutor
       databaseObjects.addAll(catalog.getSynonyms());
     } // fall through - no else
 
-    return () -> createTypedObjectsArray(databaseObjects).toString();
+    return () -> {
+      final ArrayNode list = createTypedObjectsArray(databaseObjects);
+      final ObjectNode listObject = wrapList(list);
+      return listObject.toString();
+    };
   }
 
   @Override
@@ -102,7 +106,6 @@ public final class ListFunctionExecutor
   }
 
   private ArrayNode createTypedObjectsArray(final Collection<DatabaseObject> databaseObjects) {
-    final ObjectMapper mapper = new ObjectMapper();
     final ArrayNode list = mapper.createArrayNode();
     if (databaseObjects == null || databaseObjects.isEmpty()) {
       return list;

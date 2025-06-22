@@ -1,1 +1,1 @@
-[{"schema":"PUBLIC.BOOKS","name":"PUBLICATIONS","type":"synonym"}]
+{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","name":"PUBLICATIONS","type":"synonym"}]}

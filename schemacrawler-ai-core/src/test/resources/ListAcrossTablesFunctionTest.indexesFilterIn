@@ -1,1 +1,1 @@
-[{"schema":"PUBLIC.BOOKS","table":"BOOKS","index":"U_PREVIOUSEDITION"}]
+{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","table":"BOOKS","index":"U_PREVIOUSEDITION"}]}

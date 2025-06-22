@@ -1,1 +1,1 @@
-[{"schema":"PUBLIC.BOOKS","name":"PUBLISHER_ID_SEQ","type":"sequence"},{"schema":"PUBLIC.SYSTEM_LOBS","name":"LOB_ID","type":"sequence"}]
+{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","name":"PUBLISHER_ID_SEQ","type":"sequence"},{"schema":"PUBLIC.SYSTEM_LOBS","name":"LOB_ID","type":"sequence"}]}
