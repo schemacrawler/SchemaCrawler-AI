@@ -1,15 +1,18 @@
 spring:
   main:
     banner-mode: off
+  application:
+    name: schemacrawler-mcpserver
 server:
   name: "SchemaCrawler MCP Server"
   heartbeat: true
 ai:
   mcp:
     server:
-      name: "SchemaCrawler MCP Server"
+      name: schemacrawler-mcpserver
       capabilities:
         completion: false
+        prompt: false
 management:
   endpoints:
     web:
