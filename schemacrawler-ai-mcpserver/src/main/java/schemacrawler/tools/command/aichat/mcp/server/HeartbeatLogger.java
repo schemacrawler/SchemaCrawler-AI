@@ -1,6 +1,7 @@
 package schemacrawler.tools.command.aichat.mcp.server;
 
 import java.lang.management.ManagementFactory;
+import java.time.Duration;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -33,11 +34,12 @@ public class HeartbeatLogger {
     final String serverName = environment.getProperty("server.name", "SchemaCrawler MCP Server");
     final String serverVersion = Version.version().toString();
     final long uptime = ManagementFactory.getRuntimeMXBean().getUptime() / 1_000;
+    final Duration duration = Duration.ofSeconds(uptime);
 
     LOGGER.log(
         Level.INFO,
         new StringFormat(
-            "Heartbeat: %s (%s) is running. Uptime %d seconds.",
-            serverName, serverVersion, uptime));
+            "Heartbeat: %s (%s) is running. Uptime %s.",
+            serverName, serverVersion, duration));
   }
 }
