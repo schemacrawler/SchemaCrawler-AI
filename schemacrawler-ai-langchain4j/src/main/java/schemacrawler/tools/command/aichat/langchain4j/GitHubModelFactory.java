@@ -24,7 +24,7 @@ License v3 are available at:
 http://www.gnu.org/licenses/
 
 ========================================================================
- */
+*/
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
