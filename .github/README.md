@@ -12,16 +12,14 @@
 
 ## About
 
-[SchemaCrawler]((https://www.schemacrawler.com/) is a free database schema discovery and comprehension tool. 
-
-This project is a SchemaCrawler command plugin provides an MCP Server to allow AI agents to have an interactive way to interrogate your database schema metadata.
+**SchemaCrawler - AI** provides an MCP Server to allow AI agents to have an interactive way to interrogate your database schema metadata. It is based on [SchemaCrawler](https://www.schemacrawler.com/), which is a free database schema discovery and comprehension tool. 
 
 
 ## Licensing
 
-SchemaCrawler - AI is licensed under the [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) license.
+**SchemaCrawler - AI** is licensed under the [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) license.
 
 
 ## Support
 
-SchemaCrawler - AI is not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://sualeh.github.io/SchemaCrawler/consulting.html) for details.
+**SchemaCrawler - AI** is not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://sualeh.github.io/SchemaCrawler/consulting.html) for details.
