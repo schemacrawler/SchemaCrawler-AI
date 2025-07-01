@@ -12,18 +12,16 @@
 
 ## About
 
-SchemaCrawler is a free database schema discovery and comprehension tool. SchemaCrawler is available under a number of [licenses](https://sualeh.github.io/SchemaCrawler/license.html).
+[SchemaCrawler]((https://www.schemacrawler.com/) is a free database schema discovery and comprehension tool. 
 
-This project is a SchemaCrawler command plugin to integrate with ChatGPT to provide an interactive way to interrogate your database schema metadata. No information about your database schema is shared with OpenAI. 
+This project is a SchemaCrawler command plugin provides an MCP Server to allow AI agents to have an interactive way to interrogate your database schema metadata.
+
 
 ## Licensing
 
-SchemaCrawler is available under a number of [licenses](https://www.schemacrawler.com/license.html).
+SchemaCrawler - AI is licensed under the [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) license.
 
-## Distributions and Downloads
-
-All SchemaCrawler jars are in the [Central Repository](https://central.sonatype.com/search?q=us.fatehi.schemacrawler&sort=name). They can be used as dependencies in [Gradle](https://gradle.org/) or [Apache Maven](https://maven.apache.org/) projects, or with any other build system that supports the Central Repository. 
 
 ## Support
 
-These plugins are not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://sualeh.github.io/SchemaCrawler/consulting.html) for details.
+SchemaCrawler - AI is not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://sualeh.github.io/SchemaCrawler/consulting.html) for details.
