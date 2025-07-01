@@ -1,6 +1,5 @@
 <!-- markdownlint-disable MD041 -->
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-AI/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-AI/actions?query=workflow%3A%22Quick+Build%22)
-[![The Central Repository](https://img.shields.io/maven-central/v/us.fatehi/schemacrawler-ai-parent.svg)](https://central.sonatype.com/search?q=us.fatehi.schemacrawler&sort=name)
 
 
 # <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler - AI
