@@ -95,7 +95,6 @@ jobs:
 
     - id: build-docker-early-release
       name: Build and push SchemaCrawler AI early release Docker image
-      if: !startsWith(github.ref, 'refs/tags/')
       uses: docker/build-push-action@v6
       with:
         file: ./Dockerfile.early-access-release
