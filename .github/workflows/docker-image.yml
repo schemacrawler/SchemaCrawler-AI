@@ -1,11 +1,10 @@
-name: Build and Publish AI Early Release Docker Image
+name: Build and Publish SchemaCrawler AI Docker Image
 
 on:
   workflow_dispatch:
   push:
     tags:
-      - v[0-9]+.[0-9]+.[0-9]+
-      - v[0-9]+.[0-9]+.[0-9]+-[A-Z]
+      - 'v*'
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -13,10 +12,23 @@ concurrency:
 
 jobs:
   build:
-    name: Build and Publish AI Early Release Docker Image
+    name: Build and Publish SchemaCrawler AI Docker Image
     runs-on: ubuntu-latest
     steps:
 
+# VALIDATE TAGS
+    - id: validate-semver
+      name: Validate tag against semantic versioning
+      if: startsWith(github.ref, 'refs/tags/')
+      shell: bash
+      run: |
+        SEMVER_PATTERN="^refs/tags/v(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)(-[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?(\+[0-9A-Za-z-]+(\.[0-9A-Za-z-]+)*)?$"
+        if [[ ! $GITHUB_REF =~ $SEMVER_PATTERN ]]
+          then
+            echo "Tag $GITHUB_REF does not follow semantic versioning"
+            exit 1
+          fi
+          
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
@@ -56,13 +68,16 @@ jobs:
       name: Setup Docker Buildx
       uses: docker/setup-buildx-action@v3
 
-    - name: Log into Docker Hub
+    - id: docker-login
+      name: Log into Docker Hub
       uses: docker/login-action@v3
       with:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - name: Build and push AI early release Docker image
+    - id: build-docker-latest
+      name: Build and push SchemaCrawler AI latest Docker image
+      if: startsWith(github.ref, 'refs/tags/')
       uses: docker/build-push-action@v6
       with:
         file: ./Dockerfile
@@ -71,7 +86,24 @@ jobs:
           linux/amd64
           linux/arm64
         tags: |-
-          schemacrawler/schemacrawler:extra-early-access-release
+          schemacrawler/schemacrawler:v16.26.2-2
+          schemacrawler/schemacrawler-ai:latest
+        sbom: true
+        provenance: true
+        push: true
+
+    - id: build-docker-early-release
+      name: Build and push SchemaCrawler AI early release Docker image
+      if: !startsWith(github.ref, 'refs/tags/')
+      uses: docker/build-push-action@v6
+      with:
+        file: ./Dockerfile.early-access-release
+        context: .
+        platforms: |-
+          linux/amd64
+          linux/arm64
+        tags: |-
+          schemacrawler/schemacrawler-ai:early-access-release
         sbom: true
         provenance: true
         push: true
