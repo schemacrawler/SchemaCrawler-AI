@@ -28,7 +28,7 @@ jobs:
             echo "Tag $GITHUB_REF does not follow semantic versioning"
             exit 1
           fi
-          
+
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
@@ -43,6 +43,7 @@ jobs:
       with:
         repository: schemacrawler/SchemaCrawler-AI
         path: SchemaCrawler-AI
+
     - id: build-schemacrawler-ai
       name: Build SchemaCrawler-AI for distribution
       shell: bash
@@ -86,7 +87,7 @@ jobs:
           linux/amd64
           linux/arm64
         tags: |-
-          schemacrawler/schemacrawler:v16.26.2-2
+          schemacrawler/schemacrawler-ai:${{ github.ref_name }}
           schemacrawler/schemacrawler-ai:latest
         sbom: true
         provenance: true
