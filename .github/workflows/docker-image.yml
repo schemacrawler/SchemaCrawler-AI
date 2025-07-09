@@ -45,7 +45,7 @@ jobs:
         path: SchemaCrawler-AI
 
     - id: build-schemacrawler-ai
-      name: Build SchemaCrawler-AI for distribution
+      name: Build SchemaCrawler-AI
       shell: bash
       run: |
         # Build SchemaCrawler-AI
@@ -55,9 +55,18 @@ jobs:
           --batch-mode \
           clean install
         cd ..
-        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
-        # DEBUG
+    - id: build-distribution
+      name: Build Distribution
+      shell: bash
+      run: |
+        # Build SchemaCrawler-AI Distribution
         pwd
+        echo "bin folder"
+        cp -r ./SchemaCrawler-AI/schemacrawler-ai-mcpserver/src/main/bin ./extra-bin
+        chmod +rx ./extra-bin/*.sh
+        ls -l ./extra-bin
+        echo "lib folder"
+        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
         ls -l ./extra-lib
 
 # BUILD AND PUBLISH DOCKER IMAGE
@@ -103,7 +112,6 @@ jobs:
           linux/amd64
           linux/arm64
         tags: |-
+          schemacrawler/schemacrawler-ai:${{ github.ref_name }}
           schemacrawler/schemacrawler-ai:early-access-release
-        sbom: true
-        provenance: true
         push: true

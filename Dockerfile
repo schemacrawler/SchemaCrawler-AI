@@ -29,3 +29,7 @@ FROM schemacrawler/schemacrawler:latest
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \
     ./extra-lib/* /opt/schemacrawler/lib
+COPY \
+    ./extra-bin/* /opt/schemacrawler/bin
+
+CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]

@@ -55,6 +55,10 @@
          <artifactId>schemacrawler</artifactId>
       </dependency>
       <dependency>
+        <groupId>us.fatehi</groupId>
+        <artifactId>schemacrawler-commandline</artifactId>
+      </dependency>
+      <dependency>
          <groupId>us.fatehi</groupId>
          <artifactId>schemacrawler-ai-core</artifactId>
          <version>${project.version}</version>
