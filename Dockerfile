@@ -32,8 +32,4 @@ COPY \
 COPY \
     ./extra-bin/* /opt/schemacrawler/bin
 
-# Ensure that the SchemaCrawler AI script is executable
-RUN \
-    chmod +rx /opt/schemacrawler/bin/schemacrawler-ai.sh
-
 CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]
