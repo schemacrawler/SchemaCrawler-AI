@@ -61,13 +61,13 @@ jobs:
       run: |
         # Build SchemaCrawler-AI Distribution
         pwd
-        echo "lib folder"
-        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
-        ls -l ./extra-lib
         echo "bin folder"
         cp -r ./SchemaCrawler-AI/schemacrawler-ai-mcpserver/src/main/bin ./extra-bin
         chmod +rx ./extra-bin/*.sh
         ls -l ./extra-bin
+        echo "lib folder"
+        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
+        ls -l ./extra-lib
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
