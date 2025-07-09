@@ -114,6 +114,4 @@ jobs:
         tags: |-
           schemacrawler/schemacrawler-ai:${{ github.ref_name }}
           schemacrawler/schemacrawler-ai:early-access-release
-        sbom: true
-        provenance: true
         push: true
