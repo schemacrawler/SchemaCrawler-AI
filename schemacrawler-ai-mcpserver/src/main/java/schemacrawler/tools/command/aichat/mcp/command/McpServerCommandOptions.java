@@ -30,15 +30,4 @@ package schemacrawler.tools.command.aichat.mcp.command;
 
 import schemacrawler.tools.executable.CommandOptions;
 
-public record McpServerCommandOptions() implements CommandOptions {
-
-  public McpServerCommandOptions {
-    // No options for this command
-  }
-
-  @Override
-  public String toString() {
-    // No options for this command
-    return this.getClass().getName();
-  }
-}
+public record McpServerCommandOptions(McpServerType mcpServerType) implements CommandOptions {}

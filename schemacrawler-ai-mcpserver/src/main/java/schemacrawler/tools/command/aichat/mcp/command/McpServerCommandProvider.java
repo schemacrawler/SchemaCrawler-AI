@@ -28,6 +28,7 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp.command;
 
+import static schemacrawler.tools.command.aichat.mcp.command.McpServerCommand.COMMAND;
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.executable.BaseCommandProvider;
@@ -39,12 +40,13 @@ import schemacrawler.tools.options.OutputOptions;
 public final class McpServerCommandProvider extends BaseCommandProvider {
 
   public McpServerCommandProvider() {
-    super(McpServerCommand.COMMAND);
+    super(COMMAND);
   }
 
   @Override
   public PluginCommand getCommandLineCommand() {
-    final PluginCommand pluginCommand = newPluginCommand(McpServerCommand.COMMAND);
+    final PluginCommand pluginCommand = newPluginCommand(COMMAND);
+    pluginCommand.addOption("mcp-server-type", McpServerType.class, "Type of MCP server to start");
     return pluginCommand;
   }
 
@@ -55,8 +57,7 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
     }
 
     try {
-      final McpServerCommandOptions options =
-          McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
+      final McpServerCommandOptions options = McpServerCommandOptionsBuilder.builder().toOptions();
 
       final McpServerCommand scCommand = new McpServerCommand();
       scCommand.configure(options);

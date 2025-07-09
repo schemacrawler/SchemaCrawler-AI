@@ -8,13 +8,15 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * server capabilities.
  */
 @SpringBootApplication
-public class SchemaCrawlerMcpServer {
+public class SseMcpServer {
 
   public static void main(final String[] args) {
     start();
   }
 
   public static void start() {
-    SpringApplication.run(SchemaCrawlerMcpServer.class);
+    SpringApplication app = new SpringApplication(SseMcpServer.class);
+    app.setAdditionalProfiles("sse");
+    app.run();
   }
 }

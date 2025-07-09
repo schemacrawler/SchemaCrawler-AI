@@ -29,41 +29,37 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.mcp.command;
 
 import schemacrawler.schemacrawler.OptionsBuilder;
-import schemacrawler.tools.options.Config;
-import schemacrawler.tools.options.ConfigOptionsBuilder;
 
 public final class McpServerCommandOptionsBuilder
-    implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
-        ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
+    implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
 
   public static McpServerCommandOptionsBuilder builder() {
     return new McpServerCommandOptionsBuilder();
   }
 
-  private McpServerCommandOptionsBuilder() {
-    // No options for this command
-  }
+  private McpServerType mcpServerType;
 
-  @Override
-  public McpServerCommandOptionsBuilder fromConfig(final Config config) {
-    // No options for this command
-    return this;
+  private McpServerCommandOptionsBuilder() {
+    mcpServerType = McpServerType.sse;
   }
 
   @Override
   public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
-    // No options for this command
+    if (options != null) {
+      mcpServerType = options.mcpServerType();
+    }
+    return this;
+  }
+
+  public McpServerCommandOptionsBuilder withMcpServerType(McpServerType mcpServerType) {
+    if (mcpServerType != null) {
+      this.mcpServerType = mcpServerType;
+    }
     return this;
   }
 
   @Override
-  public Config toConfig() {
-    // No options for this command
-    return new Config();
-  }
-
-  @Override
   public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions();
+    return new McpServerCommandOptions(mcpServerType);
   }
 }

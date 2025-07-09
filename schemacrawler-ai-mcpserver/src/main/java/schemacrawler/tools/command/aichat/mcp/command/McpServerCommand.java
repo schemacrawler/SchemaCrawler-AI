@@ -30,10 +30,10 @@ package schemacrawler.tools.command.aichat.mcp.command;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
+import schemacrawler.tools.command.aichat.mcp.SseMcpServer;
+import schemacrawler.tools.command.aichat.mcp.StdioMcpServer;
 import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
 import schemacrawler.tools.command.aichat.mcp.server.ConnectionService;
-import schemacrawler.tools.command.aichat.mcp.SchemaCrawlerMcpServer;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
@@ -59,7 +59,13 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
     LOGGER.log(Level.INFO, "Starting MCP server");
     ConnectionService.instantiate(commandOptions, catalog, connection);
     ConfigurationManager.getInstance().setDryRun(false);
-    SchemaCrawlerMcpServer.start();
+    switch (commandOptions.mcpServerType()) {
+      case sse:
+        SseMcpServer.start();
+      case stdio:
+      default:
+        StdioMcpServer.start();
+    }
     LOGGER.log(Level.INFO, "MCP server is running");
   }
 
