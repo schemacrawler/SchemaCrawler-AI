@@ -56,9 +56,11 @@ jobs:
           clean install
         cd ..
         cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
+        cp -r ./SchemaCrawler-AI/schemacrawler-ai-mcpserver/src/main/bin ./extra-bin
         # DEBUG
         pwd
         ls -l ./extra-lib
+        ls -l ./extra-bin
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
