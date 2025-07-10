@@ -37,11 +37,11 @@ spring:
         capabilities:
           completion: false
           prompt: false
-    server:
-      name: SchemaCrawler MCP Server
-      heartbeat: true
-    management:
-      endpoints:
-        web:
-          exposure:
-            include: info
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: info
+server:
+  name: SchemaCrawler MCP Server
+  heartbeat: true

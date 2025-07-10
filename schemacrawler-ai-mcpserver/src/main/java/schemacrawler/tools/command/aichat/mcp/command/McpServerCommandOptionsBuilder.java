@@ -29,9 +29,14 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.mcp.command;
 
 import schemacrawler.schemacrawler.OptionsBuilder;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
+import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigOptionsBuilder;
 
 public final class McpServerCommandOptionsBuilder
-    implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
+    implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
+        ConfigOptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions> {
 
   public static McpServerCommandOptionsBuilder builder() {
     return new McpServerCommandOptionsBuilder();
@@ -61,5 +66,19 @@ public final class McpServerCommandOptionsBuilder
   @Override
   public McpServerCommandOptions toOptions() {
     return new McpServerCommandOptions(mcpTransport);
+  }
+
+  @Override
+  public McpServerCommandOptionsBuilder fromConfig(final Config config) {
+    if (config != null) {
+      mcpTransport = config.getEnumValue("transport", mcpTransport.stdio);
+    }
+
+    return this;
+  }
+
+  @Override
+  public Config toConfig() {
+    throw new UnsupportedOperationException("Cannot load transport from config file");
   }
 }

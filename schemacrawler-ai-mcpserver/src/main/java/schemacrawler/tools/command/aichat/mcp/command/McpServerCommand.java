@@ -36,6 +36,7 @@ import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
 import schemacrawler.tools.command.aichat.mcp.server.ConnectionService;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
+import us.fatehi.utility.string.StringFormat;
 
 /** SchemaCrawler command plug-in. */
 public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCommandOptions> {
@@ -59,14 +60,18 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
     LOGGER.log(Level.INFO, "Starting MCP server");
     ConnectionService.instantiate(commandOptions, catalog, connection);
     ConfigurationManager.getInstance().setDryRun(false);
-    switch (commandOptions.mcpTransport()) {
+    final McpTransport mcpTransport = commandOptions.mcpTransport();
+    switch (mcpTransport) {
       case sse:
         SseMcpServer.start();
+        break;
       case stdio:
       default:
         StdioMcpServer.start();
+        break;
     }
-    LOGGER.log(Level.INFO, "MCP server is running");
+    LOGGER.log(
+        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
   }
 
   @Override

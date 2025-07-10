@@ -57,7 +57,8 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
     }
 
     try {
-      final McpServerCommandOptions options = McpServerCommandOptionsBuilder.builder().toOptions();
+      final McpServerCommandOptions options =
+          McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
 
       final McpServerCommand scCommand = new McpServerCommand();
       scCommand.configure(options);
