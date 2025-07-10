@@ -28,15 +28,13 @@ http://www.gnu.org/licenses/
 
 package schemacrawler.tools.command.aichat.mcp.command;
 
+import static schemacrawler.tools.command.aichat.mcp.McpServerUtility.startMcpServer;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import schemacrawler.tools.command.aichat.mcp.SseMcpServer;
-import schemacrawler.tools.command.aichat.mcp.StdioMcpServer;
 import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
 import schemacrawler.tools.command.aichat.mcp.server.ConnectionService;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 /** SchemaCrawler command plug-in. */
 public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCommandOptions> {
@@ -57,21 +55,9 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
 
   @Override
   public void execute() {
-    LOGGER.log(Level.INFO, "Starting MCP server");
     ConnectionService.instantiate(commandOptions, catalog, connection);
     ConfigurationManager.getInstance().setDryRun(false);
-    final McpTransport mcpTransport = commandOptions.mcpTransport();
-    switch (mcpTransport) {
-      case sse:
-        SseMcpServer.start();
-        break;
-      case stdio:
-      default:
-        StdioMcpServer.start();
-        break;
-    }
-    LOGGER.log(
-        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
+    startMcpServer(commandOptions.mcpTransport());
   }
 
   @Override
