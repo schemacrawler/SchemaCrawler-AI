@@ -18,9 +18,6 @@ spring:
         stdio: true
         type: SYNC
         name: schemacrawler-mcpserver
-		capabilities:
-		  completion: false
-		  prompt: false
 
 ---
 spring:
