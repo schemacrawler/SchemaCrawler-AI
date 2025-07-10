@@ -1,6 +1,6 @@
 package schemacrawler.tools.command.aichat.mcp.command;
 
-public enum McpServerType {
+public enum McpTransport {
   stdio,
   sse;
 }

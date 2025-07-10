@@ -59,7 +59,7 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
     LOGGER.log(Level.INFO, "Starting MCP server");
     ConnectionService.instantiate(commandOptions, catalog, connection);
     ConfigurationManager.getInstance().setDryRun(false);
-    switch (commandOptions.mcpServerType()) {
+    switch (commandOptions.mcpTransport()) {
       case sse:
         SseMcpServer.start();
       case stdio:

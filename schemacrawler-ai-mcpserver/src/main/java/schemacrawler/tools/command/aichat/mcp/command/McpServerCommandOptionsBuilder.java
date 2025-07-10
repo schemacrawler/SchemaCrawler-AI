@@ -37,29 +37,29 @@ public final class McpServerCommandOptionsBuilder
     return new McpServerCommandOptionsBuilder();
   }
 
-  private McpServerType mcpServerType;
+  private McpTransport mcpTransport;
 
   private McpServerCommandOptionsBuilder() {
-    mcpServerType = McpServerType.sse;
+    mcpTransport = McpTransport.stdio;
   }
 
   @Override
   public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
     if (options != null) {
-      mcpServerType = options.mcpServerType();
+      mcpTransport = options.mcpTransport();
     }
     return this;
   }
 
-  public McpServerCommandOptionsBuilder withMcpServerType(McpServerType mcpServerType) {
+  public McpServerCommandOptionsBuilder withMcpTransport(McpTransport mcpServerType) {
     if (mcpServerType != null) {
-      this.mcpServerType = mcpServerType;
+      mcpTransport = mcpServerType;
     }
     return this;
   }
 
   @Override
   public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions(mcpServerType);
+    return new McpServerCommandOptions(mcpTransport);
   }
 }

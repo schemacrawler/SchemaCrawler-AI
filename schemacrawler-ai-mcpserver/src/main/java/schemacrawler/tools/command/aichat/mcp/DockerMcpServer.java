@@ -85,6 +85,9 @@ public class DockerMcpServer {
 
       arguments.add("--command");
       arguments.add("mcpserver");
+
+      arguments.add("--transport");
+      arguments.add("stdio");
     }
 
     /**
