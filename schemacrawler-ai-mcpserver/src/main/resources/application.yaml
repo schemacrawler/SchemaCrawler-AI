@@ -3,18 +3,48 @@ spring:
     banner-mode: off
   application:
     name: schemacrawler-mcpserver
+
+---
+spring:
+  config:
+    activate:
+      on-profile: stdio
+  main:
+    web-application-type: none
+  ai:
+    mcp:
+      server:
+        enabled: true
+        stdio: true
+        type: SYNC
+        name: schemacrawler-mcpserver
+		capabilities:
+		  completion: false
+		  prompt: false
+
+---
+spring:
+  config:
+    activate:
+      on-profile: sse
+  server:
+    port: 8080
+  ai:
+    mcp:
+      server:
+        enabled: true
+        stdio: false
+        type: SYNC
+        name: schemacrawler-mcpserver
+        allowed-origin: '*'
+        capabilities:
+          completion: false
+          prompt: false
+  management:
+    endpoints:
+      web:
+        exposure:
+          include: info
 server:
-  name: "SchemaCrawler MCP Server"
+  name: SchemaCrawler MCP Server
   heartbeat: true
-ai:
-  mcp:
-    server:
-      name: schemacrawler-mcpserver
-      capabilities:
-        completion: false
-        prompt: false
-management:
-  endpoints:
-    web:
-      exposure:
-        include: info

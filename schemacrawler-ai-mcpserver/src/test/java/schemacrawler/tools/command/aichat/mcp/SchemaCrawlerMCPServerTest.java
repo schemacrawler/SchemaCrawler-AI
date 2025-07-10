@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+    classes = {SseMcpServer.class})
 public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll

@@ -29,41 +29,56 @@ http://www.gnu.org/licenses/
 package schemacrawler.tools.command.aichat.mcp.command;
 
 import schemacrawler.schemacrawler.OptionsBuilder;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
 
 public final class McpServerCommandOptionsBuilder
     implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
-        ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
+        ConfigOptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions> {
 
   public static McpServerCommandOptionsBuilder builder() {
     return new McpServerCommandOptionsBuilder();
   }
 
-  private McpServerCommandOptionsBuilder() {
-    // No options for this command
-  }
+  private McpTransport mcpTransport;
 
-  @Override
-  public McpServerCommandOptionsBuilder fromConfig(final Config config) {
-    // No options for this command
-    return this;
+  private McpServerCommandOptionsBuilder() {
+    mcpTransport = McpTransport.stdio;
   }
 
   @Override
   public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
-    // No options for this command
+    if (options != null) {
+      mcpTransport = options.mcpTransport();
+    }
+    return this;
+  }
+
+  public McpServerCommandOptionsBuilder withMcpTransport(McpTransport mcpServerType) {
+    if (mcpServerType != null) {
+      mcpTransport = mcpServerType;
+    }
+    return this;
+  }
+
+  @Override
+  public McpServerCommandOptions toOptions() {
+    return new McpServerCommandOptions(mcpTransport);
+  }
+
+  @Override
+  public McpServerCommandOptionsBuilder fromConfig(final Config config) {
+    if (config != null) {
+      mcpTransport = config.getEnumValue("transport", mcpTransport.stdio);
+    }
+
     return this;
   }
 
   @Override
   public Config toConfig() {
-    // No options for this command
-    return new Config();
-  }
-
-  @Override
-  public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions();
+    throw new UnsupportedOperationException("Cannot load transport from config file");
   }
 }

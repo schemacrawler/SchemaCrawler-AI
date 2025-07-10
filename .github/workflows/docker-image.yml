@@ -114,6 +114,5 @@ jobs:
           linux/amd64
           linux/arm64
         tags: |-
-          schemacrawler/schemacrawler-ai:${{ github.sha }}
           schemacrawler/schemacrawler-ai:early-access-release
         push: true
