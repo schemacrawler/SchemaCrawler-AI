@@ -6,7 +6,7 @@
 
 > [!NOTE]  
 > * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
-> * See [SchemaCrawler MCP Client Usage](https://github.com/schemacrawler/SchemaCrawler-MCP-Client-Usage) for information on how to use the MCP Server
+> * See [SchemaCrawler MCP Server Usage](https://github.com/schemacrawler/SchemaCrawler-MCP-Server-Usage) for information on how to use the MCP Server
 
 
 ## About
