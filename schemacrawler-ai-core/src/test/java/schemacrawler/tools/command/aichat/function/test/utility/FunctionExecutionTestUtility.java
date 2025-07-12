@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.function.test.utility;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -19,10 +20,10 @@ import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
-import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
-import schemacrawler.tools.command.aichat.tools.FunctionParameters;
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionExecutor;
+import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public class FunctionExecutionTestUtility {
 

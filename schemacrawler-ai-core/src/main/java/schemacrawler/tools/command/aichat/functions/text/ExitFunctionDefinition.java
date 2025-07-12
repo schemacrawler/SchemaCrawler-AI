@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
 public final class ExitFunctionDefinition extends AbstractTextFunctionDefinition<NoParameters> {

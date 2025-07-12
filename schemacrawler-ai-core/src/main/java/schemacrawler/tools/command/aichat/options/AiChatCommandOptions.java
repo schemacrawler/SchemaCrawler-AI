@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.options;
 
 import static us.fatehi.utility.Utility.requireNotBlank;

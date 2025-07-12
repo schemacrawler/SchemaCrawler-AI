@@ -7,15 +7,16 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.CHILD_TABLES;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
-import static schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
+import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.CHILD_TABLES;
+import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
+import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;
@@ -33,9 +34,9 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
 import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
-import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters;
 
 @WithTestDatabase
 @ResolveTestContext

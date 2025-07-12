@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.sql.Connection;
@@ -15,7 +16,7 @@ import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.tools.FunctionCallback;
+import schemacrawler.tools.ai.tools.FunctionCallback;
 
 public final class Langchain4JToolExecutor implements ToolExecutor {
 

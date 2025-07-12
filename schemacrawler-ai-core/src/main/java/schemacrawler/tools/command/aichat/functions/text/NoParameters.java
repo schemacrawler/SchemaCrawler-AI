@@ -7,11 +7,12 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import schemacrawler.tools.command.aichat.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionParameters;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record NoParameters() implements FunctionParameters {}

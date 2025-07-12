@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.tools;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -20,6 +21,10 @@ import static org.mockito.Mockito.when;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.JsonNode;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.ToolSpecification;
+import schemacrawler.tools.ai.tools.ToolUtility;
 
 public class ToolUtilityTest {
 

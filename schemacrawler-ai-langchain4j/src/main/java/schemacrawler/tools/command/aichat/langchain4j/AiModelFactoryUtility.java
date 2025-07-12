@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import static java.util.Objects.requireNonNull;

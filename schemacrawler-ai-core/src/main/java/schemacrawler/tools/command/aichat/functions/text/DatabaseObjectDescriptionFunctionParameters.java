@@ -7,14 +7,15 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import schemacrawler.tools.command.aichat.tools.FunctionParameters;
-import schemacrawler.tools.command.aichat.utility.JsonUtility;
+import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.utility.JsonUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DatabaseObjectDescriptionFunctionParameters(

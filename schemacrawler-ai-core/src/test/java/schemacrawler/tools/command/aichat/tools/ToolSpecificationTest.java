@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.tools;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import schemacrawler.tools.ai.tools.ToolSpecification;
 
 public class ToolSpecificationTest {
 

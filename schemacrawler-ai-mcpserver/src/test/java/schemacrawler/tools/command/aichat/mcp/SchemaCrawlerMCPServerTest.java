@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat.mcp;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -20,7 +21,8 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import schemacrawler.tools.command.aichat.mcp.server.ConfigurationManager;
+import schemacrawler.tools.ai.mcpserver.SseMcpServer;
+import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,

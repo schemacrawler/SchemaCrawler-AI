@@ -7,9 +7,10 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public class NoResultsReturn implements FunctionReturn {
 

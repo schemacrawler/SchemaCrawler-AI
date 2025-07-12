@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.function.test;
 
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;

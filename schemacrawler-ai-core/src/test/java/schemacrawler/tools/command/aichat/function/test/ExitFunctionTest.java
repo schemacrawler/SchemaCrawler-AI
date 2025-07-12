@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -21,10 +22,10 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
+import schemacrawler.tools.ai.tools.FunctionExecutor;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.NoParameters;
-import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
 
 @WithTestDatabase
 @ResolveTestContext

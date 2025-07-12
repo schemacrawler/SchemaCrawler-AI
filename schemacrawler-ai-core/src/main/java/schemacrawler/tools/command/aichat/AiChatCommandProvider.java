@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat;
 
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;

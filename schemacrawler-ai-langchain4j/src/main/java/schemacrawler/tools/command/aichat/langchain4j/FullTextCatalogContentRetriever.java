@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.util.List;
@@ -25,10 +26,10 @@ import dev.langchain4j.rag.query.Query;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Table;
-import schemacrawler.tools.command.serialize.model.AdditionalTableDetails;
-import schemacrawler.tools.command.serialize.model.CatalogDocument;
-import schemacrawler.tools.command.serialize.model.CompactCatalogUtility;
-import schemacrawler.tools.command.serialize.model.TableDocument;
+import schemacrawler.tools.ai.model.AdditionalTableDetails;
+import schemacrawler.tools.ai.model.CatalogDocument;
+import schemacrawler.tools.ai.model.CompactCatalogUtility;
+import schemacrawler.tools.ai.model.TableDocument;
 
 public class FullTextCatalogContentRetriever implements ContentRetriever {
 
