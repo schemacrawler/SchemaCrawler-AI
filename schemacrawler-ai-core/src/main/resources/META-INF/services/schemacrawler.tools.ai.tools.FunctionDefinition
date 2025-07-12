@@ -1,0 +1,8 @@
+schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition
+schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition
+schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition
+schemacrawler.tools.ai.functions.ListFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition
+schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition

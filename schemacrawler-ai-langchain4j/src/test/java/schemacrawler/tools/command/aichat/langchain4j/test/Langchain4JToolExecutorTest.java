@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;

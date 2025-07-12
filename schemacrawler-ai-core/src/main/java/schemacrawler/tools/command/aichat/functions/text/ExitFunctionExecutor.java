@@ -7,10 +7,11 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
-import schemacrawler.tools.command.aichat.tools.AbstractFunctionExecutor;
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.AbstractFunctionExecutor;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParameters> {

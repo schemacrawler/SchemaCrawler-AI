@@ -6,14 +6,15 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
 
 public class AbstractFunctionDefinitionTest {
 

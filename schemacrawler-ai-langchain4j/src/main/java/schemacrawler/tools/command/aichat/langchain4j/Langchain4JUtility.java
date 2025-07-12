@@ -7,9 +7,10 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import static schemacrawler.tools.command.aichat.tools.ToolUtility.extractParametersSchema;
+import static schemacrawler.tools.ai.tools.ToolUtility.extractParametersSchema;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -26,8 +27,8 @@ import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
 import dev.langchain4j.model.chat.request.json.JsonStringSchema;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinition;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker

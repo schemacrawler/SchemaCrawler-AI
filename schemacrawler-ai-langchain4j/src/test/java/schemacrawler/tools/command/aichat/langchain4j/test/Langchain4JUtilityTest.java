@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -22,8 +23,8 @@ import org.junit.jupiter.api.Test;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JUtility;
-import schemacrawler.tools.command.aichat.tools.FunctionDefinitionRegistry;
 
 public class Langchain4JUtilityTest {
 

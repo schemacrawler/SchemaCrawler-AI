@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.tools;
 
 import static java.util.stream.Collectors.toList;
@@ -20,10 +21,14 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.functions.json.DescribeRoutinesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.DescribeTablesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.ListFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.ListFunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
+import schemacrawler.tools.ai.tools.ToolSpecification;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;

@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.time.Duration;

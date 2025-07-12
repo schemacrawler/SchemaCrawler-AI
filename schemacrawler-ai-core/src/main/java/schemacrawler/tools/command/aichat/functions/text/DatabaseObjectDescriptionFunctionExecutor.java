@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.functions.text;
 
 import schemacrawler.inclusionrule.InclusionRule;

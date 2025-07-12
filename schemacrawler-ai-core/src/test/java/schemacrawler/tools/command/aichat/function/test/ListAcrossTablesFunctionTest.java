@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,11 +16,11 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.COLUMNS;
-import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.FOREIGN_KEYS;
-import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
-import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
-import static schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
+import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.COLUMNS;
+import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.FOREIGN_KEYS;
+import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
+import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
+import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
 import java.sql.Connection;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
@@ -40,10 +41,10 @@ import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.json.ListAcrossTablesFunctionParameters;
-import schemacrawler.tools.command.aichat.tools.FunctionExecutor;
-import schemacrawler.tools.command.aichat.tools.FunctionReturn;
+import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionExecutor;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 
 @WithTestDatabase
 @ResolveTestContext

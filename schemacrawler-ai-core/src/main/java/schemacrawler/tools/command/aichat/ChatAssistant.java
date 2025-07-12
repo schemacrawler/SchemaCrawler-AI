@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat;
 
 public interface ChatAssistant extends AutoCloseable {

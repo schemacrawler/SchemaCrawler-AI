@@ -6,6 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
+
 package schemacrawler.tools.command.aichat.mcp.controller;
 
 import static org.hamcrest.Matchers.containsString;
@@ -21,7 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import schemacrawler.tools.command.aichat.mcp.server.HealthController;
+import schemacrawler.tools.ai.mcpserver.server.HealthController;
 
 @WebMvcTest(HealthController.class)
 @ContextConfiguration(classes = {HealthController.class})

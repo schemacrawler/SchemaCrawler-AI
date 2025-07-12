@@ -7,6 +7,7 @@
  */
 
 
+
 package schemacrawler.tools.command.aichat;
 
 import java.sql.Connection;
