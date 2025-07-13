@@ -8,7 +8,7 @@
 
 
 
-package schemacrawler.tools.ai.utility;
+package schemacrawler.tools.command.aichat.utility;
 
 import java.sql.Connection;
 import java.util.function.Consumer;

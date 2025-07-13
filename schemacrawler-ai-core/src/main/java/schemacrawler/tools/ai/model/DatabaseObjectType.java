@@ -8,7 +8,7 @@
 
 
 
-package schemacrawler.tools.command.aichat.options;
+package schemacrawler.tools.ai.model;
 
 public enum DatabaseObjectType {
   ALL,

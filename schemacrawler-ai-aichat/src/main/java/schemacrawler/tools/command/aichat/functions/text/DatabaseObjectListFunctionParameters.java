@@ -10,14 +10,14 @@
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.utility.JsonUtility;
-import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DatabaseObjectListFunctionParameters(

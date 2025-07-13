@@ -10,13 +10,17 @@
 
 package schemacrawler.tools.command.aichat.function.test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -42,9 +46,15 @@ import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunct
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class RefilterTest {
+public class DatabaseObjectListFunctionTest {
 
   private Catalog catalog;
+
+  @Test
+  public void all(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
+    databaseObjects(testContext, args);
+  }
 
   @BeforeAll
   public void loadCatalog(final Connection connection) throws Exception {
@@ -68,18 +78,42 @@ public class RefilterTest {
   }
 
   @Test
-  public void refilterTest(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args1 =
-        new DatabaseObjectListFunctionParameters(SEQUENCES);
-    databaseObjects(testContext.testMethodFullName() + ".sequences", args1);
+  public void parameters() throws Exception {
+    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
+    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
+  }
 
-    final DatabaseObjectListFunctionParameters args2 =
+  @Test
+  public void routines(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(ROUTINES);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void sequences(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(SEQUENCES);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void synonyms(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args =
+        new DatabaseObjectListFunctionParameters(SYNONYMS);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void tables(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args =
         new DatabaseObjectListFunctionParameters(TABLES);
-    databaseObjects(testContext.testMethodFullName() + ".tables", args2);
+    databaseObjects(testContext, args);
   }
 
   private void databaseObjects(
-      final String reference, final DatabaseObjectListFunctionParameters args) throws Exception {
+      final TestContext testContext, final DatabaseObjectListFunctionParameters args)
+      throws Exception {
 
     final DatabaseObjectListFunctionDefinition functionDefinition =
         new DatabaseObjectListFunctionDefinition();
@@ -93,6 +127,7 @@ public class RefilterTest {
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
-    assertThat(outputOf(testout), hasSameContentAs(classpathResource(reference)));
+    assertThat(
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 }

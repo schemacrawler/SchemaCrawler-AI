@@ -10,11 +10,11 @@
 
 package schemacrawler.tools.ai.functions;
 
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
 import java.util.ArrayList;
 import java.util.Collection;
 import com.fasterxml.jackson.databind.node.ArrayNode;
@@ -28,8 +28,8 @@ import schemacrawler.schema.TypedObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.command.aichat.options.DatabaseObjectType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListFunctionExecutor

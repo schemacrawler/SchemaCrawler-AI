@@ -8,7 +8,7 @@
 
 
 
-package schemacrawler.tools.command.aichat.function.test.utility;
+package schemacrawler.tools.command.aichat.tools.utility;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;

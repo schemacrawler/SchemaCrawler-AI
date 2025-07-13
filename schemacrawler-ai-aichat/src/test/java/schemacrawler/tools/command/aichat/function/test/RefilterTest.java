@@ -10,17 +10,13 @@
 
 package schemacrawler.tools.command.aichat.function.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
@@ -46,15 +42,9 @@ import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunct
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DatabaseObjectListFunctionTest {
+public class RefilterTest {
 
   private Catalog catalog;
-
-  @Test
-  public void all(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
-    databaseObjects(testContext, args);
-  }
 
   @BeforeAll
   public void loadCatalog(final Connection connection) throws Exception {
@@ -78,42 +68,18 @@ public class DatabaseObjectListFunctionTest {
   }
 
   @Test
-  public void parameters() throws Exception {
-    final DatabaseObjectListFunctionParameters args = new DatabaseObjectListFunctionParameters(ALL);
-    assertThat(args.toString(), is("{\"database-object-type\":\"ALL\"}"));
-  }
-
-  @Test
-  public void routines(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args =
-        new DatabaseObjectListFunctionParameters(ROUTINES);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void sequences(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args =
+  public void refilterTest(final TestContext testContext) throws Exception {
+    final DatabaseObjectListFunctionParameters args1 =
         new DatabaseObjectListFunctionParameters(SEQUENCES);
-    databaseObjects(testContext, args);
-  }
+    databaseObjects(testContext.testMethodFullName() + ".sequences", args1);
 
-  @Test
-  public void synonyms(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args =
-        new DatabaseObjectListFunctionParameters(SYNONYMS);
-    databaseObjects(testContext, args);
-  }
-
-  @Test
-  public void tables(final TestContext testContext) throws Exception {
-    final DatabaseObjectListFunctionParameters args =
+    final DatabaseObjectListFunctionParameters args2 =
         new DatabaseObjectListFunctionParameters(TABLES);
-    databaseObjects(testContext, args);
+    databaseObjects(testContext.testMethodFullName() + ".tables", args2);
   }
 
   private void databaseObjects(
-      final TestContext testContext, final DatabaseObjectListFunctionParameters args)
-      throws Exception {
+      final String reference, final DatabaseObjectListFunctionParameters args) throws Exception {
 
     final DatabaseObjectListFunctionDefinition functionDefinition =
         new DatabaseObjectListFunctionDefinition();
@@ -127,7 +93,6 @@ public class DatabaseObjectListFunctionTest {
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
+    assertThat(outputOf(testout), hasSameContentAs(classpathResource(reference)));
   }
 }

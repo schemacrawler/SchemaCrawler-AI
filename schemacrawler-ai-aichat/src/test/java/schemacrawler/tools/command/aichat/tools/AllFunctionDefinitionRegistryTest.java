@@ -29,11 +29,15 @@ import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.ToolSpecification;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
+import schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition;
 import us.fatehi.utility.property.PropertyName;
 
-public class FunctionDefinitionRegistryTest {
+public class AllFunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 4;
+  private static final int NUM_FUNCTIONS = 8;
   private static final int NUM_JSON_FUNCTIONS = 4;
 
   @Test
@@ -57,6 +61,10 @@ public class FunctionDefinitionRegistryTest {
     assertThat(
         names,
         containsInAnyOrder(
+            "database-object-list",
+            "database-object-description",
+            "lint",
+            "exit",
             "describe-tables",
             "describe-routines",
             "list",
@@ -74,8 +82,12 @@ public class FunctionDefinitionRegistryTest {
             .map(function -> function.getClass().getSimpleName())
             .collect(Collectors.toList()),
         containsInAnyOrder(
+            DatabaseObjectListFunctionDefinition.class.getSimpleName(),
             DescribeTablesFunctionDefinition.class.getSimpleName(),
             DescribeRoutinesFunctionDefinition.class.getSimpleName(),
+            DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
+            ExitFunctionDefinition.class.getSimpleName(),
             ListFunctionDefinition.class.getSimpleName(),
             ListAcrossTablesFunctionDefinition.class.getSimpleName()));
   }
@@ -118,7 +130,7 @@ public class FunctionDefinitionRegistryTest {
     final Collection<ToolSpecification> textToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.TEXT);
     assertThat(textToolSpecifications, notNullValue());
-    assertThat(textToolSpecifications.size(), is(0));
+    assertThat(textToolSpecifications.size(), is(4));
 
     final Collection<ToolSpecification> jsonToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.JSON);

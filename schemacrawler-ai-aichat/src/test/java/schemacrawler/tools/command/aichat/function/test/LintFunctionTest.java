@@ -28,9 +28,9 @@ import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
-import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
 import schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.LintFunctionParameters;
+import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
 
 @WithTestDatabase
 @ResolveTestContext
