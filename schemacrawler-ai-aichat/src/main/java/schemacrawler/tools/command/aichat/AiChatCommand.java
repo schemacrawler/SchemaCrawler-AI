@@ -13,12 +13,14 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.ai.chat.ChatOptions;
+import schemacrawler.tools.ai.chat.ChatAssistant;
+import schemacrawler.tools.ai.chat.ChatAssistantRegistry;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in. */
-public final class AiChatCommand extends BaseSchemaCrawlerCommand<AiChatCommandOptions> {
+public final class AiChatCommand extends BaseSchemaCrawlerCommand<ChatOptions> {
 
   private static final Logger LOGGER = Logger.getLogger(AiChatCommand.class.getName());
 

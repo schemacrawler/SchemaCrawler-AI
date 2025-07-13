@@ -17,16 +17,16 @@ import dev.langchain4j.model.anthropic.AnthropicChatModel;
 import dev.langchain4j.model.anthropic.AnthropicChatModelName;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class AnthropicModelFactory implements AiModelFactory {
 
   private final PropertyName aiProvider = new PropertyName("anthropic", "Anthropic");
-  private final AiChatCommandOptions aiChatCommandOptions;
+  private final ChatOptions aiChatCommandOptions;
 
-  public AnthropicModelFactory(final AiChatCommandOptions commandOptions) {
+  public AnthropicModelFactory(final ChatOptions commandOptions) {
     aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
   }
 

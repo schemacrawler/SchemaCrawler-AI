@@ -10,13 +10,14 @@ package schemacrawler.tools.command.aichat.options;
 
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.OptionsBuilder;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
 import us.fatehi.utility.PropertiesUtility;
 
 public final class AiChatCommandOptionsBuilder
-    implements OptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions>,
-        ConfigOptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions> {
+    implements OptionsBuilder<AiChatCommandOptionsBuilder, ChatOptions>,
+        ConfigOptionsBuilder<AiChatCommandOptionsBuilder, ChatOptions> {
 
   private static final int DEFAULT_CONTEXT = 10;
   private static final int DEFAULT_TIMEOUT = 60;
@@ -54,7 +55,7 @@ public final class AiChatCommandOptionsBuilder
   }
 
   @Override
-  public AiChatCommandOptionsBuilder fromOptions(final AiChatCommandOptions options) {
+  public AiChatCommandOptionsBuilder fromOptions(final ChatOptions options) {
     if (options != null) {
       aiProvider = options.aiProvider();
       apiKey = options.apiKey();
@@ -73,8 +74,8 @@ public final class AiChatCommandOptionsBuilder
   }
 
   @Override
-  public AiChatCommandOptions toOptions() {
-    return new AiChatCommandOptions(aiProvider, apiKey, model, timeout, context, useMetadata);
+  public ChatOptions toOptions() {
+    return new ChatOptions(aiProvider, apiKey, model, timeout, context, useMetadata);
   }
 
   /**

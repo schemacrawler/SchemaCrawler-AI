@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat;
+package schemacrawler.tools.ai.chat;
 
 import java.sql.Connection;
 import java.util.ArrayList;
@@ -18,7 +18,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
 
@@ -60,7 +59,7 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
   }
 
   public ChatAssistant newChatAssistant(
-      final AiChatCommandOptions commandOptions,
+      final ChatOptions commandOptions,
       final Catalog catalog,
       final Connection connection) {
 
@@ -73,7 +72,7 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
         // Initialize the assistant with our parameters
         final java.lang.reflect.Constructor<?> constructor =
             chatAssistantClass.getConstructor(
-                AiChatCommandOptions.class, Catalog.class, Connection.class);
+                ChatOptions.class, Catalog.class, Connection.class);
         return (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
       } catch (final Exception e) {
         LOGGER.log(

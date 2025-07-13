@@ -12,7 +12,7 @@ import static java.util.Objects.requireNonNull;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -32,7 +32,7 @@ public class AiModelFactoryUtility {
   }
 
   public static AiModelFactory chooseAiModelFactory(
-      final AiChatCommandOptions aiChatCommandOptions) {
+      final ChatOptions aiChatCommandOptions) {
     requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     final AiModelFactory[] modelFactories = {
       new OpenAIModelFactory(aiChatCommandOptions),

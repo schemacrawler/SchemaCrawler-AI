@@ -17,16 +17,16 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.model.github.GitHubModelsChatModel;
 import dev.langchain4j.model.github.GitHubModelsChatModelName;
 import dev.langchain4j.model.github.GitHubModelsEmbeddingModel;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class GitHubModelFactory implements AiModelFactory {
 
   private final PropertyName aiProvider = new PropertyName("github-models", "GitHub Models");
-  private final AiChatCommandOptions aiChatCommandOptions;
+  private final ChatOptions aiChatCommandOptions;
 
-  public GitHubModelFactory(final AiChatCommandOptions commandOptions) {
+  public GitHubModelFactory(final ChatOptions commandOptions) {
     aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
   }
 

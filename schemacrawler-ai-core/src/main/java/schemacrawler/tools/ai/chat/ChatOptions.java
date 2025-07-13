@@ -6,12 +6,12 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.options;
+package schemacrawler.tools.ai.chat;
 
 import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.tools.executable.CommandOptions;
 
-public record AiChatCommandOptions(
+public record ChatOptions(
     String aiProvider, String apiKey, String model, int timeout, int context, boolean useMetadata)
     implements CommandOptions {
 
@@ -20,7 +20,7 @@ public record AiChatCommandOptions(
   private static final int DEFAULT_TIMEOUT = 10;
   private static final int MAXIMUM_TIMEOUT = 180;
 
-  public AiChatCommandOptions {
+  public ChatOptions {
     aiProvider = requireNotBlank(aiProvider, "No AI provider provided");
     apiKey = requireNotBlank(apiKey, "No OpenAI API key provided");
     model = requireNotBlank(model, "No AI model provided");

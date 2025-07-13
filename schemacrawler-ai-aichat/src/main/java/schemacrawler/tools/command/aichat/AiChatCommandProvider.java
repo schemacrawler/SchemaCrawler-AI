@@ -10,7 +10,7 @@ package schemacrawler.tools.command.aichat;
 
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
 import schemacrawler.tools.executable.BaseCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
@@ -66,7 +66,7 @@ public final class AiChatCommandProvider extends BaseCommandProvider {
     }
 
     try {
-      final AiChatCommandOptions options =
+      final ChatOptions options =
           AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
 
       final AiChatCommand scCommand = new AiChatCommand();

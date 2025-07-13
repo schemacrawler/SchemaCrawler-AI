@@ -56,11 +56,6 @@
       <artifactId>schemacrawler-ai-core</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-aichat</artifactId>
-      <version>${project.version}</version>
-    </dependency>
 
     <dependency>
       <groupId>dev.langchain4j</groupId>

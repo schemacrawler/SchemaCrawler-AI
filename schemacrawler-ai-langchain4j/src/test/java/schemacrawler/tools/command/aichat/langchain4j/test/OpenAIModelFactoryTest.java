@@ -17,15 +17,15 @@ import org.junit.jupiter.api.Test;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.OpenAIModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 
 public class OpenAIModelFactoryTest {
 
   @Test
   public void testHasEmbeddingModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     final OpenAIModelFactory factory = new OpenAIModelFactory(options);
 
     // Act & Assert
@@ -35,7 +35,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testIsSupportedWithNonOpenAIProvider() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("other");
     when(options.model()).thenReturn("gpt-4o-mini");
 
@@ -48,7 +48,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testIsSupportedWithOpenAIProvider() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("openai");
     when(options.model()).thenReturn("gpt-4o-mini");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -62,7 +62,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testIsSupportedWithUnsupportedModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("openai");
     when(options.model()).thenReturn("unsupported-model");
 
@@ -75,7 +75,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testNewChatMemory() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.model()).thenReturn("gpt-4o-mini");
 
     final OpenAIModelFactory factory = new OpenAIModelFactory(options);
@@ -90,7 +90,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testNewChatModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("openai");
     when(options.model()).thenReturn("gpt-4o-mini");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -108,7 +108,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testNewEmbeddingModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.apiKey()).thenReturn("test-api-key");
 
     final OpenAIModelFactory factory = new OpenAIModelFactory(options);
@@ -123,7 +123,7 @@ public class OpenAIModelFactoryTest {
   @Test
   public void testToString() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     final OpenAIModelFactory factory = new OpenAIModelFactory(options);
 
     // Act & Assert

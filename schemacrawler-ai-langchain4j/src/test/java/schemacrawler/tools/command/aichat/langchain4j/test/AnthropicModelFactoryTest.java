@@ -18,15 +18,15 @@ import org.junit.jupiter.api.Test;
 import dev.langchain4j.exception.UnsupportedFeatureException;
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AnthropicModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 
 public class AnthropicModelFactoryTest {
 
   @Test
   public void testHasEmbeddingModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     final AnthropicModelFactory factory = new AnthropicModelFactory(options);
 
     // Act & Assert
@@ -36,7 +36,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testIsSupportedWithAnthropicProvider() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("anthropic");
     when(options.model()).thenReturn("claude-3-haiku-20240307");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -50,7 +50,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testIsSupportedWithNonAnthropicProvider() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("other");
 
     final AnthropicModelFactory factory = new AnthropicModelFactory(options);
@@ -62,7 +62,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testIsSupportedWithUnsupportedModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("anthropic");
     when(options.model()).thenReturn("unsupported-model");
 
@@ -75,7 +75,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testNewChatMemory() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.context()).thenReturn(10);
 
     final AnthropicModelFactory factory = new AnthropicModelFactory(options);
@@ -90,7 +90,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testNewChatModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("anthropic");
     when(options.model()).thenReturn("claude-3-haiku-20240307");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -108,7 +108,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testNewEmbeddingModel() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     final AnthropicModelFactory factory = new AnthropicModelFactory(options);
 
     // Act & Assert
@@ -122,7 +122,7 @@ public class AnthropicModelFactoryTest {
   @Test
   public void testToString() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     final AnthropicModelFactory factory = new AnthropicModelFactory(options);
 
     // Act & Assert

@@ -13,7 +13,7 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
 import schemacrawler.tools.options.Config;
 
@@ -139,7 +139,7 @@ public class AiChatCommandOptionsBuilderTest {
 
     config = new Config();
     config.put("api-key", "api-key");
-    final AiChatCommandOptions options =
+    final ChatOptions options =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
     assertThat(options.apiKey(), is("api-key"));
     assertThat(options.model(), startsWith("gpt-4o-mini"));
@@ -148,7 +148,7 @@ public class AiChatCommandOptionsBuilderTest {
     config = new Config();
     config.put("api-key", "api-key");
     config.put("api-key:env", "api-key-env");
-    final AiChatCommandOptions options2 =
+    final ChatOptions options2 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
     assertThat(options2.apiKey(), is("api-key"));
     assertThat(options2.model(), startsWith("gpt-4o-mini"));
@@ -156,7 +156,7 @@ public class AiChatCommandOptionsBuilderTest {
     config = new Config();
     config.put("api-key:env", "api-key-env");
     System.setProperty("api-key-env", "api-key");
-    final AiChatCommandOptions options3 =
+    final ChatOptions options3 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
     assertThat(options3.apiKey(), is("api-key"));
     assertThat(options3.model(), startsWith("gpt-4o-mini"));
@@ -165,7 +165,7 @@ public class AiChatCommandOptionsBuilderTest {
     config = new Config();
     config.put("api-key", "\t");
     config.put("api-key:env", "api-key-env");
-    final AiChatCommandOptions options4 =
+    final ChatOptions options4 =
         AiChatCommandOptionsBuilder.builder().fromConfig(config).toOptions();
     assertThat(options4.apiKey(), is("api-key"));
     assertThat(options4.model(), startsWith("gpt-4o-mini"));
@@ -185,7 +185,7 @@ public class AiChatCommandOptionsBuilderTest {
 
   @Test
   public void fromOptions() {
-    final AiChatCommandOptions options =
+    final ChatOptions options =
         AiChatCommandOptionsBuilder.builder().withApiKey("api-key").withModel("model").toOptions();
     final AiChatCommandOptionsBuilder optionsBuilder =
         AiChatCommandOptionsBuilder.builder().fromOptions(options);

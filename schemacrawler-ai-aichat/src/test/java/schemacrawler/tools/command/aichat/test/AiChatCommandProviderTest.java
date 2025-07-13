@@ -22,9 +22,9 @@ import schemacrawler.test.utility.PluginCommandTestUtility;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.AiChatCommand;
 import schemacrawler.tools.command.aichat.AiChatCommandProvider;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 
@@ -57,7 +57,7 @@ public class AiChatCommandProviderTest {
     final Config config = new Config();
     config.put("api-key", "api-key");
     final AiChatCommand command = commandProvider.newSchemaCrawlerCommand("aichat", config);
-    final AiChatCommandOptions commandOptions = command.getCommandOptions();
+    final ChatOptions commandOptions = command.getCommandOptions();
     assertThat(commandOptions.apiKey(), is("api-key"));
     assertThat(commandOptions.model(), startsWith("gpt-4o-mini"));
   }
