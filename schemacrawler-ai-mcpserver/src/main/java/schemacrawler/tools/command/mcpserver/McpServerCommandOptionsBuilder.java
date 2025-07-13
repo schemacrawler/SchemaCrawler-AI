@@ -6,19 +6,15 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.mcpserver;
 
 import schemacrawler.schemacrawler.OptionsBuilder;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
 
 public final class McpServerCommandOptionsBuilder
     implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
-        ConfigOptionsBuilder<AiChatCommandOptionsBuilder, AiChatCommandOptions> {
+        ConfigOptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions> {
 
   public static McpServerCommandOptionsBuilder builder() {
     return new McpServerCommandOptionsBuilder();

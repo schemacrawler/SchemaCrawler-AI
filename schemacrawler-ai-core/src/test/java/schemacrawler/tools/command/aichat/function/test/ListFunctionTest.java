@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -16,11 +14,11 @@ import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ALL;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.ROUTINES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SEQUENCES;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.SYNONYMS;
-import static schemacrawler.tools.command.aichat.options.DatabaseObjectType.TABLES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

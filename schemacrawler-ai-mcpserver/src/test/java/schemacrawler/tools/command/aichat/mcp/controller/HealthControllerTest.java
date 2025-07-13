@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
 package schemacrawler.tools.command.aichat.mcp.controller;
 
 import static org.hamcrest.Matchers.containsString;

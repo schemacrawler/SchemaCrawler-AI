@@ -21,6 +21,9 @@ spring:
         stdio: true
         type: SYNC
         name: schemacrawler-mcpserver
+logging:
+  pattern:
+    console:
 
 ---
 spring:

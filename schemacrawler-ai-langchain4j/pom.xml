@@ -41,11 +41,6 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-scripting</artifactId>
     </dependency>
     <dependency>

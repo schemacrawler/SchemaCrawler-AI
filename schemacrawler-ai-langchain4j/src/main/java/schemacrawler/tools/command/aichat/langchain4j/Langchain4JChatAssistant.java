@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.sql.Connection;
@@ -37,9 +35,9 @@ import dev.langchain4j.rag.query.Query;
 import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.command.aichat.ChatAssistant;
+import schemacrawler.tools.ai.chat.ChatOptions;
+import schemacrawler.tools.ai.chat.ChatAssistant;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.IOUtility;
 import us.fatehi.utility.string.StringFormat;
 
@@ -61,7 +59,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private boolean shouldExit;
 
   public Langchain4JChatAssistant(
-      final AiChatCommandOptions aiChatOptions,
+      final ChatOptions aiChatOptions,
       final Catalog catalog,
       final Connection connection) {
 

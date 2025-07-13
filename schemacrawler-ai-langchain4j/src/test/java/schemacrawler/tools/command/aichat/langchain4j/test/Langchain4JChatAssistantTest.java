@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
 package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -18,15 +17,15 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JChatAssistant;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 
 public class Langchain4JChatAssistantTest {
 
   @Test
   public void testChatWithEmptyPrompt() {
     // Arrange
-    final AiChatCommandOptions mockOptions = mock(AiChatCommandOptions.class);
+    final ChatOptions mockOptions = mock(ChatOptions.class);
     final Catalog mockCatalog = mock(Catalog.class);
     final Connection mockConnection = mock(Connection.class);
 
@@ -55,7 +54,7 @@ public class Langchain4JChatAssistantTest {
     final String prompt = "Hello";
     final String expectedResponse = "Hi there!";
 
-    final AiChatCommandOptions mockOptions = mock(AiChatCommandOptions.class);
+    final ChatOptions mockOptions = mock(ChatOptions.class);
     final Catalog mockCatalog = mock(Catalog.class);
     final Connection mockConnection = mock(Connection.class);
 
@@ -81,7 +80,7 @@ public class Langchain4JChatAssistantTest {
   @Test
   public void testClose() {
     // Arrange
-    final AiChatCommandOptions mockOptions = mock(AiChatCommandOptions.class);
+    final ChatOptions mockOptions = mock(ChatOptions.class);
     final Catalog mockCatalog = mock(Catalog.class);
     final Connection mockConnection = mock(Connection.class);
 
@@ -101,7 +100,7 @@ public class Langchain4JChatAssistantTest {
   @Test
   public void testShouldExit() {
     // Arrange
-    final AiChatCommandOptions mockOptions = mock(AiChatCommandOptions.class);
+    final ChatOptions mockOptions = mock(ChatOptions.class);
     final Catalog mockCatalog = mock(Catalog.class);
     final Connection mockConnection = mock(Connection.class);
 

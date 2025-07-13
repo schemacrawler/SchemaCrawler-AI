@@ -1,110 +1,98 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-   <modelVersion>4.0.0</modelVersion>
-   <parent>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-parent</artifactId>
-      <version>16.26.3-1</version>
-      <relativePath>../schemacrawler-ai-parent</relativePath>
-   </parent>
-   <artifactId>schemacrawler-ai-mcpserver</artifactId>
-   <packaging>jar</packaging>
-   <name>SchemaCrawler AI - MCP Server</name>
-   <description>MCP server using Spring Boot AI</description>
-   <repositories>
-      <repository>
-         <id>spring-milestones</id>
-         <name>Spring Milestones</name>
-         <url>https://repo.spring.io/milestone</url>
-      </repository>
-      <repository>
-         <id>spring-snapshots</id>
-         <name>Spring Snapshots</name>
-         <url>https://repo.spring.io/snapshot</url>
-         <snapshots>
-            <enabled>true</enabled>
-         </snapshots>
-      </repository>
-      <repository>
-         <id>spring-releases</id>
-         <name>Spring Releases</name>
-         <url>https://repo.spring.io/release</url>
-      </repository>
-   </repositories>
-   <dependencyManagement>
-      <dependencies>
-         <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-dependencies</artifactId>
-            <version>3.5.0</version>
-            <type>pom</type>
-            <scope>import</scope>
-         </dependency>
-         <dependency>
-            <groupId>group.springframework.ai</groupId>
-            <artifactId>spring-ai-bom</artifactId>
-            <version>1.0.4</version>
-            <!--<type>pom</type>-->
-            <scope>import</scope>
-         </dependency>
-      </dependencies>
-   </dependencyManagement>
-   <dependencies>
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>us.fatehi</groupId>
+    <artifactId>schemacrawler-ai-parent</artifactId>
+    <version>16.26.3-1</version>
+    <relativePath>../schemacrawler-ai-parent</relativePath>
+  </parent>
+  <artifactId>schemacrawler-ai-mcpserver</artifactId>
+  <packaging>jar</packaging>
+  <name>SchemaCrawler AI - MCP Server</name>
+  <description>MCP server using Spring Boot AI</description>
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+    <repository>
+      <id>spring-snapshots</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>spring-releases</id>
+      <name>Spring Releases</name>
+      <url>https://repo.spring.io/release</url>
+    </repository>
+  </repositories>
+  <dependencyManagement>
+    <dependencies>
       <dependency>
-         <groupId>us.fatehi</groupId>
-         <artifactId>schemacrawler</artifactId>
-      </dependency>
-      <dependency>
-        <groupId>us.fatehi</groupId>
-        <artifactId>schemacrawler-commandline</artifactId>
-      </dependency>
-      <dependency>
-         <groupId>us.fatehi</groupId>
-         <artifactId>schemacrawler-ai-core</artifactId>
-         <version>${project.version}</version>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework.ai</groupId>
-         <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
-         <version>1.0.0</version>
-      </dependency>
-      <!-- Test dependencies -->
-      <dependency>
-         <groupId>us.fatehi</groupId>
-         <artifactId>schemacrawler-testdb</artifactId>
-         <scope>test</scope>
-      </dependency>
-      <dependency>
-         <groupId>org.springframework.boot</groupId>
-         <artifactId>spring-boot-starter-test</artifactId>
-         <scope>test</scope>
-      </dependency>
-   </dependencies>
-   <build>
-      <plugins>
-         <!--
-      <plugin>
         <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-maven-plugin</artifactId>
-        <executions>
-          <execution>
-            <goals>
-              <goal>repackage</goal>
-            </goals>
-            <configuration>
-              <attach>false</attach>
-            </configuration>
-          </execution>
-        </executions>
-      </plugin>
+        <artifactId>spring-boot-dependencies</artifactId>
+        <version>3.5.3</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework.ai</groupId>
+        <artifactId>spring-ai-bom</artifactId>
+        <version>1.0.0</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+  <dependencies>
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-commandline</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-ai-core</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+    </dependency>
+    <!-- Test dependencies -->
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-testdb</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-test</artifactId>
+      <scope>test</scope>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <!--
+      <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId><executions><execution><goals><goal>repackage</goal></goals><configuration><attach>false</attach></configuration></execution></executions></plugin>
       -->
-         <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-deploy-plugin</artifactId>
-            <configuration>
-               <skip>false</skip>
-            </configuration>
-         </plugin>
-      </plugins>
-   </build>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>false</skip>
+        </configuration>
+      </plugin>
+    </plugins>
+  </build>
 </project>

@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.ai.mcpserver.server;
 
 import java.sql.Connection;
@@ -21,7 +19,6 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.ToolSpecification;
-import schemacrawler.tools.ai.tools.ToolUtility;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -61,12 +58,6 @@ public final class SpringAIToolUtility {
       final ToolDefinition toolDefinition = toToolDefinition(toolSpecification);
       toolDefinitions.add(toolDefinition);
     }
-    // Add lint function, in text, not JSON
-    final ToolDefinition lintDefinition =
-        toToolDefinition(
-            ToolUtility.toToolSpecification(
-                functionDefinitionRegistry.lookupFunctionDefinition("lint").get()));
-    toolDefinitions.add(lintDefinition);
 
     return toolDefinitions;
   }

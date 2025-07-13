@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import java.time.Duration;
@@ -21,16 +19,16 @@ import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 import us.fatehi.utility.property.PropertyName;
 
 public class OpenAIModelFactory implements AiModelFactory {
 
   private final PropertyName aiProvider = new PropertyName("openai", "OpenAI");
-  private final AiChatCommandOptions aiChatCommandOptions;
+  private final ChatOptions aiChatCommandOptions;
 
-  public OpenAIModelFactory(final AiChatCommandOptions commandOptions) {
+  public OpenAIModelFactory(final ChatOptions commandOptions) {
     aiChatCommandOptions = requireNonNull(commandOptions, "No AI Chat options provided");
   }
 

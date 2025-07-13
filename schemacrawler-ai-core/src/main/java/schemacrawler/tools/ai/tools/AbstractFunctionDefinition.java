@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.ai.tools;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;

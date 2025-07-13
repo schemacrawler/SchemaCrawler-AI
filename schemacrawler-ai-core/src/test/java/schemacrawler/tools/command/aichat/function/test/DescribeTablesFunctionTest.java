@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -36,7 +34,7 @@ import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
-import schemacrawler.tools.command.aichat.function.test.utility.FunctionExecutionTestUtility;
+import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
 
 @WithTestDatabase
 @ResolveTestContext

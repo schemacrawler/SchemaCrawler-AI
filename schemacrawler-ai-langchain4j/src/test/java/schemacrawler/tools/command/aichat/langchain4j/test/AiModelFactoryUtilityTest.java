@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
 package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.hamcrest.CoreMatchers.is;
@@ -17,15 +16,15 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility;
-import schemacrawler.tools.command.aichat.options.AiChatCommandOptions;
 
 public class AiModelFactoryUtilityTest {
 
   @Test
   public void testChooseAiModelFactoryWithAnthropic() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("anthropic");
     when(options.model()).thenReturn("claude-3-haiku-20240307");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -42,7 +41,7 @@ public class AiModelFactoryUtilityTest {
   @Disabled("GitHub model factory test is disabled because we can't easily mock the static method")
   public void testChooseAiModelFactoryWithGitHub() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("github-models");
     when(options.model()).thenReturn("llama-3-8b-instruct");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -70,7 +69,7 @@ public class AiModelFactoryUtilityTest {
   @Test
   public void testChooseAiModelFactoryWithOpenAI() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("openai");
     when(options.model()).thenReturn("gpt-4o-mini");
     when(options.apiKey()).thenReturn("test-api-key");
@@ -86,7 +85,7 @@ public class AiModelFactoryUtilityTest {
   @Test
   public void testChooseAiModelFactoryWithUnsupportedProvider() {
     // Arrange
-    final AiChatCommandOptions options = mock(AiChatCommandOptions.class);
+    final ChatOptions options = mock(ChatOptions.class);
     when(options.aiProvider()).thenReturn("unsupported");
 
     // Act
