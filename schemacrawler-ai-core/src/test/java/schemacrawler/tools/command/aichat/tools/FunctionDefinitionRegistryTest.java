@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.tools;
 
 import static java.util.stream.Collectors.toList;
@@ -56,11 +54,7 @@ public class FunctionDefinitionRegistryTest {
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
     assertThat(
         names,
-        containsInAnyOrder(
-            "describe-tables",
-            "describe-routines",
-            "list",
-            "list-across-tables"));
+        containsInAnyOrder("describe-tables", "describe-routines", "list", "list-across-tables"));
   }
 
   @Test

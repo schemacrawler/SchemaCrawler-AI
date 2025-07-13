@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
 package schemacrawler.tools.ai.mcpserver;
 
 import java.util.logging.Level;
@@ -33,8 +32,8 @@ public class McpServerUtility {
         StdioMcpServer.start();
         break;
     }
-    LOGGER.log(Level.INFO,
-        new StringFormat("MCP server is running with <%s> transport", mcpTransport));
+    LOGGER.log(
+        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
   }
 
   private McpServerUtility() {

@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;

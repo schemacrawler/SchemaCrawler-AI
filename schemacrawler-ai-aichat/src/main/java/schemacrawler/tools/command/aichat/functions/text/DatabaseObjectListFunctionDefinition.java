@@ -6,8 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
-
 package schemacrawler.tools.command.aichat.functions.text;
 
 public final class DatabaseObjectListFunctionDefinition

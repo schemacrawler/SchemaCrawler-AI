@@ -6,7 +6,6 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-
 package schemacrawler.tools.ai.mcpserver.server;
 
 import java.util.List;
@@ -17,7 +16,9 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.Version;
+import schemacrawler.tools.ai.utility.JsonUtility;
 
 /**
  * Service class for managing tool providers. This class separates tool-related functionality to
@@ -53,9 +54,13 @@ public class ToolProviderService {
       description = "Gets the version of SchemaCrawler",
       returnDirect = true)
   public String getSchemaCrawlerVersion(
-      @ToolParam(description = "Current date, as an ISO 8601 local date.", required = false)
-          final String date) {
-    System.out.printf("get-schemacrawler-version called with %s", date);
-    return Version.about();
+      @ToolParam(description = "MCP Client identification, if available.", required = false)
+          final String clientId,
+      @ToolParam(description = "Event id, if available.", required = false) final String eventId) {
+    final ObjectNode objectNode = JsonUtility.mapper.createObjectNode();
+    objectNode.put("schemacrawler-version", Version.about());
+    objectNode.put("mcp-client-id", clientId);
+    objectNode.put("mcp-event-id", eventId);
+    return objectNode.toString();
   }
 }
