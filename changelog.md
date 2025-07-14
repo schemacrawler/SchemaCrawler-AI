@@ -1,6 +1,6 @@
 # SchemaCrawler AI Change History
 
-SchemaCrawler release notes.
+SchemaCrawler AI release notes.
 
 <a name="v16.26.3-1"></a>
 ## Release 16.26.3-1 - 2025-07-30
