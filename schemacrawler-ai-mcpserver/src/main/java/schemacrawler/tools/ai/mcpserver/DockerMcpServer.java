@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.logging.Level;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.InfoLevel;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.commandline.command.AvailableServers;
 
 /**
@@ -84,7 +85,7 @@ public class DockerMcpServer {
       arguments.add("mcpserver");
 
       arguments.add("--transport");
-      arguments.add("stdio");
+      arguments.add(McpServerTransportType.stdio.name());
     }
 
     /**
