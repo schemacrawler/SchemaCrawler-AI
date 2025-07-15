@@ -6,9 +6,11 @@ SchemaCrawler AI release notes.
 ## Release 16.26.3-3 - 2025-07-15
 
 - Make `--transport` required, with no defaults
+- Fix shell script for Docker MCP Catalog
+- Add logging for stdio transport
 
 
-<a name="v16.26.3-2"></a>
+<a name="v16.26.3-3"></a>
 ## Release 16.26.3-2 - 2025-07-15
 
 - Add additional tests, and fix startup issues
