@@ -10,7 +10,7 @@ package schemacrawler.tools.ai.mcpserver;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import schemacrawler.tools.command.mcpserver.McpTransport;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.string.StringFormat;
 
@@ -19,7 +19,7 @@ public class McpServerUtility {
 
   private static final Logger LOGGER = Logger.getLogger(McpServerUtility.class.getName());
 
-  public static void startMcpServer(final McpTransport mcpTransport) {
+  public static void startMcpServer(final McpServerTransportType mcpTransport) {
     if (mcpTransport == null) {
       throw new IllegalArgumentException("MCP transport not provided");
     }

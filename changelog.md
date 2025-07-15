@@ -2,6 +2,12 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v16.26.3-3"></a>
+## Release 16.26.3-3 - 2025-07-15
+
+- Make `--transport` required, with no defaults
+
+
 <a name="v16.26.3-2"></a>
 ## Release 16.26.3-2 - 2025-07-15
 

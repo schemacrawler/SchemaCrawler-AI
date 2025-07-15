@@ -10,13 +10,13 @@ package schemacrawler.tools.command.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
+import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.PluginCommandTestUtility;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
@@ -24,6 +24,7 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.tools.command.mcpserver.McpServerCommand;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandProvider;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 
@@ -49,10 +50,12 @@ public class McpServerCommandProviderTest {
         IllegalArgumentException.class,
         () -> commandProvider.newSchemaCrawlerCommand("bad-command", new Config()));
 
-    assertDoesNotThrow(() -> commandProvider.newSchemaCrawlerCommand("mcpserver", new Config()));
+    assertThrows(
+        ExecutionRuntimeException.class,
+        () -> commandProvider.newSchemaCrawlerCommand("mcpserver", new Config()));
 
     final Config config = new Config();
-    config.put("api-key", "api-key");
+    config.put("transport", McpServerTransportType.stdio);
     final McpServerCommand command = commandProvider.newSchemaCrawlerCommand("mcpserver", config);
     final McpServerCommandOptions commandOptions = command.getCommandOptions();
     assertThat(commandOptions.mcpTransport().name(), is("stdio"));

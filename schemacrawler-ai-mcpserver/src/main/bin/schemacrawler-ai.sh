@@ -3,4 +3,4 @@
 # SPDX-License-Identifier: CC-BY-NC-4.0
 
 SC_DIR=/opt/schemacrawler
-java -cp "$SC_DIR"/lib/*:"$SC_DIR"/config schemacrawler.tools.command.aichat.mcp.DockerMcpServer "$@"
+java -cp "$SC_DIR"/lib/*:"$SC_DIR"/config schemacrawler.tools.ai.mcpserver.DockerMcpServer "$@"

@@ -58,7 +58,7 @@ public class ToolProviderService {
           final String clientId,
       @ToolParam(description = "Event id, if available.", required = false) final String eventId) {
     final ObjectNode objectNode = JsonUtility.mapper.createObjectNode();
-    objectNode.put("schemacrawler-version", Version.about());
+    objectNode.put("schemacrawler-version", Version.version().toString());
     objectNode.put("mcp-client-id", clientId);
     objectNode.put("mcp-event-id", eventId);
     return objectNode.toString();

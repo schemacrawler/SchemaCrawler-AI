@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.command.mcpserver;
 
+import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
@@ -20,10 +21,12 @@ public final class McpServerCommandOptionsBuilder
     return new McpServerCommandOptionsBuilder();
   }
 
-  private McpTransport mcpTransport;
+  private McpServerTransportType mcpTransport;
 
   private McpServerCommandOptionsBuilder() {
-    mcpTransport = McpTransport.stdio;
+    // MCP Server transport needs to be explicitly specified,
+    // so default to known
+    mcpTransport = unknown;
   }
 
   @Override
@@ -34,7 +37,7 @@ public final class McpServerCommandOptionsBuilder
     return this;
   }
 
-  public McpServerCommandOptionsBuilder withMcpTransport(McpTransport mcpServerType) {
+  public McpServerCommandOptionsBuilder withMcpTransport(McpServerTransportType mcpServerType) {
     if (mcpServerType != null) {
       mcpTransport = mcpServerType;
     }
@@ -49,7 +52,7 @@ public final class McpServerCommandOptionsBuilder
   @Override
   public McpServerCommandOptionsBuilder fromConfig(final Config config) {
     if (config != null) {
-      mcpTransport = config.getEnumValue("transport", mcpTransport.stdio);
+      mcpTransport = config.getEnumValue("transport", unknown);
     }
 
     return this;
