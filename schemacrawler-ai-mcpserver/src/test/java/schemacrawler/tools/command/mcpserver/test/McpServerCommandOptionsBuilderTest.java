@@ -14,7 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptionsBuilder;
-import schemacrawler.tools.command.mcpserver.McpTransport;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.options.Config;
 
 public class McpServerCommandOptionsBuilderTest {
@@ -24,12 +24,12 @@ public class McpServerCommandOptionsBuilderTest {
 
     final McpServerCommandOptionsBuilder optionsBuilder = McpServerCommandOptionsBuilder.builder();
 
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
+    assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
 
-    optionsBuilder.withMcpTransport(McpTransport.sse);
+    optionsBuilder.withMcpTransport(McpServerTransportType.sse);
     assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("sse"));
 
-    optionsBuilder.withMcpTransport(McpTransport.stdio);
+    optionsBuilder.withMcpTransport(McpServerTransportType.stdio);
     assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
   }
 
@@ -46,15 +46,17 @@ public class McpServerCommandOptionsBuilderTest {
 
   @Test
   public void fromNullConfig() {
-    final McpServerCommandOptions options =
-        McpServerCommandOptionsBuilder.builder().fromConfig(null).toOptions();
-    assertThat(options.mcpTransport().name(), is("stdio"));
+    final McpServerCommandOptionsBuilder optionsBuilder =
+        McpServerCommandOptionsBuilder.builder().fromConfig(null);
+    assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
   }
 
   @Test
   public void fromOptions() {
     final McpServerCommandOptions options =
-        McpServerCommandOptionsBuilder.builder().withMcpTransport(McpTransport.sse).toOptions();
+        McpServerCommandOptionsBuilder.builder()
+            .withMcpTransport(McpServerTransportType.sse)
+            .toOptions();
     final McpServerCommandOptionsBuilder optionsBuilder =
         McpServerCommandOptionsBuilder.builder().fromOptions(options);
     assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("sse"));
@@ -62,11 +64,9 @@ public class McpServerCommandOptionsBuilderTest {
 
   @Test
   public void fromNullOptions() {
-    final McpServerCommandOptions options =
-        McpServerCommandOptionsBuilder.builder().fromOptions(null).toOptions();
     final McpServerCommandOptionsBuilder optionsBuilder =
-        McpServerCommandOptionsBuilder.builder().fromOptions(options);
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
+        McpServerCommandOptionsBuilder.builder().fromOptions(null);
+    assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
   }
 
   @Test

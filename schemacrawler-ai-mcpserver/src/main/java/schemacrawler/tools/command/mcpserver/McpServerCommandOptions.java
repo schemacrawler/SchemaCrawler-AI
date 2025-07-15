@@ -10,4 +10,12 @@ package schemacrawler.tools.command.mcpserver;
 
 import schemacrawler.tools.executable.CommandOptions;
 
-public record McpServerCommandOptions(McpTransport mcpTransport) implements CommandOptions {}
+public record McpServerCommandOptions(McpServerTransportType mcpTransport)
+    implements CommandOptions {
+
+  public McpServerCommandOptions {
+    if (mcpTransport == null || mcpTransport == McpServerTransportType.unknown) {
+      throw new IllegalArgumentException("No MCR Server transport specified");
+    }
+  }
+}

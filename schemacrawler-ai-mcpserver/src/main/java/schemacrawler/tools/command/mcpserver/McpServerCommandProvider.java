@@ -26,7 +26,8 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
   @Override
   public PluginCommand getCommandLineCommand() {
     final PluginCommand pluginCommand = newPluginCommand(COMMAND);
-    pluginCommand.addOption("transport", McpTransport.class, "Type of MCP server to start");
+    pluginCommand.addOption(
+        "transport", McpServerTransportType.class, "Type of MCP server to start");
     return pluginCommand;
   }
 

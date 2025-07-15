@@ -8,7 +8,8 @@
 
 package schemacrawler.tools.command.mcpserver;
 
-public enum McpTransport {
+public enum McpServerTransportType {
+  unknown,
   stdio,
   sse;
 }
