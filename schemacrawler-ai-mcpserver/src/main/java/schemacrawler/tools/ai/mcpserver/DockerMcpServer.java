@@ -201,7 +201,7 @@ public class DockerMcpServer {
    */
   public static void main(final String[] args) throws Exception {
 
-    new LoggingConfig(Level.OFF);
+    new LoggingConfig(Level.INFO);
 
     final McpServerContext runner = new McpServerContext();
     final String[] arguments = runner.buildArguments();
