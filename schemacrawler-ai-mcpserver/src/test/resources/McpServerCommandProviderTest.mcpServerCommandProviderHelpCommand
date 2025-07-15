@@ -1,0 +1,8 @@
+command:mcpserver
+
+** Allow AI agents access to your schema
+
+transport
+Type of MCP server to start
+
+Add command options to the `execute` command in the SchemaCrawler Shell

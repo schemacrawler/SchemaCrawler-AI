@@ -59,9 +59,7 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
   }
 
   public ChatAssistant newChatAssistant(
-      final ChatOptions commandOptions,
-      final Catalog catalog,
-      final Connection connection) {
+      final ChatOptions commandOptions, final Catalog catalog, final Connection connection) {
 
     if (chatAssistantClasses.isEmpty()) {
       throw new SchemaCrawlerException("No chat assistant implementation found");
@@ -71,8 +69,7 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
       try {
         // Initialize the assistant with our parameters
         final java.lang.reflect.Constructor<?> constructor =
-            chatAssistantClass.getConstructor(
-                ChatOptions.class, Catalog.class, Connection.class);
+            chatAssistantClass.getConstructor(ChatOptions.class, Catalog.class, Connection.class);
         return (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
       } catch (final Exception e) {
         LOGGER.log(

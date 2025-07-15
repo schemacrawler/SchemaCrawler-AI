@@ -1,0 +1,1 @@
+PluginCommand[name='mcpserver', options=[PluginCommandOption[name='transport', valueClass=schemacrawler.tools.command.mcpserver.McpTransport]]]

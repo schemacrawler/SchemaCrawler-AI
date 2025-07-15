@@ -59,9 +59,7 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private boolean shouldExit;
 
   public Langchain4JChatAssistant(
-      final ChatOptions aiChatOptions,
-      final Catalog catalog,
-      final Connection connection) {
+      final ChatOptions aiChatOptions, final Catalog catalog, final Connection connection) {
 
     requireNonNull(aiChatOptions, "AI chat options not provided");
     requireNonNull(catalog, "No catalog provided");

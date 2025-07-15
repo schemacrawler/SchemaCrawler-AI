@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.mcp;
+package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import java.util.Map;

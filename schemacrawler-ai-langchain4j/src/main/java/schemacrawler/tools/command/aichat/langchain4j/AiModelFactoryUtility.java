@@ -31,8 +31,7 @@ public class AiModelFactoryUtility {
     EmbeddingModel newEmbeddingModel();
   }
 
-  public static AiModelFactory chooseAiModelFactory(
-      final ChatOptions aiChatCommandOptions) {
+  public static AiModelFactory chooseAiModelFactory(final ChatOptions aiChatCommandOptions) {
     requireNonNull(aiChatCommandOptions, "No AI Chat options provided");
     final AiModelFactory[] modelFactories = {
       new OpenAIModelFactory(aiChatCommandOptions),
