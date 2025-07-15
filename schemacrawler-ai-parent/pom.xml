@@ -11,7 +11,7 @@
   </parent>
 
   <artifactId>schemacrawler-ai-parent</artifactId>
-  <version>16.26.3-1</version>
+  <version>16.26.3-2</version>
   <packaging>pom</packaging>
   <name>SchemaCrawler AI [Parent]</name>
   <description>Free database schema discovery and comprehension tool</description>
