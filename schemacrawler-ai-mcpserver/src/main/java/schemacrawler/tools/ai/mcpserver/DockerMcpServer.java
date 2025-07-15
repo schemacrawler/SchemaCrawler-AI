@@ -14,7 +14,6 @@ import java.util.logging.Level;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.tools.commandline.command.AvailableServers;
-import us.fatehi.utility.LoggingConfig;
 
 /**
  * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
@@ -76,7 +75,7 @@ public class DockerMcpServer {
 
       // Add additional SchemaCrawler command line arguments
       arguments.add("--log-level");
-      arguments.add(Level.OFF.getName());
+      arguments.add(Level.INFO.getName());
 
       arguments.add("--routines");
       arguments.add(".*");
@@ -200,9 +199,6 @@ public class DockerMcpServer {
    * @throws Exception If an error occurs during execution
    */
   public static void main(final String[] args) throws Exception {
-
-    new LoggingConfig(Level.INFO);
-
     final McpServerContext runner = new McpServerContext();
     final String[] arguments = runner.buildArguments();
     schemacrawler.Main.main(arguments);
