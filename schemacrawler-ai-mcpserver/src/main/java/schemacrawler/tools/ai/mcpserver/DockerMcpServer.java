@@ -74,9 +74,13 @@ public class DockerMcpServer {
         arguments.add(InfoLevel.standard.name());
       }
 
-      // Add additional SchemaCrawler command line arguments
+      final String logLevel = System.getenv("SCHCRWLR_LOG_LEVEL");
       arguments.add("--log-level");
-      arguments.add(Level.INFO.getName());
+      if (isValidInfoLevel(logLevel)) {
+        arguments.add(logLevel);
+      } else {
+        arguments.add(Level.INFO.getName());
+      }
 
       arguments.add("--routines");
       arguments.add(".*");
@@ -186,6 +190,24 @@ public class DockerMcpServer {
       }
       try {
         return InfoLevel.valueOfFromString(infoLevel) != InfoLevel.unknown;
+      } catch (final Exception e) {
+        return false;
+      }
+    }
+
+    /**
+     * Checks if a string is a valid log level.
+     *
+     * @param logLevel The log level string to check
+     * @return true if the string is a valid info level, false otherwise
+     */
+    public boolean isValidLogLevel(final String logLevel) {
+      if (isBlank(logLevel)) {
+        return false;
+      }
+      try {
+        Level.parse(logLevel);
+        return true;
       } catch (final Exception e) {
         return false;
       }
