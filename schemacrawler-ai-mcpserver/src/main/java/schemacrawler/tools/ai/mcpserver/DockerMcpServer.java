@@ -24,6 +24,22 @@ public class DockerMcpServer {
   /** Inner class that handles the MCP server setup. */
   public static final class McpServerContext {
 
+    private final EnvironmentVariableAccessor envAccessor;
+
+    /** Default constructor that uses System.getenv */
+    public McpServerContext() {
+      this(new SystemEnvironmentVariableAccessor());
+    }
+
+    /**
+     * Constructor with environment variable accessor for testing
+     *
+     * @param envAccessor The environment variable accessor
+     */
+    public McpServerContext(final EnvironmentVariableAccessor envAccessor) {
+      this.envAccessor = envAccessor;
+    }
+
     /**
      * Adds database credentials to the arguments list.
      *
@@ -53,7 +69,7 @@ public class DockerMcpServer {
      */
     public void addNonBlankArgument(
         final List<String> arguments, final String argName, final String envVar) {
-      final String value = System.getenv(envVar);
+      final String value = envAccessor.getenv(envVar);
       if (!isBlank(value)) {
         arguments.add(argName);
         arguments.add(value);
@@ -66,7 +82,7 @@ public class DockerMcpServer {
      * @param arguments The list of arguments to add to
      */
     public void addSchemaCrawlerArguments(final List<String> arguments) {
-      final String infoLevel = System.getenv("SCHCRWLR_INFO_LEVEL");
+      final String infoLevel = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
       arguments.add("--info-level");
       if (isValidInfoLevel(infoLevel)) {
         arguments.add(infoLevel);
@@ -74,9 +90,9 @@ public class DockerMcpServer {
         arguments.add(InfoLevel.standard.name());
       }
 
-      final String logLevel = System.getenv("SCHCRWLR_LOG_LEVEL");
+      final String logLevel = envAccessor.getenv("SCHCRWLR_LOG_LEVEL");
       arguments.add("--log-level");
-      if (isValidInfoLevel(logLevel)) {
+      if (isValidLogLevel(logLevel)) {
         arguments.add(logLevel);
       } else {
         arguments.add(Level.INFO.getName());
@@ -98,7 +114,7 @@ public class DockerMcpServer {
      * @param arguments The list of arguments to add to
      */
     public void addServerConnection(final List<String> arguments) {
-      final String server = System.getenv("SCHCRWLR_SERVER");
+      final String server = envAccessor.getenv("SCHCRWLR_SERVER");
       if (!isBlank(server) && isValidDatabasePlugin(server)) {
         arguments.add("--server");
         arguments.add(server);
@@ -106,13 +122,13 @@ public class DockerMcpServer {
 
       addNonBlankArgument(arguments, "--host", "SCHCRWLR_HOST");
 
-      final String port = System.getenv("SCHCRWLR_PORT");
+      final String port = envAccessor.getenv("SCHCRWLR_PORT");
       if (isNumeric(port)) {
         arguments.add("--port");
         arguments.add(port);
       }
 
-      final String database = System.getenv("SCHCRWLR_DATABASE");
+      final String database = envAccessor.getenv("SCHCRWLR_DATABASE");
       if (!isBlank(database)) {
         arguments.add("--database");
         arguments.add(database);
@@ -128,7 +144,7 @@ public class DockerMcpServer {
       final List<String> arguments = new ArrayList<>();
 
       // Handle connections with either JDBC URL or server/host/port
-      final String jdbcUrl = System.getenv("SCHCRWLR_JDBC_URL");
+      final String jdbcUrl = envAccessor.getenv("SCHCRWLR_JDBC_URL");
       if (!isBlank(jdbcUrl)) {
         addJdbcUrlConnection(arguments);
       } else {
