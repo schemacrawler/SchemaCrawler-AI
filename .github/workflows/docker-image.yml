@@ -106,7 +106,7 @@ jobs:
       name: Build and push SchemaCrawler AI early release Docker image
       uses: docker/build-push-action@v6
       with:
-        file: ./Dockerfile.early-access-release
+        file: ./Dockerfile
         context: .
         platforms: |-
           linux/amd64
