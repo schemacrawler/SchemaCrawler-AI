@@ -6,7 +6,8 @@
 # SPDX-License-Identifier: EPL-2.0
 # ========================================================================
 
-FROM schemacrawler/schemacrawler:latest
+ARG FROM_IMAGE=schemacrawler/schemacrawler:latest
+FROM ${FROM_IMAGE}
 
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \
