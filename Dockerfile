@@ -6,6 +6,9 @@
 # SPDX-License-Identifier: EPL-2.0
 # ========================================================================
 
+# Provided arguments
+ARG FROM_IMAGE=schemacrawler/schemacrawler:latest
+
 # Builder stage - Build SchemaCrawler AI
 FROM maven:3.9-eclipse-temurin-21 AS builder
 
@@ -19,13 +22,12 @@ RUN mvn \
       clean package
 
 # Production stage - Use SchemaCrawler base image
-ARG FROM_IMAGE=schemacrawler/schemacrawler:latest
 FROM ${FROM_IMAGE}
 
 # Copy SchemaCrawler AI distribution from builder stage
 # Based on the upload artifact path in quick-build.yml
 COPY --from=builder \
-  /build/_aichat-distrib/ \
+  _aichat-distrib/ \
   /opt/schemacrawler/
 
 CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]
