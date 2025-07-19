@@ -97,7 +97,6 @@ jobs:
           linux/arm64
         tags: |-
           schemacrawler/schemacrawler-ai:${{ github.ref_name }}
-          schemacrawler/schemacrawler-ai:${{ github.sha }}
           schemacrawler/schemacrawler-ai:latest
         sbom: true
         provenance: true
@@ -107,11 +106,13 @@ jobs:
       name: Build and push SchemaCrawler AI early release Docker image
       uses: docker/build-push-action@v6
       with:
-        file: ./Dockerfile.early-access-release
+        file: ./Dockerfile
         context: .
         platforms: |-
           linux/amd64
           linux/arm64
         tags: |-
           schemacrawler/schemacrawler-ai:early-access-release
+        build-args: |
+          FROM_IMAGE=schemacrawler/schemacrawler:early-access-release
         push: true
