@@ -15,7 +15,7 @@
   <name>SchemaCrawler AI Distribution</name>
   <description>Distribution module for SchemaCrawler AI</description>
 
-  <dependencies>  
+  <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-core</artifactId>
@@ -30,7 +30,7 @@
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-aichat</artifactId>
       <version>${project.version}</version>
-    </dependency>	
+    </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-mcpserver</artifactId>
@@ -45,7 +45,7 @@
         <artifactId>maven-assembly-plugin</artifactId>
         <configuration>
           <descriptors>
-            <descriptor>src/main/assembly/assembly.xml</descriptor>
+            <descriptor>src/main/assembly/assembly-lib.xml</descriptor>
           </descriptors>
           <formats>
             <format>dir</format>
@@ -72,5 +72,5 @@
       </plugin>
     </plugins>
   </build>
-    
+
 </project>
