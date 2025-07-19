@@ -36,39 +36,6 @@ jobs:
       with:
         java-version: 21
 
-# BUILD FOR DISTRIBUTION
-    - id: checkout-schemacrawler-ai
-      name: Checkout SchemaCrawler-AI
-      uses: actions/checkout@v4
-      with:
-        repository: schemacrawler/SchemaCrawler-AI
-        path: SchemaCrawler-AI
-
-    - id: build-schemacrawler-ai
-      name: Build SchemaCrawler-AI
-      shell: bash
-      run: |
-        # Build SchemaCrawler-AI
-        cd SchemaCrawler-AI
-        mvn \
-          --no-transfer-progress \
-          --batch-mode \
-          clean install
-        cd ..
-    - id: build-distribution
-      name: Build Distribution
-      shell: bash
-      run: |
-        # Build SchemaCrawler-AI Distribution
-        pwd
-        echo "bin folder"
-        cp -r ./SchemaCrawler-AI/schemacrawler-ai-mcpserver/src/main/bin ./extra-bin
-        chmod +rx ./extra-bin/*.sh
-        ls -l ./extra-bin
-        echo "lib folder"
-        cp -r ./SchemaCrawler-AI/schemacrawler-ai-distrib/target/_aichat/lib ./extra-lib
-        ls -l ./extra-lib
-
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
       name: Setup QEMU

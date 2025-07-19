@@ -15,7 +15,7 @@
   <name>SchemaCrawler AI Distribution</name>
   <description>Distribution module for SchemaCrawler AI</description>
 
-  <dependencies>  
+  <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-core</artifactId>
@@ -30,7 +30,7 @@
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-aichat</artifactId>
       <version>${project.version}</version>
-    </dependency>	
+    </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-mcpserver</artifactId>
@@ -43,23 +43,42 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/assembly.xml</descriptor>
-          </descriptors>
-          <formats>
-            <format>dir</format>
-          </formats>
-          <appendAssemblyId>false</appendAssemblyId>
-          <finalName>_aichat/lib</finalName>
-        </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
+            <id>make-lib-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly-lib.xml</descriptor>
+              </descriptors>
+              <formats>
+                <format>dir</format>
+              </formats>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>lib</finalName>
+              <outputDirectory>${project.basedir}/../_ai-distrib</outputDirectory>
+            </configuration>
+          </execution>
+          <execution>
+            <id>make-bin-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+              </descriptors>
+              <formats>
+                <format>dir</format>
+              </formats>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>bin</finalName>
+              <outputDirectory>${project.basedir}/../_ai-distrib</outputDirectory>
+            </configuration>
           </execution>
         </executions>
       </plugin>
@@ -72,5 +91,5 @@
       </plugin>
     </plugins>
   </build>
-    
+
 </project>
