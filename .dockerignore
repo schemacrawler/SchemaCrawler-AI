@@ -1,6 +1,0 @@
-# Ignore all files and directories ...
-**
-
-# ... except the distribution folder
-!**/_ai-distrib/
-!./_ai-distrib/

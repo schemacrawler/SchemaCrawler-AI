@@ -36,17 +36,6 @@ jobs:
       with:
         java-version: 21
 
-# BUILD FOR DISTRIBUTION
-    - id: build-schemacrawler-ai
-      name: Build SchemaCrawler-AI
-      shell: bash
-      run: |
-        # Build SchemaCrawler-AI
-        mvn \
-          --no-transfer-progress \
-          --batch-mode \
-          clean package
-
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
       name: Setup QEMU
