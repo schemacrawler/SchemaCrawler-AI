@@ -24,7 +24,7 @@ RUN \
 
 # DEBUG
 RUN \
-  ls -l ./_aichat-distrib \
+   pwd \
 && ls -1 
 
 
