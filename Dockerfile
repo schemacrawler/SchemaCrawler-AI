@@ -16,18 +16,24 @@ FROM maven:3.9-eclipse-temurin-21 AS builder
 COPY . .
 
 # Build SchemaCrawler AI (as per quick-build.yml)
-RUN mvn \
-      --no-transfer-progress \
-      --batch-mode \
-      clean package
+RUN \
+  mvn \
+    --no-transfer-progress \
+    --batch-mode \
+    clean package
+
+# DEBUG
+RUN \
+  ls -l ./_aichat-distrib \
+&& ls -1 
+
 
 # Production stage - Use SchemaCrawler base image
 FROM ${FROM_IMAGE}
 
 # Copy SchemaCrawler AI distribution from builder stage
-# Based on the upload artifact path in quick-build.yml
 COPY --from=builder \
-  _aichat-distrib/ \
+  ./_aichat-distrib/ \
   /opt/schemacrawler/
 
 CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]
