@@ -11,6 +11,6 @@ FROM ${FROM_IMAGE}
 
 # Copy SchemaCrawler AI extra distribution from the build directory
 COPY \
-    ./schemacrawler-ai-distrib/target/_ai-distrib/ /opt/schemacrawler/lib/
+    ./schemacrawler-ai-distrib/target/_ai-distrib/** /opt/schemacrawler/lib/
 
 CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]
