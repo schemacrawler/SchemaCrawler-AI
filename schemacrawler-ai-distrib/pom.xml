@@ -58,8 +58,8 @@
                 <format>dir</format>
               </formats>
               <appendAssemblyId>false</appendAssemblyId>
-              <finalName>_ai-distrib/lib</finalName>
-			  <outputDirectory>${project.basedir}/..</outputDirectory>
+              <finalName>lib</finalName>
+              <outputDirectory>${project.basedir}/../_ai-distrib</outputDirectory>
             </configuration>
           </execution>
           <execution>
@@ -76,8 +76,8 @@
                 <format>dir</format>
               </formats>
               <appendAssemblyId>false</appendAssemblyId>
-              <finalName>_ai-distrib/bin</finalName>
-			  <outputDirectory>${project.basedir}/..</outputDirectory>
+              <finalName>bin</finalName>
+              <outputDirectory>${project.basedir}/../_ai-distrib</outputDirectory>
             </configuration>
           </execution>
         </executions>
