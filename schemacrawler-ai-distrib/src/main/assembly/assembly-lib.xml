@@ -36,19 +36,19 @@
       <outputDirectory>.</outputDirectory>
       <useProjectArtifact>false</useProjectArtifact>
       <unpack>false</unpack>
-	  <useTransitiveFiltering>false</useTransitiveFiltering>
+      <useTransitiveFiltering>false</useTransitiveFiltering>
       <scope>runtime</scope>
       <excludes>
         <exclude>org.slf4j:*</exclude>
-		<exclude>org.junit.platform:*</exclude>
-		<exclude>org.junit.jupiter:*</exclude>
-		<exclude>org.opentest4j:*</exclude>
-		<exclude>com.fasterxml.jackson.*:*</exclude>
-		<exclude>org.yaml:*</exclude>
-		<exclude>javax.validation:*</exclude>
-		<exclude>com.azure:azure-core-test</exclude>
-		<exclude>org.apache.ant:*</exclude>
-		<exclude>ch.qos.logback:*</exclude>
+        <exclude>org.junit.platform:*</exclude>
+        <exclude>org.junit.jupiter:*</exclude>
+        <exclude>org.opentest4j:*</exclude>
+        <exclude>com.fasterxml.jackson.*:*</exclude>
+        <exclude>org.yaml:*</exclude>
+        <exclude>javax.validation:*</exclude>
+        <exclude>com.azure:azure-core-test</exclude>
+        <exclude>org.apache.ant:*</exclude>
+        <exclude>ch.qos.logback:*</exclude>
         <exclude>us.fatehi:schemacrawler</exclude>
         <exclude>us.fatehi:schemacrawler-api</exclude>
         <exclude>us.fatehi:schemacrawler-tools</exclude>

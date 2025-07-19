@@ -43,23 +43,40 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-assembly-plugin</artifactId>
-        <configuration>
-          <descriptors>
-            <descriptor>src/main/assembly/assembly-lib.xml</descriptor>
-          </descriptors>
-          <formats>
-            <format>dir</format>
-          </formats>
-          <appendAssemblyId>false</appendAssemblyId>
-          <finalName>_aichat/lib</finalName>
-        </configuration>
         <executions>
           <execution>
-            <id>make-assembly</id>
+            <id>make-lib-assembly</id>
             <phase>package</phase>
             <goals>
               <goal>single</goal>
             </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly-lib.xml</descriptor>
+              </descriptors>
+              <formats>
+                <format>dir</format>
+              </formats>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>_ai-distrib/lib</finalName>
+            </configuration>
+          </execution>
+          <execution>
+            <id>make-bin-assembly</id>
+            <phase>package</phase>
+            <goals>
+              <goal>single</goal>
+            </goals>
+            <configuration>
+              <descriptors>
+                <descriptor>src/main/assembly/assembly-bin.xml</descriptor>
+              </descriptors>
+              <formats>
+                <format>dir</format>
+              </formats>
+              <appendAssemblyId>false</appendAssemblyId>
+              <finalName>_ai-distrib/bin</finalName>
+            </configuration>
           </execution>
         </executions>
       </plugin>
