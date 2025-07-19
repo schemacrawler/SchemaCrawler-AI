@@ -1,4 +1,4 @@
-name: Quick Build
+name: Build with Dependencies
 
 on:
   workflow_dispatch:
@@ -15,7 +15,7 @@ permissions: read-all
 
 jobs:
   build:
-    name: Quick build
+    name: Build with Dependencies
     runs-on: ubuntu-latest
     steps:
 
@@ -59,10 +59,10 @@ jobs:
           --batch-mode \
           clean package
 
-    - id: upload-aichat-lib
-      name: Upload SchemaCrawler AI extra lib
+    - id: upload-aichat-distrib
+      name: Upload SchemaCrawler AI distribution
       uses: actions/upload-artifact@v4
       with:
-        name: aichat-extra-lib
-        path: ./schemacrawler-ai-distrib/target/_aichat
+        name: _aichat-distrib
+        path: ./_aichat-distrib
         retention-days: 5
