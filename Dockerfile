@@ -7,7 +7,7 @@
 # ========================================================================
 
 ARG FROM_IMAGE=schemacrawler/schemacrawler:latest
-FROM ${FROM_IMAGE}
+FROM --platform=linux/amd64,linux/arm64 ${FROM_IMAGE}
 
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \
