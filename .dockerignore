@@ -3,3 +3,4 @@
 
 # ... except the distribution folder
 !**/_ai-distrib/
+!./_ai-distrib/
