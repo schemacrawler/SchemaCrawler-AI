@@ -11,9 +11,9 @@ package schemacrawler.tools.command.aichat.function.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
-import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.CHILD_TABLES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
+import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import java.sql.Connection;
 import java.util.List;
@@ -50,9 +50,9 @@ public class DescribeTablesFunctionTest {
   }
 
   @Test
-  public void describeChildTables(final TestContext testContext) throws Exception {
+  public void describeReferencedTables(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("BOOKS", List.of(CHILD_TABLES));
+        new DescribeTablesFunctionParameters("BOOKS", List.of(REFERENCED_TABLES));
     describeTable(testContext, args, true);
   }
 
