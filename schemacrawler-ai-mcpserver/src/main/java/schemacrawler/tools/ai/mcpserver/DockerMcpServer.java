@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
+import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
@@ -36,8 +37,30 @@ public class DockerMcpServer {
      *
      * @param envAccessor The environment variable accessor
      */
-    public McpServerContext(final EnvironmentVariableAccessor envAccessor) {
-      this.envAccessor = envAccessor;
+    protected McpServerContext(final EnvironmentVariableAccessor envAccessor) {
+      this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
+    }
+
+    /**
+     * Builds the complete argument list from environment variables.
+     *
+     * @return List of command line arguments
+     */
+    public String[] buildArguments() {
+      final List<String> arguments = new ArrayList<>();
+
+      // Handle connections with either JDBC URL or server/host/port
+      final String jdbcUrl = envAccessor.getenv("SCHCRWLR_JDBC_URL");
+      if (!isBlank(jdbcUrl)) {
+        addJdbcUrlConnection(arguments);
+      } else {
+        addServerConnection(arguments);
+      }
+
+      addDatabaseCredentials(arguments);
+      addSchemaCrawlerArguments(arguments);
+
+      return arguments.toArray(new String[0]);
     }
 
     /**
@@ -45,7 +68,7 @@ public class DockerMcpServer {
      *
      * @param arguments The list of arguments to add to
      */
-    public void addDatabaseCredentials(final List<String> arguments) {
+    protected void addDatabaseCredentials(final List<String> arguments) {
       addNonBlankArgument(arguments, "--user:env", "SCHCRWLR_DATABASE_USER");
       addNonBlankArgument(arguments, "--password:env", "SCHCRWLR_DATABASE_PASSWORD");
     }
@@ -55,7 +78,7 @@ public class DockerMcpServer {
      *
      * @param arguments The list of arguments to add to
      */
-    public void addJdbcUrlConnection(final List<String> arguments) {
+    protected void addJdbcUrlConnection(final List<String> arguments) {
       addNonBlankArgument(arguments, "--url", "SCHCRWLR_JDBC_URL");
     }
 
@@ -67,7 +90,7 @@ public class DockerMcpServer {
      * @param argName The name of the argument (e.g., "--user")
      * @param envVar The name of the environment variable
      */
-    public void addNonBlankArgument(
+    protected void addNonBlankArgument(
         final List<String> arguments, final String argName, final String envVar) {
       final String value = envAccessor.getenv(envVar);
       if (!isBlank(value)) {
@@ -81,7 +104,7 @@ public class DockerMcpServer {
      *
      * @param arguments The list of arguments to add to
      */
-    public void addSchemaCrawlerArguments(final List<String> arguments) {
+    protected void addSchemaCrawlerArguments(final List<String> arguments) {
       final String infoLevel = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
       arguments.add("--info-level");
       if (isValidInfoLevel(infoLevel)) {
@@ -113,7 +136,7 @@ public class DockerMcpServer {
      *
      * @param arguments The list of arguments to add to
      */
-    public void addServerConnection(final List<String> arguments) {
+    protected void addServerConnection(final List<String> arguments) {
       final String server = envAccessor.getenv("SCHCRWLR_SERVER");
       if (!isBlank(server) && isValidDatabasePlugin(server)) {
         arguments.add("--server");
@@ -136,34 +159,12 @@ public class DockerMcpServer {
     }
 
     /**
-     * Builds the complete argument list from environment variables.
-     *
-     * @return List of command line arguments
-     */
-    public String[] buildArguments() {
-      final List<String> arguments = new ArrayList<>();
-
-      // Handle connections with either JDBC URL or server/host/port
-      final String jdbcUrl = envAccessor.getenv("SCHCRWLR_JDBC_URL");
-      if (!isBlank(jdbcUrl)) {
-        addJdbcUrlConnection(arguments);
-      } else {
-        addServerConnection(arguments);
-      }
-
-      addDatabaseCredentials(arguments);
-      addSchemaCrawlerArguments(arguments);
-
-      return arguments.toArray(new String[0]);
-    }
-
-    /**
      * Checks if a string is a valid numeric value.
      *
      * @param value The string to check
      * @return true if the string is a valid numeric value, false otherwise
      */
-    public boolean isNumeric(final String value) {
+    protected boolean isNumeric(final String value) {
       if (isBlank(value)) {
         return false;
       }
@@ -181,7 +182,7 @@ public class DockerMcpServer {
      * @param server The server string to check
      * @return true if the string might be a valid database plugin, false otherwise
      */
-    public boolean isValidDatabasePlugin(final String server) {
+    protected boolean isValidDatabasePlugin(final String server) {
       if (isBlank(server)) {
         return false;
       }
@@ -200,7 +201,7 @@ public class DockerMcpServer {
      * @param infoLevel The info level string to check
      * @return true if the string is a valid info level, false otherwise
      */
-    public boolean isValidInfoLevel(final String infoLevel) {
+    protected boolean isValidInfoLevel(final String infoLevel) {
       if (isBlank(infoLevel)) {
         return false;
       }
@@ -217,7 +218,7 @@ public class DockerMcpServer {
      * @param logLevel The log level string to check
      * @return true if the string is a valid info level, false otherwise
      */
-    public boolean isValidLogLevel(final String logLevel) {
+    protected boolean isValidLogLevel(final String logLevel) {
       if (isBlank(logLevel)) {
         return false;
       }

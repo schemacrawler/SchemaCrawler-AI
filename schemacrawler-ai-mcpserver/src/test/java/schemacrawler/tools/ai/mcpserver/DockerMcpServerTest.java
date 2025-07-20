@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.mcpserver.test;
+package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.contains;
@@ -28,6 +28,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.tools.ai.mcpserver.DockerMcpServer.McpServerContext;
+import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
 @DisplayName("DockerMcpServer tests")
