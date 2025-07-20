@@ -10,7 +10,7 @@ package schemacrawler.tools.ai.model;
 
 public enum AdditionalTableDetails {
   PRIMARY_KEY,
-  CHILD_TABLES,
+  REFERENCED_TABLES,
   INDEXES,
   TRIGGERS,
   ATTRIBUTES,

@@ -9,10 +9,10 @@
 package schemacrawler.tools.ai.model;
 
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.ATTRIBUTES;
-import static schemacrawler.tools.ai.model.AdditionalTableDetails.CHILD_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
+import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -37,6 +37,7 @@ import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
+import schemacrawler.schema.View;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -47,7 +48,7 @@ import schemacrawler.schema.Trigger;
   "remarks",
   "columns",
   "primary-key",
-  "child-tables",
+  "referenced-tables",
   "indexes",
   "triggers",
   "attributes",
@@ -63,7 +64,7 @@ public final class TableDocument implements Serializable {
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<ReferencedTableDocument> dependentTables;
+  private final Collection<ReferencedTableDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final List<TriggerDocument> triggers;
   private final Map<String, String> attributes;
@@ -94,13 +95,19 @@ public final class TableDocument implements Serializable {
       primaryKey = null;
     }
 
-    if (details.get(CHILD_TABLES)) {
-      dependentTables = new ArrayList<>();
-      for (final Table dependentTable : table.getDependentTables()) {
-        dependentTables.add(new ReferencedTableDocument(dependentTable));
+    if (details.get(REFERENCED_TABLES)) {
+      final Collection<Table> childTables;
+      if (table instanceof View view) {
+        childTables = view.getTableUsage();
+      } else {
+        childTables = table.getDependentTables();
+      }
+      referencedTables = new ArrayList<>();
+      for (final Table childTable : childTables) {
+        referencedTables.add(new ReferencedTableDocument(childTable));
       }
     } else {
-      dependentTables = null;
+      referencedTables = null;
     }
 
     if (details.get(INDEXES)) {
@@ -155,9 +162,15 @@ public final class TableDocument implements Serializable {
     return definition;
   }
 
-  @JsonProperty("child-tables")
-  public Collection<ReferencedTableDocument> getDependentTables() {
-    return dependentTables;
+  /**
+   * For tables, these are child tables, and for views,
+   * they are "table usage".
+   *
+   * @return Referenced tables
+   */
+  @JsonProperty("referenced-tables")
+  public Collection<ReferencedTableDocument> getReferencedTables() {
+    return referencedTables;
   }
 
   public Collection<IndexDocument> getIndexes() {
