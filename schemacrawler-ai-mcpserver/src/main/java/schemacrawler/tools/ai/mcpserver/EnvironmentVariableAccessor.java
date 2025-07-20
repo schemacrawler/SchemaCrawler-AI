@@ -12,6 +12,7 @@ package schemacrawler.tools.ai.mcpserver;
  * Interface for accessing environment variables. This allows for mocking environment variables
  * during testing.
  */
+@FunctionalInterface
 public interface EnvironmentVariableAccessor {
 
   /**

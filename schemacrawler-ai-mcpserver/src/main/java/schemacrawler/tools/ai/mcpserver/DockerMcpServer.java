@@ -28,7 +28,7 @@ public class DockerMcpServer {
 
     /** Default constructor that uses System.getenv */
     public McpServerContext() {
-      this(new SystemEnvironmentVariableAccessor());
+      this(System::getenv);
     }
 
     /**
