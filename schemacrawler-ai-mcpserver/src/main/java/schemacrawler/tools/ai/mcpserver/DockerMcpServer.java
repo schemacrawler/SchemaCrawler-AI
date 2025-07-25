@@ -146,7 +146,7 @@ public class DockerMcpServer {
       addNonBlankArgument(arguments, "--host", "SCHCRWLR_HOST");
 
       final String port = envAccessor.getenv("SCHCRWLR_PORT");
-      if (isNumeric(port)) {
+      if (isValidPort(port)) {
         arguments.add("--port");
         arguments.add(port);
       }
@@ -164,13 +164,13 @@ public class DockerMcpServer {
      * @param value The string to check
      * @return true if the string is a valid numeric value, false otherwise
      */
-    protected boolean isNumeric(final String value) {
+    protected boolean isValidPort(final String value) {
       if (isBlank(value)) {
         return false;
       }
       try {
-        Integer.parseInt(value);
-        return true;
+        final int port = Integer.parseInt(value);
+        return port > 1023 && port < 65536;
       } catch (final NumberFormatException e) {
         return false;
       }
