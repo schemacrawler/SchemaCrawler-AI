@@ -245,11 +245,15 @@ public class DockerMcpServerTest {
   @DisplayName("Should validate numeric values correctly")
   void shouldValidateNumericValues() {
     // Act & Assert
-    assertTrue(context.isNumeric("123"));
-    assertTrue(context.isNumeric("0"));
-    assertFalse(context.isNumeric(null));
-    assertFalse(context.isNumeric(""));
-    assertFalse(context.isNumeric("abc"));
-    assertFalse(context.isNumeric("123.45"));
+    assertTrue(context.isValidPort("12345"));
+    assertFalse(context.isValidPort(null));
+    assertFalse(context.isValidPort(""));
+    assertFalse(context.isValidPort("abc"));
+    assertFalse(context.isValidPort("0"));
+    assertFalse(context.isValidPort("123.45"));
+    assertFalse(context.isValidPort("42"));
+    assertFalse(context.isValidPort("-42"));
+    assertFalse(context.isValidPort("12345678901234567890"));
+    assertFalse(context.isValidPort("65537"));
   }
 }
