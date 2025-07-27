@@ -15,7 +15,7 @@ public record McpServerCommandOptions(McpServerTransportType mcpTransport)
 
   public McpServerCommandOptions {
     if (mcpTransport == null || mcpTransport == McpServerTransportType.unknown) {
-      throw new IllegalArgumentException("No MCR Server transport specified");
+      throw new IllegalArgumentException("No MCP Server transport specified");
     }
   }
 }
