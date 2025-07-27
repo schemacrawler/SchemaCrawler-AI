@@ -1,4 +1,7 @@
-# Copyright (c) Sualeh Fatehi
+# SchemaCrawler AI
+# http://www.schemacrawler.com
+# Copyright (c) 2000-2025, Sualeh Fatehi <sualeh@hotmail.com>.
+# All rights reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 
 spring:
@@ -6,6 +9,9 @@ spring:
     banner-mode: off
   application:
     name: schemacrawler-mcpserver
+server:
+  name: SchemaCrawler MCP Server
+  heartbeat: true
 
 ---
 spring:
@@ -48,6 +54,3 @@ spring:
       web:
         exposure:
           include: info
-server:
-  name: SchemaCrawler MCP Server
-  heartbeat: true
