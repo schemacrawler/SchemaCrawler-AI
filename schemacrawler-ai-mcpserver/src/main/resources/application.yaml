@@ -47,10 +47,3 @@ spring:
         capabilities:
           completion: false
           prompt: false
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: 'beans,scheduledtasks,info'
-      discovery:
-        enabled: true
