@@ -159,24 +159,6 @@ public class DockerMcpServer {
     }
 
     /**
-     * Checks if a string is a valid numeric value.
-     *
-     * @param value The string to check
-     * @return true if the string is a valid numeric value, false otherwise
-     */
-    protected boolean isValidPort(final String value) {
-      if (isBlank(value)) {
-        return false;
-      }
-      try {
-        final int port = Integer.parseInt(value);
-        return port > 1023 && port < 65536;
-      } catch (final NumberFormatException e) {
-        return false;
-      }
-    }
-
-    /**
      * Checks if a string is a valid SchemaCrawler database plugin.
      *
      * @param server The server string to check
@@ -226,6 +208,24 @@ public class DockerMcpServer {
         Level.parse(logLevel);
         return true;
       } catch (final Exception e) {
+        return false;
+      }
+    }
+
+    /**
+     * Checks if a string is a valid numeric value.
+     *
+     * @param value The string to check
+     * @return true if the string is a valid numeric value, false otherwise
+     */
+    protected boolean isValidPort(final String value) {
+      if (isBlank(value)) {
+        return false;
+      }
+      try {
+        final int port = Integer.parseInt(value);
+        return port > 1023 && port < 65536;
+      } catch (final NumberFormatException e) {
         return false;
       }
     }

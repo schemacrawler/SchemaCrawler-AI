@@ -23,7 +23,7 @@ public class StdioMcpServer {
   }
 
   public static void start() {
-    SpringApplication app = new SpringApplication(StdioMcpServer.class);
+    final SpringApplication app = new SpringApplication(StdioMcpServer.class);
     app.setAdditionalProfiles("stdio");
     app.run();
   }

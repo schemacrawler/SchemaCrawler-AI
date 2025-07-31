@@ -17,12 +17,6 @@ public class ConfigurationManager {
   private static final Object lock = new Object();
   private static volatile ConfigurationManager instance;
 
-  private boolean isDryRun = false;
-
-  private ConfigurationManager() {
-    // Private constructor to prevent direct instantiation
-  }
-
   public static ConfigurationManager getInstance() {
     if (instance == null) {
       synchronized (lock) {
@@ -34,11 +28,17 @@ public class ConfigurationManager {
     return instance;
   }
 
+  private boolean isDryRun = false;
+
+  private ConfigurationManager() {
+    // Private constructor to prevent direct instantiation
+  }
+
   public boolean isDryRun() {
     return isDryRun;
   }
 
   public void setDryRun(final boolean dryRun) {
-    this.isDryRun = dryRun;
+    isDryRun = dryRun;
   }
 }

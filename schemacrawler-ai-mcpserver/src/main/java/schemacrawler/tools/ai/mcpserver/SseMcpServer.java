@@ -23,7 +23,7 @@ public class SseMcpServer {
   }
 
   public static void start() {
-    SpringApplication app = new SpringApplication(SseMcpServer.class);
+    final SpringApplication app = new SpringApplication(SseMcpServer.class);
     app.setAdditionalProfiles("sse");
     app.run();
   }

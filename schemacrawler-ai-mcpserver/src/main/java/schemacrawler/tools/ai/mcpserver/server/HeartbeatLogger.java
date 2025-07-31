@@ -27,8 +27,10 @@ public class HeartbeatLogger {
 
   @Value("${server.heartbeat}")
   private boolean heartbeat;
+
   @Value("${server.name}")
   private String serverName;
+
   @Value("${server.version}")
   private String serverVersion;
 

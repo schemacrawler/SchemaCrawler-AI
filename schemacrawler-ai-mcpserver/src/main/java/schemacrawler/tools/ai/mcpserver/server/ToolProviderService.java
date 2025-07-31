@@ -38,17 +38,6 @@ public class ToolProviderService {
     return MethodToolCallbackProvider.builder().toolObjects(commonService).build();
   }
 
-  /**
-   * Creates a tool callback provider for SchemaCrawler tools.
-   *
-   * @return A tool callback provider
-   */
-  @Bean
-  public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolCallback> tools = SpringAIToolUtility.toolCallbacks(SpringAIToolUtility.tools());
-    return ToolCallbackProvider.from(tools);
-  }
-
   @Tool(
       name = "get-schemacrawler-version",
       description = "Gets the version of SchemaCrawler",
@@ -62,5 +51,16 @@ public class ToolProviderService {
     objectNode.put("mcp-client-id", clientId);
     objectNode.put("mcp-event-id", eventId);
     return objectNode.toString();
+  }
+
+  /**
+   * Creates a tool callback provider for SchemaCrawler tools.
+   *
+   * @return A tool callback provider
+   */
+  @Bean
+  public ToolCallbackProvider schemaCrawlerTools() {
+    final List<ToolCallback> tools = SpringAIToolUtility.toolCallbacks(SpringAIToolUtility.tools());
+    return ToolCallbackProvider.from(tools);
   }
 }
