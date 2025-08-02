@@ -25,7 +25,8 @@ import org.springframework.http.ResponseEntity;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+@SpringBootTest(
+    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = {SseMcpServer.class})
 public class SchemaCrawlerMCPServerTest {
 
@@ -39,11 +40,9 @@ public class SchemaCrawlerMCPServerTest {
     ConfigurationManager.getInstance().setDryRun(false);
   }
 
-  @LocalServerPort
-  private int port;
+  @LocalServerPort private int port;
 
-  @Autowired
-  private TestRestTemplate restTemplate;
+  @Autowired private TestRestTemplate restTemplate;
 
   @Test
   @DisplayName("Application context loads successfully")

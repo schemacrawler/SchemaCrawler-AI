@@ -47,8 +47,7 @@ public class HeartbeatLogger {
 
     LOGGER.log(
         Level.INFO,
-        new StringFormat(
-            "Heartbeat: %s is running with uptime %s.", serverName(), serverUptime()));
+        new StringFormat("Heartbeat: %s is running with uptime %s.", serverName(), serverUptime()));
   }
 
   private String serverName() {

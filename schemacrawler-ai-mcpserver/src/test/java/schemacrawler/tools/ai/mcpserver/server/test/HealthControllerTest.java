@@ -31,7 +31,7 @@ public class HealthControllerTest {
   @Autowired private MockMvc mockMvc;
 
   @ParameterizedTest
-  @ValueSource(strings = { "/", "/health" })
+  @ValueSource(strings = {"/", "/health"})
   @DisplayName("Health endpoint should return status UP")
   public void healthCheckEndpoint(final String endpoint) throws Exception {
     mockMvc
