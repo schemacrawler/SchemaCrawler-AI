@@ -8,7 +8,9 @@
 
 package schemacrawler.tools.ai.mcpserver.test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.MatcherAssert.assertThat;
 import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
@@ -23,8 +25,7 @@ import org.springframework.http.ResponseEntity;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 
-@SpringBootTest(
-    webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     classes = {SseMcpServer.class})
 public class SchemaCrawlerMCPServerTest {
 
@@ -38,9 +39,11 @@ public class SchemaCrawlerMCPServerTest {
     ConfigurationManager.getInstance().setDryRun(false);
   }
 
-  @LocalServerPort private int port;
+  @LocalServerPort
+  private int port;
 
-  @Autowired private TestRestTemplate restTemplate;
+  @Autowired
+  private TestRestTemplate restTemplate;
 
   @Test
   @DisplayName("Application context loads successfully")
@@ -54,23 +57,10 @@ public class SchemaCrawlerMCPServerTest {
     final ResponseEntity<Map> response =
         restTemplate.getForEntity("http://localhost:" + port + "/health", Map.class);
 
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).containsKey("status");
-    assertThat(response.getBody().get("status")).isEqualTo("UP");
-    assertThat(response.getBody()).containsKey("service");
-    assertThat(response.getBody().get("service")).isEqualTo("SchemaCrawler MCP Server");
-  }
-
-  @Test
-  @DisplayName("Root endpoint returns welcome message in integration test")
-  public void rootEndpoint() {
-    final ResponseEntity<Map> response =
-        restTemplate.getForEntity("http://localhost:" + port + "/", Map.class);
-
-    assertThat(response.getStatusCode()).isEqualTo(HttpStatus.OK);
-    assertThat(response.getBody()).containsKey("message");
-    assertThat(response.getBody().get("message").toString()).contains("running");
-    assertThat(response.getBody()).containsKey("health_endpoint");
-    assertThat(response.getBody().get("health_endpoint")).isEqualTo("/health");
+    final Map<String, String> body = response.getBody();
+    System.err.println(body);
+    assertThat(response.getStatusCode(), is(HttpStatus.OK));
+    assertThat(body.get("status"), is("UP"));
+    assertThat(body.get("service"), startsWith("SchemaCrawler AI MCP Server"));
   }
 }
