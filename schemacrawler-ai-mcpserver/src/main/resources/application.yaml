@@ -16,7 +16,7 @@ spring:
         type: SYNC
         name: schemacrawler-mcpserver
 server:
-  name: SchemaCrawler MCP Server
+  name: SchemaCrawler AI MCP Server
   version: "v16.26.3-3"
   heartbeat: true
 

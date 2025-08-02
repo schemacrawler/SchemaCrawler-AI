@@ -1,2 +1,2 @@
-SchemaCrawler MCP Server
+SchemaCrawler AI MCP Server
 v16.26.3-3
