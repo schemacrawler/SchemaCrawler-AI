@@ -30,26 +30,6 @@ public final class McpServerCommandOptionsBuilder
   }
 
   @Override
-  public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
-    if (options != null) {
-      mcpTransport = options.mcpTransport();
-    }
-    return this;
-  }
-
-  public McpServerCommandOptionsBuilder withMcpTransport(McpServerTransportType mcpServerType) {
-    if (mcpServerType != null) {
-      mcpTransport = mcpServerType;
-    }
-    return this;
-  }
-
-  @Override
-  public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions(mcpTransport);
-  }
-
-  @Override
   public McpServerCommandOptionsBuilder fromConfig(final Config config) {
     if (config != null) {
       mcpTransport = config.getEnumValue("transport", unknown);
@@ -59,7 +39,28 @@ public final class McpServerCommandOptionsBuilder
   }
 
   @Override
+  public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
+    if (options != null) {
+      mcpTransport = options.mcpTransport();
+    }
+    return this;
+  }
+
+  @Override
   public Config toConfig() {
     throw new UnsupportedOperationException("Cannot load transport from config file");
+  }
+
+  @Override
+  public McpServerCommandOptions toOptions() {
+    return new McpServerCommandOptions(mcpTransport);
+  }
+
+  public McpServerCommandOptionsBuilder withMcpTransport(
+      final McpServerTransportType mcpServerType) {
+    if (mcpServerType != null) {
+      mcpTransport = mcpServerType;
+    }
+    return this;
   }
 }

@@ -8,31 +8,52 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import java.lang.management.ManagementFactory;
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import jakarta.annotation.PostConstruct;
 
 /** Simple controller to check if the server is running. */
 @RestController
 public class HealthController {
 
-  @GetMapping("/health")
+  private static final Logger LOGGER = Logger.getLogger(HealthController.class.getCanonicalName());
+
+  public static Duration serverUptime() {
+    final long uptime = ManagementFactory.getRuntimeMXBean().getUptime() / 1_000;
+    final Duration duration = Duration.ofSeconds(uptime);
+    return duration;
+  }
+
+  @Value("${server.name}")
+  private String serverName;
+
+  @Value("${server.version}")
+  private String serverVersion;
+
+  @GetMapping({"/", "/health"})
   public Map<String, Object> healthCheck() {
     final Map<String, Object> response = new HashMap<>();
     response.put("status", "UP");
-    response.put("service", "SchemaCrawler MCP Server");
+    response.put("service", serverName());
     response.put("timestamp", LocalDateTime.now().toString());
+    response.put("uptime", serverUptime());
     return response;
   }
 
-  @GetMapping("/")
-  public Map<String, Object> root() {
-    final Map<String, Object> response = new HashMap<>();
-    response.put("message", "SchemaCrawler AI MCP Server is running");
-    response.put("health_endpoint", "/health");
-    response.put("timestamp", LocalDateTime.now().toString());
-    return response;
+  @PostConstruct
+  public void init() {
+    LOGGER.log(Level.INFO, serverName());
+  }
+
+  private String serverName() {
+    return String.format("%s %s", serverName, serverVersion);
   }
 }

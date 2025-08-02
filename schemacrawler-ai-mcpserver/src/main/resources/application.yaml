@@ -6,11 +6,18 @@
 
 spring:
   main:
-    banner-mode: off
+    banner-mode: log
   application:
     name: schemacrawler-mcpserver
+  ai:
+    mcp:
+      server:
+        enabled: true
+        type: SYNC
+        name: schemacrawler-mcpserver
 server:
-  name: SchemaCrawler MCP Server
+  name: SchemaCrawler AI MCP Server
+  version: "v16.26.3-4"
   heartbeat: true
 
 ---
@@ -23,13 +30,7 @@ spring:
   ai:
     mcp:
       server:
-        enabled: true
         stdio: true
-        type: SYNC
-        name: schemacrawler-mcpserver
-logging:
-  pattern:
-    console:
 
 ---
 spring:
@@ -41,16 +42,8 @@ spring:
   ai:
     mcp:
       server:
-        enabled: true
         stdio: false
-        type: SYNC
-        name: schemacrawler-mcpserver
         allowed-origin: '*'
         capabilities:
           completion: false
           prompt: false
-  management:
-    endpoints:
-      web:
-        exposure:
-          include: info
