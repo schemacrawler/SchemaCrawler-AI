@@ -30,6 +30,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
@@ -144,6 +145,7 @@ public final class TableDocument implements Serializable {
     if (details.get(ATTRIBUTES)) {
       attributes = new HashMap<>();
       table.getAttributes().entrySet().stream()
+          .filter(entry -> entry.getValue() != null && !isBlank(entry.getValue().toString()))
           .forEach(entry -> attributes.put(entry.getKey(), String.valueOf(entry.getValue())));
     } else {
       attributes = null;
@@ -163,8 +165,7 @@ public final class TableDocument implements Serializable {
   }
 
   /**
-   * For tables, these are child tables, and for views,
-   * they are "table usage".
+   * For tables, these are child tables, and for views, they are "table usage".
    *
    * @return Referenced tables
    */
