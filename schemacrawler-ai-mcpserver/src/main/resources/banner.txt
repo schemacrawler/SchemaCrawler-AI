@@ -1,2 +1,2 @@
 SchemaCrawler AI MCP Server
-v16.26.3-3
+v16.26.3-4
