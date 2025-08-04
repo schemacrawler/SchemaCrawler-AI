@@ -8,9 +8,10 @@
 
 package schemacrawler.tools.command.aichat.utility;
 
+import static java.util.Objects.requireNonNull;
+
 import java.sql.Connection;
 import java.util.function.Consumer;
-import static java.util.Objects.requireNonNull;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.PooledConnectionUtility;
 

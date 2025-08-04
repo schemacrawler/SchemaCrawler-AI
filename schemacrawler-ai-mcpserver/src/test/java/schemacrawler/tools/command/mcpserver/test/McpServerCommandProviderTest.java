@@ -14,6 +14,7 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;

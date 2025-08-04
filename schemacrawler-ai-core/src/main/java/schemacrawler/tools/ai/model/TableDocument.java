@@ -8,12 +8,23 @@
 
 package schemacrawler.tools.ai.model;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.ATTRIBUTES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
+import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -22,16 +33,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;

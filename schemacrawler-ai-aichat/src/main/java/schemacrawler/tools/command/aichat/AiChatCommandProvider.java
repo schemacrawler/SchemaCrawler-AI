@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat;
 
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
+
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.options.AiChatCommandOptionsBuilder;

@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static us.fatehi.utility.Utility.requireNotBlank;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,7 +18,6 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;

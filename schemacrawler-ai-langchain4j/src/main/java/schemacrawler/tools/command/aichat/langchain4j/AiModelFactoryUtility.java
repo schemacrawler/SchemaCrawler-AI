@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import static java.util.Objects.requireNonNull;
+
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;

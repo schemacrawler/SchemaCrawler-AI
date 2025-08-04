@@ -15,6 +15,7 @@ import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
+
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

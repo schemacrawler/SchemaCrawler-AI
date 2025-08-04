@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;

@@ -9,12 +9,8 @@
 package schemacrawler.tools.ai.model;
 
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import static us.fatehi.utility.Utility.trimToEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -22,7 +18,12 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static us.fatehi.utility.Utility.trimToEmpty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
 

@@ -9,6 +9,8 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.server.HealthController.serverUptime;
+
+import jakarta.annotation.PostConstruct;
 import java.util.concurrent.TimeUnit;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,7 +18,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import jakarta.annotation.PostConstruct;
 import us.fatehi.utility.string.StringFormat;
 
 @Component

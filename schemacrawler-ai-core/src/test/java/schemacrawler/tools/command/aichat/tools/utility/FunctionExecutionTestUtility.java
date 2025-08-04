@@ -12,9 +12,10 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static us.fatehi.utility.Utility.isBlank;
+
 import java.io.IOException;
 import java.sql.Connection;
-import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;

@@ -10,6 +10,7 @@ package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
+
 import java.sql.Connection;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schema.Catalog;

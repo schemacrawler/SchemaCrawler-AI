@@ -19,6 +19,7 @@ import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
+
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

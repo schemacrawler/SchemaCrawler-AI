@@ -8,15 +8,9 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import java.sql.Connection;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
+
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.agent.tool.ToolSpecification;
 import dev.langchain4j.data.message.AiMessage;
@@ -33,10 +27,17 @@ import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.query.Query;
 import dev.langchain4j.service.tool.ToolExecutor;
+import java.sql.Connection;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.ai.chat.ChatAssistant;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.IOUtility;
 import us.fatehi.utility.string.StringFormat;

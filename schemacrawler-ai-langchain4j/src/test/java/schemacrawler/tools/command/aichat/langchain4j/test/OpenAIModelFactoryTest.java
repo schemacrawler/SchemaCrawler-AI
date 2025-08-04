@@ -13,10 +13,11 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
-import org.junit.jupiter.api.Test;
+
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
 import dev.langchain4j.model.embedding.EmbeddingModel;
+import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.OpenAIModelFactory;
 

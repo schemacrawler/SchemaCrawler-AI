@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import static dev.langchain4j.internal.ValidationUtils.ensureNotNull;
+
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;

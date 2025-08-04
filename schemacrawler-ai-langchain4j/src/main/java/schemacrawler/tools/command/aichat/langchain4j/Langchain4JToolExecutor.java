@@ -8,10 +8,11 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import java.sql.Connection;
 import static java.util.Objects.requireNonNull;
+
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
+import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.tools.FunctionCallback;

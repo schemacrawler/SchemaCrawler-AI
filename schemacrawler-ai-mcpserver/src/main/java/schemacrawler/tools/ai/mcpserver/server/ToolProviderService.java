@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.List;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
@@ -16,7 +17,6 @@ import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.Version;
 import schemacrawler.tools.ai.utility.JsonUtility;
 

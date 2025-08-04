@@ -16,13 +16,14 @@ import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.hasSize;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
+import dev.langchain4j.model.embedding.EmbeddingModel;
+import dev.langchain4j.rag.content.Content;
+import dev.langchain4j.rag.query.Query;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import org.junit.jupiter.api.Test;
-import dev.langchain4j.model.embedding.EmbeddingModel;
-import dev.langchain4j.rag.content.Content;
-import dev.langchain4j.rag.query.Query;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Schema;

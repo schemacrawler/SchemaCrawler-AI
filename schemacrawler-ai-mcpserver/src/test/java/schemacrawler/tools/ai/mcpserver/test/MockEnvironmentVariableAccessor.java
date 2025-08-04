@@ -10,7 +10,7 @@ package schemacrawler.tools.ai.mcpserver.test;
 
 import java.util.HashMap;
 import java.util.Map;
-import schemacrawler.tools.ai.mcpserver.EnvironmentVariableAccessor;
+import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
 
 /**
  * Mock implementation of EnvironmentVariableAccessor for testing. Allows setting and getting

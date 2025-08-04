@@ -9,11 +9,12 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import java.util.ArrayList;
-import java.util.Collection;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static us.fatehi.utility.Utility.isBlank;
+import java.util.ArrayList;
+import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.DependantObject;

@@ -14,6 +14,7 @@ import static org.hamcrest.CoreMatchers.nullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.chat.ChatOptions;

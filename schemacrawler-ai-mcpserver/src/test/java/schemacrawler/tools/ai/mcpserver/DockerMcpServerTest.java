@@ -19,6 +19,7 @@ import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 import static org.mockito.Mockito.spy;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +28,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
-import schemacrawler.tools.ai.mcpserver.DockerMcpServer.McpServerContext;
 import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 

@@ -8,9 +8,10 @@
 
 package schemacrawler.tools.ai.tools;
 
-import java.util.UUID;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 import static java.util.Objects.requireNonNull;
+
+import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
+import java.util.UUID;
 import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 

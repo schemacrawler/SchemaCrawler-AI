@@ -8,8 +8,9 @@
 
 package schemacrawler.tools.ai.tools;
 
-import java.util.regex.Pattern;
 import static us.fatehi.utility.Utility.isBlank;
+
+import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;

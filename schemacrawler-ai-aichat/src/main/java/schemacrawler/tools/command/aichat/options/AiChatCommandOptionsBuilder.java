@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat.options;
 
 import static us.fatehi.utility.Utility.isBlank;
+
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.options.Config;

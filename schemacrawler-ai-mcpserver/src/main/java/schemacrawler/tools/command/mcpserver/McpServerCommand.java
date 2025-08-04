@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.mcpserver;
 
 import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
