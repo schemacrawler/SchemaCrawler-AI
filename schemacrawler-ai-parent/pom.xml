@@ -6,12 +6,12 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>16.26.3</version>
+    <version>16.27.1</version>
     <relativePath />
   </parent>
 
   <artifactId>schemacrawler-ai-parent</artifactId>
-  <version>16.26.3-4</version>
+  <version>16.27.1-4</version>
   <packaging>pom</packaging>
   <name>SchemaCrawler AI [Parent]</name>
   <description>Free database schema discovery and comprehension tool</description>
@@ -21,7 +21,7 @@
     <java.version>21</java.version>
     <maven.compiler.source>21</maven.compiler.source>
     <maven.compiler.target>21</maven.compiler.target>
-    <schemacrawler.version>16.26.3</schemacrawler.version>
+    <schemacrawler.version>16.27.1</schemacrawler.version>
   </properties>
 
   <dependencyManagement>
