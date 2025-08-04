@@ -2,8 +2,8 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v16.27.1-4"></a>
-## Release 16.27.1-4 - 2025-08-04
+<a name="v16.27.1-2"></a>
+## Release 16.27.1-2 - 2025-08-04
 
 - Use later version of Spring AI and Spring Boot
 - Refactor health endpoint to show uptime
@@ -17,7 +17,7 @@ SchemaCrawler AI release notes.
 - Add logging for stdio transport
 
 
-<a name="v16.27.1-4"></a>
+<a name="v16.27.1-2"></a>
 ## Release 16.27.1-2 - 2025-07-15
 
 - Add additional tests, and fix startup issues
