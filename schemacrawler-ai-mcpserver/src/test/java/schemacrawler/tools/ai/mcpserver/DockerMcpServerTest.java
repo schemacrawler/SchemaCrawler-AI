@@ -9,17 +9,12 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -109,8 +104,8 @@ public class DockerMcpServerTest {
     assertThat(arguments.length, greaterThan(0));
     final List<String> argList = Arrays.asList(arguments);
     assertThat(argList, hasItems("--url", "jdbc:test:url"));
-    assertThat(argList, hasItems("--user:env", "testuser"));
-    assertThat(argList, hasItems("--password:env", "testpass"));
+    assertThat(argList, hasItems("--user", "testuser"));
+    assertThat(argList, hasItems("--password", "testpass"));
   }
 
   @Test
