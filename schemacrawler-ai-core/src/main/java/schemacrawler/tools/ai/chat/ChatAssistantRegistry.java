@@ -68,9 +68,10 @@ public final class ChatAssistantRegistry extends BasePluginRegistry {
     for (final Class<? extends ChatAssistant> chatAssistantClass : chatAssistantClasses) {
       try {
         // Initialize the assistant with our parameters
-        final java.lang.reflect.Constructor<?> constructor =
-            chatAssistantClass.getConstructor(ChatOptions.class, Catalog.class, Connection.class);
-        return (ChatAssistant) constructor.newInstance(commandOptions, catalog, connection);
+        final java.lang.reflect.Constructor<?> constructor = chatAssistantClass.getConstructor();
+        final ChatAssistant chatAssistant = (ChatAssistant) constructor.newInstance();
+        chatAssistant.configure(commandOptions, catalog, connection);
+        return chatAssistant;
       } catch (final Exception e) {
         LOGGER.log(
             Level.WARNING,

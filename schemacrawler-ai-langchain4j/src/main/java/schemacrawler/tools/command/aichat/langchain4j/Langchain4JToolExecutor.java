@@ -8,10 +8,11 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import java.sql.Connection;
 import static java.util.Objects.requireNonNull;
+
 import dev.langchain4j.agent.tool.ToolExecutionRequest;
 import dev.langchain4j.service.tool.ToolExecutor;
+import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -30,7 +31,7 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
     requireNonNull(toolExecutionRequest, "No tool execution request provided");
 
     final String functionName = toolExecutionRequest.name();
-    if (!functionToolExecutor.getFunctionName().equals(functionName)) {
+    if (!functionToolExecutor.getFunctionName().getName().equals(functionName)) {
       throw new SchemaCrawlerException(String.format("Cannot execute function <>", functionName));
     }
     final String arguments = toolExecutionRequest.arguments();
