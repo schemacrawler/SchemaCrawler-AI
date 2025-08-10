@@ -9,6 +9,14 @@
 package schemacrawler.tools.command.aichat.langchain4j;
 
 import static schemacrawler.tools.ai.tools.ToolUtility.extractParametersSchema;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
+import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
+import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
+import dev.langchain4j.model.chat.request.json.JsonStringSchema;
+import dev.langchain4j.service.tool.ToolExecutor;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -17,16 +25,10 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.model.chat.request.json.JsonEnumSchema;
-import dev.langchain4j.model.chat.request.json.JsonObjectSchema;
-import dev.langchain4j.model.chat.request.json.JsonSchemaElement;
-import dev.langchain4j.model.chat.request.json.JsonStringSchema;
-import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -40,7 +42,8 @@ public class Langchain4JUtility {
 
     final Map<String, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
+            .getFunctionDefinitions(FunctionReturnType.JSON)) {
       final String functionName = functionDefinition.getName();
 
       final ToolExecutor executor = new Langchain4JToolExecutor(functionName, catalog, connection);
@@ -54,7 +57,8 @@ public class Langchain4JUtility {
 
     final List<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
+            .getFunctionDefinitions(FunctionReturnType.JSON)) {
 
       try {
         final Class<?> parametersClass = functionDefinition.getParametersClass();

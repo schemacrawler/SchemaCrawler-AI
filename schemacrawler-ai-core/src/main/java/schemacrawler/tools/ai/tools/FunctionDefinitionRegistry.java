@@ -8,6 +8,9 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.requireNotBlank;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,7 +19,7 @@ import java.util.Optional;
 import java.util.ServiceLoader;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static us.fatehi.utility.Utility.requireNotBlank;
+import java.util.stream.Collectors;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
@@ -67,8 +70,13 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     functionDefinitionRegistry = loadFunctionDefinitionRegistry();
   }
 
-  public Collection<FunctionDefinition<?>> getFunctionDefinitions() {
-    return new ArrayList<>(functionDefinitionRegistry.values());
+  public Collection<FunctionDefinition<?>> getFunctionDefinitions(
+      final FunctionReturnType returnType) {
+    requireNonNull(returnType, "No return type specified");
+
+    return functionDefinitionRegistry.values().stream()
+        .filter(functionDefinition -> functionDefinition.getFunctionReturnType() == returnType)
+        .collect(Collectors.toList());
   }
 
   @Override
@@ -87,13 +95,12 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   }
 
   public Collection<ToolSpecification> getToolSpecifications(final FunctionReturnType returnType) {
-    final Collection<ToolSpecification> toolSpecifications = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
-      if (functionDefinition.getFunctionReturnType() == returnType) {
-        toolSpecifications.add(ToolUtility.toToolSpecification(functionDefinition));
-      }
-    }
-    return toolSpecifications;
+    requireNonNull(returnType, "No return type specified");
+
+    return functionDefinitionRegistry.values().stream()
+        .filter(functionDefinition -> functionDefinition.getFunctionReturnType() == returnType)
+        .map(ToolUtility::toToolSpecification)
+        .collect(Collectors.toList());
   }
 
   public boolean hasFunctionDefinition(final String functionName) {
@@ -104,8 +111,7 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     requireNotBlank(functionName, "No function name provided");
 
     FunctionDefinition<?> functionDefinitionToCall = null;
-    for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+    for (final FunctionDefinition<?> functionDefinition : functionDefinitionRegistry.values()) {
       if (functionDefinition.getName().equals(functionName)) {
         functionDefinitionToCall = functionDefinition;
         break;

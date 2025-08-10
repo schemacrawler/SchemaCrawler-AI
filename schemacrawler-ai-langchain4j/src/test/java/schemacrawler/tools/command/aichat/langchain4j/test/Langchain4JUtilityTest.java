@@ -14,15 +14,17 @@ import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.mockito.Mockito.mock;
+
+import dev.langchain4j.agent.tool.ToolSpecification;
+import dev.langchain4j.service.tool.ToolExecutor;
 import java.sql.Connection;
 import java.util.List;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
-import dev.langchain4j.agent.tool.ToolSpecification;
-import dev.langchain4j.service.tool.ToolExecutor;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JUtility;
 
 public class Langchain4JUtilityTest {
@@ -51,7 +53,7 @@ public class Langchain4JUtilityTest {
     final int userFunctionCount =
         (int)
             FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-                .getFunctionDefinitions()
+                .getFunctionDefinitions(FunctionReturnType.JSON)
                 .stream()
                 .count();
 

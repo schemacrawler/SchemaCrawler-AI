@@ -37,4 +37,9 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
     final String arguments = toolExecutionRequest.arguments();
     return functionToolExecutor.execute(arguments);
   }
+
+  @Override
+  public String toString() {
+    return functionToolExecutor.getFunctionName().toString();
+  }
 }
