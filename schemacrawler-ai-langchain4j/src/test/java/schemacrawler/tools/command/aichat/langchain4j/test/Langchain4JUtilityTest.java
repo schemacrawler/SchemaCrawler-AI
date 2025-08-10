@@ -53,7 +53,7 @@ public class Langchain4JUtilityTest {
     final int userFunctionCount =
         (int)
             FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-                .getFunctionDefinitions(FunctionReturnType.JSON)
+                .getFunctionDefinitions(FunctionReturnType.TEXT)
                 .stream()
                 .count();
 

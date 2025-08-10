@@ -13,6 +13,7 @@ import static org.mockito.Mockito.mock;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.schema.Catalog;
@@ -22,8 +23,8 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.text.NoParameters;
 
 @WithTestDatabase
 @ResolveTestContext
