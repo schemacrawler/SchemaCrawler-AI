@@ -31,10 +31,15 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
     requireNonNull(toolExecutionRequest, "No tool execution request provided");
 
     final String functionName = toolExecutionRequest.name();
-    if (!functionToolExecutor.getFunctionName().equals(functionName)) {
+    if (!functionToolExecutor.getFunctionName().getName().equals(functionName)) {
       throw new SchemaCrawlerException(String.format("Cannot execute function <>", functionName));
     }
     final String arguments = toolExecutionRequest.arguments();
     return functionToolExecutor.execute(arguments);
+  }
+
+  @Override
+  public String toString() {
+    return functionToolExecutor.getFunctionName().toString();
   }
 }

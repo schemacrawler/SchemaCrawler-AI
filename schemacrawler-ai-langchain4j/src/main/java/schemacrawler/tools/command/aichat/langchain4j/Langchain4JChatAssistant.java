@@ -50,49 +50,19 @@ public class Langchain4JChatAssistant implements ChatAssistant {
   private static final Logger LOGGER =
       Logger.getLogger(Langchain4JChatAssistant.class.getCanonicalName());
 
-  private final ChatModel model;
-  private final ChatMemory chatMemory;
-  private final List<ToolSpecification> toolSpecifications;
-  private final Map<String, ToolExecutor> toolExecutors;
-  private final ContentRetriever contentRetriever;
-  private final String metadataPriming;
-  private final int chatContextWindowSize;
+  private boolean isConfigured;
+  private ChatModel model;
+  private ChatMemory chatMemory;
+  private List<ToolSpecification> toolSpecifications;
+  private Map<String, ToolExecutor> toolExecutors;
+  private ContentRetriever contentRetriever;
+  private String metadataPriming;
+  private int chatContextWindowSize;
   private boolean shouldExit;
 
-  public Langchain4JChatAssistant(
-      final ChatOptions aiChatOptions, final Catalog catalog, final Connection connection) {
-
-    requireNonNull(aiChatOptions, "AI chat options not provided");
-    requireNonNull(catalog, "No catalog provided");
-    requireNonNull(connection, "No connection provided");
-
-    final AiModelFactory modelFactory = AiModelFactoryUtility.chooseAiModelFactory(aiChatOptions);
-    if (modelFactory == null) {
-      throw new SchemaCrawlerException("No models found");
-    }
-
-    chatContextWindowSize = aiChatOptions.context();
-
-    model = modelFactory.newChatModel();
-    chatMemory = modelFactory.newChatMemory();
-
-    final boolean useMetadata = aiChatOptions.useMetadata();
-    if (useMetadata) {
-      final EmbeddingModel embeddingModel;
-      if (modelFactory.hasEmbeddingModel()) {
-        embeddingModel = modelFactory.newEmbeddingModel();
-      } else {
-        embeddingModel = null;
-      }
-      contentRetriever = new FullTextCatalogContentRetriever(embeddingModel, catalog);
-    } else {
-      contentRetriever = query -> Collections.emptyList();
-    }
-
-    toolSpecifications = Langchain4JUtility.tools();
-    toolExecutors = Langchain4JUtility.toolExecutors(catalog, connection);
-
-    metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
+  public Langchain4JChatAssistant() {
+    // Required to load from service loader
+    // Not configured
   }
 
   /**
@@ -102,6 +72,10 @@ public class Langchain4JChatAssistant implements ChatAssistant {
    */
   @Override
   public String chat(final String prompt) {
+
+    if (!isConfigured) {
+      throw new SchemaCrawlerException("Chat assistant is not configured");
+    }
 
     try {
       if (isBlank(prompt)) {
@@ -150,6 +124,49 @@ public class Langchain4JChatAssistant implements ChatAssistant {
 
   @Override
   public void close() {}
+
+  @Override
+  public void configure(
+      final ChatOptions aiChatOptions, final Catalog catalog, final Connection connection) {
+
+    if (isConfigured) {
+      throw new SchemaCrawlerException("Chat assistant is already configured");
+    }
+
+    requireNonNull(aiChatOptions, "AI chat options not provided");
+    requireNonNull(catalog, "No catalog provided");
+    requireNonNull(connection, "No connection provided");
+
+    final AiModelFactory modelFactory = AiModelFactoryUtility.chooseAiModelFactory(aiChatOptions);
+    if (modelFactory == null) {
+      throw new SchemaCrawlerException("No models found");
+    }
+
+    chatContextWindowSize = aiChatOptions.context();
+
+    model = modelFactory.newChatModel();
+    chatMemory = modelFactory.newChatMemory();
+
+    final boolean useMetadata = aiChatOptions.useMetadata();
+    if (useMetadata) {
+      final EmbeddingModel embeddingModel;
+      if (modelFactory.hasEmbeddingModel()) {
+        embeddingModel = modelFactory.newEmbeddingModel();
+      } else {
+        embeddingModel = null;
+      }
+      contentRetriever = new FullTextCatalogContentRetriever(embeddingModel, catalog);
+    } else {
+      contentRetriever = query -> Collections.emptyList();
+    }
+
+    toolSpecifications = Langchain4JUtility.tools();
+    toolExecutors = Langchain4JUtility.toolExecutors(catalog, connection);
+
+    metadataPriming = IOUtility.readResourceFully("/metadata-priming.txt");
+
+    isConfigured = true;
+  }
 
   @Override
   public boolean shouldExit() {

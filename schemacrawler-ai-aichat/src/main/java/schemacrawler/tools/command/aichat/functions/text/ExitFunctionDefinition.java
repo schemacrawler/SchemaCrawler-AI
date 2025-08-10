@@ -8,14 +8,16 @@
 
 package schemacrawler.tools.command.aichat.functions.text;
 
+import schemacrawler.tools.ai.tools.NoParameters;
+
 public final class ExitFunctionDefinition extends AbstractTextFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Indicate when the user is done with their research,
-        and wants to end the chat session.
-        """
+    Indicate when the user is done with their research,
+    and wants to end the chat session.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();

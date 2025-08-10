@@ -20,14 +20,14 @@
       <dependency>
         <groupId>dev.langchain4j</groupId>
         <artifactId>langchain4j-bom</artifactId>
-        <version>1.1.0</version>
+        <version>1.2.0</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>dev.langchain4j</groupId>
         <artifactId>langchain4j-community</artifactId>
-        <version>1.1.0-beta7</version>
+        <version>1.2.0-beta8</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -64,7 +64,7 @@
     <dependency>
       <groupId>dev.langchain4j</groupId>
       <artifactId>langchain4j-community-lucene</artifactId>
-      <version>1.1.0-beta7</version>
+      <version>1.2.0-beta8</version>
     </dependency>
     <dependency>
       <groupId>dev.langchain4j</groupId>

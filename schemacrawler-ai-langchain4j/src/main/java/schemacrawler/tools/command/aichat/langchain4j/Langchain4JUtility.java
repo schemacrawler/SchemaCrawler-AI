@@ -28,6 +28,7 @@ import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -41,7 +42,8 @@ public class Langchain4JUtility {
 
     final Map<String, ToolExecutor> toolSpecificationsMap = new HashMap<>();
     for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
+            .getFunctionDefinitions(FunctionReturnType.TEXT)) {
       final String functionName = functionDefinition.getName();
 
       final ToolExecutor executor = new Langchain4JToolExecutor(functionName, catalog, connection);
@@ -55,7 +57,8 @@ public class Langchain4JUtility {
 
     final List<ToolSpecification> toolSpecifications = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry().getFunctionDefinitions()) {
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
+            .getFunctionDefinitions(FunctionReturnType.TEXT)) {
 
       try {
         final Class<?> parametersClass = functionDefinition.getParametersClass();

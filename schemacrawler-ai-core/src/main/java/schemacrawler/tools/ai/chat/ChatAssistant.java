@@ -8,9 +8,14 @@
 
 package schemacrawler.tools.ai.chat;
 
+import java.sql.Connection;
+import schemacrawler.schema.Catalog;
+
 public interface ChatAssistant extends AutoCloseable {
 
   String chat(String prompt);
 
   boolean shouldExit();
+
+  void configure(ChatOptions aiChatOptions, Catalog catalog, Connection connection);
 }

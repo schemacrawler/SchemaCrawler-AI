@@ -36,8 +36,44 @@ import us.fatehi.utility.property.PropertyName;
 
 public class AllFunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 8;
+  private static final int NUM_TEXT_FUNCTIONS = 4;
   private static final int NUM_JSON_FUNCTIONS = 4;
+
+  @Test
+  public void getJsonFunctions() throws Exception {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functions =
+        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+    assertThat(functions, hasSize(NUM_JSON_FUNCTIONS));
+    assertThat(
+        functions.stream()
+            .map(function -> function.getClass().getSimpleName())
+            .collect(Collectors.toList()),
+        containsInAnyOrder(
+            DescribeRoutinesFunctionDefinition.class.getSimpleName(),
+            DescribeTablesFunctionDefinition.class.getSimpleName(),
+            ListFunctionDefinition.class.getSimpleName(),
+            ListAcrossTablesFunctionDefinition.class.getSimpleName()));
+  }
+
+  @Test
+  public void getTextFunctions() throws Exception {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functions =
+        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
+    assertThat(functions, hasSize(NUM_TEXT_FUNCTIONS));
+    assertThat(
+        functions.stream()
+            .map(function -> function.getClass().getSimpleName())
+            .collect(Collectors.toList()),
+        containsInAnyOrder(
+            DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
+            DatabaseObjectListFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
+            ExitFunctionDefinition.class.getSimpleName()));
+  }
 
   @Test
   public void name() {
@@ -53,7 +89,7 @@ public class AllFunctionDefinitionRegistryTest {
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
 
-    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
+    assertThat(functionDefinitions, hasSize(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
@@ -71,34 +107,14 @@ public class AllFunctionDefinitionRegistryTest {
   }
 
   @Test
-  public void testCommandPlugin() throws Exception {
-    final FunctionDefinitionRegistry registry =
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
-    assertThat(functions, hasSize(NUM_FUNCTIONS));
-    assertThat(
-        functions.stream()
-            .map(function -> function.getClass().getSimpleName())
-            .collect(Collectors.toList()),
-        containsInAnyOrder(
-            DatabaseObjectListFunctionDefinition.class.getSimpleName(),
-            DescribeTablesFunctionDefinition.class.getSimpleName(),
-            DescribeRoutinesFunctionDefinition.class.getSimpleName(),
-            DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
-            LintFunctionDefinition.class.getSimpleName(),
-            ExitFunctionDefinition.class.getSimpleName(),
-            ListFunctionDefinition.class.getSimpleName(),
-            ListAcrossTablesFunctionDefinition.class.getSimpleName()));
-  }
-
-  @Test
   public void testGetFunctionDefinitions() {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
+    final Collection<FunctionDefinition<?>> functions =
+        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
 
     assertThat(functions, notNullValue());
-    assertThat(functions.size(), is(NUM_FUNCTIONS));
+    assertThat(functions.size(), is(NUM_TEXT_FUNCTIONS));
   }
 
   @Test
@@ -118,7 +134,7 @@ public class AllFunctionDefinitionRegistryTest {
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
-    assertThat(names.size(), is(NUM_FUNCTIONS));
+    assertThat(names.size(), is(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
   }
 
   @Test

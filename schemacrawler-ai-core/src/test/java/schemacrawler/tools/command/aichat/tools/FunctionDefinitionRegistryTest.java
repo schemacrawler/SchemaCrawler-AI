@@ -32,7 +32,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 4;
+  private static final int NUM_TEXT_FUNCTIONS = 0;
   private static final int NUM_JSON_FUNCTIONS = 4;
 
   @Test
@@ -49,7 +49,7 @@ public class FunctionDefinitionRegistryTest {
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     final Collection<PropertyName> functionDefinitions = registry.getRegisteredPlugins();
 
-    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
+    assertThat(functionDefinitions, hasSize(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
@@ -62,8 +62,9 @@ public class FunctionDefinitionRegistryTest {
   public void testCommandPlugin() throws Exception {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
-    assertThat(functions, hasSize(NUM_FUNCTIONS));
+    final Collection<FunctionDefinition<?>> functions =
+        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+    assertThat(functions, hasSize(NUM_JSON_FUNCTIONS));
     assertThat(
         functions.stream()
             .map(function -> function.getClass().getSimpleName())
@@ -79,10 +80,18 @@ public class FunctionDefinitionRegistryTest {
   public void testGetFunctionDefinitions() {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions = registry.getFunctionDefinitions();
 
-    assertThat(functions, notNullValue());
-    assertThat(functions.size(), is(NUM_FUNCTIONS));
+    final Collection<FunctionDefinition<?>> testFunctions =
+        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
+
+    assertThat(testFunctions, notNullValue());
+    assertThat(testFunctions.size(), is(NUM_TEXT_FUNCTIONS));
+
+    final Collection<FunctionDefinition<?>> jsonFunctions =
+        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+
+    assertThat(jsonFunctions, notNullValue());
+    assertThat(jsonFunctions.size(), is(NUM_JSON_FUNCTIONS));
   }
 
   @Test
@@ -102,7 +111,7 @@ public class FunctionDefinitionRegistryTest {
 
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
-    assertThat(names.size(), is(NUM_FUNCTIONS));
+    assertThat(names.size(), is(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
   }
 
   @Test
@@ -113,7 +122,7 @@ public class FunctionDefinitionRegistryTest {
     final Collection<ToolSpecification> textToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.TEXT);
     assertThat(textToolSpecifications, notNullValue());
-    assertThat(textToolSpecifications.size(), is(0));
+    assertThat(textToolSpecifications.size(), is(NUM_TEXT_FUNCTIONS));
 
     final Collection<ToolSpecification> jsonToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.JSON);

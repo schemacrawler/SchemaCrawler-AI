@@ -10,6 +10,7 @@ package schemacrawler.tools.command.aichat.langchain4j.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,6 +19,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedConstruction;
 import org.mockito.Mockito;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.chat.ChatAssistant;
 import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JChatAssistant;
 
@@ -40,12 +42,14 @@ public class Langchain4JChatAssistantTest {
             })) {
 
       // Act
-      final Langchain4JChatAssistant assistant =
-          new Langchain4JChatAssistant(mockOptions, mockCatalog, mockConnection);
+      final ChatAssistant assistant = new Langchain4JChatAssistant();
+      assistant.configure(mockOptions, mockCatalog, mockConnection);
       final String result = assistant.chat("");
 
       // Assert
       assertThat(result, is(""));
+
+      assertDoesNotThrow(() -> assistant.close());
     }
   }
 
@@ -69,12 +73,14 @@ public class Langchain4JChatAssistantTest {
             })) {
 
       // Act
-      final Langchain4JChatAssistant assistant =
-          new Langchain4JChatAssistant(mockOptions, mockCatalog, mockConnection);
+      final ChatAssistant assistant = new Langchain4JChatAssistant();
+      assistant.configure(mockOptions, mockCatalog, mockConnection);
       final String result = assistant.chat(prompt);
 
       // Assert
       assertThat(result, is(expectedResponse));
+
+      assertDoesNotThrow(() -> assistant.close());
     }
   }
 
@@ -90,11 +96,9 @@ public class Langchain4JChatAssistantTest {
         Mockito.mockConstruction(Langchain4JChatAssistant.class)) {
 
       // Act
-      final Langchain4JChatAssistant assistant =
-          new Langchain4JChatAssistant(mockOptions, mockCatalog, mockConnection);
-      assistant.close();
-
-      // No assertion needed, just verifying it doesn't throw an exception
+      final ChatAssistant assistant = new Langchain4JChatAssistant();
+      assistant.configure(mockOptions, mockCatalog, mockConnection);
+      assertDoesNotThrow(() -> assistant.close());
     }
   }
 
@@ -115,11 +119,13 @@ public class Langchain4JChatAssistantTest {
             })) {
 
       // Act
-      final Langchain4JChatAssistant assistant =
-          new Langchain4JChatAssistant(mockOptions, mockCatalog, mockConnection);
+      final ChatAssistant assistant = new Langchain4JChatAssistant();
+      assistant.configure(mockOptions, mockCatalog, mockConnection);
 
       // Assert
       assertThat(assistant.shouldExit(), is(true));
+
+      assertDoesNotThrow(() -> assistant.close());
     }
   }
 }
