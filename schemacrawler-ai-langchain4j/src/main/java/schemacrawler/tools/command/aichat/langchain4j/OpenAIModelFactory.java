@@ -8,8 +8,8 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import java.time.Duration;
 import static java.util.Objects.requireNonNull;
+
 import dev.langchain4j.memory.ChatMemory;
 import dev.langchain4j.memory.chat.TokenWindowChatMemory;
 import dev.langchain4j.model.chat.ChatModel;
@@ -19,6 +19,7 @@ import dev.langchain4j.model.openai.OpenAiChatModelName;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModel;
 import dev.langchain4j.model.openai.OpenAiEmbeddingModelName;
 import dev.langchain4j.model.openai.OpenAiTokenCountEstimator;
+import java.time.Duration;
 import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.command.aichat.langchain4j.AiModelFactoryUtility.AiModelFactory;
 import us.fatehi.utility.property.PropertyName;

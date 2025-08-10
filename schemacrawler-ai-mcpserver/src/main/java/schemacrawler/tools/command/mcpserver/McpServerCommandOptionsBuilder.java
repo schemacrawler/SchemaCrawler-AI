@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.mcpserver;
 
 import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
+
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;

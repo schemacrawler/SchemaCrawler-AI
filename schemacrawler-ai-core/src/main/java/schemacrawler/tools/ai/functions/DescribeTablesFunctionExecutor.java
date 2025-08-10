@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.DEFAULT;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;

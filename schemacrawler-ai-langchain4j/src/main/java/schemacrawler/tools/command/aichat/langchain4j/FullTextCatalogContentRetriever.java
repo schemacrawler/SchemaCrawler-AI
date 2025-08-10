@@ -8,11 +8,8 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import java.util.List;
-import java.util.Map;
-import java.util.logging.Logger;
-import org.apache.lucene.store.Directory;
 import static java.util.Objects.requireNonNull;
+
 import dev.langchain4j.community.rag.content.retriever.lucene.LuceneContentRetriever;
 import dev.langchain4j.community.rag.content.retriever.lucene.LuceneEmbeddingStore;
 import dev.langchain4j.data.document.Metadata;
@@ -21,6 +18,10 @@ import dev.langchain4j.model.embedding.EmbeddingModel;
 import dev.langchain4j.rag.content.Content;
 import dev.langchain4j.rag.content.retriever.ContentRetriever;
 import dev.langchain4j.rag.query.Query;
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Logger;
+import org.apache.lucene.store.Directory;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schema.Table;

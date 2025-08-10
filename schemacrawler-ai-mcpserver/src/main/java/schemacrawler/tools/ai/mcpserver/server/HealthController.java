@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import jakarta.annotation.PostConstruct;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -18,7 +19,6 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import jakarta.annotation.PostConstruct;
 
 /** Simple controller to check if the server is running. */
 @RestController

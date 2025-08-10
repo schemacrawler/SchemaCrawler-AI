@@ -10,6 +10,7 @@ package schemacrawler.tools.command.aichat.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.executable.CommandRegistry;

@@ -8,10 +8,11 @@
 
 package schemacrawler.tools.ai.model;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
-import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;

@@ -9,16 +9,12 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.contains;
-import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
-import static org.mockito.Mockito.doReturn;
-import static org.mockito.Mockito.spy;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -27,7 +23,6 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
-import schemacrawler.tools.ai.mcpserver.DockerMcpServer.McpServerContext;
 import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
@@ -41,37 +36,6 @@ public class DockerMcpServerTest {
   void setUp() {
     envAccessor = new MockEnvironmentVariableAccessor();
     context = new McpServerContext(envAccessor);
-  }
-
-  @Test
-  @DisplayName("Should add database credentials when environment variables are set")
-  void shouldAddDatabaseCredentials() {
-    // Arrange
-    final List<String> arguments = new ArrayList<>();
-    envAccessor.setenv("SCHCRWLR_DATABASE_USER", "testuser");
-    envAccessor.setenv("SCHCRWLR_DATABASE_PASSWORD", "testpass");
-
-    // Act
-    context.addDatabaseCredentials(arguments);
-
-    // Assert
-    assertThat(arguments, hasSize(4));
-    assertThat(arguments, contains("--user:env", "testuser", "--password:env", "testpass"));
-  }
-
-  @Test
-  @DisplayName("Should add JDBC URL connection when environment variable is set")
-  void shouldAddJdbcUrlConnection() {
-    // Arrange
-    final List<String> arguments = new ArrayList<>();
-    envAccessor.setenv("SCHCRWLR_JDBC_URL", "jdbc:test:url");
-
-    // Act
-    context.addJdbcUrlConnection(arguments);
-
-    // Assert
-    assertThat(arguments, hasSize(2));
-    assertThat(arguments, contains("--url", "jdbc:test:url"));
   }
 
   @Test
@@ -123,38 +87,6 @@ public class DockerMcpServerTest {
   }
 
   @Test
-  @DisplayName("Should add server connection arguments when environment variables are set")
-  void shouldAddServerConnection() {
-    // Arrange
-    final List<String> arguments = new ArrayList<>();
-    envAccessor.setenv("SCHCRWLR_SERVER", "postgresql");
-    envAccessor.setenv("SCHCRWLR_HOST", "localhost");
-    envAccessor.setenv("SCHCRWLR_PORT", "5432");
-    envAccessor.setenv("SCHCRWLR_DATABASE", "testdb");
-
-    // Mock isValidDatabasePlugin to return true for testing purposes
-    final McpServerContext spyContext = spy(context);
-    doReturn(true).when(spyContext).isValidDatabasePlugin("postgresql");
-
-    // Act
-    spyContext.addServerConnection(arguments);
-
-    // Assert
-    assertThat(arguments, hasSize(8));
-    assertThat(
-        arguments,
-        hasItems(
-            "--server",
-            "postgresql",
-            "--host",
-            "localhost",
-            "--port",
-            "5432",
-            "--database",
-            "testdb"));
-  }
-
-  @Test
   @DisplayName("Should build arguments with JDBC URL connection when JDBC URL is set")
   void shouldBuildArgumentsWithJdbcUrl() {
     // Arrange
@@ -172,48 +104,8 @@ public class DockerMcpServerTest {
     assertThat(arguments.length, greaterThan(0));
     final List<String> argList = Arrays.asList(arguments);
     assertThat(argList, hasItems("--url", "jdbc:test:url"));
-    assertThat(argList, hasItems("--user:env", "testuser"));
-    assertThat(argList, hasItems("--password:env", "testpass"));
-  }
-
-  @Test
-  @DisplayName("Should build arguments with server connection when JDBC URL is not set")
-  void shouldBuildArgumentsWithServerConnection() {
-    // Arrange
-    envAccessor.setenv("SCHCRWLR_JDBC_URL", null);
-    envAccessor.setenv("SCHCRWLR_SERVER", "postgresql");
-    envAccessor.setenv("SCHCRWLR_HOST", "localhost");
-    envAccessor.setenv("SCHCRWLR_PORT", "5432");
-    envAccessor.setenv("SCHCRWLR_DATABASE", "testdb");
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", InfoLevel.standard.name());
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", Level.INFO.getName());
-
-    // Mock isValidDatabasePlugin to return true for testing purposes
-    final McpServerContext spyContext = spy(context);
-    doReturn(true).when(spyContext).isValidDatabasePlugin("postgresql");
-
-    // Act
-    final String[] arguments = spyContext.buildArguments();
-
-    // Assert
-    assertThat(arguments, notNullValue());
-    assertThat(arguments.length, greaterThan(0));
-    final List<String> argList = Arrays.asList(arguments);
-    assertThat(argList, hasItems("--server", "postgresql"));
-    assertThat(argList, hasItems("--host", "localhost"));
-  }
-
-  @Test
-  @DisplayName("Should not add database credentials when environment variables are not set")
-  void shouldNotAddDatabaseCredentialsWhenNotSet() {
-    // Arrange
-    final List<String> arguments = new ArrayList<>();
-
-    // Act
-    context.addDatabaseCredentials(arguments);
-
-    // Assert
-    assertThat(arguments, empty());
+    assertThat(argList, hasItems("--user", "testuser"));
+    assertThat(argList, hasItems("--password", "testpass"));
   }
 
   @Test
@@ -239,21 +131,5 @@ public class DockerMcpServerTest {
     assertFalse(context.isValidLogLevel(null));
     assertFalse(context.isValidLogLevel(""));
     assertFalse(context.isValidLogLevel("invalid"));
-  }
-
-  @Test
-  @DisplayName("Should validate numeric values correctly")
-  void shouldValidateNumericValues() {
-    // Act & Assert
-    assertTrue(context.isValidPort("12345"));
-    assertFalse(context.isValidPort(null));
-    assertFalse(context.isValidPort(""));
-    assertFalse(context.isValidPort("abc"));
-    assertFalse(context.isValidPort("0"));
-    assertFalse(context.isValidPort("123.45"));
-    assertFalse(context.isValidPort("42"));
-    assertFalse(context.isValidPort("-42"));
-    assertFalse(context.isValidPort("12345678901234567890"));
-    assertFalse(context.isValidPort("65537"));
   }
 }

@@ -8,14 +8,15 @@
 
 package schemacrawler.tools.command.aichat;
 
+import static us.fatehi.utility.Utility.isBlank;
+
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.ai.chat.ChatAssistant;
 import schemacrawler.tools.ai.chat.ChatAssistantRegistry;
+import schemacrawler.tools.ai.chat.ChatOptions;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 

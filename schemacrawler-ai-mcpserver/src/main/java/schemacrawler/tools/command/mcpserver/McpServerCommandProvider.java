@@ -10,6 +10,7 @@ package schemacrawler.tools.command.mcpserver;
 
 import static schemacrawler.tools.command.mcpserver.McpServerCommand.COMMAND;
 import static schemacrawler.tools.executable.commandline.PluginCommand.newPluginCommand;
+
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.executable.BaseCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;

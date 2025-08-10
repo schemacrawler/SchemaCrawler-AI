@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat.function.test;
 
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
+
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;

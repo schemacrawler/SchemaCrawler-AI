@@ -15,6 +15,7 @@ import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
+
 import java.sql.Connection;
 import java.util.List;
 import org.junit.jupiter.api.BeforeAll;

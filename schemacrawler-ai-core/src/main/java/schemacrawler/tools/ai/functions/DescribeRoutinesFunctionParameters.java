@@ -8,12 +8,12 @@
 
 package schemacrawler.tools.ai.functions;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import java.util.ArrayList;
+import java.util.Collection;
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.utility.JsonUtility;

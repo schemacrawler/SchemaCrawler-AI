@@ -8,8 +8,9 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import java.sql.Connection;
 import static java.util.Objects.requireNonNull;
+
+import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 

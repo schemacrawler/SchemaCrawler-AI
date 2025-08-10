@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
+
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;

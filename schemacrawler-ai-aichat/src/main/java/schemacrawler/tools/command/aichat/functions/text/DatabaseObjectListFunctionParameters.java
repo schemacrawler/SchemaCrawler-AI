@@ -9,6 +9,7 @@
 package schemacrawler.tools.command.aichat.functions.text;
 
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
