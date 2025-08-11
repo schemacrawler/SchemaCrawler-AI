@@ -1,7 +1,7 @@
 name: Build and Publish SchemaCrawler AI Docker Image
 
 on:
-  workflow_dispatch:
+  # workflow_dispatch:
   push:
     tags:
       - 'v*'
@@ -70,7 +70,7 @@ jobs:
         push: true
 
     - id: build-docker-early-release
-      name: Build and push SchemaCrawler AI early release Docker image
+      name: Build and push SchemaCrawler AI Early Release Docker image
       uses: docker/build-push-action@v6
       with:
         file: ./Dockerfile
