@@ -26,6 +26,7 @@
       <scope>runtime</scope>
       <includes>
         <include>us.fatehi:schemacrawler-ai-core</include>
+        <include>us.fatehi:schemacrawler-ai-aichat</include>
         <include>us.fatehi:schemacrawler-ai-langchain4j</include>
         <include>us.fatehi:schemacrawler-ai-mcpserver</include>
       </includes>
@@ -39,9 +40,9 @@
       <useTransitiveFiltering>false</useTransitiveFiltering>
       <scope>runtime</scope>
       <excludes>
-		<exclude>com.typesafe:*</exclude>
-		<exclude>jline:*</exclude>
-	    <exclude>org.slf4j:*</exclude>
+        <exclude>com.typesafe:*</exclude>
+        <exclude>jline:*</exclude>
+        <exclude>org.slf4j:*</exclude>
         <exclude>ch.qos.logback:*</exclude>
         <exclude>com.azure:azure-core-test</exclude>
         <exclude>com.fasterxml.jackson.*:*</exclude>
