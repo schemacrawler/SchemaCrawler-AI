@@ -22,8 +22,8 @@ jobs:
     - id: install-graphviz
       name: Install Graphviz
       uses: sualeh/install-graphviz@v1.0.3
-      
-# BUILD FOR DISTRIBUTION
+
+# BUILD DEPENDENCIES
     - id: checkout-schemacrawler
       name: Checkout SchemaCrawler
       uses: actions/checkout@v4
@@ -31,7 +31,7 @@ jobs:
         repository: schemacrawler/SchemaCrawler
         path: SchemaCrawler
     - id: build-schemacrawler
-      name: Build SchemaCrawler for distribution
+      name: Build SchemaCrawler for local Maven repository
       shell: bash
       run: |
         # Build SchemaCrawler
@@ -39,30 +39,28 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          -DskipTests \
+          -DskipTests=true \
           -Dmaven.javadoc.skip=true \
           clean install
-    - id: checkout-schemacrawler-ai
-      name: Checkout SchemaCrawler-AI
-      uses: actions/checkout@v4
-      with:
-        repository: schemacrawler/SchemaCrawler-AI
-        path: SchemaCrawler-AI
-    - id: build-schemacrawler-ai
-      name: Build SchemaCrawler-AI for distribution
+
+# BUILD AND TEST
+    - id: build-test
+      name: Build and run tests
       shell: bash
       run: |
-        # Build SchemaCrawler-AI
-        cd SchemaCrawler-AI
+        # Build
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          clean install
-        cd ..
-        cp -r ./SchemaCrawler-AI/_ai-distrib ./schemacrawler-ai-lib
+          clean package
+
+    - id: debug-schemacrawler-ai
+      name: Verify SchemaCrawler-AI distribution
+      shell: bash
+      run: |
         # DEBUG
         pwd
-        ls -l ./schemacrawler-ai-lib
+        ls -l ./_ai-distrib
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu

@@ -28,4 +28,4 @@ FROM schemacrawler/schemacrawler:early-access-release
 
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \
-    ./schemacrawler-ai-lib/* /opt/schemacrawler/lib
+    ./_ai-distrib/* /opt/schemacrawler/lib

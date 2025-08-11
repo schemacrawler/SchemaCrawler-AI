@@ -46,6 +46,7 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -DskipTests=true \
+          -Dmaven.javadoc.skip=true \
           clean install
 
 # BUILD AND TEST
