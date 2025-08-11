@@ -39,6 +39,8 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
+          -DskipTests \
+          -Dmaven.javadoc.skip=true \
           clean install
     - id: checkout-schemacrawler-ai
       name: Checkout SchemaCrawler-AI
