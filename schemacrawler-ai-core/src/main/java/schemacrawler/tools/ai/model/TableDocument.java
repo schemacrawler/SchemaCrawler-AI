@@ -40,22 +40,23 @@ import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
 import schemacrawler.schema.View;
+import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "table", "type", "remarks", "columns", "primary-key",
+@JsonPropertyOrder({"schema", "name", "type", "remarks", "columns", "primary-key",
     "referenced-tables", "indexes", "triggers", "attributes", "definition"})
 public final class TableDocument implements Serializable {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
   private final String schemaName;
-  private final String tableName;
-  private final String tableType;
+  private final String name;
+  private final String type;
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<ReferencedTableDocument> referencedTables;
+  private final Collection<ReferencedObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final Collection<TriggerDocument> triggers;
   private final Map<String, String> attributes;
@@ -69,8 +70,8 @@ public final class TableDocument implements Serializable {
     final String schemaName = table.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
 
-    tableName = table.getName();
-    tableType = table.getTableType().toString();
+    name = table.getName();
+    type = MetaDataUtility.getSimpleTypeName(table).name();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();
@@ -96,7 +97,7 @@ public final class TableDocument implements Serializable {
       Collections.sort(new ArrayList<>(childTables));
       referencedTables = new ArrayList<>();
       for (final Table childTable : childTables) {
-        referencedTables.add(new ReferencedTableDocument(childTable));
+        referencedTables.add(new ReferencedObjectDocument(childTable));
       }
     } else {
       referencedTables = null;
@@ -163,6 +164,11 @@ public final class TableDocument implements Serializable {
     return indexes;
   }
 
+  @JsonProperty("name")
+  public String getName() {
+    return name;
+  }
+
   public IndexDocument getPrimaryKey() {
     return primaryKey;
   }
@@ -173,7 +179,7 @@ public final class TableDocument implements Serializable {
    * @return Referenced tables
    */
   @JsonProperty("referenced-tables")
-  public Collection<ReferencedTableDocument> getReferencedTables() {
+  public Collection<ReferencedObjectDocument> getReferencedTables() {
     return referencedTables;
   }
 
@@ -186,18 +192,13 @@ public final class TableDocument implements Serializable {
     return schemaName;
   }
 
-  @JsonProperty("table")
-  public String getTableName() {
-    return tableName;
+  public Collection<TriggerDocument> getTriggers() {
+    return triggers;
   }
 
   @JsonProperty("type")
-  public String getTableType() {
-    return tableType;
-  }
-
-  public Collection<TriggerDocument> getTriggers() {
-    return triggers;
+  public String getType() {
+    return type;
   }
 
   public JsonNode toJson() {

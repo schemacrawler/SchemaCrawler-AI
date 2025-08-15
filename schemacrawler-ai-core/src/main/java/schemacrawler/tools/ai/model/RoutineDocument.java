@@ -9,8 +9,12 @@
 package schemacrawler.tools.ai.model;
 
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
-import static us.fatehi.utility.Utility.trimToEmpty;
-
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -18,18 +22,14 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
+import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "routine", "type", "remarks", "parameters", "definition"})
+@JsonPropertyOrder({"schema", "name", "type", "remarks", "parameters", "definition"})
 public final class RoutineDocument implements Serializable {
 
   private static final long serialVersionUID = 1873929712139211255L;
@@ -48,8 +48,8 @@ public final class RoutineDocument implements Serializable {
   }
 
   private final String schemaName;
-  private final String routineName;
-  private final String routineType;
+  private final String name;
+  private final String type;
   private final String remarks;
   private final List<RoutineParameterDocument> parameters;
   private final String definition;
@@ -62,8 +62,8 @@ public final class RoutineDocument implements Serializable {
     final String schemaName = routine.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
 
-    routineName = routine.getName();
-    routineType = routine.getRoutineType().toString();
+    name = routine.getName();
+    type = MetaDataUtility.getSimpleTypeName(routine).name();
 
     parameters = new ArrayList<>();
     for (final RoutineParameter routineParameter : routine.getParameters()) {
@@ -90,6 +90,11 @@ public final class RoutineDocument implements Serializable {
     return definition;
   }
 
+  @JsonProperty("name")
+  public String getName() {
+    return name;
+  }
+
   public List<RoutineParameterDocument> getParameters() {
     return parameters;
   }
@@ -98,19 +103,14 @@ public final class RoutineDocument implements Serializable {
     return remarks;
   }
 
-  @JsonProperty("routine")
-  public String getRoutineName() {
-    return routineName;
-  }
-
-  @JsonProperty("type")
-  public String getRoutineType() {
-    return routineType;
-  }
-
   @JsonProperty("schema")
   public String getSchema() {
     return schemaName;
+  }
+
+  @JsonProperty("type")
+  public String getType() {
+    return type;
   }
 
   public JsonNode toJson() {
