@@ -92,7 +92,7 @@ public final class RoutineDocument implements Serializable {
     }
 
     parameters = new ArrayList<>();
-    for (final RoutineParameter routineParameter : routine.getParameters()) {
+    for (final RoutineParameter<? extends Routine> routineParameter : routine.getParameters()) {
       final RoutineParameterDocument parameterDocument =
           new RoutineParameterDocument(routineParameter);
       parameters.add(parameterDocument);
