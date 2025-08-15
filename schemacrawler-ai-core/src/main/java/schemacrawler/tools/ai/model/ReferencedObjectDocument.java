@@ -17,28 +17,37 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
-import schemacrawler.schema.Table;
+import schemacrawler.schema.DatabaseObject;
+import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schemaName", "tableName"})
-public final class ReferencedTableDocument implements Serializable {
+@JsonPropertyOrder({"schema", "name", "type"})
+public final class ReferencedObjectDocument implements Serializable {
 
   private static final long serialVersionUID = -2159895984317222363L;
 
   private final String schemaName;
-  private final String tableName;
+  private final String name;
+  private final String type;
 
-  public ReferencedTableDocument(final Table table) {
-    requireNonNull(table, "No table provided");
+  public ReferencedObjectDocument(final DatabaseObject databaseObject) {
+    requireNonNull(databaseObject, "No database object provided");
 
-    final String schema = table.getSchema().getFullName();
+    final String schema = databaseObject.getSchema().getFullName();
     if (!isBlank(schema)) {
       schemaName = schema;
     } else {
       schemaName = null;
     }
-    tableName = table.getName();
+    name = databaseObject.getName();
+
+    type = MetaDataUtility.getSimpleTypeName(databaseObject).name();
+  }
+
+  @JsonProperty("name")
+  public String getObjectName() {
+    return name;
   }
 
   @JsonProperty("schema")
@@ -46,8 +55,8 @@ public final class ReferencedTableDocument implements Serializable {
     return schemaName;
   }
 
-  @JsonProperty("table")
-  public String getTableName() {
-    return tableName;
+  @JsonProperty("type")
+  public String getType() {
+    return type;
   }
 }

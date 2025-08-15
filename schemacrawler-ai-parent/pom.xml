@@ -84,6 +84,12 @@
       </dependency>
       <dependency>
         <groupId>us.fatehi</groupId>
+        <artifactId>schemacrawler-hsqldb</artifactId>
+        <version>${schemacrawler.version}</version>
+        <scope>test</scope>
+      </dependency>
+      <dependency>
+        <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-sqlite</artifactId>
         <version>${schemacrawler.version}</version>
         <scope>test</scope>

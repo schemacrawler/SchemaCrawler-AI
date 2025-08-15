@@ -44,6 +44,7 @@ public record DescribeRoutinesFunctionParameters(
 
   public enum RoutineDescriptionScope {
     DEFAULT(null),
+    REFERENCED_OBJECTS(AdditionalRoutineDetails.REFERENCED_OBJECTS),
     ATTRIBUTES(AdditionalRoutineDetails.ATTRIBUTES),
     DEFINIITION(AdditionalRoutineDetails.DEFINIITION);
 

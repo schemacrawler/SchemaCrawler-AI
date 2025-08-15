@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","tables":[{"schema":"PUBLIC.BOOKS","table":"AUTHORSLIST","type":"view","columns":[{"column":"ID","type":"INTEGER"},{"column":"FIRSTNAME","type":"VARCHAR"},{"column":"LASTNAME","type":"VARCHAR"}]}]}
+{"db":"HSQL Database Engine","tables":[{"schema":"PUBLIC.BOOKS","name":"AUTHORSLIST","type":"view","columns":[{"column":"ID","type":"INTEGER"},{"column":"FIRSTNAME","type":"VARCHAR"},{"column":"LASTNAME","type":"VARCHAR"}]}]}

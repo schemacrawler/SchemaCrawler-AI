@@ -17,24 +17,26 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
+import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"parameter", "remarks", "type"})
+@JsonPropertyOrder({"parameter", "mode", "type", "remarks"})
 public final class RoutineParameterDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
 
   private final String routineParameterName;
+  private final String parameterMode;
   private final String dataType;
   private final String remarks;
 
-  public RoutineParameterDocument(final RoutineParameter routineParameter) {
+  public RoutineParameterDocument(final RoutineParameter<? extends Routine> routineParameter) {
     requireNonNull(routineParameter, "No routine parameter provided");
 
     routineParameterName = routineParameter.getName();
-
+    parameterMode = routineParameter.getParameterMode().name();
     dataType = routineParameter.getColumnDataType().getName();
 
     final String remarks = routineParameter.getRemarks();
@@ -53,6 +55,11 @@ public final class RoutineParameterDocument implements Serializable {
   @JsonProperty("type")
   public String getDataType() {
     return dataType;
+  }
+
+  @JsonProperty("mode")
+  public String getParameterMode() {
+    return parameterMode;
   }
 
   @JsonProperty("remarks")

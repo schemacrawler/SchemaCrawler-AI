@@ -28,6 +28,7 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
@@ -39,13 +40,13 @@ import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
-import schemacrawler.schema.View;
+import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
   "schema",
-  "table",
+  "name",
   "type",
   "remarks",
   "columns",
@@ -61,14 +62,14 @@ public final class TableDocument implements Serializable {
   private static final long serialVersionUID = 1873929712139211255L;
 
   private final String schemaName;
-  private final String tableName;
-  private final String tableType;
+  private final String name;
+  private final String type;
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<ReferencedTableDocument> referencedTables;
+  private final Collection<ReferencedObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
-  private final List<TriggerDocument> triggers;
+  private final Collection<TriggerDocument> triggers;
   private final Map<String, String> attributes;
 
   private final String definition;
@@ -80,8 +81,8 @@ public final class TableDocument implements Serializable {
     final String schemaName = table.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
 
-    tableName = table.getName();
-    tableType = table.getTableType().toString();
+    name = table.getName();
+    type = MetaDataUtility.getSimpleTypeName(table).name();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();
@@ -98,23 +99,21 @@ public final class TableDocument implements Serializable {
     }
 
     if (details.get(REFERENCED_TABLES)) {
-      final Collection<Table> childTables;
-      if (table instanceof View view) {
-        childTables = view.getTableUsage();
-      } else {
-        childTables = table.getDependentTables();
-      }
+      final Collection<Table> references = table.getReferencedObjects();
+      Collections.sort(new ArrayList<>(references));
       referencedTables = new ArrayList<>();
-      for (final Table childTable : childTables) {
-        referencedTables.add(new ReferencedTableDocument(childTable));
+      for (final Table referencedTable : references) {
+        referencedTables.add(new ReferencedObjectDocument(referencedTable));
       }
     } else {
       referencedTables = null;
     }
 
     if (details.get(INDEXES)) {
+      final Collection<Index> tableIndexes = table.getIndexes();
+      Collections.sort(new ArrayList<>(tableIndexes));
       indexes = new ArrayList<>();
-      for (final Index index : table.getIndexes()) {
+      for (final Index index : tableIndexes) {
         indexes.add(new IndexDocument(index));
       }
     } else {
@@ -129,8 +128,10 @@ public final class TableDocument implements Serializable {
     }
 
     if (details.get(TRIGGERS) && table.hasTriggers()) {
+      final Collection<Trigger> tableTriggers = table.getTriggers();
+      Collections.sort(new ArrayList<>(tableTriggers));
       triggers = new ArrayList<>();
-      for (final Trigger trigger : table.getTriggers()) {
+      for (final Trigger trigger : tableTriggers) {
         triggers.add(new TriggerDocument(trigger));
       }
     } else {
@@ -165,22 +166,27 @@ public final class TableDocument implements Serializable {
     return definition;
   }
 
+  public Collection<IndexDocument> getIndexes() {
+    return indexes;
+  }
+
+  @JsonProperty("name")
+  public String getName() {
+    return name;
+  }
+
+  public IndexDocument getPrimaryKey() {
+    return primaryKey;
+  }
+
   /**
    * For tables, these are child tables, and for views, they are "table usage".
    *
    * @return Referenced tables
    */
   @JsonProperty("referenced-tables")
-  public Collection<ReferencedTableDocument> getReferencedTables() {
+  public Collection<ReferencedObjectDocument> getReferencedTables() {
     return referencedTables;
-  }
-
-  public Collection<IndexDocument> getIndexes() {
-    return indexes;
-  }
-
-  public IndexDocument getPrimaryKey() {
-    return primaryKey;
   }
 
   public String getRemarks() {
@@ -192,18 +198,13 @@ public final class TableDocument implements Serializable {
     return schemaName;
   }
 
-  @JsonProperty("table")
-  public String getTableName() {
-    return tableName;
+  public Collection<TriggerDocument> getTriggers() {
+    return triggers;
   }
 
   @JsonProperty("type")
-  public String getTableType() {
-    return tableType;
-  }
-
-  public List<TriggerDocument> getTriggers() {
-    return triggers;
+  public String getType() {
+    return type;
   }
 
   public JsonNode toJson() {
