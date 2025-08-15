@@ -8,12 +8,23 @@
 
 package schemacrawler.tools.ai.model;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.ATTRIBUTES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
+import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -23,29 +34,29 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies;
-import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
-import schemacrawler.schema.View;
 import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "type", "remarks", "columns", "primary-key",
-    "referenced-tables", "indexes", "triggers", "attributes", "definition"})
+@JsonPropertyOrder({
+  "schema",
+  "name",
+  "type",
+  "remarks",
+  "columns",
+  "primary-key",
+  "referenced-tables",
+  "indexes",
+  "triggers",
+  "attributes",
+  "definition"
+})
 public final class TableDocument implements Serializable {
 
   private static final long serialVersionUID = 1873929712139211255L;
@@ -88,16 +99,11 @@ public final class TableDocument implements Serializable {
     }
 
     if (details.get(REFERENCED_TABLES)) {
-      final Collection<Table> childTables;
-      if (table instanceof final View view) {
-        childTables = view.getTableUsage();
-      } else {
-        childTables = table.getDependentTables();
-      }
-      Collections.sort(new ArrayList<>(childTables));
+      final Collection<Table> references = table.getReferencedObjects();
+      Collections.sort(new ArrayList<>(references));
       referencedTables = new ArrayList<>();
-      for (final Table childTable : childTables) {
-        referencedTables.add(new ReferencedObjectDocument(childTable));
+      for (final Table referencedTable : references) {
+        referencedTables.add(new ReferencedObjectDocument(referencedTable));
       }
     } else {
       referencedTables = null;
@@ -234,8 +240,8 @@ public final class TableDocument implements Serializable {
     for (final ForeignKey foreignKey : table.getImportedForeignKeys()) {
       final List<ColumnReference> columnReferences = foreignKey.getColumnReferences();
       for (final ColumnReference columnReference : columnReferences) {
-        referencedColumns.put(columnReference.getForeignKeyColumn().getName(),
-            columnReference.getPrimaryKeyColumn());
+        referencedColumns.put(
+            columnReference.getForeignKeyColumn().getName(), columnReference.getPrimaryKeyColumn());
       }
     }
     return referencedColumns;

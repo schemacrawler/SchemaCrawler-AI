@@ -9,12 +9,9 @@
 package schemacrawler.tools.ai.model;
 
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
-import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.REFERENCED_OBJECTS;
+import static us.fatehi.utility.Utility.trimToEmpty;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
@@ -22,14 +19,30 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static us.fatehi.utility.Utility.trimToEmpty;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
 import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "type", "remarks", "parameters", "definition"})
+@JsonPropertyOrder({
+  "schema",
+  "name",
+  "type",
+  "referenced-objects",
+  "remarks",
+  "parameters",
+  "definition"
+})
 public final class RoutineDocument implements Serializable {
 
   private static final long serialVersionUID = 1873929712139211255L;
@@ -48,8 +61,10 @@ public final class RoutineDocument implements Serializable {
   }
 
   private final String schemaName;
+
   private final String name;
   private final String type;
+  private final Collection<ReferencedObjectDocument> referencedObjects;
   private final String remarks;
   private final List<RoutineParameterDocument> parameters;
   private final String definition;
@@ -64,6 +79,17 @@ public final class RoutineDocument implements Serializable {
 
     name = routine.getName();
     type = MetaDataUtility.getSimpleTypeName(routine).name();
+
+    if (details.get(REFERENCED_OBJECTS)) {
+      final Collection<? extends DatabaseObject> references = routine.getReferencedObjects();
+      Collections.sort(new ArrayList<>(references));
+      referencedObjects = new ArrayList<>();
+      for (final DatabaseObject referencedObject : references) {
+        referencedObjects.add(new ReferencedObjectDocument(referencedObject));
+      }
+    } else {
+      referencedObjects = null;
+    }
 
     parameters = new ArrayList<>();
     for (final RoutineParameter routineParameter : routine.getParameters()) {
@@ -86,6 +112,7 @@ public final class RoutineDocument implements Serializable {
     }
   }
 
+  @JsonProperty("definition")
   public String getDefinition() {
     return definition;
   }
@@ -95,10 +122,17 @@ public final class RoutineDocument implements Serializable {
     return name;
   }
 
+  @JsonProperty("parameters")
   public List<RoutineParameterDocument> getParameters() {
     return parameters;
   }
 
+  @JsonProperty("referenced-objects")
+  public Collection<ReferencedObjectDocument> getReferencedObjects() {
+    return referencedObjects;
+  }
+
+  @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
   }

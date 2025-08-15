@@ -15,7 +15,7 @@ public interface ChatAssistant extends AutoCloseable {
 
   String chat(String prompt);
 
-  boolean shouldExit();
-
   void configure(ChatOptions aiChatOptions, Catalog catalog, Connection connection);
+
+  boolean shouldExit();
 }

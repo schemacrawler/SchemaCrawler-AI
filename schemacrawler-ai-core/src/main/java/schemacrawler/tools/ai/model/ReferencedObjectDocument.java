@@ -8,14 +8,15 @@
 
 package schemacrawler.tools.ai.model;
 
-import java.io.Serializable;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
+import java.io.Serializable;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.utility.MetaDataUtility;
 
@@ -52,5 +53,10 @@ public final class ReferencedObjectDocument implements Serializable {
   @JsonProperty("schema")
   public String getSchemaName() {
     return schemaName;
+  }
+
+  @JsonProperty("type")
+  public String getType() {
+    return type;
   }
 }

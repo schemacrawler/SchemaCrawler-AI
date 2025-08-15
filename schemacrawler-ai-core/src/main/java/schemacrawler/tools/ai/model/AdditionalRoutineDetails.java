@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.model;
 
 public enum AdditionalRoutineDetails {
+  REFERENCED_OBJECTS,
   ATTRIBUTES,
   DEFINIITION
 }
