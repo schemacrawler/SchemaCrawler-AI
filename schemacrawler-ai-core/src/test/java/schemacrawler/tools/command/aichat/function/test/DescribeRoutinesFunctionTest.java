@@ -9,7 +9,6 @@
 package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
@@ -28,15 +27,16 @@ import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
-import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
 import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
+import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSourceUtility;
 
 @WithTestDatabase
 @ResolveTestContext
@@ -83,8 +83,6 @@ public class DescribeRoutinesFunctionTest {
   @BeforeAll
   public void loadCatalog(final Connection connection) throws Exception {
 
-    final SchemaRetrievalOptions schemaRetrievalOptions = TestUtility.newSchemaRetrievalOptions();
-
     final LimitOptionsBuilder limitOptionsBuilder =
         LimitOptionsBuilder.builder()
             .includeSchemas(new RegularExpressionExclusionRule(".*\\.SYSTEM_LOBS"))
@@ -98,7 +96,9 @@ public class DescribeRoutinesFunctionTest {
             .withLimitOptions(limitOptionsBuilder.toOptions())
             .withLoadOptions(loadOptionsBuilder.toOptions());
 
-    catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
+    final DatabaseConnectionSource dataSource =
+        DatabaseConnectionSourceUtility.newTestDatabaseConnectionSource(connection);
+    catalog = SchemaCrawlerUtility.getCatalog(dataSource, schemaCrawlerOptions);
   }
 
   @Test
