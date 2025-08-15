@@ -8,9 +8,11 @@
 
 package schemacrawler.tools.command.aichat.function.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
+import static schemacrawler.test.utility.FileHasContent.classpathResource;
+import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
+import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.REFERENCED_TABLES;
@@ -32,6 +34,7 @@ import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestUtility;
+import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
@@ -138,7 +141,13 @@ public class DescribeTablesFunctionTest {
   public void parameters(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("AUTHORS", null);
-    assertThat(args.toString(), is("{\"table-name\":\"AUTHORS\",\"description-scope\":[]}"));
+
+    final TestWriter testout = new TestWriter();
+    try (final TestWriter out = testout) {
+      out.write(args.toString());
+    }
+    assertThat(
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 
   private void describeTable(
