@@ -9,11 +9,12 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import java.util.ArrayList;
-import java.util.Collection;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static us.fatehi.utility.Utility.isBlank;
+import java.util.ArrayList;
+import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Column;
@@ -86,6 +87,25 @@ public final class ListAcrossTablesFunctionExecutor
         .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
+  private ObjectNode createDependentObjectNode(
+      final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
+    final ObjectNode objectNode = mapper.createObjectNode();
+    final String schemaName = dependantObject.getSchema().getFullName();
+    if (!isBlank(schemaName)) {
+      objectNode.put("schema", schemaName);
+    }
+    objectNode.put("table", dependantObject.getParent().getName());
+    final String nameAttribute = dependantObjectType.nameAttribute();
+    objectNode.put(nameAttribute, dependantObject.getName());
+    if (dependantObject instanceof final Column column) {
+      objectNode.put("data-type", column.getColumnDataType().getName());
+    }
+    if (dependantObject.hasRemarks()) {
+      objectNode.put("remarks", dependantObject.getRemarks());
+    }
+    return objectNode;
+  }
+
   private ArrayNode createTypedObjectsArray(
       final Collection<DependantObject<Table>> dependantObjects,
       final DependantObjectType dependantObjectType) {
@@ -99,8 +119,6 @@ public final class ListAcrossTablesFunctionExecutor
       return list;
     }
 
-    final String nameAttribute = dependantObjectType.nameAttribute();
-
     for (final DependantObject<Table> dependantObject : dependantObjects) {
       if (dependantObject == null
           || !dependantObjectinclusionRule.test(dependantObject.getFullName())
@@ -108,20 +126,7 @@ public final class ListAcrossTablesFunctionExecutor
         continue;
       }
 
-      final ObjectNode objectNode = mapper.createObjectNode();
-      final String schemaName = dependantObject.getSchema().getFullName();
-      if (!isBlank(schemaName)) {
-        objectNode.put("schema", schemaName);
-      }
-      objectNode.put("table", dependantObject.getParent().getName());
-      objectNode.put(nameAttribute, dependantObject.getName());
-      if (dependantObject instanceof final Column column) {
-        objectNode.put("data-type", column.getColumnDataType().getName());
-      }
-      if (dependantObject.hasRemarks()) {
-        objectNode.put("remarks", dependantObject.getRemarks());
-      }
-
+      final ObjectNode objectNode = createDependentObjectNode(dependantObjectType, dependantObject);
       list.add(objectNode);
     }
 
