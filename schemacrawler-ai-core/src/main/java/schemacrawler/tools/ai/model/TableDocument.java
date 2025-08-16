@@ -67,7 +67,7 @@ public final class TableDocument implements Serializable {
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<ReferencedObjectDocument> referencedTables;
+  private final Collection<DatabaseObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final Collection<TriggerDocument> triggers;
   private final Map<String, String> attributes;
@@ -103,7 +103,7 @@ public final class TableDocument implements Serializable {
       Collections.sort(new ArrayList<>(references));
       referencedTables = new ArrayList<>();
       for (final Table referencedTable : references) {
-        referencedTables.add(new ReferencedObjectDocument(referencedTable));
+        referencedTables.add(new DatabaseObjectDocument(referencedTable));
       }
     } else {
       referencedTables = null;
@@ -185,7 +185,7 @@ public final class TableDocument implements Serializable {
    * @return Referenced tables
    */
   @JsonProperty("referenced-tables")
-  public Collection<ReferencedObjectDocument> getReferencedTables() {
+  public Collection<DatabaseObjectDocument> getReferencedTables() {
     return referencedTables;
   }
 

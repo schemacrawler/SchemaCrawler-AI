@@ -18,12 +18,14 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import java.io.Serializable;
 import schemacrawler.schema.DatabaseObject;
-import schemacrawler.utility.MetaDataUtility;
+import schemacrawler.schema.Sequence;
+import schemacrawler.schema.Synonym;
+import schemacrawler.schema.TypedObject;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"schema", "name", "type"})
-public final class ReferencedObjectDocument implements Serializable {
+public final class DatabaseObjectDocument implements Serializable {
 
   private static final long serialVersionUID = -2159895984317222363L;
 
@@ -31,7 +33,7 @@ public final class ReferencedObjectDocument implements Serializable {
   private final String name;
   private final String type;
 
-  public ReferencedObjectDocument(final DatabaseObject databaseObject) {
+  public DatabaseObjectDocument(final DatabaseObject databaseObject) {
     requireNonNull(databaseObject, "No database object provided");
 
     final String schema = databaseObject.getSchema().getFullName();
@@ -42,7 +44,17 @@ public final class ReferencedObjectDocument implements Serializable {
     }
     name = databaseObject.getName();
 
-    type = MetaDataUtility.getSimpleTypeName(databaseObject).name();
+    if (databaseObject instanceof TypedObject typedObject) {
+      type = typedObject.getType().toString();
+    } else {
+      if (databaseObject instanceof Sequence) {
+        type = "sequence";
+      } else if (databaseObject instanceof Synonym) {
+        type = "synonym";
+      } else {
+        type = null;
+      }
+    }
   }
 
   @JsonProperty("name")

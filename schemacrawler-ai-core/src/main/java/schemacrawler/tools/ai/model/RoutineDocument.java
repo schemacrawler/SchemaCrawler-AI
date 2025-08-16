@@ -64,7 +64,7 @@ public final class RoutineDocument implements Serializable {
 
   private final String name;
   private final String type;
-  private final Collection<ReferencedObjectDocument> referencedObjects;
+  private final Collection<DatabaseObjectDocument> referencedObjects;
   private final String remarks;
   private final List<RoutineParameterDocument> parameters;
   private final String definition;
@@ -85,7 +85,7 @@ public final class RoutineDocument implements Serializable {
       Collections.sort(new ArrayList<>(references));
       referencedObjects = new ArrayList<>();
       for (final DatabaseObject referencedObject : references) {
-        referencedObjects.add(new ReferencedObjectDocument(referencedObject));
+        referencedObjects.add(new DatabaseObjectDocument(referencedObject));
       }
     } else {
       referencedObjects = null;
@@ -128,7 +128,7 @@ public final class RoutineDocument implements Serializable {
   }
 
   @JsonProperty("referenced-objects")
-  public Collection<ReferencedObjectDocument> getReferencedObjects() {
+  public Collection<DatabaseObjectDocument> getReferencedObjects() {
     return referencedObjects;
   }
 
