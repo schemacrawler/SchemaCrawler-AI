@@ -29,6 +29,6 @@ public final class DatabaseObjectListFunctionDefinition
 
   @Override
   public DatabaseObjectListFunctionExecutor newExecutor() {
-    return new DatabaseObjectListFunctionExecutor(getFunctionName());
+    return new DatabaseObjectListFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

@@ -20,8 +20,9 @@ import us.fatehi.utility.property.PropertyName;
 public abstract class AbstractSchemaCrawlerFunctionExecutor<P extends FunctionParameters>
     extends AbstractFunctionExecutor<P> {
 
-  protected AbstractSchemaCrawlerFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected AbstractSchemaCrawlerFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();

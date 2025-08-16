@@ -33,6 +33,6 @@ public final class DescribeRoutinesFunctionDefinition
 
   @Override
   public DescribeRoutinesFunctionExecutor newExecutor() {
-    return new DescribeRoutinesFunctionExecutor(getFunctionName());
+    return new DescribeRoutinesFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

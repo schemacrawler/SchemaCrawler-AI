@@ -31,6 +31,7 @@ public final class DatabaseObjectDescriptionFunctionDefinition
 
   @Override
   public DatabaseObjectDescriptionFunctionExecutor newExecutor() {
-    return new DatabaseObjectDescriptionFunctionExecutor(getFunctionName());
+    return new DatabaseObjectDescriptionFunctionExecutor(
+        getFunctionName(), getFunctionReturnType());
   }
 }

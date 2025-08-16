@@ -77,6 +77,11 @@ public class TestTextFunction implements FunctionDefinition<NoParameters> {
       }
 
       @Override
+      public FunctionReturnType getFunctionReturnType() {
+        return FunctionReturnType.TEXT;
+      }
+
+      @Override
       public void initialize() {
         throw new UnsupportedOperationException();
       }

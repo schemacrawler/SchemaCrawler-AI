@@ -25,13 +25,15 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListAcrossTablesFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListAcrossTablesFunctionParameters> {
 
-  protected ListAcrossTablesFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected ListAcrossTablesFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   @Override

@@ -15,14 +15,16 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.AbstractSchemaCrawlerFunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
     extends AbstractSchemaCrawlerFunctionExecutor<P> {
 
-  protected AbstractJsonFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected AbstractJsonFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   protected final void refilterCatalog() {

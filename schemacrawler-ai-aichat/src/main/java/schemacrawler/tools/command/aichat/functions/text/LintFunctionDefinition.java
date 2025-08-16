@@ -30,6 +30,6 @@ public final class LintFunctionDefinition
 
   @Override
   public LintFunctionExecutor newExecutor() {
-    return new LintFunctionExecutor(getFunctionName());
+    return new LintFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

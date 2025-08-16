@@ -32,6 +32,6 @@ public final class DescribeTablesFunctionDefinition
 
   @Override
   public DescribeTablesFunctionExecutor newExecutor() {
-    return new DescribeTablesFunctionExecutor(getFunctionName());
+    return new DescribeTablesFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

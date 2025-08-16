@@ -16,4 +16,6 @@ public interface FunctionExecutor<P extends FunctionParameters> extends Command<
   String getDescription();
 
   UUID getExecutorInstanceId();
+
+  FunctionReturnType getFunctionReturnType();
 }
