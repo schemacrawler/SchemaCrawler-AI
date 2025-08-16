@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -33,7 +34,7 @@ import us.fatehi.utility.property.PropertyName;
 public class FunctionDefinitionRegistryTest {
 
   private static final int NUM_TEXT_FUNCTIONS = 0;
-  private static final int NUM_JSON_FUNCTIONS = 4;
+  private static final int NUM_JSON_FUNCTIONS = 5;
 
   @Test
   public void name() {
@@ -55,7 +56,8 @@ public class FunctionDefinitionRegistryTest {
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
     assertThat(
         names,
-        containsInAnyOrder("describe-tables", "describe-routines", "list", "list-across-tables"));
+        containsInAnyOrder(
+            "describe-tables", "describe-routines", "lint", "list", "list-across-tables"));
   }
 
   @Test
@@ -72,6 +74,7 @@ public class FunctionDefinitionRegistryTest {
         containsInAnyOrder(
             DescribeTablesFunctionDefinition.class.getSimpleName(),
             DescribeRoutinesFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
             ListFunctionDefinition.class.getSimpleName(),
             ListAcrossTablesFunctionDefinition.class.getSimpleName()));
   }

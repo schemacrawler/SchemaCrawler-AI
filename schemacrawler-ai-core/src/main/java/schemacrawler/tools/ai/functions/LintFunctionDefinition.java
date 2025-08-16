@@ -6,10 +6,10 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.ai.functions;
 
 public final class LintFunctionDefinition
-    extends AbstractTextFunctionDefinition<LintFunctionParameters> {
+    extends AbstractJsonFunctionDefinition<LintFunctionParameters> {
 
   @Override
   public String getDescription() {

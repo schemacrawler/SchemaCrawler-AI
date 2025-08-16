@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.ai.functions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;

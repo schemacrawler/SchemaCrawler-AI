@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -31,13 +32,12 @@ import schemacrawler.tools.ai.tools.ToolSpecification;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
-import schemacrawler.tools.command.aichat.functions.text.LintFunctionDefinition;
 import us.fatehi.utility.property.PropertyName;
 
 public class AllFunctionDefinitionRegistryTest {
 
-  private static final int NUM_TEXT_FUNCTIONS = 4;
-  private static final int NUM_JSON_FUNCTIONS = 4;
+  private static final int NUM_TEXT_FUNCTIONS = 3;
+  private static final int NUM_JSON_FUNCTIONS = 5;
 
   @Test
   public void getJsonFunctions() throws Exception {
@@ -53,6 +53,7 @@ public class AllFunctionDefinitionRegistryTest {
         containsInAnyOrder(
             DescribeRoutinesFunctionDefinition.class.getSimpleName(),
             DescribeTablesFunctionDefinition.class.getSimpleName(),
+            LintFunctionDefinition.class.getSimpleName(),
             ListFunctionDefinition.class.getSimpleName(),
             ListAcrossTablesFunctionDefinition.class.getSimpleName()));
   }
@@ -71,7 +72,6 @@ public class AllFunctionDefinitionRegistryTest {
         containsInAnyOrder(
             DatabaseObjectDescriptionFunctionDefinition.class.getSimpleName(),
             DatabaseObjectListFunctionDefinition.class.getSimpleName(),
-            LintFunctionDefinition.class.getSimpleName(),
             ExitFunctionDefinition.class.getSimpleName()));
   }
 
@@ -145,7 +145,7 @@ public class AllFunctionDefinitionRegistryTest {
     final Collection<ToolSpecification> textToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.TEXT);
     assertThat(textToolSpecifications, notNullValue());
-    assertThat(textToolSpecifications.size(), is(4));
+    assertThat(textToolSpecifications.size(), is(NUM_TEXT_FUNCTIONS));
 
     final Collection<ToolSpecification> jsonToolSpecifications =
         registry.getToolSpecifications(FunctionReturnType.JSON);

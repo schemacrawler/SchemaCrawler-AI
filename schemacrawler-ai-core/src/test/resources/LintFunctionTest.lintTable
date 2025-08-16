@@ -1,0 +1,99 @@
+{
+  "lints" : [ {
+    "lint-id" : "abcba121-f113-446b-a96a-6216e768dfe3",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithIncrementingColumns",
+    "linter-instance-id" : "9e84322f-c1da-4550-a844-ced83e121dd3",
+    "message" : "incrementing columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORS",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "PUBLIC.BOOKS.AUTHORS.ADDRESS1, PUBLIC.BOOKS.AUTHORS.ADDRESS2"
+  }, {
+    "lint-id" : "18a4950c-e461-4038-ad35-7604db3e3b77",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "98051117-a5b8-4ea1-87b7-609fe8fe0b8e",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, FIRSTNAME, LASTNAME, ADDRESS1, ADDRESS2, CITY, STATE, POSTALCODE, COUNTRY"
+  }, {
+    "lint-id" : "245f1ff7-b8da-4c42-997d-b97b82075de5",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "98051117-a5b8-4ea1-87b7-609fe8fe0b8e",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORSLIST" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORSLIST",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "5658ddbf-3338-4aba-862d-a514b125af9c",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "98051117-a5b8-4ea1-87b7-609fe8fe0b8e",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORSLIST" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORSLIST",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, FIRSTNAME, LASTNAME"
+  }, {
+    "lint-id" : "3355d60d-f65b-4bc7-8e2f-a325bf8687f8",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "35c11217-1b7b-4358-959e-59b251b8a7dd",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.BOOKAUTHORS.SYS_FK_10118"
+  }, {
+    "lint-id" : "3e312f1f-8c65-47c5-8a32-29ac4b295fc3",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoPrimaryKey",
+    "linter-instance-id" : "210e82a3-6f4a-4fe8-aab7-16db2b0149d6",
+    "message" : "no primary key",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "9684d977-65ae-4a60-9ebe-637bdc24986a",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoSurrogatePrimaryKey",
+    "linter-instance-id" : "47c8631c-33ec-420a-bd18-9c10fbfc3aed",
+    "message" : "primary key may not be a surrogate",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "48fdc712-f96a-4276-bcd3-137f978de3f0",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "98051117-a5b8-4ea1-87b7-609fe8fe0b8e",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "BOOKID, AUTHORID, SOMEDATA"
+  } ]
+}

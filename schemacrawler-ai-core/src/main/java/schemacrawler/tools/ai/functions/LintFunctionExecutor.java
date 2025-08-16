@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.ai.functions;
 
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
