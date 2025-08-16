@@ -8,6 +8,7 @@ SchemaCrawler AI release notes.
 - Show objects referenced by routines
 - Add lint function to MCP server (and remove it from 'aichat')
 - Add table-sample function to MCP server
+- Show remarks and data types wherever possible
 
 
 <a name="v16.26.3-4"></a>
