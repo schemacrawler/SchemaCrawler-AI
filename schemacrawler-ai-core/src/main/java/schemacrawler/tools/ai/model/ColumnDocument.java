@@ -8,20 +8,19 @@
 
 package schemacrawler.tools.ai.model;
 
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
-
+import java.io.Serializable;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.io.Serializable;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Column;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"column", "remarks", "type", "referenced-column"})
+@JsonPropertyOrder({"column", "remarks", "data-type", "referenced-column"})
 public final class ColumnDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
@@ -57,7 +56,7 @@ public final class ColumnDocument implements Serializable {
     return columnName;
   }
 
-  @JsonProperty("type")
+  @JsonProperty("data-type")
   public String getDataType() {
     return dataType;
   }
