@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.ai.functions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -19,9 +19,11 @@ import schemacrawler.tools.ai.utility.JsonUtility;
 public record LintFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database table for which to find design issues.
-    Can be a regular expression.
+    May be specified as a regular expression, matching the fully qualified
+    table name (including the schema).
     Use an empty string if all tables are requested.
+    If not specified, all tables will be processed, but the results
+    could be large, and execution time may be longer.
     """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName)

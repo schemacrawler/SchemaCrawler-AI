@@ -32,6 +32,6 @@ public final class ListAcrossTablesFunctionDefinition
 
   @Override
   public ListAcrossTablesFunctionExecutor newExecutor() {
-    return new ListAcrossTablesFunctionExecutor(getFunctionName());
+    return new ListAcrossTablesFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

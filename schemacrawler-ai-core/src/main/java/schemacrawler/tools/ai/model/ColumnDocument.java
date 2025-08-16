@@ -21,7 +21,7 @@ import schemacrawler.schema.Column;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"column", "remarks", "type", "referenced-column"})
+@JsonPropertyOrder({"column", "remarks", "data-type", "referenced-column"})
 public final class ColumnDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
@@ -29,7 +29,7 @@ public final class ColumnDocument implements Serializable {
   private final String columnName;
   private final String dataType;
   private final String remarks;
-  private final ReferencedColumnDocument referencedColumn;
+  private final ColumnDocument referencedColumn;
 
   public ColumnDocument(final Column column, final Column pkColumn) {
     requireNonNull(column, "No column provided");
@@ -48,7 +48,7 @@ public final class ColumnDocument implements Serializable {
     if (pkColumn == null) {
       referencedColumn = null;
     } else {
-      referencedColumn = new ReferencedColumnDocument(pkColumn);
+      referencedColumn = new ColumnDocument(pkColumn, null);
     }
   }
 
@@ -57,13 +57,13 @@ public final class ColumnDocument implements Serializable {
     return columnName;
   }
 
-  @JsonProperty("type")
+  @JsonProperty("data-type")
   public String getDataType() {
     return dataType;
   }
 
   @JsonProperty("referenced-column")
-  public ReferencedColumnDocument getReferencedColumn() {
+  public ColumnDocument getReferencedColumn() {
     return referencedColumn;
   }
 

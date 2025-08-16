@@ -13,7 +13,6 @@ import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -21,21 +20,21 @@ import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.DatabaseObject;
-import schemacrawler.schema.Sequence;
-import schemacrawler.schema.Synonym;
-import schemacrawler.schema.TypedObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListFunctionParameters> {
 
-  protected ListFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected ListFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   @Override
@@ -97,23 +96,9 @@ public final class ListFunctionExecutor
       if (databaseObject == null) {
         continue;
       }
-      final ObjectNode objectNode = mapper.createObjectNode();
-      final String schemaName = databaseObject.getSchema().getFullName();
-      if (!isBlank(schemaName)) {
-        objectNode.put("schema", schemaName);
-      }
-      objectNode.put("name", databaseObject.getName());
-      if (databaseObject instanceof TypedObject typedObject) {
-        objectNode.put("type", typedObject.getType().toString());
-      } else {
-        if (databaseObject instanceof Sequence) {
-          objectNode.put("type", "sequence");
-        }
-        if (databaseObject instanceof Synonym) {
-          objectNode.put("type", "synonym");
-        }
-      }
-      list.add(objectNode);
+      final DatabaseObjectDocument databaseObjectDocument =
+          new DatabaseObjectDocument(databaseObject);
+      list.add(mapper.valueToTree(databaseObjectDocument));
     }
 
     return list;

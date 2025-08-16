@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schema.Column;
 import schemacrawler.schema.DependantObject;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
@@ -25,13 +26,15 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListAcrossTablesFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListAcrossTablesFunctionParameters> {
 
-  protected ListAcrossTablesFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected ListAcrossTablesFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   @Override
@@ -84,6 +87,25 @@ public final class ListAcrossTablesFunctionExecutor
         .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
+  private ObjectNode createDependentObjectNode(
+      final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
+    final ObjectNode objectNode = mapper.createObjectNode();
+    final String schemaName = dependantObject.getSchema().getFullName();
+    if (!isBlank(schemaName)) {
+      objectNode.put("schema", schemaName);
+    }
+    objectNode.put("table", dependantObject.getParent().getName());
+    final String nameAttribute = dependantObjectType.nameAttribute();
+    objectNode.put(nameAttribute, dependantObject.getName());
+    if (dependantObject instanceof final Column column) {
+      objectNode.put("data-type", column.getColumnDataType().getName());
+    }
+    if (dependantObject.hasRemarks()) {
+      objectNode.put("remarks", dependantObject.getRemarks());
+    }
+    return objectNode;
+  }
+
   private ArrayNode createTypedObjectsArray(
       final Collection<DependantObject<Table>> dependantObjects,
       final DependantObjectType dependantObjectType) {
@@ -97,8 +119,6 @@ public final class ListAcrossTablesFunctionExecutor
       return list;
     }
 
-    final String nameAttribute = dependantObjectType.nameAttribute();
-
     for (final DependantObject<Table> dependantObject : dependantObjects) {
       if (dependantObject == null
           || !dependantObjectinclusionRule.test(dependantObject.getFullName())
@@ -106,14 +126,7 @@ public final class ListAcrossTablesFunctionExecutor
         continue;
       }
 
-      final ObjectNode objectNode = mapper.createObjectNode();
-      final String schemaName = dependantObject.getSchema().getFullName();
-      if (!isBlank(schemaName)) {
-        objectNode.put("schema", schemaName);
-      }
-      objectNode.put("table", dependantObject.getParent().getName());
-      objectNode.put(nameAttribute, dependantObject.getName());
-
+      final ObjectNode objectNode = createDependentObjectNode(dependantObjectType, dependantObject);
       list.add(objectNode);
     }
 

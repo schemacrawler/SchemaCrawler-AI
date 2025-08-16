@@ -1,0 +1,711 @@
+{
+  "lints" : [ {
+    "lint-id" : "a14a2810-36e8-47f3-ba02-e28171b4e440",
+    "linter-id" : "schemacrawler.tools.linter.LinterColumnTypes",
+    "linter-instance-id" : "26a00c94-f4b4-4185-af62-893b472b743f",
+    "message" : "column with same name but different data types",
+    "object-key" : {
+      "key" : [ "catalog" ]
+    },
+    "object-name" : "catalog",
+    "object-type" : "catalog",
+    "severity" : "medium",
+    "value" : "DATA [CLOB, PUBLIC.BOOKS.VALID_STRING]"
+  }, {
+    "lint-id" : "0669c818-2a20-4c2f-b734-ab3992104d2b",
+    "linter-id" : "schemacrawler.tools.linter.LinterColumnTypes",
+    "linter-instance-id" : "26a00c94-f4b4-4185-af62-893b472b743f",
+    "message" : "column with same name but different data types",
+    "object-key" : {
+      "key" : [ "catalog" ]
+    },
+    "object-name" : "catalog",
+    "object-type" : "catalog",
+    "severity" : "medium",
+    "value" : "FIRSTNAME [VARCHAR, PUBLIC.BOOKS.NAME_TYPE]"
+  }, {
+    "lint-id" : "4a2f8d75-b963-4b1a-9073-a8df2d2ac0c6",
+    "linter-id" : "schemacrawler.tools.linter.LinterColumnTypes",
+    "linter-instance-id" : "26a00c94-f4b4-4185-af62-893b472b743f",
+    "message" : "column with same name but different data types",
+    "object-key" : {
+      "key" : [ "catalog" ]
+    },
+    "object-name" : "catalog",
+    "object-type" : "catalog",
+    "severity" : "medium",
+    "value" : "LASTNAME [VARCHAR, PUBLIC.BOOKS.NAME_TYPE]"
+  }, {
+    "lint-id" : "9a6352ec-0a66-4727-bb11-7540c74fa487",
+    "linter-id" : "schemacrawler.tools.linter.LinterColumnTypes",
+    "linter-instance-id" : "26a00c94-f4b4-4185-af62-893b472b743f",
+    "message" : "column with same name but different data types",
+    "object-key" : {
+      "key" : [ "catalog" ]
+    },
+    "object-name" : "catalog",
+    "object-type" : "catalog",
+    "severity" : "medium",
+    "value" : "STATE [CHARACTER, VARCHAR]"
+  }, {
+    "lint-id" : "eccdbb97-28f7-4177-807e-b9529690ac02",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoSurrogatePrimaryKey",
+    "linter-instance-id" : "ecba222a-97aa-4b38-8fc2-244c88476a11",
+    "message" : "primary key may not be a surrogate",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "REGIONS" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".REGIONS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "315eb5dc-bf91-43fa-bb1c-919a93d65791",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "REGIONS" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".REGIONS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "cb260c9e-a0b8-4a7a-9cdc-bdd0735a668c",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "REGIONS" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".REGIONS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "CITY, STATE, POSTALCODE, COUNTRY"
+  }, {
+    "lint-id" : "44ee0544-0b10-4de0-846e-c3347fb72d23",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithPrimaryKeyNotFirst",
+    "linter-instance-id" : "8a99a8b6-c16c-4cbd-a51c-e62a5bec2041",
+    "message" : "primary key not first",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "REGIONS" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".REGIONS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "d0fed332-e955-40e1-b3dc-9aef69869294",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoPrimaryKey",
+    "linter-instance-id" : "d03f6cba-0766-4abd-8cc3-06c54e22a766",
+    "message" : "no primary key",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALES" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALES",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "230dd448-a8eb-4cae-94d6-747f9be40bef",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoSurrogatePrimaryKey",
+    "linter-instance-id" : "ecba222a-97aa-4b38-8fc2-244c88476a11",
+    "message" : "primary key may not be a surrogate",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALES" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALES",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "f8bd6766-38a5-4a65-8e2e-01ebe185adce",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALES" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALES",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "28bc3e37-4902-47e5-962e-70dcd6828a26",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALES" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALES",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "POSTALCODE, COUNTRY, BOOKID, COUPON_ID, PERIODENDDATE, TOTALAMOUNT, SALESDATAID"
+  }, {
+    "lint-id" : "fc3dfc14-bd1d-4e03-b1db-ac99bdd156c2",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoPrimaryKey",
+    "linter-instance-id" : "d03f6cba-0766-4abd-8cc3-06c54e22a766",
+    "message" : "no primary key",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "54a5826b-7589-437d-8af4-0ace3fdba4fb",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoSurrogatePrimaryKey",
+    "linter-instance-id" : "ecba222a-97aa-4b38-8fc2-244c88476a11",
+    "message" : "primary key may not be a surrogate",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "8b57d802-dca1-402f-95e0-b7a1900c7eb4",
+    "linter-id" : "schemacrawler.tools.linter.LinterNullColumnsInIndex",
+    "linter-instance-id" : "484804fa-2ff9-438f-8637-9e90c55b5669",
+    "message" : "unique index with nullable columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA.UQ_CUSTOMERS"
+  }, {
+    "lint-id" : "16c95882-a5f9-4f90-bb4e-e54a07b59828",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "3d1b4bd6-14c4-4e77-af6c-c27eaf743357",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableEmpty",
+    "linter-instance-id" : "b247e78a-2b76-4c03-b333-c27a066d9104",
+    "message" : "empty table",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "18a6efba-3b05-4e35-b309-891ea584dc08",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "a3e00f97-9995-407c-81e8-3ccfea09e361",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "PUBLISHER SALES", "SALESDATA" ]
+    },
+    "object-name" : "PUBLIC.\"PUBLISHER SALES\".SALESDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "SALESDATAID, YEARLYAMOUNT"
+  }, {
+    "lint-id" : "9f51882b-7e47-42e4-921c-d88407de1be5",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrities" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrities\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "5cc811d6-8196-4c85-b131-6d77aace941d",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithQuotedNames",
+    "linter-instance-id" : "de27008e-84e8-4763-b7a6-03c502f12470",
+    "message" : "spaces in name, or reserved word",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrities" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrities\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "ea513054-605b-41b6-b7a1-9a69836fa535",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithQuotedNames",
+    "linter-instance-id" : "de27008e-84e8-4763-b7a6-03c502f12470",
+    "message" : "spaces in name, or reserved word",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrities" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrities\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "Id"
+  }, {
+    "lint-id" : "8acef819-63fe-4098-a8bc-a43d47ef6020",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrities" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrities\"",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "58e1ad0a-a918-43f1-8275-4fb1e35412f2",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrities" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrities\"",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "Id, NAME"
+  }, {
+    "lint-id" : "a214c5e6-dbcd-4222-8daa-0ac981dd849b",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "9afc3362-5fa0-4b39-8a01-0b6209791ef4",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.\"Celebrity Updates\".\"PK Celebrity Updates\""
+  }, {
+    "lint-id" : "98f94391-7472-4ffa-abb3-bfebc71ab7b1",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "9afc3362-5fa0-4b39-8a01-0b6209791ef4",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.\"Celebrity Updates\".SYS_FK_10128"
+  }, {
+    "lint-id" : "18b975d2-f2d6-4319-a337-8765cd72181d",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "29c53e74-cb08-4fa6-8ab4-d371abc225ac",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithQuotedNames",
+    "linter-instance-id" : "de27008e-84e8-4763-b7a6-03c502f12470",
+    "message" : "spaces in name, or reserved word",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "99f26c6f-0b23-4621-9edd-07aeb487a9b9",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithQuotedNames",
+    "linter-instance-id" : "de27008e-84e8-4763-b7a6-03c502f12470",
+    "message" : "spaces in name, or reserved word",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "Celebrity Id"
+  }, {
+    "lint-id" : "8fe73738-08ca-4d2c-88df-9dc32a2c0de1",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithQuotedNames",
+    "linter-instance-id" : "de27008e-84e8-4763-b7a6-03c502f12470",
+    "message" : "spaces in name, or reserved word",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "UPDATE"
+  }, {
+    "lint-id" : "bf58bb37-ccc6-44b1-9694-dc73290392f1",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "993112be-9c99-45c2-8a18-95f3d7cbd1f4",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "Celebrity Updates" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.\"Celebrity Updates\"",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "Celebrity Id, UPDATE"
+  }, {
+    "lint-id" : "6b2f79ec-aa7b-4805-9d70-d01fb0536362",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithIncrementingColumns",
+    "linter-instance-id" : "541a25b3-5b62-48a5-aae3-68a52f8be4e5",
+    "message" : "incrementing columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORS",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "PUBLIC.BOOKS.AUTHORS.ADDRESS1, PUBLIC.BOOKS.AUTHORS.ADDRESS2"
+  }, {
+    "lint-id" : "420d4e97-bc8a-4a88-ac0c-01a80216ede8",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, FIRSTNAME, LASTNAME, ADDRESS1, ADDRESS2, CITY, STATE, POSTALCODE, COUNTRY"
+  }, {
+    "lint-id" : "b6b4ae43-01fd-4e77-8033-4b8da7a73b09",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORSLIST" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORSLIST",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "463ec3c9-efe2-446d-916b-28933514b618",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "AUTHORSLIST" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.AUTHORSLIST",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, FIRSTNAME, LASTNAME"
+  }, {
+    "lint-id" : "7181232a-4b43-447a-840f-e7068e93078f",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "9afc3362-5fa0-4b39-8a01-0b6209791ef4",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.BOOKAUTHORS.SYS_FK_10118"
+  }, {
+    "lint-id" : "610dacde-8e61-4348-a45d-c336c3ef07c6",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoPrimaryKey",
+    "linter-instance-id" : "d03f6cba-0766-4abd-8cc3-06c54e22a766",
+    "message" : "no primary key",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "a265a0da-01c9-4527-be09-cda868a3aa9f",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoSurrogatePrimaryKey",
+    "linter-instance-id" : "ecba222a-97aa-4b38-8fc2-244c88476a11",
+    "message" : "primary key may not be a surrogate",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : ""
+  }, {
+    "lint-id" : "a69a78b0-c07f-4b36-ab04-e8b8ffe5c84e",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKAUTHORS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKAUTHORS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "BOOKID, AUTHORID, SOMEDATA"
+  }, {
+    "lint-id" : "68e5b506-49bb-4ccb-b536-ef8185fdd731",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "9afc3362-5fa0-4b39-8a01-0b6209791ef4",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.BOOKS.FK_PREVIOUSEDITION"
+  }, {
+    "lint-id" : "63eecf7b-a38f-4495-881d-52deaf54e8dd",
+    "linter-id" : "schemacrawler.tools.linter.LinterRedundantIndexes",
+    "linter-instance-id" : "9afc3362-5fa0-4b39-8a01-0b6209791ef4",
+    "message" : "redundant index",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKS",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.BOOKS.U_PREVIOUSEDITION"
+  }, {
+    "lint-id" : "ae2092d7-1bd0-435b-94fb-70a5a11b4f78",
+    "linter-id" : "schemacrawler.tools.linter.LinterNullColumnsInIndex",
+    "linter-instance-id" : "484804fa-2ff9-438f-8637-9e90c55b5669",
+    "message" : "unique index with nullable columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKS",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : "PUBLIC.BOOKS.BOOKS.U_PREVIOUSEDITION"
+  }, {
+    "lint-id" : "fe7f1041-4f3e-4609-b8ee-0923df7dee20",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "BOOKS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.BOOKS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "PREVIOUSEDITIONID"
+  }, {
+    "lint-id" : "b7f66397-41ac-4200-8414-5bf6c9655e0c",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "COUPONS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.COUPONS",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "cee94d45-10a6-4b7a-9721-b28b56f79fda",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "COUPONS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.COUPONS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "20e02fcc-d3c3-43a3-860b-828640744521",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "COUPONS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.COUPONS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, DATA, COUPONS, BOOKS"
+  }, {
+    "lint-id" : "c155b661-2950-4d71-ac13-46df9779faaf",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERDATA" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERDATA",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "be438935-c31f-4082-acf3-428bbf3c09e1",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableEmpty",
+    "linter-instance-id" : "b247e78a-2b76-4c03-b333-c27a066d9104",
+    "message" : "empty table",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERDATA" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "87618ad8-5552-4681-96b0-6cafa2e73408",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERDATA" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "d461140b-7d73-4103-8c40-26b72bbeec78",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERDATA" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERDATA",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, DATA"
+  }, {
+    "lint-id" : "ae1a6d2a-f103-413e-ace7-990e4123835a",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableEmpty",
+    "linter-instance-id" : "b247e78a-2b76-4c03-b333-c27a066d9104",
+    "message" : "empty table",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "6ec47b41-aeed-48a5-9687-81fc3bd5dfcf",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "a752ecf6-5202-44ca-8c49-8fe65b4f9b75",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "CUSTOMERS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.CUSTOMERS",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ID, FIRSTNAME, LASTNAME, AGE"
+  }, {
+    "lint-id" : "6b463073-354d-4ed8-a760-18129376187c",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableAllNullableColumns",
+    "linter-instance-id" : "a058b8db-18cd-48ff-b582-943a5f6e0933",
+    "message" : "no non-nullable data columns",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "PUBLISHERS" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.PUBLISHERS",
+    "object-type" : "table",
+    "severity" : "medium",
+    "value" : ""
+  }, {
+    "lint-id" : "2dc62ffe-a445-48d9-bd3e-07ac751c3493",
+    "linter-id" : "schemacrawler.tools.linter.LinterForeignKeyMismatch",
+    "linter-instance-id" : "0867692b-6a63-48a6-8440-28f2513d98c5",
+    "message" : "foreign key data type different from primary key",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "ΒΙΒΛΊΑ" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.ΒΙΒΛΊΑ",
+    "object-type" : "table",
+    "severity" : "high",
+    "value" : "PUBLIC.BOOKS.ΒΙΒΛΊΑ.FK_ΒΙΒΛΊΑ_PUBLISHERS"
+  }, {
+    "lint-id" : "24219d9a-555a-4ea5-aa35-7c6cac836572",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableEmpty",
+    "linter-instance-id" : "b247e78a-2b76-4c03-b333-c27a066d9104",
+    "message" : "empty table",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "ΒΙΒΛΊΑ" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.ΒΙΒΛΊΑ",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "4278fc38-be15-4c01-950b-fdd3f409bbdf",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "ΒΙΒΛΊΑ" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.ΒΙΒΛΊΑ",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : ""
+  }, {
+    "lint-id" : "59306207-60b1-4a45-9f93-00a0c8e10574",
+    "linter-id" : "schemacrawler.tools.linter.LinterTableWithNoRemarks",
+    "linter-instance-id" : "35afe4f4-b90b-4490-b695-9a36590296e0",
+    "message" : "should have remarks",
+    "object-key" : {
+      "key" : [ "PUBLIC", "BOOKS", "ΒΙΒΛΊΑ" ]
+    },
+    "object-name" : "PUBLIC.BOOKS.ΒΙΒΛΊΑ",
+    "object-type" : "table",
+    "severity" : "low",
+    "value" : "ΜΟΝΑΔΙΚΌΣ, ΤΊΤΛΟΣ, ΠΕΡΙΓΡΑΦΉ, ΕΚΔΌΤΗΣ"
+  } ]
+}

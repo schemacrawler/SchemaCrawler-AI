@@ -24,13 +24,15 @@ import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DescribeRoutinesFunctionExecutor
     extends AbstractJsonFunctionExecutor<DescribeRoutinesFunctionParameters> {
 
-  protected DescribeRoutinesFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected DescribeRoutinesFunctionExecutor(
+      final PropertyName functionName, final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   @Override

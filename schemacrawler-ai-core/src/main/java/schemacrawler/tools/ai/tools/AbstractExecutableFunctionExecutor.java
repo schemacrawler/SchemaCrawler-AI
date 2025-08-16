@@ -6,27 +6,27 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.functions.text;
+package schemacrawler.tools.ai.tools;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import java.io.StringWriter;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.tools.AbstractSchemaCrawlerFunctionExecutor;
-import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.command.aichat.utility.ConnectionDatabaseConnectionSource;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
     extends AbstractSchemaCrawlerFunctionExecutor<P> {
 
-  protected AbstractExecutableFunctionExecutor(final PropertyName functionName) {
-    super(functionName);
+  protected AbstractExecutableFunctionExecutor(final PropertyName functionName,
+      final FunctionReturnType returnType) {
+    super(functionName, returnType);
   }
 
   @Override
@@ -35,15 +35,23 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     final SchemaCrawlerExecutable executable = createExecutable();
     // Execute and generate output
     final StringWriter writer = new StringWriter();
-    final OutputOptions outputOptions =
-        OutputOptionsBuilder.builder().withOutputWriter(writer).toOptions();
+    final String outputFormat = getFunctionReturnType().name();
+    final OutputOptions outputOptions = OutputOptionsBuilder.builder().withOutputWriter(writer)
+        .withOutputFormatValue(outputFormat).toOptions();
 
     executable.setOutputOptions(outputOptions);
     executable.setCatalog(catalog);
     executable.execute();
 
     if (!hasResults()) {
-      return new NoResultsReturn();
+      if (getFunctionReturnType() == FunctionReturnType.TEXT) {
+        return () -> "There were no matching results for your query.";
+      }
+      return () -> {
+        final ObjectNode objectNode = mapper.createObjectNode();
+        objectNode.put("message", "No results");
+        return objectNode.toString();
+      };
     }
     return () -> writer.toString();
   }
@@ -69,7 +77,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     executable.setCatalog(catalog);
     if (connection != null) {
       final DatabaseConnectionSource databaseConnectionSource =
-          new ConnectionDatabaseConnectionSource(connection);
+          DatabaseConnectionSources.fromConnection(connection);
       executable.setDataSource(databaseConnectionSource);
     }
 

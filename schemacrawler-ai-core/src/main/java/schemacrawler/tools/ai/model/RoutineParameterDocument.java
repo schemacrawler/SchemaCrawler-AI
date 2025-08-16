@@ -22,7 +22,7 @@ import schemacrawler.schema.RoutineParameter;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"parameter", "mode", "type", "remarks"})
+@JsonPropertyOrder({"parameter", "mode", "data-type", "remarks"})
 public final class RoutineParameterDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
@@ -52,7 +52,7 @@ public final class RoutineParameterDocument implements Serializable {
     return routineParameterName;
   }
 
-  @JsonProperty("type")
+  @JsonProperty("data-type")
   public String getDataType() {
     return dataType;
   }

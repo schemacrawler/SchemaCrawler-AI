@@ -30,6 +30,6 @@ public final class ListFunctionDefinition
 
   @Override
   public ListFunctionExecutor newExecutor() {
-    return new ListFunctionExecutor(getFunctionName());
+    return new ListFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }
