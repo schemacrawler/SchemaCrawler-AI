@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schema.Column;
 import schemacrawler.schema.DependantObject;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
@@ -115,6 +116,9 @@ public final class ListAcrossTablesFunctionExecutor
       }
       objectNode.put("table", dependantObject.getParent().getName());
       objectNode.put(nameAttribute, dependantObject.getName());
+      if (dependantObject instanceof final Column column) {
+        objectNode.put("data-type", column.getColumnDataType().getName());
+      }
 
       list.add(objectNode);
     }
