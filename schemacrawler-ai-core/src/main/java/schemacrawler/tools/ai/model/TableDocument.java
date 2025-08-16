@@ -88,7 +88,7 @@ public final class TableDocument implements Serializable {
     columns = new ArrayList<>();
     for (final Column column : table.getColumns()) {
       final ColumnDocument columnDocument =
-          new ColumnDocument(column, referencedColumns.get(column.getName()));
+          new ColumnDocument(column, referencedColumns.get(column.getName()), false);
       columns.add(columnDocument);
     }
 

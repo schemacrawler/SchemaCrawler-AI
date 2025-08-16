@@ -8,15 +8,17 @@
 
 package schemacrawler.tools.ai.model;
 
-import java.io.Serializable;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
+import java.io.Serializable;
 import schemacrawler.schema.Column;
+import schemacrawler.schema.Table;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -25,12 +27,14 @@ public final class ColumnDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
 
+  private final String schemaName;
+  private final String tableName;
   private final String columnName;
   private final String dataType;
   private final String remarks;
-  private final ReferencedColumnDocument referencedColumn;
+  private final ColumnDocument referencedColumn;
 
-  public ColumnDocument(final Column column, final Column pkColumn) {
+  public ColumnDocument(final Column column, final Column pkColumn, final boolean includeTable) {
     requireNonNull(column, "No column provided");
 
     columnName = column.getName();
@@ -47,7 +51,22 @@ public final class ColumnDocument implements Serializable {
     if (pkColumn == null) {
       referencedColumn = null;
     } else {
-      referencedColumn = new ReferencedColumnDocument(pkColumn);
+      referencedColumn = new ColumnDocument(pkColumn, null, false);
+    }
+
+    if (includeTable) {
+      final Table table = column.getParent();
+
+      final String schema = table.getSchema().getFullName();
+      if (!isBlank(schema)) {
+        schemaName = schema;
+      } else {
+        schemaName = null;
+      }
+      tableName = table.getName();
+    } else {
+      schemaName = null;
+      tableName = null;
     }
   }
 
@@ -62,12 +81,22 @@ public final class ColumnDocument implements Serializable {
   }
 
   @JsonProperty("referenced-column")
-  public ReferencedColumnDocument getReferencedColumn() {
+  public ColumnDocument getReferencedColumn() {
     return referencedColumn;
   }
 
   @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
+  }
+
+  @JsonProperty("schema")
+  public String getSchemaName() {
+    return schemaName;
+  }
+
+  @JsonProperty("table")
+  public String getTableName() {
+    return tableName;
   }
 }
