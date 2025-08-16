@@ -16,7 +16,7 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.utility.JsonUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record LintFunctionParameters(
+public record TableSampleFunctionParameters(
     @JsonPropertyDescription(
             """
     May be specified as a regular expression, matching the fully qualified
@@ -29,7 +29,7 @@ public record LintFunctionParameters(
         String tableName)
     implements FunctionParameters {
 
-  public LintFunctionParameters {
+  public TableSampleFunctionParameters {
     if (tableName == null || tableName.isBlank()) {
       tableName = "";
     }

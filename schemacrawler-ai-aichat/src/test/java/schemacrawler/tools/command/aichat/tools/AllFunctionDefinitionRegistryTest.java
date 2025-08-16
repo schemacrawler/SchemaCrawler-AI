@@ -14,17 +14,11 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
-import schemacrawler.tools.ai.functions.LintFunctionDefinition;
-import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
-import schemacrawler.tools.ai.functions.ListFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
@@ -37,7 +31,7 @@ import us.fatehi.utility.property.PropertyName;
 public class AllFunctionDefinitionRegistryTest {
 
   private static final int NUM_TEXT_FUNCTIONS = 3;
-  private static final int NUM_JSON_FUNCTIONS = 5;
+  private static final int NUM_JSON_FUNCTIONS = 6;
 
   @Test
   public void getJsonFunctions() throws Exception {
@@ -46,16 +40,6 @@ public class AllFunctionDefinitionRegistryTest {
     final Collection<FunctionDefinition<?>> functions =
         registry.getFunctionDefinitions(FunctionReturnType.JSON);
     assertThat(functions, hasSize(NUM_JSON_FUNCTIONS));
-    assertThat(
-        functions.stream()
-            .map(function -> function.getClass().getSimpleName())
-            .collect(Collectors.toList()),
-        containsInAnyOrder(
-            DescribeRoutinesFunctionDefinition.class.getSimpleName(),
-            DescribeTablesFunctionDefinition.class.getSimpleName(),
-            LintFunctionDefinition.class.getSimpleName(),
-            ListFunctionDefinition.class.getSimpleName(),
-            ListAcrossTablesFunctionDefinition.class.getSimpleName()));
   }
 
   @Test
@@ -103,7 +87,8 @@ public class AllFunctionDefinitionRegistryTest {
             "describe-tables",
             "describe-routines",
             "list",
-            "list-across-tables"));
+            "list-across-tables",
+            "table-sample"));
   }
 
   @Test
