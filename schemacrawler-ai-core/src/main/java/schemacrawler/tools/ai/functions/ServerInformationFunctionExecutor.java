@@ -9,9 +9,10 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import java.util.Collection;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.Collection;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -30,7 +31,8 @@ public final class ServerInformationFunctionExecutor
 
   @Override
   public FunctionReturn call() throws Exception {
-    refilterCatalog();
+    // No need to refilter, but leave this boilerplate
+    // refilterCatalog();
 
     final ArrayNode list = createServerInfoArray();
     return new JsonFunctionReturn("server-information", list);

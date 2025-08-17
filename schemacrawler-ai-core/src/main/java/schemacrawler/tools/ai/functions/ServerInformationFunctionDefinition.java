@@ -18,7 +18,7 @@ public final class ServerInformationFunctionDefinition
     return """
     Provides more information about the database server, for example the product version,
     collation and so on. Details will vary based on the type of the server, for example,
-    if it is Oracle, SQL Server, PostgreSQL, MySQL, and so on.
+    if it is Oracle, SQL Server, PostgreSQL, MySQL, etc.
     Returns JSON data.
     """
         .stripIndent()
