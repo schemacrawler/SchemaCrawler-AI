@@ -9,15 +9,13 @@
 package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 import schemacrawler.schema.Index;
@@ -28,7 +26,7 @@ import schemacrawler.schema.TableConstraintColumn;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "columns", "is-unique"})
-public final class IndexDocument implements Serializable {
+public final class IndexDocument implements Document {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
@@ -59,8 +57,8 @@ public final class IndexDocument implements Serializable {
     return columns;
   }
 
-  @JsonProperty("name")
-  public String getIndexName() {
+  @Override
+  public String getName() {
     return indexName;
   }
 
@@ -68,8 +66,9 @@ public final class IndexDocument implements Serializable {
     return isUnique;
   }
 
+  @Override
   public ObjectNode toObjectNode() {
-    return new ObjectMapper().valueToTree(this);
+    return mapper.valueToTree(this);
   }
 
   @Override

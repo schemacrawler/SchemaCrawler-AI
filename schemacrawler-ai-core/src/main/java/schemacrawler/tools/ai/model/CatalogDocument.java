@@ -8,14 +8,14 @@
 
 package schemacrawler.tools.ai.model;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
@@ -23,8 +23,8 @@ import java.util.Map;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"databaseProductName", "tables"})
-public final class CatalogDocument implements Serializable {
+@JsonPropertyOrder({"db", "tables", "routines"})
+public final class CatalogDocument implements Document {
 
   private static final long serialVersionUID = -1937966351313941597L;
 
@@ -80,6 +80,11 @@ public final class CatalogDocument implements Serializable {
     return databaseProductName;
   }
 
+  @Override
+  public String getName() {
+    return null;
+  }
+
   @JsonProperty("routines")
   public List<RoutineDocument> getRoutines() {
     return routines;
@@ -90,12 +95,13 @@ public final class CatalogDocument implements Serializable {
     return tables;
   }
 
-  public JsonNode toJson() {
-    return new ObjectMapper().valueToTree(this);
+  @Override
+  public ObjectNode toObjectNode() {
+    return mapper.valueToTree(this);
   }
 
   @Override
   public String toString() {
-    return toJson().toString();
+    return toObjectNode().toString();
   }
 }

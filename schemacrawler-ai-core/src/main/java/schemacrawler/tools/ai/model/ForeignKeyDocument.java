@@ -8,15 +8,15 @@
 
 package schemacrawler.tools.ai.model;
 
-import java.io.Serializable;
+import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static java.util.Objects.requireNonNull;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Table;
@@ -24,7 +24,7 @@ import schemacrawler.schema.Table;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "referenced-table"})
-public final class ForeignKeyDocument implements Serializable {
+public final class ForeignKeyDocument implements Document {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
@@ -44,8 +44,8 @@ public final class ForeignKeyDocument implements Serializable {
     referencedTableName = parentTable.getName();
   }
 
-  @JsonProperty("name")
-  public String getForeignKeyName() {
+  @Override
+  public String getName() {
     return foreignKeyName;
   }
 
@@ -54,8 +54,9 @@ public final class ForeignKeyDocument implements Serializable {
     return referencedTableName;
   }
 
+  @Override
   public ObjectNode toObjectNode() {
-    return new ObjectMapper().valueToTree(this);
+    return mapper.valueToTree(this);
   }
 
   @Override

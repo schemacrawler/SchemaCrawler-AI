@@ -14,7 +14,6 @@ import java.util.Collection;
 import java.util.EnumMap;
 import java.util.Map;
 import schemacrawler.schema.Catalog;
-import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 
@@ -42,10 +41,6 @@ public final class CompactCatalogUtility {
       catalogDocument.addRoutine(routineDocument);
     }
     return catalogDocument;
-  }
-
-  public DatabaseObjectDocument getReferencedObject(final DatabaseObject databaseObject) {
-    return new DatabaseObjectDocument(databaseObject);
   }
 
   public RoutineDocument getRoutineDocument(final Routine routine) {

@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -16,7 +17,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
@@ -25,7 +26,7 @@ import schemacrawler.schema.TypedObject;
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"schema", "name", "type"})
-public final class DatabaseObjectDocument implements Serializable {
+public final class DatabaseObjectDocument implements Document {
 
   private static final long serialVersionUID = -2159895984317222363L;
 
@@ -55,8 +56,8 @@ public final class DatabaseObjectDocument implements Serializable {
     }
   }
 
-  @JsonProperty("name")
-  public String getDatabaseObjectName() {
+  @Override
+  public String getName() {
     return databaseObjectName;
   }
 
@@ -67,5 +68,15 @@ public final class DatabaseObjectDocument implements Serializable {
 
   public String getType() {
     return type;
+  }
+
+  @Override
+  public ObjectNode toObjectNode() {
+    return mapper.valueToTree(this);
+  }
+
+  @Override
+  public String toString() {
+    return toObjectNode().toString();
   }
 }

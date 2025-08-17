@@ -10,16 +10,15 @@ package schemacrawler.tools.ai.model;
 
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.REFERENCED_OBJECTS;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
-import java.io.Serializable;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -43,7 +42,7 @@ import schemacrawler.utility.MetaDataUtility;
   "remarks",
   "definition"
 })
-public final class RoutineDocument implements Serializable {
+public final class RoutineDocument implements Document {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
@@ -115,6 +114,11 @@ public final class RoutineDocument implements Serializable {
     return definition;
   }
 
+  @Override
+  public String getName() {
+    return routineName;
+  }
+
   public List<RoutineParameterDocument> getParameters() {
     return parameters;
   }
@@ -127,11 +131,6 @@ public final class RoutineDocument implements Serializable {
     return remarks;
   }
 
-  @JsonProperty("name")
-  public String getRoutineName() {
-    return routineName;
-  }
-
   @JsonProperty("schema")
   public String getSchemaName() {
     return schemaName;
@@ -141,13 +140,14 @@ public final class RoutineDocument implements Serializable {
     return type;
   }
 
-  public JsonNode toJson() {
-    return new ObjectMapper().valueToTree(this);
+  @Override
+  public ObjectNode toObjectNode() {
+    return mapper.valueToTree(this);
   }
 
   @Override
   public String toString() {
-    return toJson().toString();
+    return toObjectNode().toString();
   }
 
   private Map<AdditionalRoutineDetails, Boolean> defaults(

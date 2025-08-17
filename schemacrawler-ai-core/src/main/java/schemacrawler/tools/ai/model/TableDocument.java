@@ -15,17 +15,16 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -57,7 +56,7 @@ import schemacrawler.utility.MetaDataUtility;
   "attributes",
   "definition"
 })
-public final class TableDocument implements Serializable {
+public final class TableDocument implements Document {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
@@ -170,6 +169,11 @@ public final class TableDocument implements Serializable {
     return indexes;
   }
 
+  @Override
+  public String getName() {
+    return tableName;
+  }
+
   public IndexDocument getPrimaryKey() {
     return primaryKey;
   }
@@ -192,11 +196,6 @@ public final class TableDocument implements Serializable {
     return schemaName;
   }
 
-  @JsonProperty("name")
-  public String getTableName() {
-    return tableName;
-  }
-
   public Collection<TriggerDocument> getTriggers() {
     return triggers;
   }
@@ -205,8 +204,9 @@ public final class TableDocument implements Serializable {
     return type;
   }
 
+  @Override
   public ObjectNode toObjectNode() {
-    return new ObjectMapper().valueToTree(this);
+    return mapper.valueToTree(this);
   }
 
   @Override

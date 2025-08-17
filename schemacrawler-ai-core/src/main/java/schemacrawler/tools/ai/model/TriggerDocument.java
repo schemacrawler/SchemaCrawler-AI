@@ -8,14 +8,13 @@
 
 package schemacrawler.tools.ai.model;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.Serializable;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -32,7 +31,7 @@ import schemacrawler.schema.Trigger;
   "condition-timing",
   "event-manipulation"
 })
-public final class TriggerDocument implements Serializable {
+public final class TriggerDocument implements Document {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
@@ -83,13 +82,14 @@ public final class TriggerDocument implements Serializable {
     return eventManipulationType;
   }
 
-  @JsonProperty("name")
-  public String getTriggerName() {
+  @Override
+  public String getName() {
     return triggerName;
   }
 
+  @Override
   public ObjectNode toObjectNode() {
-    return new ObjectMapper().valueToTree(this);
+    return mapper.valueToTree(this);
   }
 
   @Override

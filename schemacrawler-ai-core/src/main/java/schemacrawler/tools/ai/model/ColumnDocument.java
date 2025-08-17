@@ -9,22 +9,21 @@
 package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.io.Serializable;
 import schemacrawler.schema.Column;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
-public final class ColumnDocument implements Serializable {
+public final class ColumnDocument implements Document {
 
   private static final long serialVersionUID = 5110252842937512910L;
 
@@ -54,14 +53,14 @@ public final class ColumnDocument implements Serializable {
     }
   }
 
-  @JsonProperty("name")
-  public String getColumnName() {
-    return columnName;
-  }
-
   @JsonProperty("data-type")
   public String getDataType() {
     return dataType;
+  }
+
+  @Override
+  public String getName() {
+    return columnName;
   }
 
   @JsonProperty("referenced-column")
@@ -74,8 +73,9 @@ public final class ColumnDocument implements Serializable {
     return remarks;
   }
 
+  @Override
   public ObjectNode toObjectNode() {
-    return new ObjectMapper().valueToTree(this);
+    return mapper.valueToTree(this);
   }
 
   @Override
