@@ -8,8 +8,10 @@
 
 package schemacrawler.tools.ai.functions;
 
-public final class DatabaseInformationFunctionDefinition
-    extends AbstractJsonFunctionDefinition<DatabaseInformationFunctionParameters> {
+import schemacrawler.tools.ai.tools.NoParameters;
+
+public final class ServerInformationFunctionDefinition
+    extends AbstractJsonFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {
@@ -25,12 +27,12 @@ public final class DatabaseInformationFunctionDefinition
   }
 
   @Override
-  public Class<DatabaseInformationFunctionParameters> getParametersClass() {
-    return DatabaseInformationFunctionParameters.class;
+  public Class<NoParameters> getParametersClass() {
+    return NoParameters.class;
   }
 
   @Override
-  public DatabaseInformationFunctionExecutor newExecutor() {
-    return new DatabaseInformationFunctionExecutor(getFunctionName(), getFunctionReturnType());
+  public ServerInformationFunctionExecutor newExecutor() {
+    return new ServerInformationFunctionExecutor(getFunctionName(), getFunctionReturnType());
   }
 }

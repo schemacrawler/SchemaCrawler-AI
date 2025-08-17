@@ -9,21 +9,21 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-
+import java.util.Collection;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.Collection;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
+import schemacrawler.tools.ai.tools.NoParameters;
 import us.fatehi.utility.property.Property;
 import us.fatehi.utility.property.PropertyName;
 
-public final class DatabaseInformationFunctionExecutor
-    extends AbstractJsonFunctionExecutor<DatabaseInformationFunctionParameters> {
+public final class ServerInformationFunctionExecutor
+    extends AbstractJsonFunctionExecutor<NoParameters> {
 
-  protected DatabaseInformationFunctionExecutor(
+  protected ServerInformationFunctionExecutor(
       final PropertyName functionName, final FunctionReturnType returnType) {
     super(functionName, returnType);
   }
@@ -43,6 +43,13 @@ public final class DatabaseInformationFunctionExecutor
 
   private ArrayNode createServerInfoArray() {
     final ArrayNode list = mapper.createArrayNode();
+
+    final ObjectNode databaseProductPropertyNode = mapper.createObjectNode();
+    databaseProductPropertyNode.put(
+        "database-product-name", catalog.getDatabaseInfo().getDatabaseProductName());
+    databaseProductPropertyNode.put(
+        "database-product-version", catalog.getDatabaseInfo().getDatabaseProductVersion());
+    list.add(databaseProductPropertyNode);
 
     final Collection<Property> serverInfo = catalog.getDatabaseInfo().getServerInfo();
     for (final Property serverProperty : serverInfo) {
