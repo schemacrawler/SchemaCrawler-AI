@@ -10,7 +10,6 @@ package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
-import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
 import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
 import static schemacrawler.test.utility.FileHasContent.outputOf;
@@ -22,22 +21,11 @@ import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameter
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import java.sql.Connection;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.LoadOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
-import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
@@ -48,30 +36,7 @@ import schemacrawler.tools.ai.tools.FunctionReturn;
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ListAcrossTablesFunctionTest {
-
-  private Catalog catalog;
-
-  @BeforeAll
-  public void _loadCatalog(final Connection connection) throws Exception {
-
-    final SchemaRetrievalOptions schemaRetrievalOptions = TestUtility.newSchemaRetrievalOptions();
-
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSchemas(new RegularExpressionExclusionRule(".*\\.FOR_LINT"))
-            .includeAllSynonyms()
-            .includeAllSequences()
-            .includeAllRoutines();
-    final LoadOptionsBuilder loadOptionsBuilder =
-        LoadOptionsBuilder.builder().withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum());
-    final SchemaCrawlerOptions schemaCrawlerOptions =
-        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-            .withLimitOptions(limitOptionsBuilder.toOptions())
-            .withLoadOptions(loadOptionsBuilder.toOptions());
-
-    catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
-  }
+public class ListAcrossTablesFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void columns(final TestContext testContext) throws Exception {

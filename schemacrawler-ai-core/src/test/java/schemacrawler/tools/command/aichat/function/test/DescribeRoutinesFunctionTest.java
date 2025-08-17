@@ -15,18 +15,9 @@ import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters.RoutineDescriptionScope.DEFAULT;
 import static schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters.RoutineDescriptionScope.REFERENCED_OBJECTS;
 
-import java.sql.Connection;
 import java.util.List;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.LoadOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
@@ -34,16 +25,11 @@ import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
 import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
-import schemacrawler.tools.utility.SchemaCrawlerUtility;
-import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.datasource.DatabaseConnectionSourceUtility;
 
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DescribeRoutinesFunctionTest {
-
-  private Catalog catalog;
+public class DescribeRoutinesFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void describeAllRoutines(final TestContext testContext) throws Exception {
@@ -78,27 +64,6 @@ public class DescribeRoutinesFunctionTest {
     final DescribeRoutinesFunctionParameters args =
         new DescribeRoutinesFunctionParameters("NOT_A_ROUTINE", null);
     describeRoutine(testContext, args, true);
-  }
-
-  @BeforeAll
-  public void loadCatalog(final Connection connection) throws Exception {
-
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSchemas(new RegularExpressionExclusionRule(".*\\.SYSTEM_LOBS"))
-            .includeAllSynonyms()
-            .includeAllSequences()
-            .includeAllRoutines();
-    final LoadOptionsBuilder loadOptionsBuilder =
-        LoadOptionsBuilder.builder().withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum());
-    final SchemaCrawlerOptions schemaCrawlerOptions =
-        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-            .withLimitOptions(limitOptionsBuilder.toOptions())
-            .withLoadOptions(loadOptionsBuilder.toOptions());
-
-    final DatabaseConnectionSource dataSource =
-        DatabaseConnectionSourceUtility.newTestDatabaseConnectionSource(connection);
-    catalog = SchemaCrawlerUtility.getCatalog(dataSource, schemaCrawlerOptions);
   }
 
   @Test
