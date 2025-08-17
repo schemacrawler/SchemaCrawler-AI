@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","routines":[{"schema":"PUBLIC.BOOKS","name":"GETBOOKSCOUNT","type":"procedure","referenced-objects":[{"schema":"PUBLIC.BOOKS","name":"BOOKS","type":"table"}],"parameters":[{"parameter":"BOOKSCOUNT","mode":"out","data-type":"INTEGER"}]}]}
+{"db":"HSQL Database Engine","routines":[{"schema":"PUBLIC.BOOKS","name":"GETBOOKSCOUNT","type":"procedure","parameters":[{"name":"BOOKSCOUNT","mode":"out","data-type":"INTEGER"}],"referenced-objects":[{"name":"BOOKS","type":"table","schema-name":"PUBLIC.BOOKS"}]}]}

@@ -62,7 +62,7 @@ public final class TableDocument implements Serializable {
   private static final long serialVersionUID = 1873929712139211255L;
 
   private final String schemaName;
-  private final String name;
+  private final String tableName;
   private final String type;
   private final String remarks;
   private final List<ColumnDocument> columns;
@@ -81,7 +81,7 @@ public final class TableDocument implements Serializable {
     final String schemaName = table.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
 
-    name = table.getName();
+    tableName = table.getName();
     type = MetaDataUtility.getSimpleTypeName(table).name();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
@@ -170,11 +170,6 @@ public final class TableDocument implements Serializable {
     return indexes;
   }
 
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
   public IndexDocument getPrimaryKey() {
     return primaryKey;
   }
@@ -184,7 +179,6 @@ public final class TableDocument implements Serializable {
    *
    * @return Referenced tables
    */
-  @JsonProperty("referenced-tables")
   public Collection<DatabaseObjectDocument> getReferencedTables() {
     return referencedTables;
   }
@@ -193,16 +187,19 @@ public final class TableDocument implements Serializable {
     return remarks;
   }
 
-  @JsonProperty("schema")
   public String getSchema() {
     return schemaName;
+  }
+
+  @JsonProperty("name")
+  public String getTableName() {
+    return tableName;
   }
 
   public Collection<TriggerDocument> getTriggers() {
     return triggers;
   }
 
-  @JsonProperty("type")
   public String getType() {
     return type;
   }

@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.model;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -31,14 +32,14 @@ public final class IndexDocument implements Serializable {
 
   private static final long serialVersionUID = 1873929712139211255L;
 
-  private final String name;
+  private final String indexName;
   private final List<String> columns;
   private final boolean isUnique;
 
   public IndexDocument(final Index index) {
     requireNonNull(index, "No index provided");
 
-    name = index.getName();
+    indexName = index.getName();
     columns = index.getColumns().stream().map(IndexColumn::getName).collect(Collectors.toList());
     isUnique = index.isUnique();
   }
@@ -46,7 +47,7 @@ public final class IndexDocument implements Serializable {
   public IndexDocument(final PrimaryKey primaryKey) {
     requireNonNull(primaryKey, "No index provided");
 
-    name = primaryKey.getName();
+    indexName = primaryKey.getName();
     columns =
         primaryKey.getConstrainedColumns().stream()
             .map(TableConstraintColumn::getName)
@@ -58,8 +59,9 @@ public final class IndexDocument implements Serializable {
     return columns;
   }
 
-  public String getName() {
-    return name;
+  @JsonProperty("name")
+  public String getIndexName() {
+    return indexName;
   }
 
   public boolean isUnique() {

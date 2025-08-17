@@ -30,7 +30,7 @@ public final class DatabaseObjectDocument implements Serializable {
   private static final long serialVersionUID = -2159895984317222363L;
 
   private final String schemaName;
-  private final String name;
+  private final String databaseObjectName;
   private final String type;
 
   public DatabaseObjectDocument(final DatabaseObject databaseObject) {
@@ -42,32 +42,28 @@ public final class DatabaseObjectDocument implements Serializable {
     } else {
       schemaName = null;
     }
-    name = databaseObject.getName();
+    databaseObjectName = databaseObject.getName();
 
-    if (databaseObject instanceof TypedObject typedObject) {
+    if (databaseObject instanceof final TypedObject typedObject) {
       type = typedObject.getType().toString();
+    } else if (databaseObject instanceof Sequence) {
+      type = "sequence";
+    } else if (databaseObject instanceof Synonym) {
+      type = "synonym";
     } else {
-      if (databaseObject instanceof Sequence) {
-        type = "sequence";
-      } else if (databaseObject instanceof Synonym) {
-        type = "synonym";
-      } else {
-        type = null;
-      }
+      type = null;
     }
   }
 
   @JsonProperty("name")
-  public String getObjectName() {
-    return name;
+  public String getDatabaseObjectName() {
+    return databaseObjectName;
   }
 
-  @JsonProperty("schema")
   public String getSchemaName() {
     return schemaName;
   }
 
-  @JsonProperty("type")
   public String getType() {
     return type;
   }

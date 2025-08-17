@@ -38,9 +38,9 @@ import schemacrawler.utility.MetaDataUtility;
   "schema",
   "name",
   "type",
+  "parameters",
   "referenced-objects",
   "remarks",
-  "parameters",
   "definition"
 })
 public final class RoutineDocument implements Serializable {
@@ -61,12 +61,11 @@ public final class RoutineDocument implements Serializable {
   }
 
   private final String schemaName;
-
-  private final String name;
+  private final String routineName;
   private final String type;
+  private final List<RoutineParameterDocument> parameters;
   private final Collection<DatabaseObjectDocument> referencedObjects;
   private final String remarks;
-  private final List<RoutineParameterDocument> parameters;
   private final String definition;
 
   RoutineDocument(
@@ -77,8 +76,15 @@ public final class RoutineDocument implements Serializable {
     final String schemaName = routine.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
 
-    name = routine.getName();
+    routineName = routine.getName();
     type = MetaDataUtility.getSimpleTypeName(routine).name();
+
+    parameters = new ArrayList<>();
+    for (final RoutineParameter<? extends Routine> routineParameter : routine.getParameters()) {
+      final RoutineParameterDocument parameterDocument =
+          new RoutineParameterDocument(routineParameter);
+      parameters.add(parameterDocument);
+    }
 
     if (details.get(REFERENCED_OBJECTS)) {
       final Collection<? extends DatabaseObject> references = routine.getReferencedObjects();
@@ -89,13 +95,6 @@ public final class RoutineDocument implements Serializable {
       }
     } else {
       referencedObjects = null;
-    }
-
-    parameters = new ArrayList<>();
-    for (final RoutineParameter<? extends Routine> routineParameter : routine.getParameters()) {
-      final RoutineParameterDocument parameterDocument =
-          new RoutineParameterDocument(routineParameter);
-      parameters.add(parameterDocument);
     }
 
     if (routine.hasRemarks()) {
@@ -112,37 +111,31 @@ public final class RoutineDocument implements Serializable {
     }
   }
 
-  @JsonProperty("definition")
   public String getDefinition() {
     return definition;
   }
 
-  @JsonProperty("name")
-  public String getName() {
-    return name;
-  }
-
-  @JsonProperty("parameters")
   public List<RoutineParameterDocument> getParameters() {
     return parameters;
   }
 
-  @JsonProperty("referenced-objects")
   public Collection<DatabaseObjectDocument> getReferencedObjects() {
     return referencedObjects;
   }
 
-  @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
   }
 
-  @JsonProperty("schema")
+  @JsonProperty("name")
+  public String getRoutineName() {
+    return routineName;
+  }
+
   public String getSchema() {
     return schemaName;
   }
 
-  @JsonProperty("type")
   public String getType() {
     return type;
   }

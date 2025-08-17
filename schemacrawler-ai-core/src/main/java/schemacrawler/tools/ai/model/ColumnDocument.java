@@ -21,7 +21,7 @@ import schemacrawler.schema.Column;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"column", "remarks", "data-type", "referenced-column"})
+@JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
 public final class ColumnDocument implements Serializable {
 
   private static final long serialVersionUID = 5110252842937512910L;
@@ -52,7 +52,7 @@ public final class ColumnDocument implements Serializable {
     }
   }
 
-  @JsonProperty("column")
+  @JsonProperty("name")
   public String getColumnName() {
     return columnName;
   }

@@ -26,13 +26,11 @@ import schemacrawler.schema.Trigger;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
   "name",
-  "table",
-  "remarks",
-  "primary-key",
-  "columns",
-  "indexes",
-  "attributes",
-  "definition"
+  "action-condition",
+  "action-statement",
+  "action-orientation",
+  "condition-timing",
+  "event-manipulation"
 })
 public final class TriggerDocument implements Serializable {
 
