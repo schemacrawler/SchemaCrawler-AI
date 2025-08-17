@@ -10,28 +10,15 @@ package schemacrawler.tools.command.aichat.function.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static schemacrawler.test.utility.DatabaseTestUtility.getCatalog;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.ROUTINES;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SEQUENCES;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.SYNONYMS;
 import static schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope.TABLES;
 
-import java.sql.Connection;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.inclusionrule.IncludeAll;
-import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
-import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.LoadOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
-import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestUtility;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters;
@@ -40,9 +27,7 @@ import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUti
 @WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DatabaseObjectDescriptionFunctionTest {
-
-  private Catalog catalog;
+public class DatabaseObjectDescriptionFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void describeAllRoutines(final TestContext testContext) throws Exception {
@@ -91,28 +76,6 @@ public class DatabaseObjectDescriptionFunctionTest {
     final DatabaseObjectDescriptionFunctionParameters args =
         new DatabaseObjectDescriptionFunctionParameters("NOT_A SYNONYM", SYNONYMS);
     describeDatabaseObject(testContext, args, true);
-  }
-
-  @BeforeAll
-  public void loadCatalog(final Connection connection) throws Exception {
-
-    final SchemaRetrievalOptions schemaRetrievalOptions = TestUtility.newSchemaRetrievalOptions();
-
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSchemas(new RegularExpressionExclusionRule(".*\\.FOR_LINT"))
-            .includeTables(new IncludeAll())
-            .includeAllRoutines()
-            .includeAllSynonyms()
-            .includeAllSequences();
-    final LoadOptionsBuilder loadOptionsBuilder =
-        LoadOptionsBuilder.builder().withSchemaInfoLevel(SchemaInfoLevelBuilder.maximum());
-    final SchemaCrawlerOptions schemaCrawlerOptions =
-        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-            .withLimitOptions(limitOptionsBuilder.toOptions())
-            .withLoadOptions(loadOptionsBuilder.toOptions());
-
-    catalog = getCatalog(connection, schemaRetrievalOptions, schemaCrawlerOptions);
   }
 
   @Test
