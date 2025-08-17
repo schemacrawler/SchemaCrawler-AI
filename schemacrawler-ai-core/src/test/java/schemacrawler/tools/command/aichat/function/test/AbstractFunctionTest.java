@@ -19,6 +19,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
 import schemacrawler.test.utility.ResolveTestContext;
+import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -32,6 +33,7 @@ public abstract class AbstractFunctionTest {
   protected Catalog catalog;
 
   @BeforeAll
+  @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
   public final void loadCatalog(final Connection connection) throws Exception {
 
     final LimitOptionsBuilder limitOptionsBuilder =
