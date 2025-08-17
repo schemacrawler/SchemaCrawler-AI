@@ -9,12 +9,11 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
-
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.Collection;
+import com.fasterxml.jackson.databind.node.ArrayNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Column;
@@ -64,7 +63,7 @@ public final class ListAcrossTablesFunctionExecutor
     }
 
     return () -> {
-      final String listName = dependantObjectType.name().toLowerCase();
+      final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
       final ArrayNode list = createTypedObjectsArray(dependantObjects, dependantObjectType);
       final ObjectNode listObject = wrapList(listName, list);
       return listObject.toString();
