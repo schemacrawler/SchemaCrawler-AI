@@ -52,7 +52,7 @@ public class FullTextCatalogContentRetriever implements ContentRetriever {
           new CompactCatalogUtility()
               .withAdditionalTableDetails(allTableDetails)
               .getTableDocument(table);
-      luceneIndexer.add(TextSegment.from(tableDocument.toJson().toPrettyString()));
+      luceneIndexer.add(TextSegment.from(tableDocument.toObjectNode().toPrettyString()));
     }
 
     fullTextCatalogRetriever =

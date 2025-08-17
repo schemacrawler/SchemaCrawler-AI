@@ -9,21 +9,29 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import java.util.ArrayList;
-import java.util.Collection;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static us.fatehi.utility.Utility.isBlank;
+import java.util.ArrayList;
+import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.DependantObject;
+import schemacrawler.schema.ForeignKey;
+import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
+import schemacrawler.schema.Trigger;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
+import schemacrawler.tools.ai.model.ColumnDocument;
+import schemacrawler.tools.ai.model.ForeignKeyDocument;
+import schemacrawler.tools.ai.model.IndexDocument;
+import schemacrawler.tools.ai.model.TriggerDocument;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
@@ -89,20 +97,29 @@ public final class ListAcrossTablesFunctionExecutor
 
   private ObjectNode createDependentObjectNode(
       final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
-    final ObjectNode objectNode = mapper.createObjectNode();
+
+    final ObjectNode objectNode;
+    if (dependantObject instanceof final Column column) {
+      final ColumnDocument columnDocument = new ColumnDocument(column, null);
+      objectNode = columnDocument.toObjectNode();
+    } else if (dependantObject instanceof final Index index) {
+      final IndexDocument indexDocument = new IndexDocument(index);
+      objectNode = indexDocument.toObjectNode();
+    } else if (dependantObject instanceof final Trigger trigger) {
+      final TriggerDocument triggerDocument = new TriggerDocument(trigger);
+      objectNode = triggerDocument.toObjectNode();
+    } else if (dependantObject instanceof final ForeignKey foreignKey) {
+      final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey);
+      objectNode = fkDocument.toObjectNode();
+    } else {
+      return mapper.createObjectNode();
+    }
+    // Add parent table
     final String schemaName = dependantObject.getSchema().getFullName();
     if (!isBlank(schemaName)) {
       objectNode.put("schema", schemaName);
     }
     objectNode.put("table", dependantObject.getParent().getName());
-    final String nameAttribute = dependantObjectType.nameAttribute();
-    objectNode.put(nameAttribute, dependantObject.getName());
-    if (dependantObject instanceof final Column column) {
-      objectNode.put("data-type", column.getColumnDataType().getName());
-    }
-    if (dependantObject.hasRemarks()) {
-      objectNode.put("remarks", dependantObject.getRemarks());
-    }
     return objectNode;
   }
 

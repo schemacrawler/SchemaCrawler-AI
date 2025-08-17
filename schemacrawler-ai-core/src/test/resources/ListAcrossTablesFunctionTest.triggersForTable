@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","triggers":[{"schema":"PUBLIC.BOOKS","table":"AUTHORS","trigger":"TRG_AUTHORS"}]}
+{"db":"HSQL Database Engine","triggers":[{"name":"TRG_AUTHORS","action-statement":"UPDATE BOOKS.PUBLISHERS SET PUBLISHER='Jacob'WHERE PUBLISHER='John'","action-orientation":"row","condition-timing":"after","action-order":0,"event-manipulation-type":["delete"],"schema":"PUBLIC.BOOKS","table":"AUTHORS"}]}

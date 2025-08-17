@@ -14,8 +14,10 @@ import static us.fatehi.utility.Utility.isBlank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.Serializable;
 import schemacrawler.schema.Column;
 
@@ -70,5 +72,14 @@ public final class ColumnDocument implements Serializable {
   @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
+  }
+
+  public ObjectNode toObjectNode() {
+    return new ObjectMapper().valueToTree(this);
+  }
+
+  @Override
+  public String toString() {
+    return toObjectNode().toString();
   }
 }

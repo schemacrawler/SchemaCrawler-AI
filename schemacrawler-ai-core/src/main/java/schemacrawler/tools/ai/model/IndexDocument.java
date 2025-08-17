@@ -13,10 +13,10 @@ import static java.util.Objects.requireNonNull;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -68,12 +68,12 @@ public final class IndexDocument implements Serializable {
     return isUnique;
   }
 
+  public ObjectNode toObjectNode() {
+    return new ObjectMapper().valueToTree(this);
+  }
+
   @Override
   public String toString() {
-    try {
-      return new ObjectMapper().writeValueAsString(this);
-    } catch (final JsonProcessingException e) {
-      return super.toString();
-    }
+    return toObjectNode().toString();
   }
 }
