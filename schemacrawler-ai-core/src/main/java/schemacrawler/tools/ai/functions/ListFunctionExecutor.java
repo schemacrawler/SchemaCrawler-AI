@@ -58,7 +58,7 @@ public final class ListFunctionExecutor
 
     return () -> {
       final ArrayNode list = createTypedObjectsArray(databaseObjects);
-      final ObjectNode listObject = wrapList(list);
+      final ObjectNode listObject = wrapList("list", list);
       return listObject.toString();
     };
   }

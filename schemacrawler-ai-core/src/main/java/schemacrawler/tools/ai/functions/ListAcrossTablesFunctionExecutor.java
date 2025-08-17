@@ -64,8 +64,9 @@ public final class ListAcrossTablesFunctionExecutor
     }
 
     return () -> {
+      final String listName = dependantObjectType.name().toLowerCase();
       final ArrayNode list = createTypedObjectsArray(dependantObjects, dependantObjectType);
-      final ObjectNode listObject = wrapList(list);
+      final ObjectNode listObject = wrapList(listName, list);
       return listObject.toString();
     };
   }

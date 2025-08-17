@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","table":"BOOKS","column":"PUBLICATIONDATE","data-type":"DATE","remarks":"Book publication date"}]}
+{"db":"HSQL Database Engine","columns":[{"schema":"PUBLIC.BOOKS","table":"BOOKS","column":"PUBLICATIONDATE","data-type":"DATE","remarks":"Book publication date"}]}

@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.requireNotBlank;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
@@ -32,11 +33,12 @@ public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
     MetaDataUtility.reduceCatalog(catalog, options);
   }
 
-  protected final ObjectNode wrapList(final ArrayNode list) {
+  protected final ObjectNode wrapList(final String listName, final ArrayNode list) {
+    requireNotBlank(listName, "No list name provided");
     final ObjectNode objectNode = mapper.createObjectNode();
     objectNode.put("db", catalog.getDatabaseInfo().getDatabaseProductName());
     if (list != null) {
-      objectNode.set("list", list);
+      objectNode.set(listName, list);
     }
     return objectNode;
   }
