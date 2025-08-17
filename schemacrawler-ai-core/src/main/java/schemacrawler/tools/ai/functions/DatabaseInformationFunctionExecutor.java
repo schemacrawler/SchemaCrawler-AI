@@ -32,11 +32,8 @@ public final class DatabaseInformationFunctionExecutor
   public FunctionReturn call() throws Exception {
     refilterCatalog();
 
-    return () -> {
-      final ArrayNode list = createServerInfoArray();
-      final ObjectNode listObject = wrapList("server-information", list);
-      return listObject.toString();
-    };
+    final ArrayNode list = createServerInfoArray();
+    return new JsonFunctionReturn("server-information", list);
   }
 
   @Override

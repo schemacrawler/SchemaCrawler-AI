@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"},{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"}]}
+{"list":[{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"},{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"}]}

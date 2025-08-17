@@ -29,6 +29,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
 import schemacrawler.tools.ai.model.ColumnDocument;
+import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.model.ForeignKeyDocument;
 import schemacrawler.tools.ai.model.IndexDocument;
 import schemacrawler.tools.ai.model.TriggerDocument;
@@ -70,12 +71,9 @@ public final class ListAcrossTablesFunctionExecutor
       }
     }
 
-    return () -> {
-      final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
-      final ArrayNode list = createTypedObjectsArray(dependantObjects, dependantObjectType);
-      final ObjectNode listObject = wrapList(listName, list);
-      return listObject.toString();
-    };
+    final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
+    final ArrayNode list = createTypedObjectsArray(dependantObjects, dependantObjectType);
+    return new JsonFunctionReturn(listName, list);
   }
 
   @Override
@@ -98,22 +96,29 @@ public final class ListAcrossTablesFunctionExecutor
   private ObjectNode createDependentObjectNode(
       final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
 
-    final ObjectNode objectNode;
-    if (dependantObject instanceof final Column column) {
-      final ColumnDocument columnDocument = new ColumnDocument(column, null);
-      objectNode = columnDocument.toObjectNode();
-    } else if (dependantObject instanceof final Index index) {
-      final IndexDocument indexDocument = new IndexDocument(index);
-      objectNode = indexDocument.toObjectNode();
-    } else if (dependantObject instanceof final Trigger trigger) {
-      final TriggerDocument triggerDocument = new TriggerDocument(trigger);
-      objectNode = triggerDocument.toObjectNode();
-    } else if (dependantObject instanceof final ForeignKey foreignKey) {
-      final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey);
-      objectNode = fkDocument.toObjectNode();
-    } else {
+    final Document document;
+    switch (dependantObjectType) {
+      case COLUMNS:
+        document = new ColumnDocument((Column) dependantObject, null);
+        break;
+      case INDEXES:
+        document = new IndexDocument((Index) dependantObject);
+        break;
+      case FOREIGN_KEYS:
+        document = new ForeignKeyDocument((ForeignKey) dependantObject);
+        break;
+      case TRIGGERS:
+        document = new TriggerDocument((Trigger) dependantObject);
+        break;
+      default:
+        document = null;
+        break;
+    }
+    if (document == null) {
       return mapper.createObjectNode();
     }
+
+    final ObjectNode objectNode = document.toObjectNode();
     // Add parent table
     final String schemaName = dependantObject.getSchema().getFullName();
     if (!isBlank(schemaName)) {

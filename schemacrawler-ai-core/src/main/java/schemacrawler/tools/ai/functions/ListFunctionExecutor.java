@@ -15,7 +15,6 @@ import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -56,11 +55,8 @@ public final class ListFunctionExecutor
       databaseObjects.addAll(catalog.getSynonyms());
     } // fall through - no else
 
-    return () -> {
-      final ArrayNode list = createTypedObjectsArray(databaseObjects);
-      final ObjectNode listObject = wrapList("list", list);
-      return listObject.toString();
-    };
+    final ArrayNode list = createTypedObjectsArray(databaseObjects);
+    return new JsonFunctionReturn("list", list);
   }
 
   @Override

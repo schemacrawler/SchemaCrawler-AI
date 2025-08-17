@@ -44,7 +44,7 @@ public final class DescribeRoutinesFunctionExecutor
         new CompactCatalogUtility()
             .withAdditionalRoutineDetails(routineDetails)
             .createCatalogDocument(catalog);
-    return () -> catalogDocument.toString();
+    return new JsonFunctionReturn(catalogDocument);
   }
 
   private Collection<AdditionalRoutineDetails> getRoutineDetails() {

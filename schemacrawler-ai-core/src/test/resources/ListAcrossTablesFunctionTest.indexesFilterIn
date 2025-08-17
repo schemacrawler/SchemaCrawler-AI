@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","indexes":[{"name":"U_PREVIOUSEDITION","columns":["PREVIOUSEDITIONID"],"unique":true,"schema":"PUBLIC.BOOKS","table":"BOOKS"}]}
+{"indexes":[{"name":"U_PREVIOUSEDITION","columns":["PREVIOUSEDITIONID"],"unique":true,"schema":"PUBLIC.BOOKS","table":"BOOKS"}]}

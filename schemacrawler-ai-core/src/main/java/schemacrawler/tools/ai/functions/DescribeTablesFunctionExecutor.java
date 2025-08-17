@@ -43,7 +43,7 @@ public final class DescribeTablesFunctionExecutor
         new CompactCatalogUtility()
             .withAdditionalTableDetails(tableDetails)
             .createCatalogDocument(catalog);
-    return () -> catalogDocument.toString();
+    return new JsonFunctionReturn(catalogDocument);
   }
 
   private Collection<AdditionalTableDetails> getTableDetails() {
