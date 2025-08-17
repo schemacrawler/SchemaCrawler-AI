@@ -60,6 +60,7 @@ public final class DatabaseObjectDocument implements Serializable {
     return databaseObjectName;
   }
 
+  @JsonProperty("schema")
   public String getSchemaName() {
     return schemaName;
   }

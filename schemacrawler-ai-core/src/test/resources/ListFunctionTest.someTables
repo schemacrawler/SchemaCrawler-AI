@@ -1,1 +1,1 @@
-{"db":"HSQL Database Engine","list":[{"name":"AUTHORS","type":"table","schema-name":"PUBLIC.BOOKS"},{"name":"BOOKAUTHORS","type":"table","schema-name":"PUBLIC.BOOKS"},{"name":"AUTHORSLIST","type":"view","schema-name":"PUBLIC.BOOKS"}]}
+{"db":"HSQL Database Engine","list":[{"schema":"PUBLIC.BOOKS","name":"AUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"AUTHORSLIST","type":"view"}]}

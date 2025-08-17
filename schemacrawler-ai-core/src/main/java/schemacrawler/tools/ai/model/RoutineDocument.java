@@ -132,7 +132,8 @@ public final class RoutineDocument implements Serializable {
     return routineName;
   }
 
-  public String getSchema() {
+  @JsonProperty("schema")
+  public String getSchemaName() {
     return schemaName;
   }
 

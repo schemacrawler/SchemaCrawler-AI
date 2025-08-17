@@ -187,7 +187,8 @@ public final class TableDocument implements Serializable {
     return remarks;
   }
 
-  public String getSchema() {
+  @JsonProperty("schema")
+  public String getSchemaName() {
     return schemaName;
   }
 
