@@ -20,10 +20,12 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 public final class Langchain4JToolExecutor implements ToolExecutor {
 
   private final FunctionCallback functionToolExecutor;
+  private final Connection connection;
 
   public Langchain4JToolExecutor(
       final String functionName, final Catalog catalog, final Connection connection) {
-    functionToolExecutor = new FunctionCallback(functionName, catalog, connection);
+    functionToolExecutor = new FunctionCallback(functionName, catalog);
+    this.connection = requireNonNull(connection, "No database connection provided");
   }
 
   @Override
@@ -35,7 +37,7 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
       throw new SchemaCrawlerException(String.format("Cannot execute function <>", functionName));
     }
     final String arguments = toolExecutionRequest.arguments();
-    return functionToolExecutor.execute(arguments);
+    return functionToolExecutor.execute(arguments, connection);
   }
 
   @Override

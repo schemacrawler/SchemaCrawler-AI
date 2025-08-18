@@ -8,10 +8,10 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
@@ -20,6 +20,7 @@ import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
+import us.fatehi.utility.string.StringFormat;
 
 @UtilityMarker
 public final class SpringAIToolUtility {
@@ -32,19 +33,18 @@ public final class SpringAIToolUtility {
 
     final boolean isDryRun = ConfigurationManager.getInstance().isDryRun();
     final Catalog catalog;
-    final Connection connection;
     if (isDryRun) {
       catalog = null;
-      connection = null;
     } else {
       final ConnectionService connectionService = ConnectionService.getInstance();
       catalog = connectionService.catalog();
-      connection = connectionService.connection();
+      connectionService.connection();
     }
 
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
     for (final ToolDefinition toolDefinition : tools) {
-      toolCallbacks.add(new SpringAIToolCallback(isDryRun, toolDefinition, catalog, connection));
+      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
+      toolCallbacks.add(new SpringAIToolCallback(isDryRun, toolDefinition, catalog));
     }
     return toolCallbacks;
   }

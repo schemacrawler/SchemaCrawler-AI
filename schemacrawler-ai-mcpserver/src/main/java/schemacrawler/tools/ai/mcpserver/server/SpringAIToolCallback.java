@@ -29,14 +29,11 @@ public final class SpringAIToolCallback implements ToolCallback {
   private final FunctionCallback functionToolExecutor;
 
   public SpringAIToolCallback(
-      final boolean isDryRun,
-      final ToolDefinition toolDefinition,
-      final Catalog catalog,
-      final Connection connection) {
+      final boolean isDryRun, final ToolDefinition toolDefinition, final Catalog catalog) {
     this.isDryRun = isDryRun;
     this.toolDefinition = Objects.requireNonNull(toolDefinition, "No tool definition provided");
     if (!isDryRun) {
-      functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog, connection);
+      functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
     } else {
       functionToolExecutor = null;
     }
@@ -54,7 +51,8 @@ public final class SpringAIToolCallback implements ToolCallback {
     if (isDryRun) {
       return callMessage;
     }
-    return functionToolExecutor.execute(toolInput);
+    final Connection connection = ConnectionService.getInstance().connection();
+    return functionToolExecutor.execute(toolInput, connection);
   }
 
   @Override
