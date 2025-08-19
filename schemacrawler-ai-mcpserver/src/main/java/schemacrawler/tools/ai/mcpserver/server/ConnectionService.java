@@ -11,6 +11,11 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 /**
  * A singleton service that provides access to database connection resources. This class follows an
@@ -18,6 +23,8 @@ import java.sql.Connection;
  * can be used.
  */
 public class ConnectionService {
+
+  private static final Logger LOGGER = Logger.getLogger(ConnectionService.class.getName());
 
   private static final Object lock = new Object();
   private static volatile ConnectionService instance;
@@ -48,21 +55,36 @@ public class ConnectionService {
       if (instance != null) {
         throw new IllegalStateException("ConnectionService has already been initialized");
       }
-      instance = new ConnectionService(connection);
+      final DatabaseConnectionSource dbConnectionSource = newDatabaseConnectionSource(connection);
+      instance = new ConnectionService(dbConnectionSource);
     }
   }
 
-  private final Connection connection;
+  private static DatabaseConnectionSource newDatabaseConnectionSource(final Connection connection) {
+    DatabaseConnectionSource dbConnectionSource = null;
+
+    try {
+      dbConnectionSource = EnvironmentalDatabaseConnectionSourceBuilder.builder().build();
+    } catch (final Exception e) {
+      LOGGER.log(Level.WARNING, "Cannot make a database connection", e);
+      // Fall back to using the provided connection
+      dbConnectionSource = DatabaseConnectionSources.fromConnection(connection);
+    }
+    return dbConnectionSource;
+  }
+
+  private final DatabaseConnectionSource dbConnectionSource;
 
   /**
    * Private constructor to prevent direct instantiation. Use {@link #instantiate(Connection)} to
    * initialize and {@link #getInstance()} to access the singleton instance.
    */
-  private ConnectionService(final Connection connection) {
-    this.connection = requireNonNull(connection, "No connection provided");
+  private ConnectionService(final DatabaseConnectionSource dbConnectionSource) {
+    this.dbConnectionSource =
+        requireNonNull(dbConnectionSource, "No database connection source provided");
   }
 
   public Connection connection() {
-    return connection;
+    return dbConnectionSource.get();
   }
 }
