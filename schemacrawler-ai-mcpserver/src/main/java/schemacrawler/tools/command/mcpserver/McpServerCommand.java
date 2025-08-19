@@ -36,8 +36,8 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
 
   @Override
   public void execute() {
-    ConnectionService.instantiate(commandOptions, catalog, connection);
-    ConfigurationManager.getInstance().setDryRun(false);
+    ConnectionService.instantiate(connection);
+    ConfigurationManager.instantiate(commandOptions, catalog);
     startMcpServer(commandOptions.mcpTransport());
   }
 

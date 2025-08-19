@@ -37,8 +37,9 @@ public final class SpringAIToolUtility {
       catalog = null;
     } else {
       final ConnectionService connectionService = ConnectionService.getInstance();
-      catalog = connectionService.catalog();
       connectionService.connection();
+      final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+      catalog = configurationManager.getCatalog();
     }
 
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
