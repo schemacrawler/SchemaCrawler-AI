@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -130,5 +131,15 @@ public class McpServerContextTest {
     assertThat(context.validLogLevel(null).getName(), is("INFO"));
     assertThat(context.validLogLevel("").getName(), is("INFO"));
     assertThat(context.validLogLevel("invalid").getName(), is("INFO"));
+  }
+
+  @Test
+  @DisplayName("Should validate transport correctly")
+  void shouldValidateTransport() {
+    assertThat(context.validTransport("stdio"), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport("sse"), is(McpServerTransportType.sse));
+    assertThat(context.validTransport("unknown"), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport(null), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport(""), is(McpServerTransportType.stdio));
   }
 }

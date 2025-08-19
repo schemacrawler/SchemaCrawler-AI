@@ -78,45 +78,73 @@ public final class McpServerContext {
     arguments.add("--command");
     arguments.add("mcpserver");
 
+    final String transport = envAccessor.getenv("SCHCRWLR_MCP_SERVER_TRANSPORT");
     arguments.add("--transport");
-    arguments.add(McpServerTransportType.stdio.name());
+    arguments.add(validTransport(transport).name());
   }
 
   /**
-   * Checks if a string is a valid SchemaCrawler info level.
+   * Parses a string and returns a valid SchemaCrawler info level.
    *
-   * @param infoLevelString The info level string to check
-   * @return true if the string is a valid info level, false otherwise
+   * @param value The info level string to check
+   * @return InfoLevel Non-null value
    */
-  protected InfoLevel validInfoLevel(final String infoLevelString) {
-    if (isBlank(infoLevelString)) {
-      return InfoLevel.standard;
+  protected InfoLevel validInfoLevel(final String value) {
+    final InfoLevel defaultValue = InfoLevel.standard;
+
+    if (isBlank(value)) {
+      return defaultValue;
     }
     try {
-      InfoLevel infoLevel = InfoLevel.valueOfFromString(infoLevelString);
+      InfoLevel infoLevel = InfoLevel.valueOfFromString(value);
       if (infoLevel == InfoLevel.unknown) {
-        infoLevel = InfoLevel.standard;
+        infoLevel = defaultValue;
       }
       return infoLevel;
     } catch (final Exception e) {
-      return InfoLevel.standard;
+      return defaultValue;
     }
   }
 
   /**
-   * Checks if a string is a valid log level.
+   * Parses a string and returns a valid log level.
    *
-   * @param logLevel The log level string to check
-   * @return true if the string is a valid info level, false otherwise
+   * @param value The log level string to check
+   * @return Level Non-null value
    */
-  protected Level validLogLevel(final String logLevel) {
-    if (isBlank(logLevel)) {
-      return Level.INFO;
+  protected Level validLogLevel(final String value) {
+    final Level defaultValue = Level.INFO;
+
+    if (isBlank(value)) {
+      return defaultValue;
     }
     try {
-      return Level.parse(logLevel);
+      return Level.parse(value);
     } catch (final Exception e) {
-      return Level.INFO;
+      return defaultValue;
+    }
+  }
+
+  /**
+   * Parses a string and returns a valid transport.
+   *
+   * @param value The transport string to check
+   * @return McpServerTransportType Non-null value
+   */
+  protected McpServerTransportType validTransport(final String value) {
+    final McpServerTransportType defaultValue = McpServerTransportType.stdio;
+
+    if (isBlank(value)) {
+      return defaultValue;
+    }
+    try {
+      McpServerTransportType transport = McpServerTransportType.valueOf(value);
+      if (transport == McpServerTransportType.unknown) {
+        transport = defaultValue;
+      }
+      return transport;
+    } catch (final Exception e) {
+      return defaultValue;
     }
   }
 
