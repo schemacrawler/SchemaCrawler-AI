@@ -74,6 +74,10 @@ public final class McpServerContext {
 
     arguments.add("--routines");
     arguments.add(".*");
+    arguments.add("--sequences");
+    arguments.add(".*");
+    arguments.add("--synonyms");
+    arguments.add(".*");
 
     arguments.add("--command");
     arguments.add("mcpserver");
