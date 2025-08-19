@@ -2,7 +2,9 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -38,11 +40,19 @@ public final class McpServerContext {
    */
   public String[] buildArguments() {
 
-    final DatabaseConnectionSourceBuilder databaseConnectionSourceBuilder =
-        EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor);
-    final List<String> connectionArguments = databaseConnectionSourceBuilder.toArguments();
+    final List<String> arguments = new ArrayList<>();
 
-    final List<String> arguments = new ArrayList<>(connectionArguments);
+    final List<String> offlineDatabaseArgs = buildOfflineDatabaseArguments();
+    if (offlineDatabaseArgs.size() > 0) {
+      arguments.addAll(offlineDatabaseArgs);
+    } else {
+      final DatabaseConnectionSourceBuilder databaseConnectionSourceBuilder =
+          EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor);
+      final List<String> connectionArguments = databaseConnectionSourceBuilder.toArguments();
+
+      arguments.addAll(connectionArguments);
+    }
+
     addSchemaCrawlerArguments(arguments);
 
     return arguments.toArray(new String[0]);
@@ -113,5 +123,28 @@ public final class McpServerContext {
     } catch (final Exception e) {
       return false;
     }
+  }
+
+  private List<String> buildOfflineDatabaseArguments() {
+
+    final List<String> arguments = new ArrayList<>();
+
+    final String offlineDatabasePathString =
+        trimToEmpty(envAccessor.getenv("SCHCRWLR_OFFLINE_DATABASE"));
+    if (isBlank(offlineDatabasePathString)) {
+      return arguments;
+    }
+
+    final Path offlineDatabasePath = Path.of(offlineDatabasePathString);
+    if (!offlineDatabasePath.toFile().exists() && !offlineDatabasePath.toFile().isFile()) {
+      return arguments;
+    }
+
+    arguments.add("--server");
+    arguments.add("offline");
+    arguments.add("--database");
+    arguments.add(offlineDatabasePath.toAbsolutePath().toString());
+
+    return arguments;
   }
 }
