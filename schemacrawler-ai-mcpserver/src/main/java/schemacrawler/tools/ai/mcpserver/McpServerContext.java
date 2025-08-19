@@ -66,19 +66,11 @@ public final class McpServerContext {
   protected void addSchemaCrawlerArguments(final List<String> arguments) {
     final String infoLevel = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
     arguments.add("--info-level");
-    if (isValidInfoLevel(infoLevel)) {
-      arguments.add(infoLevel);
-    } else {
-      arguments.add(InfoLevel.standard.name());
-    }
+    arguments.add(validInfoLevel(infoLevel).name());
 
     final String logLevel = envAccessor.getenv("SCHCRWLR_LOG_LEVEL");
     arguments.add("--log-level");
-    if (isValidLogLevel(logLevel)) {
-      arguments.add(logLevel);
-    } else {
-      arguments.add(Level.INFO.getName());
-    }
+    arguments.add(validLogLevel(logLevel).getName());
 
     arguments.add("--routines");
     arguments.add(".*");
@@ -93,17 +85,21 @@ public final class McpServerContext {
   /**
    * Checks if a string is a valid SchemaCrawler info level.
    *
-   * @param infoLevel The info level string to check
+   * @param infoLevelString The info level string to check
    * @return true if the string is a valid info level, false otherwise
    */
-  protected boolean isValidInfoLevel(final String infoLevel) {
-    if (isBlank(infoLevel)) {
-      return false;
+  protected InfoLevel validInfoLevel(final String infoLevelString) {
+    if (isBlank(infoLevelString)) {
+      return InfoLevel.standard;
     }
     try {
-      return InfoLevel.valueOfFromString(infoLevel) != InfoLevel.unknown;
+      InfoLevel infoLevel = InfoLevel.valueOfFromString(infoLevelString);
+      if (infoLevel == InfoLevel.unknown) {
+        infoLevel = InfoLevel.standard;
+      }
+      return infoLevel;
     } catch (final Exception e) {
-      return false;
+      return InfoLevel.standard;
     }
   }
 
@@ -113,15 +109,14 @@ public final class McpServerContext {
    * @param logLevel The log level string to check
    * @return true if the string is a valid info level, false otherwise
    */
-  protected boolean isValidLogLevel(final String logLevel) {
+  protected Level validLogLevel(final String logLevel) {
     if (isBlank(logLevel)) {
-      return false;
+      return Level.INFO;
     }
     try {
-      Level.parse(logLevel);
-      return true;
+      return Level.parse(logLevel);
     } catch (final Exception e) {
-      return false;
+      return Level.INFO;
     }
   }
 
