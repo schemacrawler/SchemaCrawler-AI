@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.Mockito.mock;
 
 import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
@@ -23,8 +24,10 @@ import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
+import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -33,6 +36,7 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
   public static void setDryRun() {
+    ConfigurationManager.instantiate(mock(McpServerCommandOptions.class), mock(Catalog.class));
     ConfigurationManager.getInstance().setDryRun(true);
   }
 

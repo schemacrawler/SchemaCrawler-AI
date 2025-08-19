@@ -35,7 +35,6 @@ public final class FunctionCallback {
 
   private FunctionDefinition<FunctionParameters> functionDefinition;
   private final Catalog catalog;
-  private final Connection connection;
 
   /**
    * Function callbacks are created and registered ahead of time, with the required context that is
@@ -45,10 +44,8 @@ public final class FunctionCallback {
    * @param catalog Database catalog.
    * @param connection A live connection to the database.
    */
-  public FunctionCallback(
-      final String functionName, final Catalog catalog, final Connection connection) {
+  public FunctionCallback(final String functionName, final Catalog catalog) {
     this.catalog = catalog;
-    this.connection = connection;
 
     // Look up function definition
     final Optional<FunctionDefinition<?>> lookedupFunctionDefinition =
@@ -69,7 +66,10 @@ public final class FunctionCallback {
    * @param argumentsString JSON string with arguments.
    * @return Result of execution.
    */
-  public String execute(final String argumentsString) {
+  public String execute(final String argumentsString, final Connection connection) {
+
+    requireNonNull(connection, "No database connection provided");
+
     final PropertyName functionName = getFunctionName();
     LOGGER.log(
         Level.INFO, new StringFormat("Executing%n%s", toObject(argumentsString).toPrettyString()));
@@ -81,7 +81,7 @@ public final class FunctionCallback {
     try {
       final FunctionParameters arguments = instantiateArguments(argumentsString);
 
-      final String returnValue = executeFunction(arguments);
+      final String returnValue = executeFunction(arguments, connection);
       return returnValue;
     } catch (final Exception e) {
       LOGGER.log(
@@ -113,7 +113,7 @@ public final class FunctionCallback {
     return toObject(null).toPrettyString();
   }
 
-  private String executeFunction(final FunctionParameters arguments) {
+  private String executeFunction(final FunctionParameters arguments, final Connection connection) {
     requireNonNull(arguments, "No function arguments provided");
 
     try {
