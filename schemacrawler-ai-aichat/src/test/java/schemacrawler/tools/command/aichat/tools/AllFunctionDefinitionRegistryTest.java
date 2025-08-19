@@ -14,6 +14,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
+
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -31,7 +32,7 @@ import us.fatehi.utility.property.PropertyName;
 public class AllFunctionDefinitionRegistryTest {
 
   private static final int NUM_TEXT_FUNCTIONS = 3;
-  private static final int NUM_JSON_FUNCTIONS = 6;
+  private static final int NUM_JSON_FUNCTIONS = 7;
 
   @Test
   public void getJsonFunctions() throws Exception {
@@ -88,6 +89,7 @@ public class AllFunctionDefinitionRegistryTest {
             "describe-routines",
             "list",
             "list-across-tables",
+            "server-information",
             "table-sample"));
   }
 
