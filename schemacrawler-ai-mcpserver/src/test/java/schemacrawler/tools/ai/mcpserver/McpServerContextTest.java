@@ -8,13 +8,13 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -26,8 +26,8 @@ import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
-@DisplayName("DockerMcpServer tests")
-public class DockerMcpServerTest {
+@DisplayName("Docker MCP Server configuration tests")
+public class McpServerContextTest {
 
   private MockEnvironmentVariableAccessor envAccessor;
   private McpServerContext context;
@@ -59,7 +59,8 @@ public class DockerMcpServerTest {
 
   @Test
   @DisplayName(
-      "Should add SchemaCrawler arguments with default values when environment variables are not set")
+      "Should add SchemaCrawler arguments with default values when environment variables are not"
+          + " set")
   void shouldAddSchemaCrawlerArgumentsWithDefaults() {
     // Arrange
     final List<String> arguments = new ArrayList<>();
@@ -111,25 +112,34 @@ public class DockerMcpServerTest {
   @Test
   @DisplayName("Should validate info levels correctly")
   void shouldValidateInfoLevels() {
-    // Act & Assert
-    assertTrue(context.isValidInfoLevel("standard"));
-    assertTrue(context.isValidInfoLevel("detailed"));
-    assertTrue(context.isValidInfoLevel("maximum"));
-    assertFalse(context.isValidInfoLevel(null));
-    assertFalse(context.isValidInfoLevel(""));
-    assertFalse(context.isValidInfoLevel("invalid"));
+    assertThat(context.validInfoLevel("standard"), is(InfoLevel.standard));
+    assertThat(context.validInfoLevel("detailed"), is(InfoLevel.detailed));
+    assertThat(context.validInfoLevel("maximum"), is(InfoLevel.maximum));
+    assertThat(context.validInfoLevel(null), is(InfoLevel.standard));
+    assertThat(context.validInfoLevel(""), is(InfoLevel.standard));
+    assertThat(context.validInfoLevel("invalid"), is(InfoLevel.standard));
   }
 
   @Test
   @DisplayName("Should validate log levels correctly")
   void shouldValidateLogLevels() {
     // Act & Assert
-    assertTrue(context.isValidLogLevel("INFO"));
-    assertTrue(context.isValidLogLevel("WARNING"));
-    assertTrue(context.isValidLogLevel("SEVERE"));
-    assertTrue(context.isValidLogLevel("FINE"));
-    assertFalse(context.isValidLogLevel(null));
-    assertFalse(context.isValidLogLevel(""));
-    assertFalse(context.isValidLogLevel("invalid"));
+    assertThat(context.validLogLevel("INFO").getName(), is("INFO"));
+    assertThat(context.validLogLevel("WARNING").getName(), is("WARNING"));
+    assertThat(context.validLogLevel("SEVERE").getName(), is("SEVERE"));
+    assertThat(context.validLogLevel("FINE").getName(), is("FINE"));
+    assertThat(context.validLogLevel(null).getName(), is("INFO"));
+    assertThat(context.validLogLevel("").getName(), is("INFO"));
+    assertThat(context.validLogLevel("invalid").getName(), is("INFO"));
+  }
+
+  @Test
+  @DisplayName("Should validate transport correctly")
+  void shouldValidateTransport() {
+    assertThat(context.validTransport("stdio"), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport("sse"), is(McpServerTransportType.sse));
+    assertThat(context.validTransport("unknown"), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport(null), is(McpServerTransportType.stdio));
+    assertThat(context.validTransport(""), is(McpServerTransportType.stdio));
   }
 }
