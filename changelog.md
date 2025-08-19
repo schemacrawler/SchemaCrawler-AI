@@ -10,6 +10,7 @@ SchemaCrawler AI release notes.
 - Add table-sample function to MCP server
 - Show remarks and data types wherever possible
 - Add function for getting database server information
+- Create a new connection from the pool for every tool execution
 
 
 <a name="v16.26.3-4"></a>
