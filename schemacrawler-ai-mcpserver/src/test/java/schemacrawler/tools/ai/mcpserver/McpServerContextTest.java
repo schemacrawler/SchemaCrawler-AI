@@ -14,7 +14,6 @@ import static org.hamcrest.Matchers.greaterThan;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -28,6 +27,8 @@ import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
 @DisplayName("Docker MCP Server configuration tests")
 public class McpServerContextTest {
+
+  private static final int NUM_ARGS = 14;
 
   private MockEnvironmentVariableAccessor envAccessor;
   private McpServerContext context;
@@ -52,7 +53,7 @@ public class McpServerContextTest {
     context.addSchemaCrawlerArguments(arguments);
 
     // Assert
-    assertThat(arguments, hasSize(10));
+    assertThat(arguments, hasSize(NUM_ARGS));
     assertThat(arguments, hasItems("--info-level", "detailed"));
     assertThat(arguments, hasItems("--log-level", "FINE"));
   }
@@ -71,7 +72,7 @@ public class McpServerContextTest {
     context.addSchemaCrawlerArguments(arguments);
 
     // Assert
-    assertThat(arguments, hasSize(10));
+    assertThat(arguments, hasSize(NUM_ARGS));
     assertThat(
         arguments,
         hasItems(
