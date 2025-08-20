@@ -21,8 +21,8 @@ public class DockerMcpServer {
    * @throws Exception If an error occurs during execution
    */
   public static void main(final String[] args) throws Exception {
-    final McpServerContext runner = new McpServerContext();
-    final String[] arguments = runner.buildArguments();
+    final McpServerContext context = new McpServerContext();
+    final String[] arguments = context.buildArguments();
     schemacrawler.Main.main(arguments);
   }
 }
