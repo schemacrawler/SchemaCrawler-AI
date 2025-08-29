@@ -5,19 +5,27 @@ import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.nio.file.Path;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import schemacrawler.schemacrawler.InfoLevel;
+import schemacrawler.schemacrawler.LimitOptions;
+import schemacrawler.schemacrawler.LimitOptionsBuilder;
+import schemacrawler.schemacrawler.LoadOptions;
+import schemacrawler.schemacrawler.LoadOptionsBuilder;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
-import us.fatehi.utility.datasource.DatabaseConnectionSourceBuilder;
+import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
+import us.fatehi.utility.LoggingConfig;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
 
 /** Inner class that handles the MCP server setup. */
 public final class McpServerContext {
 
   private final EnvironmentVariableAccessor envAccessor;
+  private final McpServerTransportType transport;
+  private final SchemaCrawlerOptions schemaCrawlerOptions;
 
   /** Default constructor that uses System.getenv */
   public McpServerContext() {
@@ -31,6 +39,34 @@ public final class McpServerContext {
    */
   protected McpServerContext(final EnvironmentVariableAccessor envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
+
+    final Level logLevel = readLogLevel();
+    new LoggingConfig(logLevel);
+
+    transport = readTransport();
+    schemaCrawlerOptions = buildSchemaCrawlerOptions();
+  }
+
+  public SchemaCrawlerOptions getSchemaCrawlerOptions() {
+    return schemaCrawlerOptions;
+  }
+
+  public McpServerTransportType mcpTransport() {
+    return transport;
+  }
+
+  protected DatabaseConnectionSource buildCatalogDatabaseConnectionSource() {
+
+    final String offlineDatabasePathString =
+        trimToEmpty(envAccessor.getenv("SCHCRWLR_OFFLINE_DATABASE"));
+    if (isBlank(offlineDatabasePathString)) {
+      return buildOperationsDatabaseConnectionSource();
+    }
+
+    final Path offlineDatabasePath = Path.of(offlineDatabasePathString);
+    final DatabaseConnectionSource dbConnectionSource =
+        OfflineConnectionUtility.newOfflineDatabaseConnectionSource(offlineDatabasePath);
+    return dbConnectionSource;
   }
 
   /**
@@ -38,24 +74,11 @@ public final class McpServerContext {
    *
    * @return List of command line arguments
    */
-  public String[] buildArguments() {
+  protected DatabaseConnectionSource buildOperationsDatabaseConnectionSource() {
 
-    final List<String> arguments = new ArrayList<>();
-
-    final List<String> offlineDatabaseArgs = buildOfflineDatabaseArguments();
-    if (offlineDatabaseArgs.size() > 0) {
-      arguments.addAll(offlineDatabaseArgs);
-    } else {
-      final DatabaseConnectionSourceBuilder databaseConnectionSourceBuilder =
-          EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor);
-      final List<String> connectionArguments = databaseConnectionSourceBuilder.toArguments();
-
-      arguments.addAll(connectionArguments);
-    }
-
-    addSchemaCrawlerArguments(arguments);
-
-    return arguments.toArray(new String[0]);
+    final DatabaseConnectionSource databaseConnectionSource =
+        EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor).build();
+    return databaseConnectionSource;
   }
 
   /**
@@ -63,28 +86,23 @@ public final class McpServerContext {
    *
    * @param arguments The list of arguments to add to
    */
-  protected void addSchemaCrawlerArguments(final List<String> arguments) {
-    final String infoLevel = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
-    arguments.add("--info-level");
-    arguments.add(validInfoLevel(infoLevel).name());
+  protected SchemaCrawlerOptions buildSchemaCrawlerOptions() {
+    final InfoLevel infoLevel = readInfoLevel();
 
-    final String logLevel = envAccessor.getenv("SCHCRWLR_LOG_LEVEL");
-    arguments.add("--log-level");
-    arguments.add(validLogLevel(logLevel).getName());
+    final LoadOptions loadOptions = LoadOptionsBuilder.builder().withInfoLevel(infoLevel).build();
+    final LimitOptions limitOptions =
+        LimitOptionsBuilder.builder()
+            .includeAllRoutines()
+            .includeAllSequences()
+            .includeAllSynonyms()
+            .includeAllTables()
+            .build();
 
-    arguments.add("--routines");
-    arguments.add(".*");
-    arguments.add("--sequences");
-    arguments.add(".*");
-    arguments.add("--synonyms");
-    arguments.add(".*");
-
-    arguments.add("--command");
-    arguments.add("mcpserver");
-
-    final String transport = envAccessor.getenv("SCHCRWLR_MCP_SERVER_TRANSPORT");
-    arguments.add("--transport");
-    arguments.add(validTransport(transport).name());
+    final SchemaCrawlerOptions schemaCrawlerOptions =
+        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+            .withLoadOptions(loadOptions)
+            .withLimitOptions(limitOptions);
+    return schemaCrawlerOptions;
   }
 
   /**
@@ -93,13 +111,11 @@ public final class McpServerContext {
    * @param value The info level string to check
    * @return InfoLevel Non-null value
    */
-  protected InfoLevel validInfoLevel(final String value) {
-    final InfoLevel defaultValue = InfoLevel.standard;
+  protected InfoLevel readInfoLevel() {
 
-    if (isBlank(value)) {
-      return defaultValue;
-    }
+    final InfoLevel defaultValue = InfoLevel.standard;
     try {
+      final String value = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
       InfoLevel infoLevel = InfoLevel.valueOfFromString(value);
       if (infoLevel == InfoLevel.unknown) {
         infoLevel = defaultValue;
@@ -116,9 +132,11 @@ public final class McpServerContext {
    * @param value The log level string to check
    * @return Level Non-null value
    */
-  protected Level validLogLevel(final String value) {
+  protected Level readLogLevel() {
+
     final Level defaultValue = Level.INFO;
 
+    final String value = envAccessor.getenv("SCHCRWLR_LOG_LEVEL");
     if (isBlank(value)) {
       return defaultValue;
     }
@@ -135,9 +153,12 @@ public final class McpServerContext {
    * @param value The transport string to check
    * @return McpServerTransportType Non-null value
    */
-  protected McpServerTransportType validTransport(final String value) {
+  protected McpServerTransportType readTransport() {
+    requireNonNull(envAccessor, "No environmental accessor provided");
+
     final McpServerTransportType defaultValue = McpServerTransportType.stdio;
 
+    final String value = envAccessor.getenv("SCHCRWLR_MCP_SERVER_TRANSPORT");
     if (isBlank(value)) {
       return defaultValue;
     }
@@ -150,28 +171,5 @@ public final class McpServerContext {
     } catch (final Exception e) {
       return defaultValue;
     }
-  }
-
-  private List<String> buildOfflineDatabaseArguments() {
-
-    final List<String> arguments = new ArrayList<>();
-
-    final String offlineDatabasePathString =
-        trimToEmpty(envAccessor.getenv("SCHCRWLR_OFFLINE_DATABASE"));
-    if (isBlank(offlineDatabasePathString)) {
-      return arguments;
-    }
-
-    final Path offlineDatabasePath = Path.of(offlineDatabasePathString);
-    if (!offlineDatabasePath.toFile().exists() && !offlineDatabasePath.toFile().isFile()) {
-      return arguments;
-    }
-
-    arguments.add("--server");
-    arguments.add("offline");
-    arguments.add("--database");
-    arguments.add(offlineDatabasePath.toAbsolutePath().toString());
-
-    return arguments;
   }
 }
