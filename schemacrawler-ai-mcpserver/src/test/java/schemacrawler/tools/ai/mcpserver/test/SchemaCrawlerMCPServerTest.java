@@ -27,7 +27,6 @@ import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
-import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -36,7 +35,7 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
   public static void setDryRun() {
-    ConfigurationManager.instantiate(mock(McpServerCommandOptions.class), mock(Catalog.class));
+    ConfigurationManager.instantiate(mock(Catalog.class));
     ConfigurationManager.getInstance().setDryRun(true);
   }
 

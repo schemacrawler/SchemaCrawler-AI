@@ -51,11 +51,22 @@ public class ConnectionService {
    * @throws IllegalStateException if the service has already been initialized
    */
   public static void instantiate(final Connection connection) {
+    final DatabaseConnectionSource dbConnectionSource = newDatabaseConnectionSource(connection);
+    instantiate(dbConnectionSource);
+  }
+
+  /**
+   * Initializes the ConnectionService singleton. This method should be called exactly once during
+   * application startup. Subsequent calls will throw an IllegalStateException.
+   *
+   * @param dbConnectionSource Database connection sources
+   * @throws IllegalStateException if the service has already been initialized
+   */
+  public static void instantiate(final DatabaseConnectionSource dbConnectionSource) {
     synchronized (lock) {
       if (instance != null) {
         throw new IllegalStateException("ConnectionService has already been initialized");
       }
-      final DatabaseConnectionSource dbConnectionSource = newDatabaseConnectionSource(connection);
       instance = new ConnectionService(dbConnectionSource);
     }
   }

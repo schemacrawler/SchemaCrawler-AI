@@ -10,25 +10,18 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.greaterThan;
-import static org.hamcrest.Matchers.hasItems;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.notNullValue;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.logging.Level;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
-@DisplayName("Docker MCP Server configuration tests")
+@DisplayName("MCP Server configuration tests")
 public class McpServerContextTest {
-
-  private static final int NUM_ARGS = 14;
 
   private MockEnvironmentVariableAccessor envAccessor;
   private McpServerContext context;
@@ -36,111 +29,152 @@ public class McpServerContextTest {
   @BeforeEach
   void setUp() {
     envAccessor = new MockEnvironmentVariableAccessor();
-    context = new McpServerContext(envAccessor);
   }
 
   @Test
-  @DisplayName(
-      "Should add SchemaCrawler arguments with custom values when environment variables are set")
-  void shouldAddSchemaCrawlerArgumentsWithCustomValues() {
+  @DisplayName("Should read info level with custom values when environment variables are set")
+  void shouldReadInfoLevelWithCustomValues() {
     // Arrange
-    final List<String> arguments = new ArrayList<>();
-
     envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "FINE");
+    context = new McpServerContext(envAccessor);
 
     // Act
-    context.addSchemaCrawlerArguments(arguments);
+    final InfoLevel infoLevel = context.readInfoLevel();
 
     // Assert
-    assertThat(arguments, hasSize(NUM_ARGS));
-    assertThat(arguments, hasItems("--info-level", "detailed"));
-    assertThat(arguments, hasItems("--log-level", "FINE"));
+    assertThat(infoLevel, is(InfoLevel.detailed));
   }
 
   @Test
-  @DisplayName(
-      "Should add SchemaCrawler arguments with default values when environment variables are not"
-          + " set")
-  void shouldAddSchemaCrawlerArgumentsWithDefaults() {
+  @DisplayName("Should read info level with default values when environment variables are not set")
+  void shouldReadInfoLevelWithDefaults() {
     // Arrange
-    final List<String> arguments = new ArrayList<>();
     envAccessor.setenv("SCHCRWLR_INFO_LEVEL", null);
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", null);
+    context = new McpServerContext(envAccessor);
 
     // Act
-    context.addSchemaCrawlerArguments(arguments);
+    final InfoLevel infoLevel = context.readInfoLevel();
 
     // Assert
-    assertThat(arguments, hasSize(NUM_ARGS));
-    assertThat(
-        arguments,
-        hasItems(
-            "--info-level",
-            InfoLevel.standard.name(),
-            "--log-level",
-            Level.INFO.getName(),
-            "--routines",
-            ".*",
-            "--command",
-            "mcpserver",
-            "--transport",
-            McpServerTransportType.stdio.name()));
+    assertThat(infoLevel, is(InfoLevel.standard));
   }
 
   @Test
-  @DisplayName("Should build arguments with JDBC URL connection when JDBC URL is set")
-  void shouldBuildArgumentsWithJdbcUrl() {
+  @DisplayName("Should build SchemaCrawler options when context is created")
+  void shouldBuildSchemaCrawlerOptions() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_JDBC_URL", "jdbc:test:url");
-    envAccessor.setenv("SCHCRWLR_DATABASE_USER", "testuser");
-    envAccessor.setenv("SCHCRWLR_DATABASE_PASSWORD", "testpass");
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", null);
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", null);
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    context = new McpServerContext(envAccessor);
 
     // Act
-    final String[] arguments = context.buildArguments();
+    final SchemaCrawlerOptions options = context.getSchemaCrawlerOptions();
 
     // Assert
-    assertThat(arguments, notNullValue());
-    assertThat(arguments.length, greaterThan(0));
-    final List<String> argList = Arrays.asList(arguments);
-    assertThat(argList, hasItems("--url", "jdbc:test:url"));
-    assertThat(argList, hasItems("--user", "testuser"));
-    assertThat(argList, hasItems("--password", "testpass"));
+    assertThat(options, notNullValue());
+    assertThat(options.getLoadOptions(), notNullValue());
+    assertThat(options.getLimitOptions(), notNullValue());
+    assertThat(options.getLoadOptions().getSchemaInfoLevel().getTag(), is("detailed"));
   }
 
   @Test
   @DisplayName("Should validate info levels correctly")
   void shouldValidateInfoLevels() {
-    assertThat(context.validInfoLevel("standard"), is(InfoLevel.standard));
-    assertThat(context.validInfoLevel("detailed"), is(InfoLevel.detailed));
-    assertThat(context.validInfoLevel("maximum"), is(InfoLevel.maximum));
-    assertThat(context.validInfoLevel(null), is(InfoLevel.standard));
-    assertThat(context.validInfoLevel(""), is(InfoLevel.standard));
-    assertThat(context.validInfoLevel("invalid"), is(InfoLevel.standard));
+    // Test standard level
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "standard");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.standard));
+
+    // Test detailed level
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.detailed));
+
+    // Test maximum level
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "maximum");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.maximum));
+
+    // Test null defaults to standard
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", null);
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.standard));
+
+    // Test empty string defaults to standard
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.standard));
+
+    // Test invalid value defaults to standard
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "invalid");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readInfoLevel(), is(InfoLevel.standard));
   }
 
   @Test
   @DisplayName("Should validate log levels correctly")
   void shouldValidateLogLevels() {
-    // Act & Assert
-    assertThat(context.validLogLevel("INFO").getName(), is("INFO"));
-    assertThat(context.validLogLevel("WARNING").getName(), is("WARNING"));
-    assertThat(context.validLogLevel("SEVERE").getName(), is("SEVERE"));
-    assertThat(context.validLogLevel("FINE").getName(), is("FINE"));
-    assertThat(context.validLogLevel(null).getName(), is("INFO"));
-    assertThat(context.validLogLevel("").getName(), is("INFO"));
-    assertThat(context.validLogLevel("invalid").getName(), is("INFO"));
+    // Test INFO level
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "INFO");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("INFO"));
+
+    // Test WARNING level
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "WARNING");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("WARNING"));
+
+    // Test SEVERE level
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "SEVERE");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("SEVERE"));
+
+    // Test FINE level
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "FINE");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("FINE"));
+
+    // Test null defaults to INFO
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", null);
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("INFO"));
+
+    // Test empty string defaults to INFO
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("INFO"));
+
+    // Test invalid value defaults to INFO
+    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "invalid");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.readLogLevel().getName(), is("INFO"));
   }
 
   @Test
   @DisplayName("Should validate transport correctly")
   void shouldValidateTransport() {
-    assertThat(context.validTransport("stdio"), is(McpServerTransportType.stdio));
-    assertThat(context.validTransport("sse"), is(McpServerTransportType.sse));
-    assertThat(context.validTransport("unknown"), is(McpServerTransportType.stdio));
-    assertThat(context.validTransport(null), is(McpServerTransportType.stdio));
-    assertThat(context.validTransport(""), is(McpServerTransportType.stdio));
+    // Test stdio transport
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "stdio");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+
+    // Test sse transport
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "sse");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.mcpTransport(), is(McpServerTransportType.sse));
+
+    // Test unknown value defaults to stdio
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "unknown");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+
+    // Test null defaults to stdio
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", null);
+    context = new McpServerContext(envAccessor);
+    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+
+    // Test empty string defaults to stdio
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "");
+    context = new McpServerContext(envAccessor);
+    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
   }
 }
