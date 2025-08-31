@@ -10,6 +10,8 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
@@ -22,6 +24,8 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
  */
 public class McpServerMain {
 
+  private static final Logger LOGGER = Logger.getLogger(McpServerMain.class.getName());
+
   /**
    * Main method that reads environment variables, constructs arguments, and runs SchemaCrawler MCP
    * Server.
@@ -32,14 +36,28 @@ public class McpServerMain {
   public static void main(final String[] args) throws Exception {
     // Read options from environmental variable
     final McpServerContext context = new McpServerContext();
-    final SchemaCrawlerOptions schemaCrawlerOptions = context.getSchemaCrawlerOptions();
-    final DatabaseConnectionSource connectionSource =
-        context.buildCatalogDatabaseConnectionSource();
-    // Obtain the database catalog
-    final Catalog catalog = SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
-    ConnectionService.instantiate(connectionSource);
+    final Catalog catalog = getCatalog(context);
     ConfigurationManager.instantiate(catalog);
     // Start the MCP server
     startMcpServer(context.mcpTransport());
+  }
+
+  private static Catalog getCatalog(final McpServerContext context) {
+    try {
+      final SchemaCrawlerOptions schemaCrawlerOptions = context.getSchemaCrawlerOptions();
+      final DatabaseConnectionSource connectionSource =
+          context.buildCatalogDatabaseConnectionSource();
+      // Obtain the database catalog
+      final Catalog catalog =
+          SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
+      ConnectionService.instantiate(connectionSource);
+      return catalog;
+    } catch (final Exception e) {
+      LOGGER.log(Level.SEVERE, "Could not load catalog", e);
+      if (!ConnectionService.isInstantiated()) {
+        ConnectionService.instantiate(new EmptyDatabaseConnectionSource());
+      }
+      return new EmptyCatalog();
+    }
   }
 }

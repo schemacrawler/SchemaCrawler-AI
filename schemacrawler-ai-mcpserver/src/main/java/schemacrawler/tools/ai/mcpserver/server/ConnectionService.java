@@ -71,6 +71,10 @@ public class ConnectionService {
     }
   }
 
+  public static boolean isInstantiated() {
+    return instance != null;
+  }
+
   private static DatabaseConnectionSource newDatabaseConnectionSource(final Connection connection) {
     DatabaseConnectionSource dbConnectionSource = null;
 
