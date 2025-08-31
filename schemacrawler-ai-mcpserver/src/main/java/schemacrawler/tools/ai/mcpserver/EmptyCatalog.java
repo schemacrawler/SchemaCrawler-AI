@@ -32,6 +32,25 @@ public class EmptyCatalog implements Catalog {
 
   private static final long serialVersionUID = -8018517276190501450L;
 
+  private final String errorMessage;
+
+  public EmptyCatalog(final Exception e) {
+    final String baseErrorMessage =
+        """
+        The MCP server is in an error state, since it could not
+        make a connection to the database. Database schema metadata
+        is not available.
+        """
+                .strip()
+                .trim()
+            + "\n";
+    if (e != null) {
+      errorMessage = baseErrorMessage + e.getMessage();
+    } else {
+      errorMessage = baseErrorMessage;
+    }
+  }
+
   @Override
   public int compareTo(final NamedObject o) {
     return -1;
@@ -64,12 +83,12 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public CrawlInfo getCrawlInfo() {
-    throw new UnsupportedOperationException("No supported in an empty catalog");
+    throw new UnsupportedOperationException(errorMessage);
   }
 
   @Override
   public DatabaseInfo getDatabaseInfo() {
-    throw new UnsupportedOperationException("No supported in an empty catalog");
+    throw new UnsupportedOperationException(errorMessage);
   }
 
   @Override
@@ -84,7 +103,7 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public JdbcDriverInfo getJdbcDriverInfo() {
-    throw new UnsupportedOperationException("No supported in an empty catalog");
+    throw new UnsupportedOperationException(errorMessage);
   }
 
   @Override

@@ -57,7 +57,7 @@ public class McpServerMain {
       if (!ConnectionService.isInstantiated()) {
         ConnectionService.instantiate(new EmptyDatabaseConnectionSource());
       }
-      return new EmptyCatalog();
+      return new EmptyCatalog(e);
     }
   }
 }
