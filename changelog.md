@@ -2,8 +2,8 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v16.27.1-1"></a>
-## Release 16.27.1-1 - 2025-08-25
+<a name="v16.27.2-1"></a>
+## Release 16.27.2-1 - 2025-08-25
 
 - Show objects referenced by routines
 - Add lint function to MCP server (and remove it from 'aichat')
