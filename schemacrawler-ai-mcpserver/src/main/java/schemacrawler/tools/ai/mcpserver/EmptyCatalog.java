@@ -37,15 +37,15 @@ public class EmptyCatalog implements Catalog {
   public EmptyCatalog(final Exception e) {
     final String baseErrorMessage =
         """
-        The MCP server is in an error state, since it could not
-        make a connection to the database. Database schema metadata
-        is not available.
+        The SchemaCrawler AI MCP server is in an error state.
+        Database schema metadata is not available,
+        since it could not make a connection to the database.
         """
                 .strip()
                 .trim()
             + "\n";
     if (e != null) {
-      errorMessage = baseErrorMessage + e.getMessage();
+      errorMessage = baseErrorMessage + "\n" + e.getMessage();
     } else {
       errorMessage = baseErrorMessage;
     }

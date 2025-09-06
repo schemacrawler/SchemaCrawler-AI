@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.tools;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.wrapException;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -88,8 +89,9 @@ public final class FunctionCallback {
           Level.INFO,
           e,
           new StringFormat(
-              "Could not call function with arguments: %s(%s)", functionName, argumentsString));
-      return e.getMessage();
+              "Could not call function with arguments: %s(%s)%n%s",
+              functionName, argumentsString, e.getMessage()));
+      return wrapException(e);
     }
   }
 
@@ -113,31 +115,21 @@ public final class FunctionCallback {
     return toObject(null).toPrettyString();
   }
 
-  private String executeFunction(final FunctionParameters arguments, final Connection connection) {
+  private String executeFunction(final FunctionParameters arguments, final Connection connection)
+      throws Exception {
     requireNonNull(arguments, "No function arguments provided");
 
-    try {
-      FunctionReturn functionReturn;
-      final FunctionExecutor<FunctionParameters> functionExecutor =
-          functionDefinition.newExecutor();
-      functionExecutor.configure(arguments);
-      functionExecutor.initialize();
-      functionExecutor.setCatalog(catalog);
-      if (functionExecutor.usesConnection()) {
-        functionExecutor.setConnection(connection);
-      }
-      functionReturn = functionExecutor.call();
-      final String returnValue = functionReturn.get();
-      return returnValue;
-    } catch (final Exception e) {
-      LOGGER.log(
-          Level.INFO,
-          e,
-          new StringFormat(
-              "Could not call function with arguments: %s(%s)",
-              functionDefinition.getName(), arguments));
-      return e.getMessage();
+    FunctionReturn functionReturn;
+    final FunctionExecutor<FunctionParameters> functionExecutor = functionDefinition.newExecutor();
+    functionExecutor.configure(arguments);
+    functionExecutor.initialize();
+    functionExecutor.setCatalog(catalog);
+    if (functionExecutor.usesConnection()) {
+      functionExecutor.setConnection(connection);
     }
+    functionReturn = functionExecutor.call();
+    final String returnValue = functionReturn.get();
+    return returnValue;
   }
 
   private <P extends FunctionParameters> P instantiateArguments(final String argumentsString)
