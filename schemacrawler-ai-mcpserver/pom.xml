@@ -129,7 +129,7 @@
             <phase>none</phase> <!-- This disables the execution -->
           </execution>
         </executions>
-      </plugin>      
+      </plugin>
     </plugins>
   </build>
 </project>
