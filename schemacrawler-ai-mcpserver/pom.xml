@@ -120,6 +120,16 @@
           <skip>false</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-dependencies</id> <!-- Must match the ID from parent -->
+            <phase>none</phase> <!-- This disables the execution -->
+          </execution>
+        </executions>
+      </plugin>
     </plugins>
   </build>
 </project>
