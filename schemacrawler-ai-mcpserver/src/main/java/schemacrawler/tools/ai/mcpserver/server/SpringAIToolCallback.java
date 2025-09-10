@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
@@ -40,7 +41,8 @@ public final class SpringAIToolCallback implements ToolCallback {
   }
 
   @Override
-  public String call(final String toolInput) {
+  @NonNull
+  public String call(@NonNull final String toolInput) {
     if (!StringUtils.hasText(toolInput)) {
       return "";
     }
@@ -56,11 +58,13 @@ public final class SpringAIToolCallback implements ToolCallback {
   }
 
   @Override
-  public String call(final String toolInput, @Nullable final ToolContext tooContext) {
+  @NonNull
+  public String call(@NonNull final String toolInput, @Nullable final ToolContext tooContext) {
     return call(toolInput);
   }
 
   @Override
+  @NonNull
   public ToolDefinition getToolDefinition() {
     return toolDefinition;
   }

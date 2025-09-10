@@ -35,9 +35,15 @@ public class HeartbeatLogger {
   @Value("${server.version}")
   private String serverVersion;
 
+  private boolean isInErrorState;
+
   @PostConstruct
   public void init() {
-    LOGGER.log(Level.INFO, String.format("%s; heartbeat=%b", serverName(), heartbeat));
+    isInErrorState = ConfigurationManager.getInstance().isInErrorState();
+    LOGGER.log(
+        Level.INFO,
+        String.format(
+            "%s; heartbeat=%b; inErrorState=%b", serverName(), heartbeat, isInErrorState));
   }
 
   @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 30)
@@ -48,7 +54,9 @@ public class HeartbeatLogger {
 
     LOGGER.log(
         Level.INFO,
-        new StringFormat("Heartbeat: %s is running with uptime %s.", serverName(), serverUptime()));
+        new StringFormat(
+            "Heartbeat: %s is running with uptime %s%s",
+            serverName(), serverUptime(), isInErrorState ? "; server is in error state" : ""));
   }
 
   private String serverName() {
