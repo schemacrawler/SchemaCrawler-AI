@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static java.util.Objects.requireNonNull;
 
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.EmptyCatalog;
 
 /**
  * Thread-safe singleton configuration manager for SchemaCrawler AI. Manages configuration settings
@@ -58,6 +59,10 @@ public class ConfigurationManager {
 
   public boolean isDryRun() {
     return isDryRun;
+  }
+
+  public boolean isInErrorState() {
+    return catalog instanceof EmptyCatalog;
   }
 
   public void setDryRun(final boolean dryRun) {

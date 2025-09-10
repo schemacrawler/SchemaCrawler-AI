@@ -54,6 +54,7 @@ public class McpServerMain {
       return catalog;
     } catch (final Exception e) {
       LOGGER.log(Level.SEVERE, "Could not load catalog", e);
+      LOGGER.log(Level.SEVERE, "Server is running in an error state");
       if (!ConnectionService.isInstantiated()) {
         ConnectionService.instantiate(new EmptyDatabaseConnectionSource());
       }
