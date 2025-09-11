@@ -52,47 +52,47 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public int compareTo(final NamedObject o) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> T getAttribute(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> T getAttribute(final String name, final T defaultValue) throws ClassCastException {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Map<String, Object> getAttributes() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getColumnDataTypes() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getColumnDataTypes(final Schema schema) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public CrawlInfo getCrawlInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public DatabaseInfo getDatabaseInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<DatabaseUser> getDatabaseUsers() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
@@ -102,7 +102,7 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public JdbcDriverInfo getJdbcDriverInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
@@ -112,145 +112,145 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public String getRemarks() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines(final Schema schema) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines(final Schema schema, final String routineName) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Schema> getSchemas() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Sequence> getSequences() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Sequence> getSequences(final Schema schema) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Synonym> getSynonyms() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Synonym> getSynonyms(final Schema schema) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getSystemColumnDataTypes() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Table> getTables() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Table> getTables(final Schema schema) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public boolean hasAttribute(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public boolean hasRemarks() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public NamedObjectKey key() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> Optional<T> lookupAttribute(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Optional<Column> lookupColumn(
       final Schema schema, final String tableName, final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <C extends ColumnDataType> Optional<C> lookupColumnDataType(
       final Schema schema, final String dataTypeName) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Schema> Optional<S> lookupSchema(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Sequence> Optional<S> lookupSequence(
       final Schema schema, final String sequenceName) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Synonym> Optional<S> lookupSynonym(
       final Schema schema, final String synonymName) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <C extends ColumnDataType> Optional<C> lookupSystemColumnDataType(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T extends Table> Optional<T> lookupTable(final Schema schema, final String tableName) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <N extends NamedObject> void reduce(final Class<N> clazz, final Reducer<N> reducer) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public void removeAttribute(final String name) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> void setAttribute(final String name, final T value) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public void setRemarks(final String remarks) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <N extends NamedObject> void undo(final Class<N> clazz, final Reducer<N> reducer) {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 }
