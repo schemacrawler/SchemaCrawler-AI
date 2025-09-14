@@ -10,39 +10,18 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
-import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
-import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.ToolSpecification;
 import us.fatehi.utility.UtilityMarker;
-import us.fatehi.utility.string.StringFormat;
 
 @UtilityMarker
 public final class SpringAIToolUtility {
 
   private static final Logger LOGGER =
       Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
-
-  public static List<ToolCallback> toolCallbacks(final List<ToolDefinition> tools) {
-    Objects.requireNonNull(tools, "Tools must not be null");
-
-    final ConnectionService connectionService = ConnectionService.getInstance();
-    connectionService.connection();
-    final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-    final Catalog catalog = configurationManager.getCatalog();
-
-    final List<ToolCallback> toolCallbacks = new ArrayList<>();
-    for (final ToolDefinition toolDefinition : tools) {
-      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
-      toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
-    }
-    return toolCallbacks;
-  }
 
   public static List<ToolDefinition> tools() {
     final FunctionDefinitionRegistry functionDefinitionRegistry =
