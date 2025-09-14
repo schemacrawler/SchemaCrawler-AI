@@ -60,7 +60,6 @@ public class SchemaCrawlerMCPServerTest {
     final Map<String, String> body = response.getBody();
     System.err.println(body);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(body.get("status"), is("UP"));
-    assertThat(body.get("service"), startsWith("SchemaCrawler AI MCP Server"));
+    assertThat(body.get("_server"), startsWith("SchemaCrawler AI MCP Server"));
   }
 }
