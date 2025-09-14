@@ -2,8 +2,8 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v16.27.2-1"></a>
-## Release 16.27.2-1 - 2025-09-03
+<a name="v16.28.1-1"></a>
+## Release 16.28.1-1 - 2025-09-03
 
 - Allow MCP Server to be started entirely from environmental variables
 - Start MCP Server in an error state if a database connection cannot be made
