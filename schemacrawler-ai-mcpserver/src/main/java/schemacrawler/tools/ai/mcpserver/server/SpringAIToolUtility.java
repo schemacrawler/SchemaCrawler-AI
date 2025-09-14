@@ -31,21 +31,15 @@ public final class SpringAIToolUtility {
   public static List<ToolCallback> toolCallbacks(final List<ToolDefinition> tools) {
     Objects.requireNonNull(tools, "Tools must not be null");
 
-    final boolean isDryRun = ConfigurationManager.getInstance().isDryRun();
-    final Catalog catalog;
-    if (isDryRun) {
-      catalog = null;
-    } else {
-      final ConnectionService connectionService = ConnectionService.getInstance();
-      connectionService.connection();
-      final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-      catalog = configurationManager.getCatalog();
-    }
+    final ConnectionService connectionService = ConnectionService.getInstance();
+    connectionService.connection();
+    final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+    final Catalog catalog = configurationManager.getCatalog();
 
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
     for (final ToolDefinition toolDefinition : tools) {
       LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
-      toolCallbacks.add(new SpringAIToolCallback(isDryRun, toolDefinition, catalog));
+      toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
     }
     return toolCallbacks;
   }

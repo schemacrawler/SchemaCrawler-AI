@@ -47,8 +47,6 @@ public class ConfigurationManager {
     }
   }
 
-  private boolean isDryRun = false;
-
   private final McpServerTransportType mcpTransport;
   private final Catalog catalog;
 
@@ -65,15 +63,7 @@ public class ConfigurationManager {
     return mcpTransport;
   }
 
-  public boolean isDryRun() {
-    return isDryRun;
-  }
-
   public boolean isInErrorState() {
     return catalog instanceof EmptyCatalog;
-  }
-
-  public void setDryRun(final boolean dryRun) {
-    isDryRun = dryRun;
   }
 }

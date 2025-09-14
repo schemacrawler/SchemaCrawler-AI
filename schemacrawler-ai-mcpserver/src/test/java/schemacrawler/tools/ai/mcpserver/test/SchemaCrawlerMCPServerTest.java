@@ -15,7 +15,6 @@ import static org.mockito.Mockito.mock;
 import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Map;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -28,6 +27,8 @@ import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
+import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -36,13 +37,8 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
   public static void setDryRun() {
+    ConnectionService.instantiate(mock(DatabaseConnectionSource.class));
     ConfigurationManager.instantiate(unknown, mock(Catalog.class));
-    ConfigurationManager.getInstance().setDryRun(true);
-  }
-
-  @AfterAll
-  public static void unsetDryRun() {
-    ConfigurationManager.getInstance().setDryRun(false);
   }
 
   @LocalServerPort private int port;
