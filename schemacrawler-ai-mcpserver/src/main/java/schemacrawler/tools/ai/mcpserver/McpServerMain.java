@@ -40,7 +40,7 @@ public class McpServerMain {
     // Read options from environmental variable
     final McpServerContext context = new McpServerContext();
     final Catalog catalog = getCatalog(context);
-    ConfigurationManager.instantiate(catalog);
+    ConfigurationManager.instantiate(context.mcpTransport(), catalog);
     // Start the MCP server
     startMcpServer(context.mcpTransport());
   }

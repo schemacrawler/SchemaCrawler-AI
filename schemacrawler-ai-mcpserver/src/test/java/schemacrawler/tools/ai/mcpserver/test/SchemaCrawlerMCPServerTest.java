@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
+import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Map;
 import org.junit.jupiter.api.AfterAll;
@@ -35,7 +36,7 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
   public static void setDryRun() {
-    ConfigurationManager.instantiate(mock(Catalog.class));
+    ConfigurationManager.instantiate(unknown, mock(Catalog.class));
     ConfigurationManager.getInstance().setDryRun(true);
   }
 
