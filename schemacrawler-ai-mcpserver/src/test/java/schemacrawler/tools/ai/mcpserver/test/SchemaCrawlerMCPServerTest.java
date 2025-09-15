@@ -11,8 +11,11 @@ package schemacrawler.tools.ai.mcpserver.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
+
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -27,6 +30,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @SpringBootTest(
@@ -56,10 +60,12 @@ public class SchemaCrawlerMCPServerTest {
     final ResponseEntity<Map> response =
         restTemplate.getForEntity("http://localhost:" + port + "/health", Map.class);
 
-    final Map<String, String> body = response.getBody();
-    System.err.println(body);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(body.get("status"), is("UP"));
-    assertThat(body.get("service"), startsWith("SchemaCrawler AI MCP Server"));
+
+    final Map<String, String> currentStatus = response.getBody();
+    assertThat(currentStatus, is(not(nullValue())));
+    assertThat(currentStatus.get("_service"), startsWith("SchemaCrawler AI MCP Server"));
+    assertThat(currentStatus.get("in-error-state"), is(Boolean.FALSE.toString()));
+    assertThat(currentStatus.get("transport"), is(McpServerTransportType.sse.name()));
   }
 }

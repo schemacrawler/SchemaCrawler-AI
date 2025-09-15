@@ -8,11 +8,10 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import static schemacrawler.tools.ai.mcpserver.server.HealthController.serverUptime;
-
 import jakarta.annotation.PostConstruct;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +33,7 @@ public class ServerHealth {
   public Map<String, String> currentState() {
     final Map<String, String> currentState = new HashMap<>();
     currentState.put("_server", getServerName());
+    currentState.put("current-timestamp", String.valueOf(LocalDateTime.now()));
     currentState.put("in-error-state", Boolean.toString(isInErrorState));
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
@@ -43,7 +43,7 @@ public class ServerHealth {
   public String currentStateString() {
     return String.format(
         "%s%nin-error-state=%s; server-uptime=%s; transport=%s",
-        getServerName(), isInErrorState, serverUptime(), mcpTransport);
+        getServerName(), isInErrorState, getServerUptime(), mcpTransport);
   }
 
   public McpServerTransportType getMcpTransport() {
