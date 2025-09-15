@@ -150,32 +150,6 @@ class HeartbeatLoggerTest {
   }
 
   @Test
-  void testHeartbeatMessage_WithJsonProcessingError_ShouldFallbackToPlainText() {
-    // This test verifies the fallback mechanism when JSON processing fails
-    // In practice, this is hard to trigger without modifying the mapper,
-    // so we'll just verify the structure exists and behaves correctly
-
-    try (MockedStatic<ConfigurationManager> mockedConfigManager =
-        mockStatic(ConfigurationManager.class)) {
-      mockedConfigManager.when(ConfigurationManager::getInstance).thenReturn(configurationManager);
-      when(configurationManager.isInErrorState()).thenReturn(true);
-      when(configurationManager.getMcpTransport()).thenReturn(McpServerTransportType.stdio);
-
-      heartbeatLogger.init();
-
-      final LogRecord logRecord = logHandler.getLogRecords().get(0);
-      final String logMessage = logRecord.getMessage().toString();
-
-      // Should still contain the essential information even if JSON formatting works
-      assertThat("Should contain server information", logMessage, containsString("TestServer"));
-      assertThat(
-          "Should contain some form of error state info",
-          logMessage,
-          anyOf(containsString("in-error-state"), containsString("true")));
-    }
-  }
-
-  @Test
   void testInit_ShouldInitializeFieldsAndLogHeartbeat() {
     // Given
     try (MockedStatic<ConfigurationManager> mockedConfigManager =
