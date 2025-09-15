@@ -13,7 +13,6 @@ import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.mockito.Mockito.mock;
 import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
-
 import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -36,7 +35,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
-  public static void setDryRun() {
+  public static void setup() {
     ConnectionService.instantiate(mock(DatabaseConnectionSource.class));
     ConfigurationManager.instantiate(unknown, mock(Catalog.class));
   }

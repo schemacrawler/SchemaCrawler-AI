@@ -9,14 +9,12 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
-
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.EmptyCatalog;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
 /**
- * Thread-safe singleton configuration manager for SchemaCrawler AI. Manages configuration settings
- * like isDryRun.
+ * Thread-safe singleton configuration manager for SchemaCrawler AI.
  */
 public class ConfigurationManager {
 
