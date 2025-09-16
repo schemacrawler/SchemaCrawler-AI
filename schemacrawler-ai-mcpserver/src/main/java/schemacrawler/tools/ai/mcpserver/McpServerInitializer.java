@@ -56,16 +56,42 @@ public class McpServerInitializer
       final Catalog catalog,
       final Connection connection,
       final McpServerTransportType mcpTransport) {
-    this.catalog = requireNonNull(catalog, "No catalog provided");
-    connectionSource = DatabaseConnectionSources.fromConnection(connection);
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
+
+    DatabaseConnectionSource connectionSource;
+    try {
+      connectionSource = DatabaseConnectionSources.fromConnection(connection);
+    } catch (final Exception e) {
+      if (mcpTransport != McpServerTransportType.stdio) {
+        throw e;
+      }
+      connectionSource = new EmptyDatabaseConnectionSource();
+    }
+    this.connectionSource = connectionSource;
+
+    this.catalog = requireNonNull(catalog, "No catalog provided");
   }
 
   public McpServerInitializer(final McpServerContext context) {
     requireNonNull(context, "No context provided");
+
     mcpTransport = context.mcpTransport();
-    connectionSource = context.buildCatalogDatabaseConnectionSource();
-    catalog = getCatalog(context, connectionSource);
+
+    DatabaseConnectionSource connectionSource;
+    Catalog catalog;
+    try {
+      connectionSource = context.buildCatalogDatabaseConnectionSource();
+      catalog = getCatalog(context, connectionSource);
+    } catch (final Exception e) {
+      if (mcpTransport != McpServerTransportType.stdio) {
+        throw e;
+      }
+      connectionSource = new EmptyDatabaseConnectionSource();
+      catalog = new EmptyCatalog(e);
+    }
+
+    this.connectionSource = connectionSource;
+    this.catalog = catalog;
   }
 
   @Override
