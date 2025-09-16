@@ -8,8 +8,12 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.string.StringFormat;
@@ -19,19 +23,12 @@ public class McpServerUtility {
 
   private static final Logger LOGGER = Logger.getLogger(McpServerUtility.class.getName());
 
+  @SpringBootApplication
+  public static class McpServer {}
+
   public static void startMcpServer(final McpServerTransportType mcpTransport) {
-    if (mcpTransport == null) {
-      throw new IllegalArgumentException("MCP transport not provided");
-    }
-    switch (mcpTransport) {
-      case sse:
-        SseMcpServer.start();
-        break;
-      case stdio:
-      default:
-        StdioMcpServer.start();
-        break;
-    }
+    requireNonNull(mcpTransport, "No MCP transport specified");
+    new SpringApplicationBuilder(McpServer.class).profiles(mcpTransport.name()).run();
     LOGGER.log(
         Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
   }
