@@ -26,6 +26,9 @@ RUN \
 # PRODUCTION stage - Create SchemaCrawler AI image
 FROM ${FROM_IMAGE}
 
+LABEL \
+  io.modelcontextprotocol.server.name="com.schemacrawler/schemacrawler-ai"
+
 # Copy SchemaCrawler AI distribution from builder stage
 COPY --from=builder \
   ./_ai-distrib/ \
