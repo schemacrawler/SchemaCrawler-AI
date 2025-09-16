@@ -154,26 +154,26 @@ public class McpServerContextTest {
     // Test stdio transport
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "stdio");
     context = new McpServerContext(envAccessor);
-    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.stdio));
 
     // Test sse transport
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "sse");
     context = new McpServerContext(envAccessor);
-    assertThat(context.mcpTransport(), is(McpServerTransportType.sse));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.sse));
 
     // Test unknown value defaults to stdio
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "unknown");
     context = new McpServerContext(envAccessor);
-    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.stdio));
 
     // Test null defaults to stdio
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", null);
     context = new McpServerContext(envAccessor);
-    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.stdio));
 
     // Test empty string defaults to stdio
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "");
     context = new McpServerContext(envAccessor);
-    assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.stdio));
   }
 }

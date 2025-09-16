@@ -14,6 +14,7 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.nio.file.Path;
 import java.util.logging.Level;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -23,6 +24,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
+import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
@@ -54,16 +56,11 @@ public final class McpServerContext {
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
   }
 
-  public SchemaCrawlerOptions getSchemaCrawlerOptions() {
-    return schemaCrawlerOptions;
-  }
-
-  public McpServerTransportType mcpTransport() {
+  public McpServerTransportType getMcpTransport() {
     return transport;
   }
 
   protected DatabaseConnectionSource buildCatalogDatabaseConnectionSource() {
-
     final String offlineDatabasePathString =
         trimToEmpty(envAccessor.getenv("SCHCRWLR_OFFLINE_DATABASE"));
     if (isBlank(offlineDatabasePathString)) {
@@ -82,7 +79,6 @@ public final class McpServerContext {
    * @return List of command line arguments
    */
   protected DatabaseConnectionSource buildOperationsDatabaseConnectionSource() {
-
     final DatabaseConnectionSource databaseConnectionSource =
         EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor).build();
     return databaseConnectionSource;
@@ -109,6 +105,17 @@ public final class McpServerContext {
         SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
             .withLoadOptions(loadOptions)
             .withLimitOptions(limitOptions);
+    return schemaCrawlerOptions;
+  }
+
+  protected Catalog getCatalog() {
+    final DatabaseConnectionSource connectionSource = buildCatalogDatabaseConnectionSource();
+    final SchemaCrawlerOptions schemaCrawlerOptions = getSchemaCrawlerOptions();
+    final Catalog catalog = SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
+    return catalog;
+  }
+
+  protected SchemaCrawlerOptions getSchemaCrawlerOptions() {
     return schemaCrawlerOptions;
   }
 

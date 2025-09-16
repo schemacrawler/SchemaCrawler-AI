@@ -39,7 +39,7 @@ public class McpServerMain {
 
   public static void startMcpServer() {
     final McpServerContext context = new McpServerContext();
-    final McpServerTransportType mcpTransport = context.mcpTransport();
+    final McpServerTransportType mcpTransport = context.getMcpTransport();
     new SpringApplicationBuilder(McpServer.class)
         .initializers(new McpServerInitializer(context))
         .profiles(mcpTransport.name())
