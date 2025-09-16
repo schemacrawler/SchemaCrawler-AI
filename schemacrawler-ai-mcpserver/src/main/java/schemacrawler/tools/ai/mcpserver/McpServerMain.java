@@ -9,10 +9,11 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static java.util.Objects.requireNonNull;
-import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
@@ -21,6 +22,7 @@ import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.string.StringFormat;
 
 /**
  * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
@@ -42,8 +44,11 @@ public class McpServerMain {
     final Catalog catalog = getCatalog(context);
     ConfigurationManager.instantiate(context.mcpTransport(), catalog);
     // Start the MCP server
-    startMcpServer(context.mcpTransport());
+    McpServerMain.startMcpServer(context.mcpTransport());
   }
+
+  @SpringBootApplication
+  public static class McpServer {}
 
   private static Catalog getCatalog(final McpServerContext context) {
     requireNonNull(context, "No context provided");
@@ -67,5 +72,12 @@ public class McpServerMain {
       }
       return new EmptyCatalog(e);
     }
+  }
+
+  public static void startMcpServer(final McpServerTransportType mcpTransport) {
+    requireNonNull(mcpTransport, "No MCP transport specified");
+    new SpringApplicationBuilder(McpServer.class).profiles(mcpTransport.name()).run();
+    LOGGER.log(
+        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
   }
 }

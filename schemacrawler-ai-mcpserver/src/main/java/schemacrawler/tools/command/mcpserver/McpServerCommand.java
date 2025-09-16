@@ -8,10 +8,9 @@
 
 package schemacrawler.tools.command.mcpserver;
 
-import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
-
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import schemacrawler.tools.ai.mcpserver.McpServerMain;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
@@ -39,7 +38,7 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
     final McpServerTransportType mcpTransport = commandOptions.mcpTransport();
     ConnectionService.instantiate(connection);
     ConfigurationManager.instantiate(mcpTransport, catalog);
-    startMcpServer(mcpTransport);
+    McpServerMain.startMcpServer(mcpTransport);
   }
 
   @Override

@@ -26,7 +26,7 @@ import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.mcpserver.McpServerUtility.McpServer;
+import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
