@@ -43,7 +43,7 @@ public final class SpringAIToolCallback implements ToolCallback {
     final String callMessage = String.format("Call to <%s>%n%s", toolDefinition.name(), toolInput);
     LOGGER.info(callMessage);
 
-    final Connection connection = ConnectionService.getInstance().connection();
+    final Connection connection = ConnectionService.getConnection();
     return functionToolExecutor.execute(toolInput, connection);
   }
 
