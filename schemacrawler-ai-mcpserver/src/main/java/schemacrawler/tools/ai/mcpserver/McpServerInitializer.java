@@ -19,8 +19,6 @@ import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
@@ -96,8 +94,6 @@ public class McpServerInitializer
 
   @Override
   public void initialize(@NonNull final GenericApplicationContext context) {
-
-    ConnectionService.instantiate(connectionSource);
 
     context.registerBean("catalog", Catalog.class, () -> catalog);
     context.registerBean(

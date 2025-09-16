@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.command.mcpserver;
 
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.CommandOptions;
 
 public record McpServerCommandOptions(McpServerTransportType mcpTransport)
