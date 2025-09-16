@@ -33,8 +33,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.HealthController;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @WebMvcTest(HealthController.class)
 @ContextConfiguration(classes = {HealthController.class, HealthControllerTest.MockConfig.class})
@@ -43,6 +46,26 @@ public class HealthControllerTest {
 
   @TestConfiguration
   static class MockConfig {
+    @Bean
+    Catalog catalog() {
+      return mock(Catalog.class);
+    }
+
+    @Bean
+    DatabaseConnectionSource databaseConnectionSource() {
+      return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    boolean isInErrorState() {
+      return false;
+    }
+
+    @Bean
+    McpServerTransportType mcpTransport() {
+      return McpServerTransportType.sse;
+    }
+
     @Bean
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);

@@ -8,24 +8,22 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import static java.util.Objects.requireNonNull;
-import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
-
+import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
-import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
-import schemacrawler.tools.utility.SchemaCrawlerUtility;
-import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.string.StringFormat;
 
 /**
  * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
  */
 public class McpServerMain {
+
+  @SpringBootApplication
+  public static class McpServer {}
 
   private static final Logger LOGGER = Logger.getLogger(McpServerMain.class.getName());
 
@@ -37,35 +35,29 @@ public class McpServerMain {
    * @throws Exception If an error occurs during execution
    */
   public static void main(final String[] args) throws Exception {
-    // Read options from environmental variable
-    final McpServerContext context = new McpServerContext();
-    final Catalog catalog = getCatalog(context);
-    ConfigurationManager.instantiate(context.mcpTransport(), catalog);
-    // Start the MCP server
-    startMcpServer(context.mcpTransport());
+    McpServerMain.startMcpServer();
   }
 
-  private static Catalog getCatalog(final McpServerContext context) {
-    requireNonNull(context, "No context provided");
-    try {
-      final SchemaCrawlerOptions schemaCrawlerOptions = context.getSchemaCrawlerOptions();
-      final DatabaseConnectionSource connectionSource =
-          context.buildCatalogDatabaseConnectionSource();
-      // Obtain the database catalog
-      final Catalog catalog =
-          SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
-      ConnectionService.instantiate(connectionSource);
-      return catalog;
-    } catch (final Exception e) {
-      LOGGER.log(Level.SEVERE, "Could not load catalog", e);
-      if (context.mcpTransport() != McpServerTransportType.stdio) {
-        throw new SchemaCrawlerException("Could not obtain database metadata", e);
-      }
-      LOGGER.log(Level.SEVERE, "Server is running in an error state");
-      if (!ConnectionService.isInstantiated()) {
-        ConnectionService.instantiate(new EmptyDatabaseConnectionSource());
-      }
-      return new EmptyCatalog(e);
-    }
+  public static void startMcpServer() {
+    final McpServerContext context = new McpServerContext();
+    final McpServerTransportType mcpTransport = context.mcpTransport();
+    new SpringApplicationBuilder(McpServer.class)
+        .initializers(new McpServerInitializer(context))
+        .profiles(mcpTransport.name())
+        .run();
+    LOGGER.log(
+        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
+  }
+
+  public static void startMcpServer(
+      final Catalog catalog,
+      final Connection connection,
+      final McpServerTransportType mcpTransport) {
+    new SpringApplicationBuilder(McpServer.class)
+        .initializers(new McpServerInitializer(catalog, connection, mcpTransport))
+        .profiles(mcpTransport.name())
+        .run();
+    LOGGER.log(
+        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
   }
 }

@@ -11,11 +11,7 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 /**
  * A singleton service that provides access to database connection resources. This class follows an
@@ -23,8 +19,6 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
  * can be used.
  */
 public class ConnectionService {
-
-  private static final Logger LOGGER = Logger.getLogger(ConnectionService.class.getName());
 
   private static final Object lock = new Object();
   private static volatile ConnectionService instance;
@@ -47,18 +41,6 @@ public class ConnectionService {
    * Initializes the ConnectionService singleton. This method should be called exactly once during
    * application startup. Subsequent calls will throw an IllegalStateException.
    *
-   * @param connection SQL connection
-   * @throws IllegalStateException if the service has already been initialized
-   */
-  public static void instantiate(final Connection connection) {
-    final DatabaseConnectionSource dbConnectionSource = newDatabaseConnectionSource(connection);
-    instantiate(dbConnectionSource);
-  }
-
-  /**
-   * Initializes the ConnectionService singleton. This method should be called exactly once during
-   * application startup. Subsequent calls will throw an IllegalStateException.
-   *
    * @param dbConnectionSource Database connection sources
    * @throws IllegalStateException if the service has already been initialized
    */
@@ -69,23 +51,6 @@ public class ConnectionService {
       }
       instance = new ConnectionService(dbConnectionSource);
     }
-  }
-
-  public static boolean isInstantiated() {
-    return instance != null;
-  }
-
-  private static DatabaseConnectionSource newDatabaseConnectionSource(final Connection connection) {
-    DatabaseConnectionSource dbConnectionSource = null;
-
-    try {
-      dbConnectionSource = EnvironmentalDatabaseConnectionSourceBuilder.builder().build();
-    } catch (final Exception e) {
-      LOGGER.log(Level.WARNING, "Cannot make a database connection", e);
-      // Fall back to using the provided connection
-      dbConnectionSource = DatabaseConnectionSources.fromConnection(connection);
-    }
-    return dbConnectionSource;
   }
 
   private final DatabaseConnectionSource dbConnectionSource;

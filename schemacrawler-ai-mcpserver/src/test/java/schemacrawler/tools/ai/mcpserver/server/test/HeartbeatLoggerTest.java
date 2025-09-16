@@ -32,17 +32,40 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.HeartbeatLogger;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @TestInstance(Lifecycle.PER_CLASS)
-@org.springframework.test.context.junit.jupiter.SpringJUnitConfig(
-    classes = {HeartbeatLogger.class, HeartbeatLoggerTest.MockConfig.class})
+@SpringJUnitConfig(classes = {HeartbeatLogger.class, HeartbeatLoggerTest.MockConfig.class})
 @TestPropertySource(properties = {"server.heartbeat=true"})
 public class HeartbeatLoggerTest {
 
   @TestConfiguration
   static class MockConfig {
+    @Bean
+    Catalog catalog() {
+      return mock(Catalog.class);
+    }
+
+    @Bean
+    DatabaseConnectionSource databaseConnectionSource() {
+      return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    boolean isInErrorState() {
+      return false;
+    }
+
+    @Bean
+    McpServerTransportType mcpTransport() {
+      return McpServerTransportType.sse;
+    }
+
     @Bean
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);
