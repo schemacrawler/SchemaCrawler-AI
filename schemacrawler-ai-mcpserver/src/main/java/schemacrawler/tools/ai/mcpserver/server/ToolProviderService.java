@@ -70,18 +70,17 @@ public class ToolProviderService {
    */
   @Bean
   public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolDefinition> tools1 = SpringAIToolUtility.tools();
-    Objects.requireNonNull(tools1, "Tools must not be null");
+    final List<ToolDefinition> toolDefinitions = SpringAIToolUtility.tools();
+    Objects.requireNonNull(toolDefinitions, "Tools must not be null");
 
     final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
     final Catalog catalog = configurationManager.getCatalog();
 
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
-    for (final ToolDefinition toolDefinition : tools1) {
+    for (final ToolDefinition toolDefinition : toolDefinitions) {
       LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
       toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
     }
-    final List<ToolCallback> tools = toolCallbacks;
-    return ToolCallbackProvider.from(tools);
+    return ToolCallbackProvider.from(toolCallbacks);
   }
 }
