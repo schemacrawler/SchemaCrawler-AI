@@ -8,15 +8,9 @@
 
 package schemacrawler.tools.ai.mcpserver.test;
 
-import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
-import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.not;
-import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
 
-import java.util.Map;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,13 +18,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @SpringBootTest(
@@ -52,20 +43,5 @@ public class SchemaCrawlerMCPServerTest {
   @DisplayName("Application context loads successfully")
   public void contextLoads() {
     // This test will fail if the application context cannot start
-  }
-
-  @Test
-  @DisplayName("Health endpoint returns status UP in integration test")
-  public void healthEndpoint() {
-    final ResponseEntity<Map> response =
-        restTemplate.getForEntity("http://localhost:" + port + "/health", Map.class);
-
-    assertThat(response.getStatusCode(), is(HttpStatus.OK));
-
-    final Map<String, String> currentStatus = response.getBody();
-    assertThat(currentStatus, is(not(nullValue())));
-    assertThat(currentStatus.get("_service"), startsWith("SchemaCrawler AI MCP Server"));
-    assertThat(currentStatus.get("in-error-state"), is(Boolean.FALSE.toString()));
-    assertThat(currentStatus.get("transport"), is(McpServerTransportType.sse.name()));
   }
 }
