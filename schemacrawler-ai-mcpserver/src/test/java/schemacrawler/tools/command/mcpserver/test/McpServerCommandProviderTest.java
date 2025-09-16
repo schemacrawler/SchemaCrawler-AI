@@ -22,10 +22,10 @@ import schemacrawler.test.utility.PluginCommandTestUtility;
 import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.TestContext;
 import schemacrawler.test.utility.TestWriter;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.command.mcpserver.McpServerCommand;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandProvider;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 

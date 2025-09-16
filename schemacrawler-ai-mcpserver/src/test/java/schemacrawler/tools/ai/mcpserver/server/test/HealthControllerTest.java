@@ -34,9 +34,9 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HealthController;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @WebMvcTest(HealthController.class)

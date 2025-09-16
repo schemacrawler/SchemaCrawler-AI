@@ -18,7 +18,6 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 
 @DisplayName("MCP Server configuration tests")
 public class McpServerContextTest {

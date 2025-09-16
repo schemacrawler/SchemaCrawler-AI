@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.Logger;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
@@ -19,9 +18,6 @@ import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
 public final class SpringAIToolUtility {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(SpringAIToolUtility.class.getCanonicalName());
 
   public static List<ToolDefinition> tools() {
     final FunctionDefinitionRegistry functionDefinitionRegistry =

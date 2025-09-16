@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.mcpserver;
+package schemacrawler.tools.ai.mcpserver;
 
 public enum McpServerTransportType {
   unknown,

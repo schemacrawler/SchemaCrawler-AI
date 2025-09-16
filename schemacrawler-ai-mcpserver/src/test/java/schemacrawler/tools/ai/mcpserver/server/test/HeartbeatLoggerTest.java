@@ -34,9 +34,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HeartbeatLogger;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @TestInstance(Lifecycle.PER_CLASS)

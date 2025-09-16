@@ -13,9 +13,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptionsBuilder;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.options.Config;
 
 public class McpServerCommandOptionsBuilderTest {

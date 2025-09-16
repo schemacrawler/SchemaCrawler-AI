@@ -21,7 +21,6 @@ import schemacrawler.schemacrawler.LoadOptions;
 import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import us.fatehi.utility.LoggingConfig;

@@ -29,10 +29,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.test.SchemaCrawlerMCPServerTest.MockConfig;
-import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @SpringBootTest(
