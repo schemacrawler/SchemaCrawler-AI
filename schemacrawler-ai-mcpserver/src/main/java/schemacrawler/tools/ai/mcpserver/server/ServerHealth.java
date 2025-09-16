@@ -10,7 +10,8 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
-import java.time.LocalDateTime;
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,7 +35,7 @@ public class ServerHealth {
   public Map<String, String> currentState() {
     final Map<String, String> currentState = new HashMap<>();
     currentState.put("_server", getServerName());
-    currentState.put("current-timestamp", String.valueOf(LocalDateTime.now()));
+    currentState.put("current-timestamp", String.valueOf(ZonedDateTime.now(ZoneOffset.UTC)));
     currentState.put("in-error-state", Boolean.toString(isInErrorState));
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
