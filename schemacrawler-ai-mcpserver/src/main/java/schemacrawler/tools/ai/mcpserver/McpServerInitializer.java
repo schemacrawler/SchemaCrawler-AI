@@ -19,7 +19,6 @@ import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
@@ -73,11 +72,11 @@ public class McpServerInitializer
   public void initialize(@NonNull final GenericApplicationContext context) {
 
     ConnectionService.instantiate(connectionSource);
-    ConfigurationManager.instantiate(mcpTransport, catalog);
 
     context.registerBean("catalog", Catalog.class, () -> catalog);
     context.registerBean(
         "databaseConnectionSource", DatabaseConnectionSource.class, () -> connectionSource);
     context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
+    context.registerBean("isInErrorState", Boolean.class, () -> catalog instanceof EmptyCatalog);
   }
 }

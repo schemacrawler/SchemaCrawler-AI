@@ -20,6 +20,7 @@ import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.Version;
@@ -36,6 +37,8 @@ public class ToolProviderService {
 
   private static final Logger LOGGER =
       Logger.getLogger(ToolProviderService.class.getCanonicalName());
+
+  @Autowired private Catalog catalog;
 
   /**
    * Creates a tool callback provider for common services.
@@ -72,9 +75,6 @@ public class ToolProviderService {
   public ToolCallbackProvider schemaCrawlerTools() {
     final List<ToolDefinition> toolDefinitions = SpringAIToolUtility.tools();
     Objects.requireNonNull(toolDefinitions, "Tools must not be null");
-
-    final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
-    final Catalog catalog = configurationManager.getCatalog();
 
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
     for (final ToolDefinition toolDefinition : toolDefinitions) {

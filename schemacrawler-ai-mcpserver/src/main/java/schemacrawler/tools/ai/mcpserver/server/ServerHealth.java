@@ -8,12 +8,12 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import jakarta.annotation.PostConstruct;
 import java.lang.management.ManagementFactory;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.Map;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import schemacrawler.tools.command.mcpserver.McpServerTransportType;
@@ -27,8 +27,9 @@ public class ServerHealth {
   @Value("${server.version}")
   private String serverVersion;
 
-  private volatile boolean isInErrorState;
-  private volatile McpServerTransportType mcpTransport;
+  @Autowired private boolean isInErrorState;
+
+  @Autowired private McpServerTransportType mcpTransport;
 
   public Map<String, String> currentState() {
     final Map<String, String> currentState = new HashMap<>();
@@ -58,15 +59,6 @@ public class ServerHealth {
     final long uptime = ManagementFactory.getRuntimeMXBean().getUptime() / 1_000;
     final Duration duration = Duration.ofSeconds(uptime);
     return duration;
-  }
-
-  @PostConstruct
-  public void init() {
-    isInErrorState = ConfigurationManager.getInstance().isInErrorState();
-    mcpTransport = ConfigurationManager.getInstance().getMcpTransport();
-    if (mcpTransport == null) {
-      mcpTransport = McpServerTransportType.stdio;
-    }
   }
 
   public boolean isInErrorState() {
