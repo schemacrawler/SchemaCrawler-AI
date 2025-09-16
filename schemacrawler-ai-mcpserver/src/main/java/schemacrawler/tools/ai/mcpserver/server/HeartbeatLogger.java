@@ -8,17 +8,19 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import static schemacrawler.tools.ai.mcpserver.server.HealthController.serverUptime;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import jakarta.annotation.PostConstruct;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
-import us.fatehi.utility.string.StringFormat;
 
 @Component
 @EnableScheduling
@@ -29,16 +31,18 @@ public class HeartbeatLogger {
   @Value("${server.heartbeat}")
   private boolean heartbeat;
 
-  @Value("${server.name}")
-  private String serverName;
+  @Autowired private ServerHealth serverHealth;
 
-  @Value("${server.version}")
-  private String serverVersion;
-
-  @PostConstruct
-  public void init() {
-    LOGGER.log(Level.INFO, String.format("%s; heartbeat=%b", serverName(), heartbeat));
-  }
+  private final Supplier<String> heartbeatMessage =
+      () -> {
+        final Map<String, String> heartbeatMessage = serverHealth.currentState();
+        try {
+          return "\n"
+              + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(heartbeatMessage);
+        } catch (final JsonProcessingException e) {
+          return serverHealth.currentStateString();
+        }
+      };
 
   @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 30)
   public void logHeartbeat() {
@@ -46,12 +50,6 @@ public class HeartbeatLogger {
       return;
     }
 
-    LOGGER.log(
-        Level.INFO,
-        new StringFormat("Heartbeat: %s is running with uptime %s.", serverName(), serverUptime()));
-  }
-
-  private String serverName() {
-    return String.format("%s %s", serverName, serverVersion);
+    LOGGER.log(Level.INFO, heartbeatMessage);
   }
 }

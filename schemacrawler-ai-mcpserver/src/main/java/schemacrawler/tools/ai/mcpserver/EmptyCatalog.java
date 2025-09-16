@@ -9,7 +9,6 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Optional;
 import schemacrawler.schema.Catalog;
@@ -40,10 +39,10 @@ public class EmptyCatalog implements Catalog {
         The SchemaCrawler AI MCP server is in an error state.
         Database schema metadata is not available,
         since it could not make a connection to the database.
+        Correct the error, and restart the server.
         """
-                .strip()
-                .trim()
-            + "\n";
+            .strip()
+            .trim();
     if (e != null) {
       errorMessage = baseErrorMessage + "\n" + e.getMessage();
     } else {
@@ -53,47 +52,47 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public int compareTo(final NamedObject o) {
-    return -1;
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> T getAttribute(final String name) {
-    return null;
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> T getAttribute(final String name, final T defaultValue) throws ClassCastException {
-    return null;
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Map<String, Object> getAttributes() {
-    return Collections.emptyMap();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getColumnDataTypes() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getColumnDataTypes(final Schema schema) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public CrawlInfo getCrawlInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public DatabaseInfo getDatabaseInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<DatabaseUser> getDatabaseUsers() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
@@ -103,7 +102,7 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public JdbcDriverInfo getJdbcDriverInfo() {
-    throw new UnsupportedOperationException(errorMessage);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
@@ -113,145 +112,145 @@ public class EmptyCatalog implements Catalog {
 
   @Override
   public String getRemarks() {
-    return getName();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines(final Schema schema) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Routine> getRoutines(final Schema schema, final String routineName) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Schema> getSchemas() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Sequence> getSequences() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Sequence> getSequences(final Schema schema) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Synonym> getSynonyms() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Synonym> getSynonyms(final Schema schema) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<ColumnDataType> getSystemColumnDataTypes() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Table> getTables() {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Collection<Table> getTables(final Schema schema) {
-    return Collections.emptyList();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public boolean hasAttribute(final String name) {
-    return false;
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public boolean hasRemarks() {
-    return false;
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public NamedObjectKey key() {
-    return new NamedObjectKey((String) null);
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> Optional<T> lookupAttribute(final String name) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public Optional<Column> lookupColumn(
       final Schema schema, final String tableName, final String name) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <C extends ColumnDataType> Optional<C> lookupColumnDataType(
       final Schema schema, final String dataTypeName) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Schema> Optional<S> lookupSchema(final String name) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Sequence> Optional<S> lookupSequence(
       final Schema schema, final String sequenceName) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <S extends Synonym> Optional<S> lookupSynonym(
       final Schema schema, final String synonymName) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <C extends ColumnDataType> Optional<C> lookupSystemColumnDataType(final String name) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T extends Table> Optional<T> lookupTable(final Schema schema, final String tableName) {
-    return Optional.empty();
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <N extends NamedObject> void reduce(final Class<N> clazz, final Reducer<N> reducer) {
-    // No-op
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public void removeAttribute(final String name) {
-    // No-op
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <T> void setAttribute(final String name, final T value) {
-    // No-op
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public void setRemarks(final String remarks) {
-    // No-op
+    throw new IllegalStateException(errorMessage);
   }
 
   @Override
   public <N extends NamedObject> void undo(final Class<N> clazz, final Reducer<N> reducer) {
-    // No-op
+    throw new IllegalStateException(errorMessage);
   }
 }

@@ -9,12 +9,13 @@
 package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.not;
+import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
+import static schemacrawler.tools.command.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Map;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -27,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.SseMcpServer;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
+import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
@@ -34,14 +37,9 @@ import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 public class SchemaCrawlerMCPServerTest {
 
   @BeforeAll
-  public static void setDryRun() {
-    ConfigurationManager.instantiate(mock(Catalog.class));
-    ConfigurationManager.getInstance().setDryRun(true);
-  }
-
-  @AfterAll
-  public static void unsetDryRun() {
-    ConfigurationManager.getInstance().setDryRun(false);
+  public static void setup() {
+    ConnectionService.instantiate(mock(DatabaseConnectionSource.class));
+    ConfigurationManager.instantiate(unknown, mock(Catalog.class));
   }
 
   @LocalServerPort private int port;
@@ -60,10 +58,10 @@ public class SchemaCrawlerMCPServerTest {
     final ResponseEntity<Map> response =
         restTemplate.getForEntity("http://localhost:" + port + "/health", Map.class);
 
-    final Map<String, String> body = response.getBody();
-    System.err.println(body);
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
-    assertThat(body.get("status"), is("UP"));
-    assertThat(body.get("service"), startsWith("SchemaCrawler AI MCP Server"));
+
+    final Map<String, String> currentStatus = response.getBody();
+    assertThat(currentStatus, is(not(nullValue())));
+    assertThat(currentStatus.isEmpty(), is(false));
   }
 }

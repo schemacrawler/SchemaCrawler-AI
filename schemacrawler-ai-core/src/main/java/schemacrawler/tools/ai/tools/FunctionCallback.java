@@ -162,7 +162,6 @@ public final class FunctionCallback {
 
     final PropertyName functionName = getFunctionName();
     objectNode.put("name", functionName.getName());
-    objectNode.put("description", functionName.getDescription());
 
     try {
       final String functionArguments;

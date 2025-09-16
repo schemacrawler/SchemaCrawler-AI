@@ -8,14 +8,17 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.McpServerUtility.startMcpServer;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.mcpserver.server.ConfigurationManager;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
+import schemacrawler.tools.command.mcpserver.McpServerTransportType;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
@@ -37,12 +40,13 @@ public class McpServerMain {
     // Read options from environmental variable
     final McpServerContext context = new McpServerContext();
     final Catalog catalog = getCatalog(context);
-    ConfigurationManager.instantiate(catalog);
+    ConfigurationManager.instantiate(context.mcpTransport(), catalog);
     // Start the MCP server
     startMcpServer(context.mcpTransport());
   }
 
   private static Catalog getCatalog(final McpServerContext context) {
+    requireNonNull(context, "No context provided");
     try {
       final SchemaCrawlerOptions schemaCrawlerOptions = context.getSchemaCrawlerOptions();
       final DatabaseConnectionSource connectionSource =
@@ -54,6 +58,10 @@ public class McpServerMain {
       return catalog;
     } catch (final Exception e) {
       LOGGER.log(Level.SEVERE, "Could not load catalog", e);
+      if (context.mcpTransport() != McpServerTransportType.stdio) {
+        throw new SchemaCrawlerException("Could not obtain database metadata", e);
+      }
+      LOGGER.log(Level.SEVERE, "Server is running in an error state");
       if (!ConnectionService.isInstantiated()) {
         ConnectionService.instantiate(new EmptyDatabaseConnectionSource());
       }

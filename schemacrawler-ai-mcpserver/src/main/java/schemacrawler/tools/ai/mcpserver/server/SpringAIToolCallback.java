@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import org.springframework.ai.chat.model.ToolContext;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
+import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
@@ -24,23 +25,17 @@ public final class SpringAIToolCallback implements ToolCallback {
   private static final Logger LOGGER =
       Logger.getLogger(SpringAIToolCallback.class.getCanonicalName());
 
-  private final boolean isDryRun;
   private final ToolDefinition toolDefinition;
   private final FunctionCallback functionToolExecutor;
 
-  public SpringAIToolCallback(
-      final boolean isDryRun, final ToolDefinition toolDefinition, final Catalog catalog) {
-    this.isDryRun = isDryRun;
+  public SpringAIToolCallback(final ToolDefinition toolDefinition, final Catalog catalog) {
     this.toolDefinition = Objects.requireNonNull(toolDefinition, "No tool definition provided");
-    if (!isDryRun) {
-      functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
-    } else {
-      functionToolExecutor = null;
-    }
+    functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
   }
 
   @Override
-  public String call(final String toolInput) {
+  @NonNull
+  public String call(@NonNull final String toolInput) {
     if (!StringUtils.hasText(toolInput)) {
       return "";
     }
@@ -48,19 +43,18 @@ public final class SpringAIToolCallback implements ToolCallback {
     final String callMessage = String.format("Call to <%s>%n%s", toolDefinition.name(), toolInput);
     LOGGER.info(callMessage);
 
-    if (isDryRun) {
-      return callMessage;
-    }
     final Connection connection = ConnectionService.getInstance().connection();
     return functionToolExecutor.execute(toolInput, connection);
   }
 
   @Override
-  public String call(final String toolInput, @Nullable final ToolContext tooContext) {
+  @NonNull
+  public String call(@NonNull final String toolInput, @Nullable final ToolContext tooContext) {
     return call(toolInput);
   }
 
   @Override
+  @NonNull
   public ToolDefinition getToolDefinition() {
     return toolDefinition;
   }

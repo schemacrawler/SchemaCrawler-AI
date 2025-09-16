@@ -36,9 +36,10 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
 
   @Override
   public void execute() {
+    final McpServerTransportType mcpTransport = commandOptions.mcpTransport();
     ConnectionService.instantiate(connection);
-    ConfigurationManager.instantiate(catalog);
-    startMcpServer(commandOptions.mcpTransport());
+    ConfigurationManager.instantiate(mcpTransport, catalog);
+    startMcpServer(mcpTransport);
   }
 
   @Override

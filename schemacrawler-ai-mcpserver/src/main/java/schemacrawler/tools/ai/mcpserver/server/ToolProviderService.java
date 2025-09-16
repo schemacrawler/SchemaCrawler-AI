@@ -9,16 +9,23 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
+import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.Version;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.utility.JsonUtility;
+import us.fatehi.utility.string.StringFormat;
 
 /**
  * Service class for managing tool providers. This class separates tool-related functionality to
@@ -26,6 +33,9 @@ import schemacrawler.tools.ai.utility.JsonUtility;
  */
 @Service
 public class ToolProviderService {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(ToolProviderService.class.getCanonicalName());
 
   /**
    * Creates a tool callback provider for common services.
@@ -60,7 +70,17 @@ public class ToolProviderService {
    */
   @Bean
   public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolCallback> tools = SpringAIToolUtility.toolCallbacks(SpringAIToolUtility.tools());
-    return ToolCallbackProvider.from(tools);
+    final List<ToolDefinition> toolDefinitions = SpringAIToolUtility.tools();
+    Objects.requireNonNull(toolDefinitions, "Tools must not be null");
+
+    final ConfigurationManager configurationManager = ConfigurationManager.getInstance();
+    final Catalog catalog = configurationManager.getCatalog();
+
+    final List<ToolCallback> toolCallbacks = new ArrayList<>();
+    for (final ToolDefinition toolDefinition : toolDefinitions) {
+      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
+      toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
+    }
+    return ToolCallbackProvider.from(toolCallbacks);
   }
 }
