@@ -40,6 +40,7 @@ public class HeartbeatLogger {
           return "\n"
               + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(heartbeatMessage);
         } catch (final JsonProcessingException e) {
+          LOGGER.log(Level.WARNING, "Could not convert server state to JSON", e);
           return serverHealth.currentStateString();
         }
       };
