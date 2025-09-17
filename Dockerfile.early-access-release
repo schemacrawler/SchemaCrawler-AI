@@ -9,7 +9,7 @@
 FROM schemacrawler/schemacrawler:early-access-release
 
 LABEL \
-  io.modelcontextprotocol.server.name="com.schemacrawler/schemacrawler-ai"
+  io.modelcontextprotocol.server.name="io.github.schemacrawler/schemacrawler-ai"
 
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \

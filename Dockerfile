@@ -27,7 +27,7 @@ RUN \
 FROM ${FROM_IMAGE}
 
 LABEL \
-  io.modelcontextprotocol.server.name="com.schemacrawler/schemacrawler-ai"
+  io.modelcontextprotocol.server.name="io.github.schemacrawler/schemacrawler-ai"
 
 # Copy SchemaCrawler AI distribution from builder stage
 COPY --from=builder \
