@@ -2,10 +2,17 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v16.28.1-1"></a>
-## Release 16.28.1-1 - 2025-09-18
+<a name="v16.28.1-2"></a>
+## Release 16.28.1-2 - 2025-09-17
 
-- Refactor code
+- Add tags to publish to https://github.com/modelcontextprotocol/registry/
+
+
+<a name="v16.28.1-1"></a>
+## Release 16.28.1-1 - 2025-09-16
+
+- Refactor code to make it more idiomatic in the Spring Frameork
+- Format tool error messages in JSON
 
 
 <a name="v16.27.2-1"></a>
