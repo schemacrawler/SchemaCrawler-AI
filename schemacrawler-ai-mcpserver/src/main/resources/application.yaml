@@ -42,6 +42,7 @@ spring:
   ai:
     mcp:
       server:
+        protocol: STREAMABLE
         stdio: false
         allowed-origin: '*'
         capabilities:
