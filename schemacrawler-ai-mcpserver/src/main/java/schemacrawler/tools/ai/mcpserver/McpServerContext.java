@@ -30,14 +30,14 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
 
 /** Inner class that handles the MCP server setup. */
-public final class McpServerContext {
+final class McpServerContext {
 
   private final EnvironmentVariableAccessor envAccessor;
   private final McpServerTransportType transport;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
 
   /** Default constructor that uses System.getenv */
-  public McpServerContext() {
+  protected McpServerContext() {
     this(System::getenv);
   }
 
@@ -54,10 +54,6 @@ public final class McpServerContext {
 
     transport = readTransport();
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
-  }
-
-  public McpServerTransportType getMcpTransport() {
-    return transport;
   }
 
   protected DatabaseConnectionSource buildCatalogDatabaseConnectionSource() {
@@ -113,6 +109,10 @@ public final class McpServerContext {
     final SchemaCrawlerOptions schemaCrawlerOptions = getSchemaCrawlerOptions();
     final Catalog catalog = SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
     return catalog;
+  }
+
+  protected McpServerTransportType getMcpTransport() {
+    return transport;
   }
 
   protected SchemaCrawlerOptions getSchemaCrawlerOptions() {
