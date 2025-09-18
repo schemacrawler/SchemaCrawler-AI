@@ -19,18 +19,20 @@ import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionCallback;
+import schemacrawler.tools.ai.tools.ToolSpecification;
 
-public final class SpringAIToolCallback implements ToolCallback {
+public final class SchemaCrawlerToolCallback implements ToolCallback {
 
   private static final Logger LOGGER =
-      Logger.getLogger(SpringAIToolCallback.class.getCanonicalName());
+      Logger.getLogger(SchemaCrawlerToolCallback.class.getCanonicalName());
 
   private final ToolDefinition toolDefinition;
   private final FunctionCallback functionToolExecutor;
 
-  public SpringAIToolCallback(final ToolDefinition toolDefinition, final Catalog catalog) {
-    this.toolDefinition = Objects.requireNonNull(toolDefinition, "No tool definition provided");
-    functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
+  public SchemaCrawlerToolCallback(final ToolSpecification toolSpecification, final Catalog catalog) {
+    Objects.requireNonNull(toolSpecification, "No tool specification provided");
+    toolDefinition = toToolDefinition(toolSpecification);
+    functionToolExecutor = new FunctionCallback(toolSpecification.name(), catalog);
   }
 
   @Override
@@ -62,5 +64,12 @@ public final class SpringAIToolCallback implements ToolCallback {
   @Override
   public String toString() {
     return toolDefinition.name();
+  }
+
+  private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
+    final ToolDefinition toolDefinition = ToolDefinition.builder().name(toolSpecification.name())
+        .description(toolSpecification.description())
+        .inputSchema(toolSpecification.getParametersAsString()).build();
+    return toolDefinition;
   }
 }

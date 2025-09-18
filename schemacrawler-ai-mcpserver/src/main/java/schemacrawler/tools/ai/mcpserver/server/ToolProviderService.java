@@ -17,7 +17,6 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
 import org.springframework.ai.tool.annotation.Tool;
 import org.springframework.ai.tool.annotation.ToolParam;
-import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.ai.tool.method.MethodToolCallbackProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -79,20 +78,9 @@ public class ToolProviderService {
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
     for (final ToolSpecification toolSpecification :
         functionDefinitionRegistry.getToolSpecifications(FunctionReturnType.JSON)) {
-      final ToolDefinition toolDefinition = toToolDefinition(toolSpecification);
-      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
-      toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
+      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolSpecification.name()));
+      toolCallbacks.add(new SchemaCrawlerToolCallback(toolSpecification, catalog));
     }
     return ToolCallbackProvider.from(toolCallbacks);
-  }
-
-  private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
-    final ToolDefinition toolDefinition =
-        ToolDefinition.builder()
-            .name(toolSpecification.name())
-            .description(toolSpecification.description())
-            .inputSchema(toolSpecification.getParametersAsString())
-            .build();
-    return toolDefinition;
   }
 }
