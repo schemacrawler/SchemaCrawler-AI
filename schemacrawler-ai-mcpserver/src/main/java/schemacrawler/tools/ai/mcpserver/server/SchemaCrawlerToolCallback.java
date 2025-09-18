@@ -29,10 +29,11 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
   private final ToolDefinition toolDefinition;
   private final FunctionCallback functionToolExecutor;
 
-  public SchemaCrawlerToolCallback(final ToolSpecification toolSpecification, final Catalog catalog) {
+  public SchemaCrawlerToolCallback(
+      final ToolSpecification toolSpecification, final Catalog catalog) {
     Objects.requireNonNull(toolSpecification, "No tool specification provided");
     toolDefinition = toToolDefinition(toolSpecification);
-    functionToolExecutor = new FunctionCallback(toolSpecification.name(), catalog);
+    functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
   }
 
   @Override
@@ -67,9 +68,12 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
   }
 
   private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
-    final ToolDefinition toolDefinition = ToolDefinition.builder().name(toolSpecification.name())
-        .description(toolSpecification.description())
-        .inputSchema(toolSpecification.getParametersAsString()).build();
+    final ToolDefinition toolDefinition =
+        ToolDefinition.builder()
+            .name(toolSpecification.name())
+            .description(toolSpecification.description())
+            .inputSchema(toolSpecification.getParametersAsString())
+            .build();
     return toolDefinition;
   }
 }
