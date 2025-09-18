@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
@@ -32,6 +33,9 @@ public class McpServerInitializer
       final McpServerTransportType mcpTransport) {
 
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
+    if (mcpTransport == McpServerTransportType.unknown) {
+      throw new SchemaCrawlerException("Unknown MCP Server transport type");
+    }
 
     DatabaseConnectionSource connectionSource;
     try {
