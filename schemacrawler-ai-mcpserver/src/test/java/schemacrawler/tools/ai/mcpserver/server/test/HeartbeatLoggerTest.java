@@ -63,7 +63,7 @@ public class HeartbeatLoggerTest {
 
     @Bean
     McpServerTransportType mcpTransport() {
-      return McpServerTransportType.sse;
+      return McpServerTransportType.http;
     }
 
     @Bean

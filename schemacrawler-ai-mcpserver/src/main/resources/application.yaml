@@ -36,7 +36,7 @@ spring:
 spring:
   config:
     activate:
-      on-profile: sse
+      on-profile: http
   server:
     port: 8080
   ai:

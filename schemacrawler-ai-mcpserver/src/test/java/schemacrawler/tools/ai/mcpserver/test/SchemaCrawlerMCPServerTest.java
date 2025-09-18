@@ -61,7 +61,7 @@ public class SchemaCrawlerMCPServerTest {
 
     @Bean
     McpServerTransportType mcpTransport() {
-      return McpServerTransportType.sse;
+      return McpServerTransportType.http;
     }
 
     @Bean
