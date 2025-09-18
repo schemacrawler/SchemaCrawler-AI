@@ -15,6 +15,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
@@ -78,10 +79,16 @@ public class McpServerInitializer
 
   @Override
   public void initialize(@NonNull final GenericApplicationContext context) {
-    context.registerBean("catalog", Catalog.class, () -> catalog);
+    context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
     context.registerBean(
         "databaseConnectionSource", DatabaseConnectionSource.class, () -> connectionSource);
-    context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
+    context.registerAlias("databaseConnectionSource", "connectionSource");
+    context.registerBean("catalog", Catalog.class, () -> catalog);
     context.registerBean("isInErrorState", Boolean.class, () -> catalog instanceof EmptyCatalog);
+    // Register services
+    context.registerBean(
+        "functionDefinitionRegistry",
+        FunctionDefinitionRegistry.class,
+        () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
   }
 }

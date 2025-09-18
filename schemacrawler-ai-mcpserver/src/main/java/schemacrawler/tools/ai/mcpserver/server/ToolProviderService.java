@@ -11,7 +11,6 @@ package schemacrawler.tools.ai.mcpserver.server;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.ai.tool.ToolCallback;
@@ -25,6 +24,9 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.Version;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
+import schemacrawler.tools.ai.tools.ToolSpecification;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import us.fatehi.utility.string.StringFormat;
 
@@ -39,6 +41,7 @@ public class ToolProviderService {
       Logger.getLogger(ToolProviderService.class.getCanonicalName());
 
   @Autowired private Catalog catalog;
+  @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
 
   /**
    * Creates a tool callback provider for common services.
@@ -73,14 +76,23 @@ public class ToolProviderService {
    */
   @Bean
   public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolDefinition> toolDefinitions = SpringAIToolUtility.tools();
-    Objects.requireNonNull(toolDefinitions, "Tools must not be null");
-
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
-    for (final ToolDefinition toolDefinition : toolDefinitions) {
+    for (final ToolSpecification toolSpecification :
+        functionDefinitionRegistry.getToolSpecifications(FunctionReturnType.JSON)) {
+      final ToolDefinition toolDefinition = toToolDefinition(toolSpecification);
       LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolDefinition.name()));
       toolCallbacks.add(new SpringAIToolCallback(toolDefinition, catalog));
     }
     return ToolCallbackProvider.from(toolCallbacks);
+  }
+
+  private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
+    final ToolDefinition toolDefinition =
+        ToolDefinition.builder()
+            .name(toolSpecification.name())
+            .description(toolSpecification.description())
+            .inputSchema(toolSpecification.getParametersAsString())
+            .build();
+    return toolDefinition;
   }
 }

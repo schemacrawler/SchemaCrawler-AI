@@ -31,3 +31,4 @@ jobs:
             --file=./schemacrawler-ai-mcpserver/mcp-registration.json
           ./mcp-publisher publish \
             --file=./schemacrawler-ai-mcpserver/mcp-registration.json
+          ./mcp-publisher logout
