@@ -203,6 +203,12 @@ public class EmptyCatalog implements Catalog {
   }
 
   @Override
+  public <R extends Routine> Optional<R> lookupRoutine(
+      final Schema schema, final String routineName) {
+    throw new IllegalStateException(errorMessage);
+  }
+
+  @Override
   public <S extends Schema> Optional<S> lookupSchema(final String name) {
     throw new IllegalStateException(errorMessage);
   }
