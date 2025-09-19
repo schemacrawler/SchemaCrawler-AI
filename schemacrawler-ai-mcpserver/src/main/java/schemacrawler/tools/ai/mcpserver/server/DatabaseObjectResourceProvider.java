@@ -106,7 +106,7 @@ public class DatabaseObjectResourceProvider {
   private Document lookupRoutine(final Schema schema, final String routineName) {
     final Routine routine =
         catalog
-            .lookupRoutine(schema, routineName)
+            .lookupRoutine(schema, trimToEmpty(routineName))
             .orElseThrow(
                 () ->
                     new SchemaCrawlerException(
@@ -134,7 +134,7 @@ public class DatabaseObjectResourceProvider {
   private Document lookupSequence(final Schema schema, final String sequenceName) {
     final Sequence sequence =
         catalog
-            .lookupSequence(schema, sequenceName)
+            .lookupSequence(schema, trimToEmpty(sequenceName))
             .orElseThrow(
                 () ->
                     new SchemaCrawlerException(
@@ -149,7 +149,7 @@ public class DatabaseObjectResourceProvider {
   private Document lookupSynonym(final Schema schema, final String synonymName) {
     final Synonym synonym =
         catalog
-            .lookupSynonym(schema, synonymName)
+            .lookupSynonym(schema, trimToEmpty(synonymName))
             .orElseThrow(
                 () ->
                     new SchemaCrawlerException(
@@ -164,7 +164,7 @@ public class DatabaseObjectResourceProvider {
   private Document lookupTable(final Schema schema, final String tableName) {
     final Table table =
         catalog
-            .lookupTable(schema, tableName)
+            .lookupTable(schema, trimToEmpty(tableName))
             .orElseThrow(
                 () ->
                     new SchemaCrawlerException(
