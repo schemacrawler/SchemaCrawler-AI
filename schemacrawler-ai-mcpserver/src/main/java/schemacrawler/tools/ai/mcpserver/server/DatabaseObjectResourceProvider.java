@@ -5,6 +5,12 @@ import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.Implementation;
+import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
+import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,9 +27,13 @@ import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
+import us.fatehi.utility.string.StringFormat;
 
 @Service
 public class DatabaseObjectResourceProvider {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(DatabaseObjectResourceProvider.class.getCanonicalName());
 
   @Autowired public Catalog catalog;
 
@@ -33,6 +43,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
+      final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
               description =
@@ -46,6 +57,9 @@ public class DatabaseObjectResourceProvider {
     final Schema schema = lookupSchema(schemaName);
 
     final Document document = lookupRoutine(schema, routineName);
+
+    logResourceRequest(exchange, schema, routineName);
+
     return document.toObjectNode().toPrettyString();
   }
 
@@ -55,6 +69,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified sequence.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSequenceDetails(
+      final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
               description =
@@ -68,6 +83,9 @@ public class DatabaseObjectResourceProvider {
     final Schema schema = lookupSchema(schemaName);
 
     final Document document = lookupSequence(schema, sequenceName);
+
+    logResourceRequest(exchange, schema, sequenceName);
+
     return document.toObjectNode().toPrettyString();
   }
 
@@ -77,6 +95,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified synonym.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSynonymDetails(
+      final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
               description =
@@ -90,6 +109,9 @@ public class DatabaseObjectResourceProvider {
     final Schema schema = lookupSchema(schemaName);
 
     final Document document = lookupSynonym(schema, synonymName);
+
+    logResourceRequest(exchange, schema, synonymName);
+
     return document.toObjectNode().toPrettyString();
   }
 
@@ -99,6 +121,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
+      final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
               description =
@@ -112,7 +135,30 @@ public class DatabaseObjectResourceProvider {
     final Schema schema = lookupSchema(schemaName);
 
     final Document document = lookupTable(schema, tableName);
+
+    logResourceRequest(exchange, schema, tableName);
+
     return document.toObjectNode().toPrettyString();
+  }
+
+  private void logResourceRequest(
+      final McpSyncServerExchange exchange, final Schema schema, final String databaseObjectName) {
+    if (exchange != null) {
+      final String logMessage =
+          String.format("Resource requested for %s", schema.key().with(databaseObjectName));
+      exchange.loggingNotification(
+          LoggingMessageNotification.builder()
+              .logger(LOGGER.getName())
+              .level(LoggingLevel.INFO)
+              .data(logMessage)
+              .build());
+      LOGGER.log(Level.CONFIG, logMessage);
+      final Implementation clientInfo = exchange.getClientInfo();
+      if (clientInfo != null) {
+        LOGGER.log(
+            Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
+      }
+    }
   }
 
   private Document lookupRoutine(final Schema schema, final String routineName) {
