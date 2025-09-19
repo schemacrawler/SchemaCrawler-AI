@@ -5,10 +5,10 @@ import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
+import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Schema;
@@ -30,15 +30,18 @@ public class DatabaseObjectResourceProvider {
   @McpResource(
       uri = "routines://{schema}/{routine-name}",
       name = "routine-details",
-      description =
-          """
-          Provides detailed database metadata for the specified routine.
-          If the database has no schemas, use "%" for the schema.
-          """,
+      description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
-      @RequestParam(name = "schema") final String schemaName,
-      @RequestParam(name = "routine-name") final String routineName) {
+      @McpArg(
+              name = "schema",
+              description =
+                  "Fully qualified schema name. "
+                      + "If the database has no schemas, use \"%\" for the schema.",
+              required = false)
+          final String schemaName,
+      @McpArg(name = "routine-name", description = "Routine name.", required = true)
+          final String routineName) {
 
     final Schema schema = lookupSchema(schemaName);
 
@@ -49,15 +52,18 @@ public class DatabaseObjectResourceProvider {
   @McpResource(
       uri = "sequences://{schema}/{sequence-name}",
       name = "sequence-details",
-      description =
-          """
-          Provides detailed database metadata for the specified sequence.
-          If the database has no schemas, use "%" for the schema.
-          """,
+      description = "Provides detailed database metadata for the specified sequence.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSequenceDetails(
-      @RequestParam(name = "schema") final String schemaName,
-      @RequestParam(name = "sequence-name") final String sequenceName) {
+      @McpArg(
+              name = "schema",
+              description =
+                  "Fully qualified schema name. "
+                      + "If the database has no schemas, use \"%\" for the schema.",
+              required = false)
+          final String schemaName,
+      @McpArg(name = "sequence-name", description = "Sequence name.", required = true)
+          final String sequenceName) {
 
     final Schema schema = lookupSchema(schemaName);
 
@@ -68,15 +74,18 @@ public class DatabaseObjectResourceProvider {
   @McpResource(
       uri = "synonyms://{schema}/{synonym-name}",
       name = "synonym-details",
-      description =
-          """
-          Provides detailed database metadata for the specified synonym.
-          If the database has no schemas, use "%" for the schema.
-          """,
+      description = "Provides detailed database metadata for the specified synonym.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSynonymDetails(
-      @RequestParam(name = "schema") final String schemaName,
-      @RequestParam(name = "synonym-name") final String synonymName) {
+      @McpArg(
+              name = "schema",
+              description =
+                  "Fully qualified schema name. "
+                      + "If the database has no schemas, use \"%\" for the schema.",
+              required = false)
+          final String schemaName,
+      @McpArg(name = "synonym-name", description = "Synonym name.", required = true)
+          final String synonymName) {
 
     final Schema schema = lookupSchema(schemaName);
 
@@ -87,15 +96,18 @@ public class DatabaseObjectResourceProvider {
   @McpResource(
       uri = "tables://{schema}/{table-name}",
       name = "table-details",
-      description =
-          """
-          Provides detailed database metadata for the specified table.
-          If the database has no schemas, use "%" for the schema.
-          """,
+      description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
-      @RequestParam(name = "schema") final String schemaName,
-      @RequestParam(name = "table-name") final String tableName) {
+      @McpArg(
+              name = "schema",
+              description =
+                  "Fully qualified schema name. "
+                      + "If the database has no schemas, use \"%\" for the schema.",
+              required = false)
+          final String schemaName,
+      @McpArg(name = "table-name", description = "Table name.", required = true)
+          final String tableName) {
 
     final Schema schema = lookupSchema(schemaName);
 
