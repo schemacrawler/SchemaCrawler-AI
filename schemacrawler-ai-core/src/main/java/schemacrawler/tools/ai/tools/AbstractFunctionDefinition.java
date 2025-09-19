@@ -8,8 +8,9 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
@@ -44,7 +45,7 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     try {
       final FunctionParameters parametersObject =
           getParametersClass().getDeclaredConstructor().newInstance();
-      parameters = new ObjectMapper().writeValueAsString(parametersObject);
+      parameters = mapper.writeValueAsString(parametersObject);
     } catch (final Exception e) {
       parameters =
           new KebabCaseStrategy()

@@ -9,11 +9,11 @@
 package schemacrawler.tools.ai.tools;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static schemacrawler.tools.ai.utility.JsonUtility.wrapException;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Connection;
 import java.util.Optional;
@@ -31,8 +31,6 @@ import us.fatehi.utility.string.StringFormat;
 public final class FunctionCallback {
 
   private static final Logger LOGGER = Logger.getLogger(FunctionCallback.class.getCanonicalName());
-
-  private static ObjectMapper objectMapper = new ObjectMapper();
 
   private FunctionDefinition<FunctionParameters> functionDefinition;
   private final Catalog catalog;
@@ -141,9 +139,8 @@ public final class FunctionCallback {
     } else {
       functionArguments = argumentsString;
     }
-    final ObjectMapper objectMapper = new ObjectMapper();
     try {
-      final P parameters = objectMapper.readValue(functionArguments, parametersClass);
+      final P parameters = mapper.readValue(functionArguments, parametersClass);
       LOGGER.log(Level.FINE, String.valueOf(parameters));
       return parameters;
     } catch (final Exception e) {
@@ -158,7 +155,7 @@ public final class FunctionCallback {
   }
 
   private ObjectNode toObject(final String argumentsString) {
-    final ObjectNode objectNode = objectMapper.createObjectNode();
+    final ObjectNode objectNode = mapper.createObjectNode();
 
     final PropertyName functionName = getFunctionName();
     objectNode.put("name", functionName.getName());
@@ -170,10 +167,10 @@ public final class FunctionCallback {
       } else {
         functionArguments = argumentsString;
       }
-      final JsonNode arguments = objectMapper.readTree(functionArguments);
+      final JsonNode arguments = mapper.readTree(functionArguments);
       objectNode.set("arguments", arguments);
     } catch (final Exception e) {
-      objectNode.set("arguments", objectMapper.createObjectNode());
+      objectNode.set("arguments", mapper.createObjectNode());
     }
 
     return objectNode;

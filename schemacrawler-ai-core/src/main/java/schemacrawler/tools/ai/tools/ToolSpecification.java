@@ -8,8 +8,9 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
 public record ToolSpecification(String name, String description, JsonNode parameters) {
@@ -18,10 +19,8 @@ public record ToolSpecification(String name, String description, JsonNode parame
     return parameters.toPrettyString();
   }
 
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
   public JsonNode getToolSpecification() {
-    final ObjectNode toolSpecification = OBJECT_MAPPER.createObjectNode();
+    final ObjectNode toolSpecification = mapper.createObjectNode();
     toolSpecification.put("name", name);
     toolSpecification.put("description", description);
     toolSpecification.set("parameters", parameters);

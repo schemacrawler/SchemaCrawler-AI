@@ -8,9 +8,10 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import com.fasterxml.jackson.module.jsonSchema.JsonSchema;
@@ -31,13 +32,12 @@ import us.fatehi.utility.UtilityMarker;
 public final class ToolUtility {
 
   private static final Logger LOGGER = Logger.getLogger(ToolUtility.class.getCanonicalName());
-  private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
 
   public static Map<String, JsonNode> extractParametersSchema(final Class<?> parametersClass) {
     try {
-      final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(OBJECT_MAPPER);
+      final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
       final JsonSchema schema = schemaGen.generateSchema(parametersClass);
-      final JsonNode schemaNode = OBJECT_MAPPER.valueToTree(schema);
+      final JsonNode schemaNode = mapper.valueToTree(schema);
 
       return Optional.ofNullable(schemaNode.get("properties"))
           .map(JsonNode::properties)
@@ -76,7 +76,7 @@ public final class ToolUtility {
     Objects.requireNonNull(parametersClass, "Parameters must not be null");
 
     final Map<String, JsonNode> parametersJsonSchema = extractParametersSchema(parametersClass);
-    final ObjectNode schema = OBJECT_MAPPER.createObjectNode();
+    final ObjectNode schema = mapper.createObjectNode();
     // schema.set("$schema", SchemaVersion.DRAFT_2020_12.getIdentifier());
     schema.put("type", "object");
 

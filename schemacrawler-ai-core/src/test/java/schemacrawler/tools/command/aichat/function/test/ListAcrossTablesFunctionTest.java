@@ -18,9 +18,9 @@ import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameter
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -117,7 +117,7 @@ public class ListAcrossTablesFunctionTest extends AbstractFunctionTest {
         new ListAcrossTablesFunctionParameters(NONE, null, null);
 
     final Map<String, String> resultMap =
-        new ObjectMapper().readValue(args.toString(), new TypeReference<Map<String, String>>() {});
+        mapper.readValue(args.toString(), new TypeReference<Map<String, String>>() {});
 
     assertThat(resultMap, hasEntry("dependant-object-type", "NONE"));
     assertThat(resultMap, hasEntry("dependant-object-name", null));
