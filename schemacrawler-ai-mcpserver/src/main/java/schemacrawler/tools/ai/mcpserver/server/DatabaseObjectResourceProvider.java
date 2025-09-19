@@ -53,14 +53,15 @@ public class DatabaseObjectResourceProvider {
           final String schemaName,
       @McpArg(name = "routine-name", description = "Routine name.", required = true)
           final String routineName) {
-
-    final Schema schema = lookupSchema(schemaName);
-
-    final Document document = lookupRoutine(schema, routineName);
-
-    logResourceRequest(exchange, schema, routineName);
-
-    return document.toObjectNode().toPrettyString();
+    try {
+      final Schema schema = lookupSchema(schemaName);
+      final Document document = lookupRoutine(schema, routineName);
+      logResourceRequest(exchange, schema, routineName);
+      return document.toObjectNode().toPrettyString();
+    } catch (final Exception e) {
+      logException(exchange, e);
+      throw e;
+    }
   }
 
   @McpResource(
@@ -79,14 +80,15 @@ public class DatabaseObjectResourceProvider {
           final String schemaName,
       @McpArg(name = "sequence-name", description = "Sequence name.", required = true)
           final String sequenceName) {
-
-    final Schema schema = lookupSchema(schemaName);
-
-    final Document document = lookupSequence(schema, sequenceName);
-
-    logResourceRequest(exchange, schema, sequenceName);
-
-    return document.toObjectNode().toPrettyString();
+    try {
+      final Schema schema = lookupSchema(schemaName);
+      final Document document = lookupSequence(schema, sequenceName);
+      logResourceRequest(exchange, schema, sequenceName);
+      return document.toObjectNode().toPrettyString();
+    } catch (final Exception e) {
+      logException(exchange, e);
+      throw e;
+    }
   }
 
   @McpResource(
@@ -105,14 +107,15 @@ public class DatabaseObjectResourceProvider {
           final String schemaName,
       @McpArg(name = "synonym-name", description = "Synonym name.", required = true)
           final String synonymName) {
-
-    final Schema schema = lookupSchema(schemaName);
-
-    final Document document = lookupSynonym(schema, synonymName);
-
-    logResourceRequest(exchange, schema, synonymName);
-
-    return document.toObjectNode().toPrettyString();
+    try {
+      final Schema schema = lookupSchema(schemaName);
+      final Document document = lookupSynonym(schema, synonymName);
+      logResourceRequest(exchange, schema, synonymName);
+      return document.toObjectNode().toPrettyString();
+    } catch (final Exception e) {
+      logException(exchange, e);
+      throw e;
+    }
   }
 
   @McpResource(
@@ -131,33 +134,51 @@ public class DatabaseObjectResourceProvider {
           final String schemaName,
       @McpArg(name = "table-name", description = "Table name.", required = true)
           final String tableName) {
+    try {
+      final Schema schema = lookupSchema(schemaName);
+      final Document document = lookupTable(schema, tableName);
+      logResourceRequest(exchange, schema, tableName);
+      return document.toObjectNode().toPrettyString();
+    } catch (final Exception e) {
+      logException(exchange, e);
+      throw e;
+    }
+  }
 
-    final Schema schema = lookupSchema(schemaName);
-
-    final Document document = lookupTable(schema, tableName);
-
-    logResourceRequest(exchange, schema, tableName);
-
-    return document.toObjectNode().toPrettyString();
+  private void logException(final McpSyncServerExchange exchange, final Exception e) {
+    if (exchange == null || e == null) {
+      return;
+    }
+    exchange.loggingNotification(
+        LoggingMessageNotification.builder()
+            .logger(LOGGER.getName())
+            .level(LoggingLevel.NOTICE)
+            .data(e.getMessage())
+            .build());
+    LOGGER.log(Level.CONFIG, e.getMessage(), e);
+    final Implementation clientInfo = exchange.getClientInfo();
+    if (clientInfo != null) {
+      LOGGER.log(Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
+    }
   }
 
   private void logResourceRequest(
       final McpSyncServerExchange exchange, final Schema schema, final String databaseObjectName) {
-    if (exchange != null) {
-      final String logMessage =
-          String.format("Resource requested for %s", schema.key().with(databaseObjectName));
-      exchange.loggingNotification(
-          LoggingMessageNotification.builder()
-              .logger(LOGGER.getName())
-              .level(LoggingLevel.INFO)
-              .data(logMessage)
-              .build());
-      LOGGER.log(Level.CONFIG, logMessage);
-      final Implementation clientInfo = exchange.getClientInfo();
-      if (clientInfo != null) {
-        LOGGER.log(
-            Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
-      }
+    if (exchange == null) {
+      return;
+    }
+    final String logMessage =
+        String.format("Resource requested for %s", schema.key().with(databaseObjectName));
+    exchange.loggingNotification(
+        LoggingMessageNotification.builder()
+            .logger(LOGGER.getName())
+            .level(LoggingLevel.INFO)
+            .data(logMessage)
+            .build());
+    LOGGER.log(Level.CONFIG, logMessage);
+    final Implementation clientInfo = exchange.getClientInfo();
+    if (clientInfo != null) {
+      LOGGER.log(Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
     }
   }
 
