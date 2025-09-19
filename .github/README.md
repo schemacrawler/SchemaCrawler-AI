@@ -1,6 +1,6 @@
 <!-- markdownlint-disable MD041 -->
 [![Quick Build](https://github.com/schemacrawler/SchemaCrawler-AI/workflows/Quick%20Build/badge.svg)](https://github.com/schemacrawler/SchemaCrawler-AI/actions?query=workflow%3A%22Quick+Build%22)
-
+[![Docker Pulls](https://img.shields.io/docker/pulls/schemacrawler/schemacrawler-ai?color=FFDAB9)](https://hub.docker.com/r/schemacrawler/schemacrawler-ai/)
 
 # <img src="https://raw.githubusercontent.com/schemacrawler/SchemaCrawler/main/schemacrawler-website/src/site/resources/images/schemacrawler_logo.png" height="100px" width="100px" valign="middle"/> SchemaCrawler - AI
 

@@ -2,14 +2,21 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v16.28.2-1"></a>
+## Release 16.28.2-1 - 2025-09-21
+
+- Support streamable HTTP protocol for MCP Server
+- Publish MCP resources for database object metadata
+
+
 <a name="v16.28.1-2"></a>
-## Release 16.28.1-2 - 2025-09-17
+## Release 16.28.2-2 - 2025-09-17
 
 - Add tags to publish to https://github.com/modelcontextprotocol/registry/
 
 
 <a name="v16.28.1-1"></a>
-## Release 16.28.1-1 - 2025-09-16
+## Release 16.28.2-1 - 2025-09-16
 
 - Refactor code to make it more idiomatic in the Spring Frameork
 - Format tool error messages in JSON
