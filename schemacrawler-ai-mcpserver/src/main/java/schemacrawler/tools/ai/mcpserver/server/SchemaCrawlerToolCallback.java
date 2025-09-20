@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import java.sql.Connection;
 import java.util.Objects;
@@ -49,7 +50,7 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
       return "";
     }
 
-    logToolCall(tooContext, toolInput);
+    logToolCall(tooContext, functionToolExecutor.toCallObject(toolInput));
 
     final Connection connection = ConnectionService.getConnection();
     return functionToolExecutor.execute(toolInput, connection);
@@ -66,13 +67,13 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
     return toolDefinition.name();
   }
 
-  private void logToolCall(final ToolContext tooContext, final String toolInput) {
+  private void logToolCall(final ToolContext tooContext, final JsonNode callObject) {
     final Optional<McpSyncServerExchange> optionalExchange =
         McpToolUtils.getMcpExchange(tooContext);
     if (optionalExchange.isEmpty()) {
       return;
     }
-    final String callMessage = String.format("Call to <%s>%n%s", toolDefinition.name(), toolInput);
+    final String callMessage = String.format("Executing:%n%s", callObject.toPrettyString());
     LoggingUtility.log(optionalExchange.get(), callMessage);
   }
 

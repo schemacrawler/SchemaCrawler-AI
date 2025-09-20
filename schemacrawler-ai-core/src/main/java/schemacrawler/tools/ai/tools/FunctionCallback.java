@@ -69,9 +69,9 @@ public final class FunctionCallback {
 
     requireNonNull(connection, "No database connection provided");
 
-    final PropertyName functionName = getFunctionName();
     LOGGER.log(
-        Level.INFO, new StringFormat("Executing%n%s", toObject(argumentsString).toPrettyString()));
+        Level.FINER,
+        new StringFormat("Executing%n%s", toCallObject(argumentsString).toPrettyString()));
 
     if (functionDefinition == null) {
       return "";
@@ -87,8 +87,7 @@ public final class FunctionCallback {
           Level.INFO,
           e,
           new StringFormat(
-              "Could not call function with arguments: %s(%s)%n%s",
-              functionName, argumentsString, e.getMessage()));
+              "Exception executing: %s%n%s", toCallObject(argumentsString), e.getMessage()));
       return wrapException(e);
     }
   }
@@ -108,9 +107,31 @@ public final class FunctionCallback {
     return functionName;
   }
 
+  public JsonNode toCallObject(final String argumentsString) {
+    final ObjectNode objectNode = mapper.createObjectNode();
+
+    final PropertyName functionName = getFunctionName();
+    objectNode.put("name", functionName.getName());
+
+    try {
+      final String functionArguments;
+      if (isBlank(argumentsString)) {
+        functionArguments = "{}";
+      } else {
+        functionArguments = argumentsString;
+      }
+      final JsonNode arguments = mapper.readTree(functionArguments);
+      objectNode.set("arguments", arguments);
+    } catch (final Exception e) {
+      objectNode.set("arguments", mapper.createObjectNode());
+    }
+
+    return objectNode;
+  }
+
   @Override
   public String toString() {
-    return toObject(null).toPrettyString();
+    return toCallObject(null).toPrettyString();
   }
 
   private String executeFunction(final FunctionParameters arguments, final Connection connection)
@@ -152,27 +173,5 @@ public final class FunctionCallback {
               parametersClass.getName(), functionArguments));
       return parametersClass.getDeclaredConstructor().newInstance();
     }
-  }
-
-  private ObjectNode toObject(final String argumentsString) {
-    final ObjectNode objectNode = mapper.createObjectNode();
-
-    final PropertyName functionName = getFunctionName();
-    objectNode.put("name", functionName.getName());
-
-    try {
-      final String functionArguments;
-      if (isBlank(argumentsString)) {
-        functionArguments = "{}";
-      } else {
-        functionArguments = argumentsString;
-      }
-      final JsonNode arguments = mapper.readTree(functionArguments);
-      objectNode.set("arguments", arguments);
-    } catch (final Exception e) {
-      objectNode.set("arguments", mapper.createObjectNode());
-    }
-
-    return objectNode;
   }
 }
