@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.command.aichat.functions.text;
 
+import schemacrawler.tools.ai.functions.TextFunctionReturn;
 import schemacrawler.tools.ai.tools.AbstractFunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
@@ -22,6 +23,6 @@ public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParam
 
   @Override
   public FunctionReturn call() {
-    return () -> "Thank you for using SchemaCrawler with AI chat.";
+    return new TextFunctionReturn("Thank you for using SchemaCrawler with AI chat.");
   }
 }

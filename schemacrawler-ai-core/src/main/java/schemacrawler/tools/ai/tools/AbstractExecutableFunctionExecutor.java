@@ -15,6 +15,7 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.functions.JsonFunctionReturn;
+import schemacrawler.tools.ai.functions.TextFunctionReturn;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
@@ -59,7 +60,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
           return new JsonFunctionReturn(objectNode);
         case TEXT:
         default:
-          return () -> "There were no matching results for your query.";
+          return new TextFunctionReturn("There were no matching results for your query.");
       }
     }
 
