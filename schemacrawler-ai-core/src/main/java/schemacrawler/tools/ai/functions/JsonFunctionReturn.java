@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.requireNotBlank;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.tools.ai.model.Document;
@@ -19,23 +20,24 @@ import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public class JsonFunctionReturn implements FunctionReturn {
 
-  private final ObjectNode objectNode;
+  private final JsonNode objectNode;
 
   public JsonFunctionReturn(final Document document) {
     requireNonNull(document, "No schema document provided");
     objectNode = document.toObjectNode();
   }
 
-  public JsonFunctionReturn(final ObjectNode objectNode) {
+  public JsonFunctionReturn(final JsonNode objectNode) {
     this.objectNode = requireNonNull(objectNode, "No object node provided");
   }
 
   public JsonFunctionReturn(final String listName, final ArrayNode list) {
     requireNotBlank(listName, "No list name provided");
-    objectNode = mapper.createObjectNode();
+    final ObjectNode listNode = mapper.createObjectNode();
     if (list != null) {
-      objectNode.set(listName, list);
+      listNode.set(listName, list);
     }
+    objectNode = listNode;
   }
 
   @Override
@@ -43,7 +45,7 @@ public class JsonFunctionReturn implements FunctionReturn {
     return objectNode.toString();
   }
 
-  public ObjectNode getObjectNode() {
+  public JsonNode getResult() {
     return objectNode;
   }
 }

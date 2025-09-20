@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Collection;
@@ -34,8 +35,8 @@ public final class ServerInformationFunctionExecutor
     // No need to refilter, but leave this boilerplate
     // refilterCatalog();
 
-    final ArrayNode list = createServerInfoArray();
-    return new JsonFunctionReturn("server-information", list);
+    final JsonNode serverInfo = createServerInfoArray();
+    return new JsonFunctionReturn(serverInfo);
   }
 
   @Override
@@ -43,28 +44,28 @@ public final class ServerInformationFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
   }
 
-  private ArrayNode createServerInfoArray() {
-    final ArrayNode list = mapper.createArrayNode();
+  private JsonNode createServerInfoArray() {
 
-    final ObjectNode databaseProductPropertyNode = mapper.createObjectNode();
+    final ObjectNode databaseInfo = mapper.createObjectNode();
+
+    final ObjectNode databaseProductPropertyNode = databaseInfo.putObject("database-server");
     databaseProductPropertyNode.put(
         "database-product-name", catalog.getDatabaseInfo().getDatabaseProductName());
     databaseProductPropertyNode.put(
         "database-product-version", catalog.getDatabaseInfo().getDatabaseProductVersion());
-    list.add(databaseProductPropertyNode);
 
+    final ArrayNode serverInfoArray = databaseInfo.putArray("server-info");
     final Collection<Property> serverInfo = catalog.getDatabaseInfo().getServerInfo();
     for (final Property serverProperty : serverInfo) {
       if (serverProperty == null) {
         continue;
       }
-      final ObjectNode serverPropertyNode = mapper.createObjectNode();
+      final ObjectNode serverPropertyNode = serverInfoArray.addObject();
       serverPropertyNode.put("name", serverProperty.getName());
       serverPropertyNode.put("description", serverProperty.getDescription());
       serverPropertyNode.put("value", serverProperty.getValue().toString());
-      list.add(serverPropertyNode);
     }
 
-    return list;
+    return databaseInfo;
   }
 }
