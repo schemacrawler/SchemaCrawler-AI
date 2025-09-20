@@ -29,7 +29,7 @@ jobs:
           ./mcp-publisher --version
           ./mcp-publisher login github-oidc
           cp \
-            ./schemacrawler-ai-mcpserver/mcp-registration.json
+            ./schemacrawler-ai-mcpserver/mcp-registration.json \
             ./server.json
           ./mcp-publisher publish
           ./mcp-publisher logout
