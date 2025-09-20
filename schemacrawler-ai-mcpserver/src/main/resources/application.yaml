@@ -17,7 +17,7 @@ spring:
         name: schemacrawler-mcpserver
 server:
   name: SchemaCrawler AI MCP Server
-  version: "v16.28.1-2"
+  version: "v16.28.2-2"
   heartbeat: true
 
 ---
@@ -36,12 +36,13 @@ spring:
 spring:
   config:
     activate:
-      on-profile: sse
+      on-profile: http
   server:
     port: 8080
   ai:
     mcp:
       server:
+        protocol: STREAMABLE
         stdio: false
         allowed-origin: '*'
         capabilities:

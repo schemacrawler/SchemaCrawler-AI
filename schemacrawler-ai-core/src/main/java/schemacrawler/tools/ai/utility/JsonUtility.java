@@ -23,7 +23,7 @@ public class JsonUtility {
       return "";
     }
     try {
-      return new ObjectMapper().writeValueAsString(parameters);
+      return mapper.writeValueAsString(parameters);
     } catch (final JsonProcessingException e) {
       return "";
     }
@@ -31,7 +31,7 @@ public class JsonUtility {
 
   public static String wrapException(final Exception exception) {
     try {
-      return new ObjectMapper().writeValueAsString(new ExceptionInfo(exception));
+      return mapper.writeValueAsString(new ExceptionInfo(exception));
     } catch (final JsonProcessingException e) {
       return "";
     }

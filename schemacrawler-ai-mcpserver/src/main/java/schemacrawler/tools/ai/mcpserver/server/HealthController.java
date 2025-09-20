@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,7 +21,9 @@ public class HealthController {
 
   @Autowired private ServerHealth serverHealth;
 
-  @GetMapping({"/", "/health"})
+  @GetMapping(
+      value = {"/", "/health"},
+      produces = APPLICATION_JSON_VALUE)
   public Map<String, String> healthCheck() {
     return serverHealth.currentState();
   }

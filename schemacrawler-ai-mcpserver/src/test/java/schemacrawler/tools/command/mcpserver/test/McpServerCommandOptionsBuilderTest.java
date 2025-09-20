@@ -27,8 +27,8 @@ public class McpServerCommandOptionsBuilderTest {
 
     assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
 
-    optionsBuilder.withMcpTransport(McpServerTransportType.sse);
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("sse"));
+    optionsBuilder.withMcpTransport(McpServerTransportType.http);
+    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("http"));
 
     optionsBuilder.withMcpTransport(McpServerTransportType.stdio);
     assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
@@ -39,10 +39,10 @@ public class McpServerCommandOptionsBuilderTest {
     Config config;
 
     config = new Config();
-    config.put("transport", "sse");
+    config.put("transport", "http");
     final McpServerCommandOptions options =
         McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
-    assertThat(options.mcpTransport().name(), is("sse"));
+    assertThat(options.mcpTransport().name(), is("http"));
   }
 
   @Test
@@ -56,11 +56,11 @@ public class McpServerCommandOptionsBuilderTest {
   public void fromOptions() {
     final McpServerCommandOptions options =
         McpServerCommandOptionsBuilder.builder()
-            .withMcpTransport(McpServerTransportType.sse)
+            .withMcpTransport(McpServerTransportType.http)
             .toOptions();
     final McpServerCommandOptionsBuilder optionsBuilder =
         McpServerCommandOptionsBuilder.builder().fromOptions(options);
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("sse"));
+    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("http"));
   }
 
   @Test

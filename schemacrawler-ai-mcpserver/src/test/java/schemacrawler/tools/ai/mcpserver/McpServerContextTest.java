@@ -156,10 +156,10 @@ public class McpServerContextTest {
     context = new McpServerContext(envAccessor);
     assertThat(context.getMcpTransport(), is(McpServerTransportType.stdio));
 
-    // Test sse transport
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "sse");
+    // Test http transport
+    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "http");
     context = new McpServerContext(envAccessor);
-    assertThat(context.getMcpTransport(), is(McpServerTransportType.sse));
+    assertThat(context.getMcpTransport(), is(McpServerTransportType.http));
 
     // Test unknown value defaults to stdio
     envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "unknown");

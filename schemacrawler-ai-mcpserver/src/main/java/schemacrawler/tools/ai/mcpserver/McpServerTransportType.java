@@ -11,5 +11,5 @@ package schemacrawler.tools.ai.mcpserver;
 public enum McpServerTransportType {
   unknown,
   stdio,
-  sse;
+  http;
 }

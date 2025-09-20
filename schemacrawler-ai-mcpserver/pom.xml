@@ -6,7 +6,7 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-ai-parent</artifactId>
-    <version>16.28.1-2</version>
+    <version>16.28.2-2</version>
     <relativePath>../schemacrawler-ai-parent</relativePath>
   </parent>
   <artifactId>schemacrawler-ai-mcpserver</artifactId>
@@ -45,7 +45,7 @@
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>1.0.1</version>
+        <version>1.1.0-M1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>

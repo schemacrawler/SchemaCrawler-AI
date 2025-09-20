@@ -12,9 +12,9 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -63,7 +63,7 @@ public class HeartbeatLoggerTest {
 
     @Bean
     McpServerTransportType mcpTransport() {
-      return McpServerTransportType.sse;
+      return McpServerTransportType.http;
     }
 
     @Bean
@@ -75,8 +75,6 @@ public class HeartbeatLoggerTest {
   @Autowired private HeartbeatLogger heartbeatLogger;
 
   @Autowired private ServerHealth serverHealth;
-
-  private final ObjectMapper objectMapper = new ObjectMapper();
 
   @BeforeEach
   public void _stubServerHealth() {
@@ -131,7 +129,7 @@ public class HeartbeatLoggerTest {
           org.hamcrest.Matchers.is(false));
       final String raw = messages.get(messages.size() - 1);
       final String json = raw.strip(); // remove leading newline
-      final JsonNode node = objectMapper.readTree(json);
+      final JsonNode node = mapper.readTree(json);
       assertThat("Parsed JSON should not be null", node, notNullValue());
       // Optionally, check for a field we provided
       assertThat("_server should be present", node.get("_server"), notNullValue());
