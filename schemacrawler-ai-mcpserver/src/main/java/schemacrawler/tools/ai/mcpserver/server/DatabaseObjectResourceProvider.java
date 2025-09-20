@@ -6,9 +6,6 @@ import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.Implementation;
-import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
-import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
 import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -23,12 +20,12 @@ import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
+import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
-import us.fatehi.utility.string.StringFormat;
 
 @Service
 public class DatabaseObjectResourceProvider {
@@ -154,53 +151,27 @@ public class DatabaseObjectResourceProvider {
       final McpSyncServerExchange exchange,
       final ReadResourceRequest resourceRequest,
       final Exception e) {
+
     if (exchange == null || e == null) {
       return;
     }
+
     final String logMessage;
     if (resourceRequest != null) {
       logMessage = String.format("Could not read resource <%s>", resourceRequest.uri());
     } else {
       logMessage = e.getMessage();
     }
-    // Log to client
-    exchange.loggingNotification(
-        LoggingMessageNotification.builder()
-            .logger(LOGGER.getName())
-            .level(LoggingLevel.NOTICE)
-            .data(logMessage)
-            .build());
-    // Log to server
-    LOGGER.log(Level.INFO, logMessage);
+
+    LoggingUtility.log(exchange, logMessage);
     LOGGER.log(Level.FINER, e.getMessage(), e);
-    // Log connected client information
-    final Implementation clientInfo = exchange.getClientInfo();
-    if (clientInfo != null) {
-      LOGGER.log(Level.INFO, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
-    }
   }
 
   private void logResourceRequest(
       final McpSyncServerExchange exchange, final Schema schema, final String databaseObjectName) {
-    if (exchange == null) {
-      return;
-    }
     final String logMessage =
         String.format("Resource requested for %s", schema.key().with(databaseObjectName));
-    // Log to client
-    exchange.loggingNotification(
-        LoggingMessageNotification.builder()
-            .logger(LOGGER.getName())
-            .level(LoggingLevel.INFO)
-            .data(logMessage)
-            .build());
-    // Log to server
-    LOGGER.log(Level.INFO, logMessage);
-    // Log connected client information
-    final Implementation clientInfo = exchange.getClientInfo();
-    if (clientInfo != null) {
-      LOGGER.log(Level.INFO, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
-    }
+    LoggingUtility.log(exchange, logMessage);
   }
 
   private Document lookupRoutine(final Schema schema, final String routineName) {

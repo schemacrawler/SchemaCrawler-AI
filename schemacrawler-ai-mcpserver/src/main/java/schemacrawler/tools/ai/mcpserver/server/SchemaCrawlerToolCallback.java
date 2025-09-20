@@ -8,23 +8,23 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import io.modelcontextprotocol.server.McpSyncServerExchange;
 import java.sql.Connection;
 import java.util.Objects;
-import java.util.logging.Logger;
+import java.util.Optional;
 import org.springframework.ai.chat.model.ToolContext;
+import org.springframework.ai.mcp.McpToolUtils;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.lang.NonNull;
 import org.springframework.lang.Nullable;
 import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.ToolSpecification;
 
 public final class SchemaCrawlerToolCallback implements ToolCallback {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(SchemaCrawlerToolCallback.class.getCanonicalName());
 
   private final ToolDefinition toolDefinition;
   private final FunctionCallback functionToolExecutor;
@@ -39,21 +39,20 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
   @Override
   @NonNull
   public String call(@NonNull final String toolInput) {
-    if (!StringUtils.hasText(toolInput)) {
-      return "";
-    }
-
-    final String callMessage = String.format("Call to <%s>%n%s", toolDefinition.name(), toolInput);
-    LOGGER.info(callMessage);
-
-    final Connection connection = ConnectionService.getConnection();
-    return functionToolExecutor.execute(toolInput, connection);
+    return call(toolInput, null);
   }
 
   @Override
   @NonNull
   public String call(@NonNull final String toolInput, @Nullable final ToolContext tooContext) {
-    return call(toolInput);
+    if (!StringUtils.hasText(toolInput)) {
+      return "";
+    }
+
+    logToolCall(tooContext, toolInput);
+
+    final Connection connection = ConnectionService.getConnection();
+    return functionToolExecutor.execute(toolInput, connection);
   }
 
   @Override
@@ -65,6 +64,16 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
   @Override
   public String toString() {
     return toolDefinition.name();
+  }
+
+  private void logToolCall(final ToolContext tooContext, final String toolInput) {
+    final Optional<McpSyncServerExchange> optionalExchange =
+        McpToolUtils.getMcpExchange(tooContext);
+    if (optionalExchange.isEmpty()) {
+      return;
+    }
+    final String callMessage = String.format("Call to <%s>%n%s", toolDefinition.name(), toolInput);
+    LoggingUtility.log(optionalExchange.get(), callMessage);
   }
 
   private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
