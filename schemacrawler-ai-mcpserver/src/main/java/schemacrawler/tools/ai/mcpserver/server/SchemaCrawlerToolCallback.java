@@ -23,6 +23,7 @@ import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public final class SchemaCrawlerToolCallback implements ToolCallback {
 
@@ -50,7 +51,8 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
     logToolCall(tooContext, functionToolExecutor.toCallObject(toolInput));
 
     final Connection connection = ConnectionService.getConnection();
-    return functionToolExecutor.execute(toolInput, connection);
+    final FunctionReturn functionReturn = functionToolExecutor.execute(toolInput, connection);
+    return functionReturn.get();
   }
 
   @Override

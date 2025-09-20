@@ -29,14 +29,6 @@ public class JsonUtility {
     }
   }
 
-  public static String wrapException(final Exception exception) {
-    try {
-      return mapper.writeValueAsString(new ExceptionInfo(exception));
-    } catch (final JsonProcessingException e) {
-      return "";
-    }
-  }
-
   private JsonUtility() {
     // Prevent instantiation
   }

@@ -17,18 +17,25 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.utility.ExceptionInfo;
 
 public class JsonFunctionReturn implements FunctionReturn {
 
-  private final JsonNode objectNode;
+  private final JsonNode jsonNode;
 
   public JsonFunctionReturn(final Document document) {
     requireNonNull(document, "No schema document provided");
-    objectNode = document.toObjectNode();
+    jsonNode = document.toObjectNode();
+  }
+
+  public JsonFunctionReturn(final Exception exception) {
+    final ObjectNode objectNode = mapper.createObjectNode();
+    objectNode.putPOJO("exception", new ExceptionInfo(exception));
+    jsonNode = objectNode;
   }
 
   public JsonFunctionReturn(final JsonNode objectNode) {
-    this.objectNode = requireNonNull(objectNode, "No object node provided");
+    jsonNode = requireNonNull(objectNode, "No object node provided");
   }
 
   public JsonFunctionReturn(final String listName, final ArrayNode list) {
@@ -37,15 +44,15 @@ public class JsonFunctionReturn implements FunctionReturn {
     if (list != null) {
       listNode.set(listName, list);
     }
-    objectNode = listNode;
+    jsonNode = listNode;
   }
 
   @Override
   public String get() {
-    return objectNode.toString();
+    return jsonNode.toString();
   }
 
   public JsonNode getResult() {
-    return objectNode;
+    return jsonNode;
   }
 }
