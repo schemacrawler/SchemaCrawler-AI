@@ -23,17 +23,14 @@ import org.springframework.util.StringUtils;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
-import schemacrawler.tools.ai.tools.ToolSpecification;
 
 public final class SchemaCrawlerToolCallback implements ToolCallback {
 
   private final ToolDefinition toolDefinition;
   private final FunctionCallback functionToolExecutor;
 
-  public SchemaCrawlerToolCallback(
-      final ToolSpecification toolSpecification, final Catalog catalog) {
-    Objects.requireNonNull(toolSpecification, "No tool specification provided");
-    toolDefinition = toToolDefinition(toolSpecification);
+  public SchemaCrawlerToolCallback(final ToolDefinition toolDefinition, final Catalog catalog) {
+    this.toolDefinition = Objects.requireNonNull(toolDefinition, "No tool definition provided");
     functionToolExecutor = new FunctionCallback(toolDefinition.name(), catalog);
   }
 
@@ -75,15 +72,5 @@ public final class SchemaCrawlerToolCallback implements ToolCallback {
     }
     final String callMessage = String.format("Executing:%n%s", callObject.toPrettyString());
     LoggingUtility.log(optionalExchange.get(), callMessage);
-  }
-
-  private ToolDefinition toToolDefinition(final ToolSpecification toolSpecification) {
-    final ToolDefinition toolDefinition =
-        ToolDefinition.builder()
-            .name(toolSpecification.name())
-            .description(toolSpecification.description())
-            .inputSchema(toolSpecification.getParametersAsString())
-            .build();
-    return toolDefinition;
   }
 }

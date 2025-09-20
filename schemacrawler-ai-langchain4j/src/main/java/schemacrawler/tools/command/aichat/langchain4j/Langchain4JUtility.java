@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.command.aichat.langchain4j;
 
-import static schemacrawler.tools.ai.tools.ToolUtility.extractParametersSchema;
+import static schemacrawler.tools.ai.tools.ToolUtility.extractParametersSchemaMap;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import dev.langchain4j.agent.tool.ToolSpecification;
@@ -62,7 +62,7 @@ public class Langchain4JUtility {
 
       try {
         final Class<?> parametersClass = functionDefinition.getParametersClass();
-        final Map<String, JsonNode> parametersSchema = extractParametersSchema(parametersClass);
+        final Map<String, JsonNode> parametersSchema = extractParametersSchemaMap(parametersClass);
         final Map<String, JsonSchemaElement> properties = toProperties(parametersSchema);
         final JsonObjectSchema parameters =
             JsonObjectSchema.builder().addProperties(properties).build();

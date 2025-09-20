@@ -33,7 +33,7 @@ public final class ToolUtility {
 
   private static final Logger LOGGER = Logger.getLogger(ToolUtility.class.getCanonicalName());
 
-  public static Map<String, JsonNode> extractParametersSchema(final Class<?> parametersClass) {
+  public static Map<String, JsonNode> extractParametersSchemaMap(final Class<?> parametersClass) {
     try {
       final JsonSchemaGenerator schemaGen = new JsonSchemaGenerator(mapper);
       final JsonSchema schema = schemaGen.generateSchema(parametersClass);
@@ -60,22 +60,10 @@ public final class ToolUtility {
     }
   }
 
-  public static ToolSpecification toToolSpecification(
-      final FunctionDefinition<?> functionDefinition) {
-    Objects.requireNonNull(functionDefinition, "Function definition must not be null");
-    final String functionName = functionDefinition.getName();
-    final String functionDescription = functionDefinition.getDescription();
-    final JsonNode parameters = generateParametersSchema(functionDefinition.getParametersClass());
-    final ToolSpecification toolSpecification =
-        new ToolSpecification(functionName, functionDescription, parameters);
-    LOGGER.log(Level.INFO, String.format("Generated tool specification%n%s", toolSpecification));
-    return toolSpecification;
-  }
-
-  private static JsonNode generateParametersSchema(final Class<?> parametersClass) {
+  public static JsonNode extractParametersSchemaNode(final Class<?> parametersClass) {
     Objects.requireNonNull(parametersClass, "Parameters must not be null");
 
-    final Map<String, JsonNode> parametersJsonSchema = extractParametersSchema(parametersClass);
+    final Map<String, JsonNode> parametersJsonSchema = extractParametersSchemaMap(parametersClass);
     final ObjectNode schema = mapper.createObjectNode();
     // schema.set("$schema", SchemaVersion.DRAFT_2020_12.getIdentifier());
     schema.put("type", "object");

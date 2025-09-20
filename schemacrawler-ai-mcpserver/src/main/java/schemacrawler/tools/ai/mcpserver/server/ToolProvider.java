@@ -9,6 +9,10 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -18,17 +22,15 @@ import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
 import org.springframework.ai.tool.ToolCallback;
 import org.springframework.ai.tool.ToolCallbackProvider;
+import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import schemacrawler.Version;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
-import schemacrawler.tools.ai.tools.ToolSpecification;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import us.fatehi.utility.string.StringFormat;
 
@@ -41,19 +43,19 @@ public class ToolProvider {
 
   private static final Logger LOGGER = Logger.getLogger(ToolProvider.class.getCanonicalName());
 
-  @Autowired
-  private ServerHealth serverHealth;
-  @Autowired
-  private Catalog catalog;
-  @Autowired
-  private FunctionDefinitionRegistry functionDefinitionRegistry;
+  @Autowired private ServerHealth serverHealth;
+  @Autowired private Catalog catalog;
+  @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
+  @Autowired private ToolHelper toolHelper;
 
-  @McpTool(name = "mcp-server-health",
+  @McpTool(
+      name = "mcp-server-health",
       description = "Gets the SchemaCrawler MCP version and uptime status",
       annotations = @McpAnnotations(readOnlyHint = true, destructiveHint = false))
-  public String getSchemaCrawlerVersion(final McpSyncServerExchange exchange,
-      @McpArg(description = "MCP Client identification, if available.",
-          required = false) final String clientId,
+  public String getSchemaCrawlerVersion(
+      final McpSyncServerExchange exchange,
+      @McpArg(description = "MCP Client identification, if available.", required = false)
+          final String clientId,
       @McpArg(description = "Event id, if available.", required = false) final String eventId) {
     final ObjectNode objectNode = JsonUtility.mapper.createObjectNode();
     objectNode.put("schemacrawler-version", Version.version().toString());
@@ -82,10 +84,12 @@ public class ToolProvider {
   @Bean
   public ToolCallbackProvider schemaCrawlerTools() {
     final List<ToolCallback> toolCallbacks = new ArrayList<>();
-    for (final ToolSpecification toolSpecification : functionDefinitionRegistry
-        .getToolSpecifications(FunctionReturnType.JSON)) {
-      LOGGER.log(Level.FINE, new StringFormat("Add callback for <%s>", toolSpecification.name()));
-      toolCallbacks.add(new SchemaCrawlerToolCallback(toolSpecification, catalog));
+    for (final FunctionDefinition<?> functionDefinition :
+        functionDefinitionRegistry.lookupFunctionsByType(FunctionReturnType.JSON)) {
+      LOGGER.log(
+          Level.FINE, new StringFormat("Add callback for <%s>", functionDefinition.getName()));
+      final ToolDefinition toolDefinition = toolHelper.toToolDefinition(functionDefinition);
+      toolCallbacks.add(new SchemaCrawlerToolCallback(toolDefinition, catalog));
     }
     return ToolCallbackProvider.from(toolCallbacks);
   }
