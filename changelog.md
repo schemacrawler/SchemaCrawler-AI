@@ -10,7 +10,7 @@ SchemaCrawler AI release notes.
 
 
 <a name="v16.28.1-2"></a>
-## Release 16.28.2-2 - 2025-09-17
+## Release 16.28.2-1 - 2025-09-17
 
 - Add tags to publish to https://github.com/modelcontextprotocol/registry/
 
