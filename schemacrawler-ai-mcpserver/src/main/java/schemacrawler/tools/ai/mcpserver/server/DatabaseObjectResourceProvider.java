@@ -9,6 +9,7 @@ import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
 import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
+import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springaicommunity.mcp.annotation.McpArg;
@@ -43,6 +44,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
+      final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
@@ -59,7 +61,7 @@ public class DatabaseObjectResourceProvider {
       logResourceRequest(exchange, schema, routineName);
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      logException(exchange, e);
+      logException(exchange, resourceRequest, e);
       throw e;
     }
   }
@@ -70,6 +72,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified sequence.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSequenceDetails(
+      final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
@@ -86,7 +89,7 @@ public class DatabaseObjectResourceProvider {
       logResourceRequest(exchange, schema, sequenceName);
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      logException(exchange, e);
+      logException(exchange, resourceRequest, e);
       throw e;
     }
   }
@@ -97,6 +100,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified synonym.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getSynonymDetails(
+      final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
@@ -113,7 +117,7 @@ public class DatabaseObjectResourceProvider {
       logResourceRequest(exchange, schema, synonymName);
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      logException(exchange, e);
+      logException(exchange, resourceRequest, e);
       throw e;
     }
   }
@@ -124,6 +128,7 @@ public class DatabaseObjectResourceProvider {
       description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
+      final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
       @McpArg(
               name = "schema",
@@ -140,25 +145,38 @@ public class DatabaseObjectResourceProvider {
       logResourceRequest(exchange, schema, tableName);
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      logException(exchange, e);
+      logException(exchange, resourceRequest, e);
       throw e;
     }
   }
 
-  private void logException(final McpSyncServerExchange exchange, final Exception e) {
+  private void logException(
+      final McpSyncServerExchange exchange,
+      final ReadResourceRequest resourceRequest,
+      final Exception e) {
     if (exchange == null || e == null) {
       return;
     }
+    final String logMessage;
+    if (resourceRequest != null) {
+      logMessage = String.format("Could not read resource <%s>", resourceRequest.uri());
+    } else {
+      logMessage = e.getMessage();
+    }
+    // Log to client
     exchange.loggingNotification(
         LoggingMessageNotification.builder()
             .logger(LOGGER.getName())
             .level(LoggingLevel.NOTICE)
-            .data(e.getMessage())
+            .data(logMessage)
             .build());
-    LOGGER.log(Level.CONFIG, e.getMessage(), e);
+    // Log to server
+    LOGGER.log(Level.INFO, logMessage);
+    LOGGER.log(Level.FINER, e.getMessage(), e);
+    // Log connected client information
     final Implementation clientInfo = exchange.getClientInfo();
     if (clientInfo != null) {
-      LOGGER.log(Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
+      LOGGER.log(Level.INFO, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
     }
   }
 
@@ -169,16 +187,19 @@ public class DatabaseObjectResourceProvider {
     }
     final String logMessage =
         String.format("Resource requested for %s", schema.key().with(databaseObjectName));
+    // Log to client
     exchange.loggingNotification(
         LoggingMessageNotification.builder()
             .logger(LOGGER.getName())
             .level(LoggingLevel.INFO)
             .data(logMessage)
             .build());
-    LOGGER.log(Level.CONFIG, logMessage);
+    // Log to server
+    LOGGER.log(Level.INFO, logMessage);
+    // Log connected client information
     final Implementation clientInfo = exchange.getClientInfo();
     if (clientInfo != null) {
-      LOGGER.log(Level.CONFIG, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
+      LOGGER.log(Level.INFO, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
     }
   }
 
@@ -190,7 +211,7 @@ public class DatabaseObjectResourceProvider {
                 () ->
                     new SchemaCrawlerException(
                         String.format(
-                            "Routine <%s.%s> not found", schema.getFullName(), routineName)));
+                            "Routine <%s/%s> not found", schema.getFullName(), routineName)));
 
     final RoutineDocument routineDocument =
         new CompactCatalogUtility()
@@ -218,7 +239,7 @@ public class DatabaseObjectResourceProvider {
                 () ->
                     new SchemaCrawlerException(
                         String.format(
-                            "Sequence <%s.%s> not found", schema.getFullName(), sequenceName)));
+                            "Sequence <%s/%s> not found", schema.getFullName(), sequenceName)));
 
     final DatabaseObjectDocument sequenceDocument = new DatabaseObjectDocument(sequence);
 
@@ -233,7 +254,7 @@ public class DatabaseObjectResourceProvider {
                 () ->
                     new SchemaCrawlerException(
                         String.format(
-                            "Synonym <%s.%s> not found", schema.getFullName(), synonymName)));
+                            "Synonym <%s/%s> not found", schema.getFullName(), synonymName)));
 
     final DatabaseObjectDocument synonymDocument = new DatabaseObjectDocument(synonym);
 
@@ -247,7 +268,7 @@ public class DatabaseObjectResourceProvider {
             .orElseThrow(
                 () ->
                     new SchemaCrawlerException(
-                        String.format("Table <%s.%s> not found", schema.getFullName(), tableName)));
+                        String.format("Table <%s/%s> not found", schema.getFullName(), tableName)));
 
     final TableDocument tableDocument =
         new CompactCatalogUtility()
