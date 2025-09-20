@@ -8,20 +8,24 @@
 
 package schemacrawler.tools.ai.functions;
 
-import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.requireNotBlank;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.requireNotBlank;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.utility.ExceptionInfo;
 
 public class JsonFunctionReturn implements FunctionReturn {
 
+
   private final JsonNode jsonNode;
+
+  public JsonFunctionReturn() {
+    jsonNode = mapper.missingNode();
+  }
 
   public JsonFunctionReturn(final Document document) {
     requireNonNull(document, "No schema document provided");

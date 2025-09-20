@@ -8,16 +8,15 @@
 
 package schemacrawler.tools.ai.tools;
 
-import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Connection;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.functions.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
@@ -76,7 +75,7 @@ public final class FunctionCallback {
     }
 
     if (functionDefinition == null) {
-      return new JsonFunctionReturn(mapper.missingNode());
+      return new JsonFunctionReturn();
     }
 
     try {
