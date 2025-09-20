@@ -28,9 +28,8 @@ jobs:
           # Publish to MCP Registry
           ./mcp-publisher --version
           ./mcp-publisher login github-oidc
-          ./mcp-publisher publish \
-            --dry-run \
-            --file=./schemacrawler-ai-mcpserver/mcp-registration.json
-          ./mcp-publisher publish \
-            --file=./schemacrawler-ai-mcpserver/mcp-registration.json
+          cp \
+            ./schemacrawler-ai-mcpserver/mcp-registration.json
+            ./server.json
+          ./mcp-publisher publish
           ./mcp-publisher logout
