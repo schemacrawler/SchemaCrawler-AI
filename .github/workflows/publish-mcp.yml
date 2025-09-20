@@ -25,10 +25,10 @@ jobs:
         name: Publish to MCP Registry
         shell: bash
         run: |
-          ./mcp-publisher login github-oidc
-          ./mcp-publisher publish \
+          mcp-publisher login github-oidc
+          mcp-publisher publish \
             --dry-run \
             --file=./schemacrawler-ai-mcpserver/mcp-registration.json
-          ./mcp-publisher publish \
+          mcp-publisher publish \
             --file=./schemacrawler-ai-mcpserver/mcp-registration.json
-          ./mcp-publisher logout
+          mcp-publisher logout
