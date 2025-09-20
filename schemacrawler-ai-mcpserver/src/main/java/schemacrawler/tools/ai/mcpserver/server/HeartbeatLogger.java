@@ -45,7 +45,7 @@ public class HeartbeatLogger {
         }
       };
 
-  @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 30)
+  @Scheduled(timeUnit = TimeUnit.SECONDS, fixedRate = 120)
   public void logHeartbeat() {
     if (!heartbeat) {
       return;
