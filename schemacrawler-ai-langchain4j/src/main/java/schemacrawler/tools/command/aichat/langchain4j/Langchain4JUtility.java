@@ -46,7 +46,8 @@ public class Langchain4JUtility {
             .getFunctionDefinitions(FunctionReturnType.TEXT)) {
       final String functionName = functionDefinition.getName();
 
-      final ToolExecutor executor = new Langchain4JToolExecutor(functionName, catalog, connection);
+      final ToolExecutor executor =
+          new Langchain4JToolExecutor(functionDefinition, catalog, connection);
       toolSpecificationsMap.put(functionName, executor);
     }
 

@@ -16,16 +16,20 @@ import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.tools.FunctionCallback;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public final class Langchain4JToolExecutor implements ToolExecutor {
 
-  private final FunctionCallback functionToolExecutor;
+  private final FunctionCallback<? extends FunctionParameters> functionToolExecutor;
   private final Connection connection;
 
-  public Langchain4JToolExecutor(
-      final String functionName, final Catalog catalog, final Connection connection) {
-    functionToolExecutor = new FunctionCallback(functionName, catalog);
+  public <P extends FunctionParameters> Langchain4JToolExecutor(
+      final FunctionDefinition<P> functionDefinition,
+      final Catalog catalog,
+      final Connection connection) {
+    functionToolExecutor = new FunctionCallback<>(functionDefinition, catalog);
     this.connection = requireNonNull(connection, "No database connection provided");
   }
 

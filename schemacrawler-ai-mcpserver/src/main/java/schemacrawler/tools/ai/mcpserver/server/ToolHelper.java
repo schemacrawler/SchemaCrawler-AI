@@ -22,7 +22,6 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
-import java.util.logging.Logger;
 import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -30,6 +29,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.ToolUtility;
 
@@ -39,9 +39,9 @@ public class ToolHelper {
   public static class ToolCallHandler
       implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
 
-    private final FunctionCallback functionCallback;
+    private final FunctionCallback<? extends FunctionParameters> functionCallback;
 
-    public ToolCallHandler(final FunctionCallback functionCallback) {
+    public ToolCallHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
       this.functionCallback = requireNonNull(functionCallback, "No function callback provided");
     }
 
@@ -82,16 +82,15 @@ public class ToolHelper {
     }
   }
 
-  private static final Logger LOGGER = Logger.getLogger(ToolHelper.class.getCanonicalName());
-
   @Autowired private Catalog catalog;
 
-  public McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
-      final FunctionDefinition<?> functionDefinition) {
+  public <P extends FunctionParameters>
+      McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
+          final FunctionDefinition<P> functionDefinition) {
 
     final Tool tool = toTool(functionDefinition);
-    final FunctionCallback functionCallback =
-        new FunctionCallback(functionDefinition.getName(), catalog);
+    final FunctionCallback<P> functionCallback =
+        new FunctionCallback<>(functionDefinition, catalog);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
     return new McpServerFeatures.SyncToolSpecification(tool, null, toolCallHandler);
