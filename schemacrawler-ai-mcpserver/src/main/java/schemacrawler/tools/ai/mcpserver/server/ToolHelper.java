@@ -9,7 +9,9 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
@@ -18,7 +20,6 @@ import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.logging.Logger;
 import org.springframework.ai.model.ModelOptionsUtils;
@@ -32,23 +33,6 @@ import schemacrawler.tools.ai.tools.ToolUtility;
 
 @Component
 public class ToolHelper {
-
-  @Deprecated
-  public static class DeprecatedToolCallHandler
-      implements BiFunction<McpSyncServerExchange, Map<String, Object>, CallToolResult> {
-
-    private ToolCallHandler toolCallHander;
-
-    public DeprecatedToolCallHandler(ToolCallHandler toolCallHander) {
-      toolCallHander = requireNonNull(toolCallHander, "No tool call handler provided");
-    }
-
-    @Override
-    public CallToolResult apply(
-        final McpSyncServerExchange exchange, final Map<String, Object> request) {
-      return toolCallHander.apply(exchange, new CallToolRequest(toolCallHander.name(), request));
-    }
-  }
 
   public static class ToolCallHandler
       implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
@@ -64,6 +48,10 @@ public class ToolHelper {
         final McpSyncServerExchange exchange, final CallToolRequest request) {
       try {
         final String arguments = ModelOptionsUtils.toJsonString(request.arguments());
+        log(
+            exchange,
+            String.format(
+                "Executing:%n%s", functionCallback.toCallObject(arguments).toPrettyString()));
         final Connection connection = ConnectionService.getConnection();
         final FunctionReturn functionReturn = functionCallback.execute(arguments, connection);
         return new CallToolResult(List.of(new TextContent(functionReturn.get())), false);
@@ -89,19 +77,18 @@ public class ToolHelper {
         new FunctionCallback(functionDefinition.getName(), catalog);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
-    return new McpServerFeatures.SyncToolSpecification(
-        tool, new DeprecatedToolCallHandler(toolCallHandler), toolCallHandler);
+    return new McpServerFeatures.SyncToolSpecification(tool, null, toolCallHandler);
   }
 
   private Tool toTool(final FunctionDefinition<?> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
+    final JsonNode parametersSchemaNode =
+        ToolUtility.extractParametersSchemaNode(functionDefinition.getParametersClass());
     final Tool tool =
         Tool.builder()
             .name(functionDefinition.getName())
             .description(functionDefinition.getDescription())
-            .inputSchema(
-                ToolUtility.extractParametersSchemaNode(functionDefinition.getParametersClass())
-                    .toString())
+            .inputSchema(parametersSchemaNode.toString())
             .build();
     return tool;
   }

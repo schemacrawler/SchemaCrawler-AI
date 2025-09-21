@@ -83,7 +83,8 @@ public class ToolProvider {
       for (final FunctionDefinition<?> functionDefinition :
           functionDefinitionRegistry.lookupFunctionsByType(FunctionReturnType.JSON)) {
         LOGGER.log(
-            Level.FINE, new StringFormat("Add callback for <%s>", functionDefinition.getName()));
+            Level.INFO,
+            new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
         final McpServerFeatures.SyncToolSpecification toolSpecification =
             toolHelper.toSyncToolSpecification(functionDefinition);
         mcpSyncServer.addTool(toolSpecification);
