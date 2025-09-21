@@ -16,6 +16,7 @@ import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
+import io.modelcontextprotocol.spec.McpSchema.Content;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
@@ -26,6 +27,7 @@ import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -46,6 +48,8 @@ public class ToolHelper {
     @Override
     public CallToolResult apply(
         final McpSyncServerExchange exchange, final CallToolRequest request) {
+      FunctionReturn functionReturn;
+      boolean inError;
       try {
         final String arguments = ModelOptionsUtils.toJsonString(request.arguments());
         log(
@@ -53,15 +57,28 @@ public class ToolHelper {
             String.format(
                 "Executing:%n%s", functionCallback.toCallObject(arguments).toPrettyString()));
         final Connection connection = ConnectionService.getConnection();
-        final FunctionReturn functionReturn = functionCallback.execute(arguments, connection);
-        return new CallToolResult(List.of(new TextContent(functionReturn.get())), false);
+        functionReturn = functionCallback.execute(arguments, connection);
+        inError = false;
       } catch (final Exception e) {
-        return new CallToolResult(List.of(new TextContent(e.getMessage())), true);
+        functionReturn = new ExceptionFunctionReturn(e);
+        inError = true;
       }
+      final List<Content> content = createContent(functionReturn);
+      return new CallToolResult(content, inError);
     }
 
     public String name() {
       return functionCallback.getFunctionName().getName();
+    }
+
+    private List<Content> createContent(final FunctionReturn functionReturn) {
+      Content content;
+      if (functionReturn == null) {
+        content = new TextContent("");
+      } else {
+        content = new TextContent(functionReturn.get());
+      }
+      return List.of(content);
     }
   }
 

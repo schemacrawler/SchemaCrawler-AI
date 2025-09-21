@@ -8,16 +8,18 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.isBlank;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.sql.Connection;
 import java.util.Optional;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.functions.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -89,7 +91,7 @@ public final class FunctionCallback {
           e,
           new StringFormat(
               "Exception executing: %s%n%s", toCallObject(argumentsString), e.getMessage()));
-      return new JsonFunctionReturn(e);
+      return new ExceptionFunctionReturn(e);
     }
   }
 
