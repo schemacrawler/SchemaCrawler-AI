@@ -16,6 +16,7 @@ import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.tools.FunctionCallback;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 
 public final class Langchain4JToolExecutor implements ToolExecutor {
 
@@ -37,7 +38,8 @@ public final class Langchain4JToolExecutor implements ToolExecutor {
       throw new SchemaCrawlerException(String.format("Cannot execute function <>", functionName));
     }
     final String arguments = toolExecutionRequest.arguments();
-    return functionToolExecutor.execute(arguments, connection);
+    final FunctionReturn functionReturn = functionToolExecutor.execute(arguments, connection);
+    return functionReturn.get();
   }
 
   @Override

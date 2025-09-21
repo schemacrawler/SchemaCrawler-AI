@@ -94,15 +94,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return registeredPlugins;
   }
 
-  public Collection<ToolSpecification> getToolSpecifications(final FunctionReturnType returnType) {
-    requireNonNull(returnType, "No return type specified");
-
-    return functionDefinitionRegistry.values().stream()
-        .filter(functionDefinition -> functionDefinition.getFunctionReturnType() == returnType)
-        .map(ToolUtility::toToolSpecification)
-        .collect(Collectors.toList());
-  }
-
   public boolean hasFunctionDefinition(final String functionName) {
     return functionDefinitionRegistry.containsKey(functionName);
   }
@@ -122,5 +113,14 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
       return Optional.empty();
     }
     return Optional.of(functionDefinitionToCall);
+  }
+
+  public Collection<FunctionDefinition<?>> lookupFunctionsByType(
+      final FunctionReturnType returnType) {
+    requireNonNull(returnType, "No return type specified");
+
+    return functionDefinitionRegistry.values().stream()
+        .filter(functionDefinition -> functionDefinition.getFunctionReturnType() == returnType)
+        .collect(Collectors.toList());
   }
 }

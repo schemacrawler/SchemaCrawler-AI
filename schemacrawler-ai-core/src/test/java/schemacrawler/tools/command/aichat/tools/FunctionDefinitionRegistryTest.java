@@ -30,7 +30,6 @@ import schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
-import schemacrawler.tools.ai.tools.ToolSpecification;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
@@ -132,13 +131,13 @@ public class FunctionDefinitionRegistryTest {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
 
-    final Collection<ToolSpecification> textToolSpecifications =
-        registry.getToolSpecifications(FunctionReturnType.TEXT);
+    final Collection<FunctionDefinition<?>> textToolSpecifications =
+        registry.lookupFunctionsByType(FunctionReturnType.TEXT);
     assertThat(textToolSpecifications, notNullValue());
     assertThat(textToolSpecifications.size(), is(NUM_TEXT_FUNCTIONS));
 
-    final Collection<ToolSpecification> jsonToolSpecifications =
-        registry.getToolSpecifications(FunctionReturnType.JSON);
+    final Collection<FunctionDefinition<?>> jsonToolSpecifications =
+        registry.lookupFunctionsByType(FunctionReturnType.JSON);
     assertThat(jsonToolSpecifications, notNullValue());
     assertThat(jsonToolSpecifications.size(), is(NUM_JSON_FUNCTIONS));
   }
