@@ -36,7 +36,7 @@ import schemacrawler.tools.ai.tools.ToolUtility;
 @Component
 public class ToolHelper {
 
-  public static class ToolCallHandler
+  private static class ToolCallHandler
       implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
 
     private final FunctionCallback<? extends FunctionParameters> functionCallback;
@@ -49,7 +49,6 @@ public class ToolHelper {
     public CallToolResult apply(
         final McpSyncServerExchange exchange, final CallToolRequest request) {
       FunctionReturn functionReturn;
-      boolean inError;
       try {
         final String arguments = ModelOptionsUtils.toJsonString(request.arguments());
         log(
@@ -58,17 +57,12 @@ public class ToolHelper {
                 "Executing:%n%s", functionCallback.toCallObject(arguments).toPrettyString()));
         final Connection connection = ConnectionService.getConnection();
         functionReturn = functionCallback.execute(arguments, connection);
-        inError = false;
       } catch (final Exception e) {
         functionReturn = new ExceptionFunctionReturn(e);
-        inError = true;
       }
       final List<Content> content = createContent(functionReturn);
+      final boolean inError = functionReturn instanceof ExceptionFunctionReturn;
       return new CallToolResult(content, inError);
-    }
-
-    public String name() {
-      return functionCallback.getFunctionName().getName();
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
