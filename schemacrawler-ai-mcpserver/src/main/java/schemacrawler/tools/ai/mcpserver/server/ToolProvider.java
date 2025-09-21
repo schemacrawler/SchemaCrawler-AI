@@ -11,23 +11,20 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.modelcontextprotocol.server.McpServerFeatures;
+import io.modelcontextprotocol.server.McpSyncServer;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
-import org.springframework.ai.tool.ToolCallback;
-import org.springframework.ai.tool.ToolCallbackProvider;
-import org.springframework.ai.tool.definition.ToolDefinition;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.Version;
-import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
@@ -44,7 +41,6 @@ public class ToolProvider {
   private static final Logger LOGGER = Logger.getLogger(ToolProvider.class.getCanonicalName());
 
   @Autowired private ServerHealth serverHealth;
-  @Autowired private Catalog catalog;
   @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
   @Autowired private ToolHelper toolHelper;
 
@@ -77,20 +73,22 @@ public class ToolProvider {
   }
 
   /**
-   * Creates a tool callback provider for SchemaCrawler tools.
+   * Creates a tool callbacks for SchemaCrawler tools.
    *
-   * @return A tool callback provider
+   * @return Registers tool callbacks
    */
   @Bean
-  public ToolCallbackProvider schemaCrawlerTools() {
-    final List<ToolCallback> toolCallbacks = new ArrayList<>();
-    for (final FunctionDefinition<?> functionDefinition :
-        functionDefinitionRegistry.lookupFunctionsByType(FunctionReturnType.JSON)) {
-      LOGGER.log(
-          Level.FINE, new StringFormat("Add callback for <%s>", functionDefinition.getName()));
-      final ToolDefinition toolDefinition = toolHelper.toToolDefinition(functionDefinition);
-      toolCallbacks.add(new SchemaCrawlerToolCallback(toolDefinition, catalog));
-    }
-    return ToolCallbackProvider.from(toolCallbacks);
+  public CommandLineRunner schemaCrawlerTools(final McpSyncServer mcpSyncServer) {
+    return args -> {
+      for (final FunctionDefinition<?> functionDefinition :
+          functionDefinitionRegistry.lookupFunctionsByType(FunctionReturnType.JSON)) {
+        LOGGER.log(
+            Level.INFO,
+            new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
+        final McpServerFeatures.SyncToolSpecification toolSpecification =
+            toolHelper.toSyncToolSpecification(functionDefinition);
+        mcpSyncServer.addTool(toolSpecification);
+      }
+    };
   }
 }

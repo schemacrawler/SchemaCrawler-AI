@@ -8,16 +8,17 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import java.sql.Connection;
-import java.util.Optional;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
+import java.sql.Connection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.functions.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -27,11 +28,11 @@ import us.fatehi.utility.string.StringFormat;
  * tool. This class can be adapted into a framework class for Spring Boot AI, LangChain4J, or other
  * library.
  */
-public final class FunctionCallback {
+public final class FunctionCallback<P extends FunctionParameters> {
 
   private static final Logger LOGGER = Logger.getLogger(FunctionCallback.class.getCanonicalName());
 
-  private FunctionDefinition<FunctionParameters> functionDefinition;
+  private FunctionDefinition<P> functionDefinition;
   private final Catalog catalog;
 
   /**
@@ -42,20 +43,9 @@ public final class FunctionCallback {
    * @param catalog Database catalog.
    * @param connection A live connection to the database.
    */
-  public FunctionCallback(final String functionName, final Catalog catalog) {
+  public FunctionCallback(final FunctionDefinition<P> functionDefinition, final Catalog catalog) {
+    this.functionDefinition = requireNonNull(functionDefinition, "No function definition provided");
     this.catalog = catalog;
-
-    // Look up function definition
-    final Optional<FunctionDefinition<?>> lookedupFunctionDefinition =
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-            .lookupFunctionDefinition(functionName);
-    if (!lookedupFunctionDefinition.isEmpty()) {
-      functionDefinition =
-          (FunctionDefinition<FunctionParameters>) lookedupFunctionDefinition.get();
-    } else {
-      LOGGER.log(Level.WARNING, new StringFormat("Function <%s> not found", functionName));
-      functionDefinition = null;
-    }
   }
 
   /**
@@ -79,7 +69,7 @@ public final class FunctionCallback {
     }
 
     try {
-      final FunctionParameters arguments = instantiateArguments(argumentsString);
+      final P arguments = instantiateArguments(argumentsString);
 
       final FunctionReturn returnValue = executeFunction(arguments, connection);
       return returnValue;
@@ -89,7 +79,7 @@ public final class FunctionCallback {
           e,
           new StringFormat(
               "Exception executing: %s%n%s", toCallObject(argumentsString), e.getMessage()));
-      return new JsonFunctionReturn(e);
+      return new ExceptionFunctionReturn(e);
     }
   }
 
@@ -135,12 +125,12 @@ public final class FunctionCallback {
     return toCallObject(null).toPrettyString();
   }
 
-  private FunctionReturn executeFunction(
-      final FunctionParameters arguments, final Connection connection) throws Exception {
+  private FunctionReturn executeFunction(final P arguments, final Connection connection)
+      throws Exception {
     requireNonNull(arguments, "No function arguments provided");
 
     FunctionReturn functionReturn;
-    final FunctionExecutor<FunctionParameters> functionExecutor = functionDefinition.newExecutor();
+    final FunctionExecutor<P> functionExecutor = functionDefinition.newExecutor();
     functionExecutor.configure(arguments);
     functionExecutor.initialize();
     functionExecutor.setCatalog(catalog);
@@ -151,9 +141,8 @@ public final class FunctionCallback {
     return functionReturn;
   }
 
-  private <P extends FunctionParameters> P instantiateArguments(final String argumentsString)
-      throws Exception {
-    final Class<P> parametersClass = (Class<P>) functionDefinition.getParametersClass();
+  private P instantiateArguments(final String argumentsString) throws Exception {
+    final Class<P> parametersClass = functionDefinition.getParametersClass();
     final String functionArguments;
     if (isBlank(argumentsString)) {
       functionArguments = "{}";

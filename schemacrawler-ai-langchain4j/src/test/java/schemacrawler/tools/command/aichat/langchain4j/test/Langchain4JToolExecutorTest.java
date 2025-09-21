@@ -14,6 +14,7 @@ import static org.mockito.Mockito.mock;
 import java.sql.Connection;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JToolExecutor;
 
 public class Langchain4JToolExecutorTest {
@@ -21,14 +22,14 @@ public class Langchain4JToolExecutorTest {
   @Test
   public void testExecuteWithNullRequest() {
     // Arrange
-    final String functionName = "testFunction";
+    final FunctionDefinition<?> functionDefinition = mock(FunctionDefinition.class);
 
     final Catalog catalog = mock(Catalog.class);
     final Connection connection = mock(Connection.class);
 
     // Create the tool executor
     final Langchain4JToolExecutor toolExecutor =
-        new Langchain4JToolExecutor(functionName, catalog, connection);
+        new Langchain4JToolExecutor(functionDefinition, catalog, connection);
 
     // Act & Assert
     assertThrows(NullPointerException.class, () -> toolExecutor.execute(null, null));
