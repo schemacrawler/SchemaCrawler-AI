@@ -14,12 +14,12 @@ public final class DescribeTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        Get the details and description of database tables or views,
-        including columns, primary key, foreign keys, indexes and triggers.
-        This could return a lot of information if not limited by a
-        parameter specifying one or more tables.
-        Returns data as a JSON object.
-        """
+    Get the details and description of database tables or views,
+    including columns, primary key, foreign keys, indexes and triggers.
+    This could return a lot of information if not limited by a
+    parameter specifying one or more tables.
+    Returns data as a JSON object.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -32,6 +32,6 @@ public final class DescribeTablesFunctionDefinition
 
   @Override
   public DescribeTablesFunctionExecutor newExecutor() {
-    return new DescribeTablesFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new DescribeTablesFunctionExecutor(getFunctionName());
   }
 }

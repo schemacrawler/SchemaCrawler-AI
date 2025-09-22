@@ -15,7 +15,6 @@ import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.AbstractExecutableFunctionExecutor;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;
@@ -23,9 +22,8 @@ import us.fatehi.utility.property.PropertyName;
 public final class LintFunctionExecutor
     extends AbstractExecutableFunctionExecutor<LintFunctionParameters> {
 
-  protected LintFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  protected LintFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override

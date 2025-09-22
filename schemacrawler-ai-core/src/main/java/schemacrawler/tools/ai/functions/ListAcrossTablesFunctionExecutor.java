@@ -34,15 +34,13 @@ import schemacrawler.tools.ai.model.ForeignKeyDocument;
 import schemacrawler.tools.ai.model.IndexDocument;
 import schemacrawler.tools.ai.model.TriggerDocument;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListAcrossTablesFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListAcrossTablesFunctionParameters> {
 
-  protected ListAcrossTablesFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  protected ListAcrossTablesFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override

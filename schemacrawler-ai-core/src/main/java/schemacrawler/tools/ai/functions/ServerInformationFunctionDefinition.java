@@ -33,6 +33,6 @@ public final class ServerInformationFunctionDefinition
 
   @Override
   public ServerInformationFunctionExecutor newExecutor() {
-    return new ServerInformationFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new ServerInformationFunctionExecutor(getFunctionName());
   }
 }

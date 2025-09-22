@@ -14,11 +14,11 @@ public final class DatabaseObjectDescriptionFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        Get the details and description of database objects like
-        tables (all types, including views),
-        routines (that is, functions and stored procedures),
-        sequences, or synonyms.
-        """
+    Get the details and description of database objects like
+    tables (all types, including views),
+    routines (that is, functions and stored procedures),
+    sequences, or synonyms.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -31,7 +31,6 @@ public final class DatabaseObjectDescriptionFunctionDefinition
 
   @Override
   public DatabaseObjectDescriptionFunctionExecutor newExecutor() {
-    return new DatabaseObjectDescriptionFunctionExecutor(
-        getFunctionName(), getFunctionReturnType());
+    return new DatabaseObjectDescriptionFunctionExecutor(getFunctionName());
   }
 }

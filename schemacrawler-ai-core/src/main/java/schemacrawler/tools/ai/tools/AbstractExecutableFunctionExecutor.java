@@ -28,15 +28,14 @@ import us.fatehi.utility.property.PropertyName;
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
     extends AbstractSchemaCrawlerFunctionExecutor<P> {
 
-  protected AbstractExecutableFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  protected AbstractExecutableFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override
   public final FunctionReturn call() {
 
-    final FunctionReturnType functionReturnType = getFunctionReturnType();
+    final FunctionReturnType functionReturnType = commandOptions.getFunctionReturnType();
 
     final SchemaCrawlerExecutable executable = createExecutable();
     // Execute and generate output

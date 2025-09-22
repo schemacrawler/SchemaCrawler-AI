@@ -25,15 +25,13 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListFunctionParameters> {
 
-  protected ListFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  protected ListFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override

@@ -17,7 +17,6 @@ import java.util.Collection;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.NoParameters;
 import us.fatehi.utility.property.Property;
 import us.fatehi.utility.property.PropertyName;
@@ -25,9 +24,8 @@ import us.fatehi.utility.property.PropertyName;
 public final class ServerInformationFunctionExecutor
     extends AbstractJsonFunctionExecutor<NoParameters> {
 
-  protected ServerInformationFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  protected ServerInformationFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override

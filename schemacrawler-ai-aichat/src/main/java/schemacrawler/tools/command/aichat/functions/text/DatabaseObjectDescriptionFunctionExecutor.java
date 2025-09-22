@@ -13,7 +13,6 @@ import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.AbstractExecutableFunctionExecutor;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionParameters.DatabaseObjectsScope;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.options.Config;
@@ -22,9 +21,8 @@ import us.fatehi.utility.property.PropertyName;
 public final class DatabaseObjectDescriptionFunctionExecutor
     extends AbstractExecutableFunctionExecutor<DatabaseObjectDescriptionFunctionParameters> {
 
-  DatabaseObjectDescriptionFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
-    super(functionName, returnType);
+  DatabaseObjectDescriptionFunctionExecutor(final PropertyName functionName) {
+    super(functionName);
   }
 
   @Override

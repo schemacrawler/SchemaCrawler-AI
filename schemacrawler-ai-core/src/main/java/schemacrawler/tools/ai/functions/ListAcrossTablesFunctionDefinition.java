@@ -14,12 +14,12 @@ public final class ListAcrossTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        List names of names of database objects like columns, indexes, triggers,
-        and foreign keys for tables across the whole database.
-        The corresponding tables are identified, and details can be
-        obtained later by describing those tables.
-        Returns JSON data.
-        """
+    List names of names of database objects like columns, indexes, triggers,
+    and foreign keys for tables across the whole database.
+    The corresponding tables are identified, and details can be
+    obtained later by describing those tables.
+    Returns JSON data.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -32,6 +32,6 @@ public final class ListAcrossTablesFunctionDefinition
 
   @Override
   public ListAcrossTablesFunctionExecutor newExecutor() {
-    return new ListAcrossTablesFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new ListAcrossTablesFunctionExecutor(getFunctionName());
   }
 }

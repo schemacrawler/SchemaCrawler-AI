@@ -14,10 +14,10 @@ public final class ListFunctionDefinition
   @Override
   public String getDescription() {
     return """
-        List names of database objects like tables, routines
-        (that is, functions and stored procedures), sequences, or synonyms.
-        Returns JSON data.
-        """
+    List names of database objects like tables, routines
+    (that is, functions and stored procedures), sequences, or synonyms.
+    Returns JSON data.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -30,6 +30,6 @@ public final class ListFunctionDefinition
 
   @Override
   public ListFunctionExecutor newExecutor() {
-    return new ListFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new ListFunctionExecutor(getFunctionName());
   }
 }

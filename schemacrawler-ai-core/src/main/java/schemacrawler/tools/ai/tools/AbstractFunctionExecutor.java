@@ -20,14 +20,11 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
 
   private final PropertyName functionName;
   private final UUID executorInstanceId;
-  private final FunctionReturnType returnType;
 
-  protected AbstractFunctionExecutor(
-      final PropertyName functionName, final FunctionReturnType returnType) {
+  protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
     this.functionName = functionName;
     executorInstanceId = UUID.randomUUID();
-    this.returnType = requireNonNull(returnType, "No return type specified");
   }
 
   @Override
@@ -38,11 +35,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   @Override
   public final UUID getExecutorInstanceId() {
     return executorInstanceId;
-  }
-
-  @Override
-  public FunctionReturnType getFunctionReturnType() {
-    return returnType;
   }
 
   @Override
