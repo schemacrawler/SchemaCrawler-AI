@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 public final class ListAcrossTablesFunctionDefinition
-    extends AbstractJsonFunctionDefinition<ListAcrossTablesFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<ListAcrossTablesFunctionParameters> {
 
   @Override
   public String getDescription() {

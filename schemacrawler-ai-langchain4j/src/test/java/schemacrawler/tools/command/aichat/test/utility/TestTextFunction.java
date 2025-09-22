@@ -5,7 +5,6 @@ import java.util.UUID;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.NoParameters;
 import us.fatehi.utility.property.PropertyName;
 
@@ -19,11 +18,6 @@ public class TestTextFunction implements FunctionDefinition<NoParameters> {
         .stripIndent()
         .replace("\n", " ")
         .trim();
-  }
-
-  @Override
-  public FunctionReturnType getFunctionReturnType() {
-    return FunctionReturnType.TEXT;
   }
 
   @Override

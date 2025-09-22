@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 public final class LintFunctionDefinition
-    extends AbstractJsonFunctionDefinition<LintFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<LintFunctionParameters> {
 
   @Override
   public String getDescription() {

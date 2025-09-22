@@ -8,11 +8,9 @@
 
 package schemacrawler.tools.ai.tools;
 
-import schemacrawler.schema.TypedObject;
 import us.fatehi.utility.property.PropertyName;
 
-public interface FunctionDefinition<P extends FunctionParameters>
-    extends TypedObject<FunctionReturnType> {
+public interface FunctionDefinition<P extends FunctionParameters> {
 
   String getDescription();
 
@@ -20,16 +18,9 @@ public interface FunctionDefinition<P extends FunctionParameters>
     return new PropertyName(getName(), getDescription());
   }
 
-  FunctionReturnType getFunctionReturnType();
-
   String getName();
 
   Class<P> getParametersClass();
-
-  @Override
-  default FunctionReturnType getType() {
-    return getFunctionReturnType();
-  }
 
   FunctionExecutor<P> newExecutor();
 }

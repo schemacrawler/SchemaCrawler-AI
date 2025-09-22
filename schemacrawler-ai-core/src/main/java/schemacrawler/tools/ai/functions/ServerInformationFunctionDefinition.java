@@ -11,7 +11,7 @@ package schemacrawler.tools.ai.functions;
 import schemacrawler.tools.ai.tools.NoParameters;
 
 public final class ServerInformationFunctionDefinition
-    extends AbstractJsonFunctionDefinition<NoParameters> {
+    extends AbstractMcpServerFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {

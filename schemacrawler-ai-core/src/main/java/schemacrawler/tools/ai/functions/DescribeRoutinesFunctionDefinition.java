@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 public final class DescribeRoutinesFunctionDefinition
-    extends AbstractJsonFunctionDefinition<DescribeRoutinesFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<DescribeRoutinesFunctionParameters> {
 
   @Override
   public String getDescription() {

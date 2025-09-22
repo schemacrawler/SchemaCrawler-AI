@@ -29,7 +29,6 @@ import schemacrawler.tools.ai.functions.ServerInformationFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
@@ -71,8 +70,7 @@ public class FunctionDefinitionRegistryTest {
   public void testCommandPlugin() throws Exception {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions =
-        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+    final Collection<FunctionDefinition<?>> functions = registry.getMcpServerFunctionDefinitions();
     assertThat(functions, hasSize(NUM_JSON_FUNCTIONS));
     assertThat(
         functions.stream()
@@ -93,14 +91,13 @@ public class FunctionDefinitionRegistryTest {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
 
-    final Collection<FunctionDefinition<?>> testFunctions =
-        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
+    final Collection<FunctionDefinition<?>> testFunctions = registry.getTextFunctionDefinitions();
 
     assertThat(testFunctions, notNullValue());
     assertThat(testFunctions.size(), is(NUM_TEXT_FUNCTIONS));
 
     final Collection<FunctionDefinition<?>> jsonFunctions =
-        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+        registry.getMcpServerFunctionDefinitions();
 
     assertThat(jsonFunctions, notNullValue());
     assertThat(jsonFunctions.size(), is(NUM_JSON_FUNCTIONS));
@@ -124,22 +121,6 @@ public class FunctionDefinitionRegistryTest {
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
     assertThat(names.size(), is(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
-  }
-
-  @Test
-  public void testGetToolSpecifications() {
-    final FunctionDefinitionRegistry registry =
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-
-    final Collection<FunctionDefinition<?>> textToolSpecifications =
-        registry.lookupFunctionsByType(FunctionReturnType.TEXT);
-    assertThat(textToolSpecifications, notNullValue());
-    assertThat(textToolSpecifications.size(), is(NUM_TEXT_FUNCTIONS));
-
-    final Collection<FunctionDefinition<?>> jsonToolSpecifications =
-        registry.lookupFunctionsByType(FunctionReturnType.JSON);
-    assertThat(jsonToolSpecifications, notNullValue());
-    assertThat(jsonToolSpecifications.size(), is(NUM_JSON_FUNCTIONS));
   }
 
   @Test

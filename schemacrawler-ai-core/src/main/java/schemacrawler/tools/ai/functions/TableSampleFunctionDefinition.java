@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 public final class TableSampleFunctionDefinition
-    extends AbstractJsonFunctionDefinition<TableSampleFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<TableSampleFunctionParameters> {
 
   @Override
   public String getDescription() {

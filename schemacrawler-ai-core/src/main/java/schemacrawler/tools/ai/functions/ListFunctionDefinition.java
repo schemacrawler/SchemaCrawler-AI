@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 public final class ListFunctionDefinition
-    extends AbstractJsonFunctionDefinition<ListFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<ListFunctionParameters> {
 
   @Override
   public String getDescription() {

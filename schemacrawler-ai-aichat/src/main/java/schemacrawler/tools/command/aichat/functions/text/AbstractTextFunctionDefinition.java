@@ -8,17 +8,8 @@
 
 package schemacrawler.tools.command.aichat.functions.text;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 
 public abstract class AbstractTextFunctionDefinition<P extends FunctionParameters>
-    extends AbstractFunctionDefinition<P> {
-
-  @JsonIgnore
-  @Override
-  public final FunctionReturnType getFunctionReturnType() {
-    return FunctionReturnType.TEXT;
-  }
-}
+    extends AbstractFunctionDefinition<P> {}
