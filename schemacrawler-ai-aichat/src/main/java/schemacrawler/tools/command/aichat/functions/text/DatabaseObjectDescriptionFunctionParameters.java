@@ -8,30 +8,32 @@
 
 package schemacrawler.tools.command.aichat.functions.text;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.utility.JsonUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DatabaseObjectDescriptionFunctionParameters(
     @JsonPropertyDescription(
             """
-    Name of database object to describe.
-    Can be a regular expression.
-    Use an empty string if all database objects are requested.
-    """)
+            Name of database object to describe.
+            Can be a regular expression.
+            Use an empty string if all database objects are requested.
+            """)
         @JsonProperty(defaultValue = "", required = false)
         String databaseObjectName,
     @JsonPropertyDescription(
             """
-        Indicates the type of database objects to show - like
-        tables (all types, including views),
-        routines (that is, functions and stored procedures),
-        sequences, or synonyms.
-        """)
+            Indicates the type of database objects to show - like
+            tables (all types, including views),
+            routines (that is, functions and stored procedures),
+            sequences, or synonyms.
+            """)
         @JsonProperty(defaultValue = "NONE", required = true)
         DatabaseObjectsScope databaseObjectsScope)
     implements FunctionParameters {
@@ -56,5 +58,11 @@ public record DatabaseObjectDescriptionFunctionParameters(
   @Override
   public String toString() {
     return JsonUtility.parametersToString(this);
+  }
+
+  @JsonIgnore
+  @Override
+  public final FunctionReturnType getFunctionReturnType() {
+    return FunctionReturnType.TEXT;
   }
 }

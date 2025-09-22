@@ -8,4 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
-public interface FunctionParameters {}
+public interface FunctionParameters {
+
+  FunctionReturnType getFunctionReturnType();
+}

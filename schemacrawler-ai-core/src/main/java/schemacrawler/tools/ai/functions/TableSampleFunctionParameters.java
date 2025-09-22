@@ -13,18 +13,19 @@ import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.utility.JsonUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record TableSampleFunctionParameters(
     @JsonPropertyDescription(
             """
-    May be specified as a regular expression, matching the fully qualified
-    table name (including the schema).
-    Use an empty string if all tables are requested.
-    If not specified, all tables will be processed, but the results
-    could be large, and execution time may be longer.
-    """)
+            May be specified as a regular expression, matching the fully qualified
+            table name (including the schema).
+            Use an empty string if all tables are requested.
+            If not specified, all tables will be processed, but the results
+            could be large, and execution time may be longer.
+            """)
         @JsonProperty(defaultValue = "", required = false)
         String tableName)
     implements FunctionParameters {
@@ -38,5 +39,10 @@ public record TableSampleFunctionParameters(
   @Override
   public String toString() {
     return JsonUtility.parametersToString(this);
+  }
+
+  @Override
+  public FunctionReturnType getFunctionReturnType() {
+    return FunctionReturnType.JSON;
   }
 }
