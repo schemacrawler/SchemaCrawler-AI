@@ -10,33 +10,35 @@ package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.utility.JsonUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListFunctionParameters(
     @JsonPropertyDescription(
             """
-    Type of database object to list, like tables (including views),
-    routines (that is, stored procedures and functions),
-    schemas (that is, catalogs), sequences, or synonyms.
-    If the parameter is not provided, all database objects are listed.
-    """)
+            Type of database object to list, like tables (including views),
+            routines (that is, stored procedures and functions),
+            schemas (that is, catalogs), sequences, or synonyms.
+            If the parameter is not provided, all database objects are listed.
+            """)
         @JsonProperty(defaultValue = "ALL", required = false)
         DatabaseObjectType databaseObjectType,
     @JsonPropertyDescription(
             """
-    Name of database object to list.
-    Is a regular expression, matching the fully qualified
-    database object name (including the schema). May match
-    more than one database object.
-    Use an empty string if all database objects are requested.
-    """)
+            Name of database object to list.
+            Is a regular expression, matching the fully qualified
+            database object name (including the schema). May match
+            more than one database object.
+            Use an empty string if all database objects are requested.
+            """)
         @JsonProperty(defaultValue = "", required = false)
         String databaseObjectName)
     implements FunctionParameters {
@@ -50,5 +52,11 @@ public record ListFunctionParameters(
   @Override
   public String toString() {
     return JsonUtility.parametersToString(this);
+  }
+
+  @JsonIgnore
+  @Override
+  public final FunctionReturnType getFunctionReturnType() {
+    return FunctionReturnType.JSON;
   }
 }

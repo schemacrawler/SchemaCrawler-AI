@@ -18,6 +18,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.ToolUtility;
 
 public class ToolUtilityTest {
@@ -26,6 +27,11 @@ public class ToolUtilityTest {
   public static class TestParameters implements FunctionParameters {
     private String requiredParam;
     private String optionalParam;
+
+    @Override
+    public final FunctionReturnType getFunctionReturnType() {
+      return FunctionReturnType.JSON;
+    }
 
     public String getOptionalParam() {
       return optionalParam;

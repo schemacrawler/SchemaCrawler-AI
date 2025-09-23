@@ -24,7 +24,6 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.langchain4j.Langchain4JUtility;
 
 public class Langchain4JUtilityTest {
@@ -53,7 +52,7 @@ public class Langchain4JUtilityTest {
     final int userFunctionCount =
         (int)
             FunctionDefinitionRegistry.getFunctionDefinitionRegistry()
-                .getFunctionDefinitions(FunctionReturnType.TEXT)
+                .getTextFunctionDefinitions()
                 .stream()
                 .count();
 

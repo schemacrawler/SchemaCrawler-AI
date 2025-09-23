@@ -9,18 +9,18 @@
 package schemacrawler.tools.ai.functions;
 
 public final class DescribeRoutinesFunctionDefinition
-    extends AbstractJsonFunctionDefinition<DescribeRoutinesFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<DescribeRoutinesFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Get the details and description of database routine
-        (stored procedures or functions),
-        including parameters and return types.
-        This could return a lot of information if not limited by a
-        parameter specifying one or more routines.
-        Returns data as a JSON object.
-        """
+    Get the details and description of database routine
+    (stored procedures or functions),
+    including parameters and return types.
+    This could return a lot of information if not limited by a
+    parameter specifying one or more routines.
+    Returns data as a JSON object.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -33,6 +33,6 @@ public final class DescribeRoutinesFunctionDefinition
 
   @Override
   public DescribeRoutinesFunctionExecutor newExecutor() {
-    return new DescribeRoutinesFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new DescribeRoutinesFunctionExecutor(getFunctionName());
   }
 }

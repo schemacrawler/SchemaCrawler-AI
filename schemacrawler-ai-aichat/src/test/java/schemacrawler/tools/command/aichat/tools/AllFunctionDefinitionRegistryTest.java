@@ -22,7 +22,6 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectDescriptionFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.DatabaseObjectListFunctionDefinition;
 import schemacrawler.tools.command.aichat.functions.text.ExitFunctionDefinition;
@@ -37,8 +36,7 @@ public class AllFunctionDefinitionRegistryTest {
   public void getJsonFunctions() throws Exception {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions =
-        registry.getFunctionDefinitions(FunctionReturnType.JSON);
+    final Collection<FunctionDefinition<?>> functions = registry.getMcpServerFunctionDefinitions();
     assertThat(functions, hasSize(NUM_JSON_FUNCTIONS));
   }
 
@@ -46,8 +44,7 @@ public class AllFunctionDefinitionRegistryTest {
   public void getTextFunctions() throws Exception {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions =
-        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
+    final Collection<FunctionDefinition<?>> functions = registry.getTextFunctionDefinitions();
     assertThat(functions, hasSize(NUM_TEXT_FUNCTIONS));
     assertThat(
         functions.stream()
@@ -96,8 +93,7 @@ public class AllFunctionDefinitionRegistryTest {
   public void testGetFunctionDefinitions() {
     final FunctionDefinitionRegistry registry =
         FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    final Collection<FunctionDefinition<?>> functions =
-        registry.getFunctionDefinitions(FunctionReturnType.TEXT);
+    final Collection<FunctionDefinition<?>> functions = registry.getTextFunctionDefinitions();
 
     assertThat(functions, notNullValue());
     assertThat(functions.size(), is(NUM_TEXT_FUNCTIONS));
@@ -121,22 +117,6 @@ public class AllFunctionDefinitionRegistryTest {
     final List<String> names =
         functionDefinitions.stream().map(PropertyName::getName).collect(toList());
     assertThat(names.size(), is(NUM_TEXT_FUNCTIONS + NUM_JSON_FUNCTIONS));
-  }
-
-  @Test
-  public void testGetToolSpecifications() {
-    final FunctionDefinitionRegistry registry =
-        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-
-    final Collection<FunctionDefinition<?>> textToolSpecifications =
-        registry.lookupFunctionsByType(FunctionReturnType.TEXT);
-    assertThat(textToolSpecifications, notNullValue());
-    assertThat(textToolSpecifications.size(), is(NUM_TEXT_FUNCTIONS));
-
-    final Collection<FunctionDefinition<?>> jsonToolSpecifications =
-        registry.lookupFunctionsByType(FunctionReturnType.JSON);
-    assertThat(jsonToolSpecifications, notNullValue());
-    assertThat(jsonToolSpecifications.size(), is(NUM_JSON_FUNCTIONS));
   }
 
   @Test

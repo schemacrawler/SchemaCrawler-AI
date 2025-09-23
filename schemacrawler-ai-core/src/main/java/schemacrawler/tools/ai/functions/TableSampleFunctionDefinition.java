@@ -9,18 +9,18 @@
 package schemacrawler.tools.ai.functions;
 
 public final class TableSampleFunctionDefinition
-    extends AbstractJsonFunctionDefinition<TableSampleFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<TableSampleFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Gets a few sample rows of data from a table.
-        These rows are selected at random, and so different
-        rows may be returned each time they are requested.
-        Do not use this as a substitute for running a query
-        on a table, but rather to infer what the table may
-        contain.
-        """
+    Gets a few sample rows of data from a table.
+    These rows are selected at random, and so different
+    rows may be returned each time they are requested.
+    Do not use this as a substitute for running a query
+    on a table, but rather to infer what the table may
+    contain.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -33,6 +33,6 @@ public final class TableSampleFunctionDefinition
 
   @Override
   public TableSampleFunctionExecutor newExecutor() {
-    return new TableSampleFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new TableSampleFunctionExecutor(getFunctionName());
   }
 }

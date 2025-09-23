@@ -27,7 +27,6 @@ import org.springframework.stereotype.Service;
 import schemacrawler.Version;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import us.fatehi.utility.string.StringFormat;
 
@@ -81,7 +80,7 @@ public class ToolProvider {
   public CommandLineRunner schemaCrawlerTools(final McpSyncServer mcpSyncServer) {
     return args -> {
       for (final FunctionDefinition<?> functionDefinition :
-          functionDefinitionRegistry.lookupFunctionsByType(FunctionReturnType.JSON)) {
+          functionDefinitionRegistry.getMcpServerFunctionDefinitions()) {
         LOGGER.log(
             Level.INFO,
             new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));

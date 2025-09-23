@@ -9,15 +9,15 @@
 package schemacrawler.tools.ai.functions;
 
 public final class LintFunctionDefinition
-    extends AbstractJsonFunctionDefinition<LintFunctionParameters> {
+    extends AbstractMcpServerFunctionDefinition<LintFunctionParameters> {
 
   @Override
   public String getDescription() {
     return """
-        Lint database schemas.
-        Find design issues with specific tables, or with the entire database.
-        Find problems with database design, such as no indexes on foreign keys.
-        """
+    Lint database schemas.
+    Find design issues with specific tables, or with the entire database.
+    Find problems with database design, such as no indexes on foreign keys.
+    """
         .stripIndent()
         .replace("\n", " ")
         .trim();
@@ -30,6 +30,6 @@ public final class LintFunctionDefinition
 
   @Override
   public LintFunctionExecutor newExecutor() {
-    return new LintFunctionExecutor(getFunctionName(), getFunctionReturnType());
+    return new LintFunctionExecutor(getFunctionName());
   }
 }

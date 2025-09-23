@@ -8,8 +8,16 @@
 
 package schemacrawler.tools.ai.tools;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
-public record NoParameters() implements FunctionParameters {}
+public record NoParameters() implements FunctionParameters {
+
+  @JsonIgnore
+  @Override
+  public final FunctionReturnType getFunctionReturnType() {
+    return FunctionReturnType.JSON;
+  }
+}

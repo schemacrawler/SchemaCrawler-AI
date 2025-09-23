@@ -11,14 +11,13 @@ package schemacrawler.tools.command.aichat.functions.text;
 import schemacrawler.tools.ai.functions.TextFunctionReturn;
 import schemacrawler.tools.ai.tools.AbstractFunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.NoParameters;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ExitFunctionExecutor extends AbstractFunctionExecutor<NoParameters> {
 
   protected ExitFunctionExecutor(final PropertyName functionName) {
-    super(functionName, FunctionReturnType.TEXT);
+    super(functionName);
   }
 
   @Override
