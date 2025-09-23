@@ -3,16 +3,15 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
-import static us.fatehi.utility.Utility.trimToEmpty;
-
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static us.fatehi.utility.Utility.trimToEmpty;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Schema;
@@ -36,7 +35,7 @@ public class DatabaseObjectResourceProvider {
   @Autowired public Catalog catalog;
 
   @McpResource(
-      uri = "routines://{schema}/{routine-name}",
+      uri = "routines://{schema}/{routine-name}.json",
       name = "routine-details",
       description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
@@ -64,7 +63,7 @@ public class DatabaseObjectResourceProvider {
   }
 
   @McpResource(
-      uri = "sequences://{schema}/{sequence-name}",
+      uri = "sequences://{schema}/{sequence-name}.json",
       name = "sequence-details",
       description = "Provides detailed database metadata for the specified sequence.",
       mimeType = APPLICATION_JSON_VALUE)
@@ -92,7 +91,7 @@ public class DatabaseObjectResourceProvider {
   }
 
   @McpResource(
-      uri = "synonyms://{schema}/{synonym-name}",
+      uri = "synonyms://{schema}/{synonym-name}.json",
       name = "synonym-details",
       description = "Provides detailed database metadata for the specified synonym.",
       mimeType = APPLICATION_JSON_VALUE)
@@ -120,7 +119,7 @@ public class DatabaseObjectResourceProvider {
   }
 
   @McpResource(
-      uri = "tables://{schema}/{table-name}",
+      uri = "tables://{schema}/{table-name}.json",
       name = "table-details",
       description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
