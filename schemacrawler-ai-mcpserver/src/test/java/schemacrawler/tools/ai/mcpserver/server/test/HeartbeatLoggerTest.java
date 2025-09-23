@@ -128,7 +128,7 @@ public class HeartbeatLoggerTest {
       final JsonNode node = mapper.readTree(currentStatusJson);
       final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
       assertThat("Parsed JSON should not be null", node, notNullValue());
-      assertThat("_server should be present", currentStateMap, is(currentState()));
+      assertThat("Current state should match", currentStateMap, is(currentState()));
     } finally {
       logger.removeHandler(handler);
       logger.setLevel(previousLevel);
