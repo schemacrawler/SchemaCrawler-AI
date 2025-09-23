@@ -47,7 +47,7 @@ public class DatabaseObjectResourceProvider {
               name = "schema",
               description =
                   "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"%\" for the schema.",
+                      + "If the database has no schemas, use \"-\" for the schema.",
               required = false)
           final String schemaName,
       @McpArg(name = "routine-name", description = "Routine name.", required = true)
@@ -75,7 +75,7 @@ public class DatabaseObjectResourceProvider {
               name = "schema",
               description =
                   "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"%\" for the schema.",
+                      + "If the database has no schemas, use \"-\" for the schema.",
               required = false)
           final String schemaName,
       @McpArg(name = "sequence-name", description = "Sequence name.", required = true)
@@ -103,7 +103,7 @@ public class DatabaseObjectResourceProvider {
               name = "schema",
               description =
                   "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"%\" for the schema.",
+                      + "If the database has no schemas, use \"-\" for the schema.",
               required = false)
           final String schemaName,
       @McpArg(name = "synonym-name", description = "Synonym name.", required = true)
@@ -131,7 +131,7 @@ public class DatabaseObjectResourceProvider {
               name = "schema",
               description =
                   "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"%\" for the schema.",
+                      + "If the database has no schemas, use \"-\" for the schema.",
               required = false)
           final String schemaName,
       @McpArg(name = "table-name", description = "Table name.", required = true)
@@ -193,7 +193,7 @@ public class DatabaseObjectResourceProvider {
   }
 
   private Schema lookupSchema(final String schemaName) {
-    final String lookupSchemaName = trimToEmpty(schemaName).replace("%", "");
+    final String lookupSchemaName = trimToEmpty(schemaName).replace("-", "");
     final Schema schema =
         catalog
             .lookupSchema(lookupSchemaName)
