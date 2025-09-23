@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver.server.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -23,7 +24,6 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -68,28 +68,28 @@ public class HeartbeatLoggerTest {
 
     @Bean
     ServerHealth serverHealth() {
-      return mock(ServerHealth.class);
+      final ServerHealth serverHealth = mock(ServerHealth.class);
+      when(serverHealth.currentState()).thenReturn(currentState());
+      when(serverHealth.currentStateString())
+          .thenReturn(
+              "SchemaCrawler AI MCP Server Test\n"
+                  + "in-error-state=false; server-uptime=PT0S; transport=stdio");
+
+      return serverHealth;
     }
   }
 
-  @Autowired private HeartbeatLogger heartbeatLogger;
-
-  @Autowired private ServerHealth serverHealth;
-
-  @BeforeEach
-  public void _stubServerHealth() {
+  static Map<String, String> currentState() {
     final Map<String, String> state = new HashMap<>();
     state.put("_server", "SchemaCrawler AI MCP Server Test");
     state.put("current-timestamp", "2025-01-01T00:00:00");
     state.put("in-error-state", "false");
     state.put("server-uptime", "PT0S");
     state.put("transport", "stdio");
-    when(serverHealth.currentState()).thenReturn(state);
-    when(serverHealth.currentStateString())
-        .thenReturn(
-            "SchemaCrawler AI MCP Server Test\n"
-                + "in-error-state=false; server-uptime=PT0S; transport=stdio");
+    return state;
   }
+
+  @Autowired private HeartbeatLogger heartbeatLogger;
 
   @Test
   @DisplayName("HeartbeatLogger should log valid JSON when heartbeat is enabled")
@@ -123,16 +123,12 @@ public class HeartbeatLoggerTest {
       heartbeatLogger.logHeartbeat();
 
       // Assert
-      assertThat(
-          "A heartbeat message should be logged",
-          messages.isEmpty(),
-          org.hamcrest.Matchers.is(false));
-      final String raw = messages.get(messages.size() - 1);
-      final String json = raw.strip(); // remove leading newline
-      final JsonNode node = mapper.readTree(json);
+      assertThat("A heartbeat message should be logged", messages.isEmpty(), is(false));
+      final String currentStatusJson = messages.get(messages.size() - 1);
+      final JsonNode node = mapper.readTree(currentStatusJson);
+      final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
       assertThat("Parsed JSON should not be null", node, notNullValue());
-      // Optionally, check for a field we provided
-      assertThat("_server should be present", node.get("_server"), notNullValue());
+      assertThat("_server should be present", currentStateMap, is(currentState()));
     } finally {
       logger.removeHandler(handler);
       logger.setLevel(previousLevel);
