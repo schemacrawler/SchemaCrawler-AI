@@ -9,21 +9,20 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
-
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.modelcontextprotocol.server.McpServerFeatures;
-import io.modelcontextprotocol.server.McpSyncServer;
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.Implementation;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpTool;
 import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.modelcontextprotocol.server.McpServerFeatures;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import schemacrawler.Version;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
@@ -45,7 +44,7 @@ public class ToolProvider {
 
   @McpTool(
       name = "mcp-server-health",
-      description = "Gets the SchemaCrawler MCP version and uptime status",
+      description = "Gets the SchemaCrawler AI MCP Server version and uptime status",
       annotations = @McpAnnotations(readOnlyHint = true, destructiveHint = false))
   public String getSchemaCrawlerVersion(
       final McpSyncServerExchange exchange,
@@ -77,17 +76,17 @@ public class ToolProvider {
    * @return Registers tool callbacks
    */
   @Bean
-  public CommandLineRunner schemaCrawlerTools(final McpSyncServer mcpSyncServer) {
-    return args -> {
-      for (final FunctionDefinition<?> functionDefinition :
-          functionDefinitionRegistry.getMcpServerFunctionDefinitions()) {
-        LOGGER.log(
-            Level.INFO,
-            new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
-        final McpServerFeatures.SyncToolSpecification toolSpecification =
-            toolHelper.toSyncToolSpecification(functionDefinition);
-        mcpSyncServer.addTool(toolSpecification);
-      }
-    };
+  public List<McpServerFeatures.SyncToolSpecification> schemaCrawlerTools() {
+    final List<McpServerFeatures.SyncToolSpecification> tools = new ArrayList<>();
+    for (final FunctionDefinition<?> functionDefinition :
+        functionDefinitionRegistry.getMcpServerFunctionDefinitions()) {
+      LOGGER.log(
+          Level.INFO,
+          new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
+      final McpServerFeatures.SyncToolSpecification toolSpecification =
+          toolHelper.toSyncToolSpecification(functionDefinition);
+      tools.add(toolSpecification);
+    }
+    return tools;
   }
 }
