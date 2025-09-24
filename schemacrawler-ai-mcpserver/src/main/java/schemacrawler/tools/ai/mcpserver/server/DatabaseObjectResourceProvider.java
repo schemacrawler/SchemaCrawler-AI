@@ -7,22 +7,20 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
-import schemacrawler.schema.Schema;
-import schemacrawler.schema.Sequence;
-import schemacrawler.schema.Synonym;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
-import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
@@ -36,26 +34,19 @@ public class DatabaseObjectResourceProvider {
   @Autowired public Catalog catalog;
 
   @McpResource(
-      uri = "routines://{schema}/{routine-name}",
+      uri = "routines://{routine-name}",
       name = "routine-details",
       description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
       final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
-      @McpArg(
-              name = "schema",
-              description =
-                  "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"-\" for the schema.",
-              required = false)
-          final String schemaName,
-      @McpArg(name = "routine-name", description = "Routine name.", required = true)
+      @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
           final String routineName) {
     try {
-      final Schema schema = lookupSchema(schemaName);
-      final Document document = lookupRoutine(schema, routineName);
-      logResourceRequest(exchange, schema, routineName);
+      final Document document = lookupRoutine(routineName);
+      LoggingUtility.log(
+          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       logException(exchange, resourceRequest, e);
@@ -64,82 +55,19 @@ public class DatabaseObjectResourceProvider {
   }
 
   @McpResource(
-      uri = "sequences://{schema}/{sequence-name}",
-      name = "sequence-details",
-      description = "Provides detailed database metadata for the specified sequence.",
-      mimeType = APPLICATION_JSON_VALUE)
-  public String getSequenceDetails(
-      final ReadResourceRequest resourceRequest,
-      final McpSyncServerExchange exchange,
-      @McpArg(
-              name = "schema",
-              description =
-                  "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"-\" for the schema.",
-              required = false)
-          final String schemaName,
-      @McpArg(name = "sequence-name", description = "Sequence name.", required = true)
-          final String sequenceName) {
-    try {
-      final Schema schema = lookupSchema(schemaName);
-      final Document document = lookupSequence(schema, sequenceName);
-      logResourceRequest(exchange, schema, sequenceName);
-      return document.toObjectNode().toPrettyString();
-    } catch (final Exception e) {
-      logException(exchange, resourceRequest, e);
-      throw e;
-    }
-  }
-
-  @McpResource(
-      uri = "synonyms://{schema}/{synonym-name}",
-      name = "synonym-details",
-      description = "Provides detailed database metadata for the specified synonym.",
-      mimeType = APPLICATION_JSON_VALUE)
-  public String getSynonymDetails(
-      final ReadResourceRequest resourceRequest,
-      final McpSyncServerExchange exchange,
-      @McpArg(
-              name = "schema",
-              description =
-                  "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"-\" for the schema.",
-              required = false)
-          final String schemaName,
-      @McpArg(name = "synonym-name", description = "Synonym name.", required = true)
-          final String synonymName) {
-    try {
-      final Schema schema = lookupSchema(schemaName);
-      final Document document = lookupSynonym(schema, synonymName);
-      logResourceRequest(exchange, schema, synonymName);
-      return document.toObjectNode().toPrettyString();
-    } catch (final Exception e) {
-      logException(exchange, resourceRequest, e);
-      throw e;
-    }
-  }
-
-  @McpResource(
-      uri = "tables://{schema}/{table-name}",
+      uri = "tables://{table-name}",
       name = "table-details",
       description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
       final ReadResourceRequest resourceRequest,
       final McpSyncServerExchange exchange,
-      @McpArg(
-              name = "schema",
-              description =
-                  "Fully qualified schema name. "
-                      + "If the database has no schemas, use \"-\" for the schema.",
-              required = false)
-          final String schemaName,
-      @McpArg(name = "table-name", description = "Table name.", required = true)
+      @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)
           final String tableName) {
     try {
-      final Schema schema = lookupSchema(schemaName);
-      final Document document = lookupTable(schema, tableName);
-      logResourceRequest(exchange, schema, tableName);
+      final Document document = lookupTable(tableName);
+      LoggingUtility.log(
+          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       logException(exchange, resourceRequest, e);
@@ -167,23 +95,26 @@ public class DatabaseObjectResourceProvider {
     LOGGER.log(Level.FINER, e.getMessage(), e);
   }
 
-  private void logResourceRequest(
-      final McpSyncServerExchange exchange, final Schema schema, final String databaseObjectName) {
-    final String logMessage =
-        String.format("Resource requested for %s", schema.key().with(databaseObjectName));
-    LoggingUtility.log(exchange, logMessage);
-  }
+  private Document lookupRoutine(final String routineName) {
+    final String searchRoutineName = trimToEmpty(routineName);
+    final List<Routine> routines =
+        catalog.getRoutines().stream()
+            .filter(
+                routine ->
+                    routine.getName().equalsIgnoreCase(searchRoutineName)
+                        || routine.getFullName().equalsIgnoreCase(searchRoutineName))
+            .collect(Collectors.toList());
+    if (routines.isEmpty()) {
+      throw new SchemaCrawlerException(String.format("Routine <%s> not found", routineName));
+    }
+    if (routines.size() > 1) {
+      throw new SchemaCrawlerException(
+          String.format(
+              "Too many routines match <%s> - provide a fully-qualified routine name",
+              routineName));
+    }
 
-  private Document lookupRoutine(final Schema schema, final String routineName) {
-    final Routine routine =
-        catalog
-            .lookupRoutine(schema, trimToEmpty(routineName))
-            .orElseThrow(
-                () ->
-                    new SchemaCrawlerException(
-                        String.format(
-                            "Routine <%s/%s> not found", schema.getFullName(), routineName)));
-
+    final Routine routine = routines.get(0);
     final RoutineDocument routineDocument =
         new CompactCatalogUtility()
             .withAdditionalRoutineDetails(allRoutineDetails())
@@ -192,55 +123,25 @@ public class DatabaseObjectResourceProvider {
     return routineDocument;
   }
 
-  private Schema lookupSchema(final String schemaName) {
-    final String lookupSchemaName = trimToEmpty(schemaName).replace("-", "");
-    final Schema schema =
-        catalog
-            .lookupSchema(lookupSchemaName)
-            .orElseThrow(
-                () -> new SchemaCrawlerException("Please provide a valid database schema"));
-    return schema;
-  }
+  private Document lookupTable(final String tableName) {
+    final String searchTableName = trimToEmpty(tableName);
+    final List<Table> tables =
+        catalog.getTables().stream()
+            .filter(
+                table ->
+                    table.getName().equalsIgnoreCase(searchTableName)
+                        || table.getFullName().equalsIgnoreCase(searchTableName))
+            .collect(Collectors.toList());
+    if (tables.isEmpty()) {
+      throw new SchemaCrawlerException(String.format("Table <%s> not found", tableName));
+    }
+    if (tables.size() > 1) {
+      throw new SchemaCrawlerException(
+          String.format(
+              "Too many tables match <%s> - provide a fully-qualified table name", tableName));
+    }
 
-  private Document lookupSequence(final Schema schema, final String sequenceName) {
-    final Sequence sequence =
-        catalog
-            .lookupSequence(schema, trimToEmpty(sequenceName))
-            .orElseThrow(
-                () ->
-                    new SchemaCrawlerException(
-                        String.format(
-                            "Sequence <%s/%s> not found", schema.getFullName(), sequenceName)));
-
-    final DatabaseObjectDocument sequenceDocument = new DatabaseObjectDocument(sequence);
-
-    return sequenceDocument;
-  }
-
-  private Document lookupSynonym(final Schema schema, final String synonymName) {
-    final Synonym synonym =
-        catalog
-            .lookupSynonym(schema, trimToEmpty(synonymName))
-            .orElseThrow(
-                () ->
-                    new SchemaCrawlerException(
-                        String.format(
-                            "Synonym <%s/%s> not found", schema.getFullName(), synonymName)));
-
-    final DatabaseObjectDocument synonymDocument = new DatabaseObjectDocument(synonym);
-
-    return synonymDocument;
-  }
-
-  private Document lookupTable(final Schema schema, final String tableName) {
-    final Table table =
-        catalog
-            .lookupTable(schema, trimToEmpty(tableName))
-            .orElseThrow(
-                () ->
-                    new SchemaCrawlerException(
-                        String.format("Table <%s/%s> not found", schema.getFullName(), tableName)));
-
+    final Table table = tables.get(0);
     final TableDocument tableDocument =
         new CompactCatalogUtility()
             .withAdditionalTableDetails(allTableDetails())
