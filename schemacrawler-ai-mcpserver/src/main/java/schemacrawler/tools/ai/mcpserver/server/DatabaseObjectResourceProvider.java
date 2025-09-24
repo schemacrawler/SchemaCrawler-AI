@@ -85,13 +85,13 @@ public class DatabaseObjectResourceProvider {
   private <DO extends DatabaseObject> DO lookupDatabaseObject(
       final String databaseObjectName, final Collection<DO> databaseObjects) {
     requireNonNull(databaseObjects, "No database objects provided");
-    final String searchRoutineName = trimToEmpty(databaseObjectName);
+    final String searchObjectName = trimToEmpty(databaseObjectName);
     final List<DO> routines =
         databaseObjects.stream()
             .filter(
                 databaseObject ->
-                    databaseObject.getName().equalsIgnoreCase(searchRoutineName)
-                        || databaseObject.getFullName().equalsIgnoreCase(searchRoutineName))
+                    databaseObject.getName().equalsIgnoreCase(searchObjectName)
+                        || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
     if (routines.isEmpty()) {
       throw new SchemaCrawlerException(String.format("<%s> not found", databaseObjectName));
