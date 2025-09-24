@@ -10,7 +10,6 @@ import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.Collection;
 import java.util.List;
-import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
@@ -28,9 +27,6 @@ import schemacrawler.tools.ai.model.TableDocument;
 
 @Service
 public class DatabaseObjectResourceProvider {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(DatabaseObjectResourceProvider.class.getCanonicalName());
 
   @Autowired public Catalog catalog;
 
