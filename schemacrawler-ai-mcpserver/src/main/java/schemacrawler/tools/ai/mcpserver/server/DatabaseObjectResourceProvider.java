@@ -3,10 +3,6 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
-import static us.fatehi.utility.Utility.trimToEmpty;
-
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -15,6 +11,9 @@ import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import static us.fatehi.utility.Utility.trimToEmpty;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
@@ -46,7 +45,7 @@ public class DatabaseObjectResourceProvider {
     try {
       final Document document = lookupRoutine(routineName);
       LoggingUtility.log(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()));
+          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       logException(exchange, resourceRequest, e);
@@ -67,7 +66,7 @@ public class DatabaseObjectResourceProvider {
     try {
       final Document document = lookupTable(tableName);
       LoggingUtility.log(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()));
+          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       logException(exchange, resourceRequest, e);
@@ -92,7 +91,7 @@ public class DatabaseObjectResourceProvider {
     }
 
     LoggingUtility.log(exchange, logMessage);
-    LOGGER.log(Level.FINER, e.getMessage(), e);
+    LOGGER.log(Level.FINER, logMessage, e);
   }
 
   private Document lookupRoutine(final String routineName) {
