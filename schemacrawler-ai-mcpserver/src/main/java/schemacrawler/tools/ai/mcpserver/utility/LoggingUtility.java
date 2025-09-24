@@ -41,4 +41,14 @@ public class LoggingUtility {
       LOGGER.log(Level.FINE, new StringFormat("%s %s", clientInfo.name(), clientInfo.version()));
     }
   }
+
+  public static void logException(
+      final McpSyncServerExchange exchange, final String logMessage, final Exception e) {
+    if (exchange == null || e == null) {
+      return;
+    }
+
+    LoggingUtility.log(exchange, logMessage);
+    LOGGER.log(Level.WARNING, logMessage, e);
+  }
 }
