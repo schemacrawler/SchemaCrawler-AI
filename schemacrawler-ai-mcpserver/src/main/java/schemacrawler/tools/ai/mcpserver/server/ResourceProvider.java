@@ -47,11 +47,11 @@ public class ResourceProvider {
               .withAdditionalRoutineDetails(allRoutineDetails())
               .getRoutineDocument(routine);
       LoggingUtility.log(
-          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
+          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       LoggingUtility.logException(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()), e);
+          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }
   }
@@ -73,11 +73,11 @@ public class ResourceProvider {
               .withAdditionalTableDetails(allTableDetails())
               .getTableDocument(table);
       LoggingUtility.log(
-          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
+          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       LoggingUtility.logException(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()), e);
+          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }
   }
