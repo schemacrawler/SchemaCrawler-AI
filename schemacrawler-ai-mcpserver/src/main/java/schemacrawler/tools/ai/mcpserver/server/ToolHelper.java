@@ -102,26 +102,11 @@ public class ToolHelper {
     final Class<P> parametersClass = functionDefinition.getParametersClass();
     final JsonNode parametersSchemaNode = ToolUtility.extractParametersSchemaNode(parametersClass);
 
-    final McpSchema.ToolAnnotations annotations =
-        new McpSchema.ToolAnnotations(
-            toolName,
-            // readOnlyHint
-            true,
-            // destructiveHint
-            false,
-            // idempotentHint
-            false,
-            // openWorldHint
-            true,
-            // returnDirect
-            false);
-
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
             .name(toolName)
             .description(functionDefinition.getDescription())
             .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
-            .annotations(annotations)
             .build();
     return tool;
   }
