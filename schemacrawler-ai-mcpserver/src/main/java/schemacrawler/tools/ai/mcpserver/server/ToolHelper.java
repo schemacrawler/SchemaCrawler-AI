@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
@@ -90,15 +91,16 @@ public class ToolHelper {
     return new McpServerFeatures.SyncToolSpecification(tool, null, toolCallHandler);
   }
 
-  private Tool toTool(final FunctionDefinition<?> functionDefinition) {
+  private <P extends FunctionParameters> Tool toTool(
+      final FunctionDefinition<P> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
-    final JsonNode parametersSchemaNode =
-        ToolUtility.extractParametersSchemaNode(functionDefinition.getParametersClass());
+    final Class<P> parametersClass = functionDefinition.getParametersClass();
+    final JsonNode parametersSchemaNode = ToolUtility.extractParametersSchemaNode(parametersClass);
     final Tool tool =
         Tool.builder()
             .name(functionDefinition.getName())
             .description(functionDefinition.getDescription())
-            .inputSchema(parametersSchemaNode.toString())
+            .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
             .build();
     return tool;
   }
