@@ -45,3 +45,5 @@ spring:
         protocol: STREAMABLE
         stdio: false
         allowed-origin: '*'
+        streamable-http:
+          disallow-delete: true
