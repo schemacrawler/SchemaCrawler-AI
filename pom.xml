@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-ai-aggregator</artifactId>
-  <version>16.28.2-2</version>
+  <version>16.28.3-1</version>
   <packaging>pom</packaging>
   <name>SchemaCrawler AI [Aggregator]</name>
 
