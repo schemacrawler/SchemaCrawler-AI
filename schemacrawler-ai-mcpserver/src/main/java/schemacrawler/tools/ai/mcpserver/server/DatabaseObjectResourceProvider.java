@@ -83,26 +83,26 @@ public class DatabaseObjectResourceProvider {
   }
 
   private <DO extends DatabaseObject> DO lookupDatabaseObject(
-      final String databaseObjectName, final Collection<DO> databaseObjects) {
-    requireNonNull(databaseObjects, "No database objects provided");
+      final String databaseObjectName, final Collection<DO> allDatabaseObjects) {
+    requireNonNull(allDatabaseObjects, "No database objects provided");
     final String searchObjectName = trimToEmpty(databaseObjectName);
-    final List<DO> routines =
-        databaseObjects.stream()
+    final List<DO> databaseObjects =
+        allDatabaseObjects.stream()
             .filter(
                 databaseObject ->
                     databaseObject.getName().equalsIgnoreCase(searchObjectName)
                         || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
-    if (routines.isEmpty()) {
+    if (databaseObjects.isEmpty()) {
       throw new SchemaCrawlerException(String.format("<%s> not found", databaseObjectName));
     }
-    if (routines.size() > 1) {
+    if (databaseObjects.size() > 1) {
       throw new SchemaCrawlerException(
           String.format(
               "<%s> has too many matches - provide a fully-qualified name", databaseObjectName));
     }
 
-    final DO routine = routines.get(0);
-    return routine;
+    final DO databaseObject = databaseObjects.get(0);
+    return databaseObject;
   }
 }
