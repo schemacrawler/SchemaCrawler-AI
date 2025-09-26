@@ -26,7 +26,7 @@ import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
 
 @Service
-public class DatabaseObjectResourceProvider {
+public class ResourceProvider {
 
   @Autowired public Catalog catalog;
 
