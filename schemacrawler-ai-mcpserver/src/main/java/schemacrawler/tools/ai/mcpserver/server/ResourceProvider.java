@@ -26,7 +26,7 @@ import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
 
 @Service
-public class DatabaseObjectResourceProvider {
+public class ResourceProvider {
 
   @Autowired public Catalog catalog;
 
@@ -47,11 +47,11 @@ public class DatabaseObjectResourceProvider {
               .withAdditionalRoutineDetails(allRoutineDetails())
               .getRoutineDocument(routine);
       LoggingUtility.log(
-          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
+          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       LoggingUtility.logException(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()), e);
+          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }
   }
@@ -73,36 +73,36 @@ public class DatabaseObjectResourceProvider {
               .withAdditionalTableDetails(allTableDetails())
               .getTableDocument(table);
       LoggingUtility.log(
-          exchange, String.format("Generated resource for <%s>", resourceRequest.uri()));
+          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
       LoggingUtility.logException(
-          exchange, String.format("Could not read resource <%s>", resourceRequest.uri()), e);
+          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }
   }
 
   private <DO extends DatabaseObject> DO lookupDatabaseObject(
-      final String databaseObjectName, final Collection<DO> databaseObjects) {
-    requireNonNull(databaseObjects, "No database objects provided");
+      final String databaseObjectName, final Collection<DO> allDatabaseObjects) {
+    requireNonNull(allDatabaseObjects, "No database objects provided");
     final String searchObjectName = trimToEmpty(databaseObjectName);
-    final List<DO> routines =
-        databaseObjects.stream()
+    final List<DO> databaseObjects =
+        allDatabaseObjects.stream()
             .filter(
                 databaseObject ->
                     databaseObject.getName().equalsIgnoreCase(searchObjectName)
                         || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
-    if (routines.isEmpty()) {
+    if (databaseObjects.isEmpty()) {
       throw new SchemaCrawlerException(String.format("<%s> not found", databaseObjectName));
     }
-    if (routines.size() > 1) {
+    if (databaseObjects.size() > 1) {
       throw new SchemaCrawlerException(
           String.format(
               "<%s> has too many matches - provide a fully-qualified name", databaseObjectName));
     }
 
-    final DO routine = routines.get(0);
-    return routine;
+    final DO databaseObject = databaseObjects.get(0);
+    return databaseObject;
   }
 }

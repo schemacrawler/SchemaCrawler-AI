@@ -10,10 +10,13 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.Content;
@@ -22,7 +25,6 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
-import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.schema.Catalog;
@@ -50,7 +52,7 @@ public class ToolHelper {
         final McpSyncServerExchange exchange, final CallToolRequest request) {
       FunctionReturn functionReturn;
       try {
-        final String arguments = ModelOptionsUtils.toJsonString(request.arguments());
+        final String arguments = mapper.writeValueAsString(request.arguments());
         log(
             exchange,
             String.format(
@@ -62,7 +64,9 @@ public class ToolHelper {
       }
       final List<Content> content = createContent(functionReturn);
       final boolean inError = functionReturn instanceof ExceptionFunctionReturn;
-      return new CallToolResult(content, inError);
+      final CallToolResult callToolResult =
+          CallToolResult.builder().content(content).isError(inError).build();
+      return callToolResult;
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
@@ -82,7 +86,7 @@ public class ToolHelper {
       McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
           final FunctionDefinition<P> functionDefinition) {
 
-    final Tool tool = toTool(functionDefinition);
+    final McpSchema.Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
         new FunctionCallback<>(functionDefinition, catalog);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
@@ -90,15 +94,19 @@ public class ToolHelper {
     return new McpServerFeatures.SyncToolSpecification(tool, null, toolCallHandler);
   }
 
-  private Tool toTool(final FunctionDefinition<?> functionDefinition) {
+  private <P extends FunctionParameters> Tool toTool(
+      final FunctionDefinition<P> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
-    final JsonNode parametersSchemaNode =
-        ToolUtility.extractParametersSchemaNode(functionDefinition.getParametersClass());
-    final Tool tool =
-        Tool.builder()
-            .name(functionDefinition.getName())
+    final String toolName = functionDefinition.getName();
+
+    final Class<P> parametersClass = functionDefinition.getParametersClass();
+    final JsonNode parametersSchemaNode = ToolUtility.extractParametersSchemaNode(parametersClass);
+
+    final McpSchema.Tool tool =
+        McpSchema.Tool.builder()
+            .name(toolName)
             .description(functionDefinition.getDescription())
-            .inputSchema(parametersSchemaNode.toString())
+            .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
             .build();
     return tool;
   }
