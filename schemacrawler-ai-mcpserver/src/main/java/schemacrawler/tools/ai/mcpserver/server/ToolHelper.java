@@ -63,7 +63,9 @@ public class ToolHelper {
       }
       final List<Content> content = createContent(functionReturn);
       final boolean inError = functionReturn instanceof ExceptionFunctionReturn;
-      return new CallToolResult(content, inError);
+      final CallToolResult callToolResult =
+          CallToolResult.builder().content(content).isError(inError).build();
+      return callToolResult;
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
