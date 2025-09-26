@@ -10,11 +10,13 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.Content;
@@ -23,7 +25,6 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
-import org.springframework.ai.model.ModelOptionsUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.schema.Catalog;
@@ -51,7 +52,7 @@ public class ToolHelper {
         final McpSyncServerExchange exchange, final CallToolRequest request) {
       FunctionReturn functionReturn;
       try {
-        final String arguments = ModelOptionsUtils.toJsonString(request.arguments());
+        final String arguments = mapper.writeValueAsString(request.arguments());
         log(
             exchange,
             String.format(
@@ -85,7 +86,7 @@ public class ToolHelper {
       McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
           final FunctionDefinition<P> functionDefinition) {
 
-    final Tool tool = toTool(functionDefinition);
+    final McpSchema.Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
         new FunctionCallback<>(functionDefinition, catalog);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
@@ -96,13 +97,31 @@ public class ToolHelper {
   private <P extends FunctionParameters> Tool toTool(
       final FunctionDefinition<P> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
+    final String toolName = functionDefinition.getName();
+
     final Class<P> parametersClass = functionDefinition.getParametersClass();
     final JsonNode parametersSchemaNode = ToolUtility.extractParametersSchemaNode(parametersClass);
-    final Tool tool =
-        Tool.builder()
-            .name(functionDefinition.getName())
+
+    final McpSchema.ToolAnnotations annotations =
+        new McpSchema.ToolAnnotations(
+            toolName,
+            // readOnlyHint
+            true,
+            // destructiveHint
+            false,
+            // idempotentHint
+            false,
+            // openWorldHint
+            true,
+            // returnDirect
+            false);
+
+    final McpSchema.Tool tool =
+        McpSchema.Tool.builder()
+            .name(toolName)
             .description(functionDefinition.getDescription())
             .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
+            .annotations(annotations)
             .build();
     return tool;
   }
