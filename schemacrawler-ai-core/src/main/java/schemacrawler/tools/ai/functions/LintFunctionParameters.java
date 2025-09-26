@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.functions;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
@@ -41,6 +42,7 @@ public record LintFunctionParameters(
     return JsonUtility.parametersToString(this);
   }
 
+  @JsonIgnore
   @Override
   public FunctionReturnType getFunctionReturnType() {
     return FunctionReturnType.JSON;
