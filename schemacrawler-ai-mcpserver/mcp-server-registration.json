@@ -1,8 +1,8 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-07-09/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-09-16/server.schema.json",
   "name": "io.github.schemacrawler/schemacrawler-ai",
   "description": "Enables natural language schema queries — explore tables, keys, procedures, and get SQL help fast",
-  "website_url": "https://www.schemacrawler.com/",
+  "websiteUrl": "https://www.schemacrawler.com/",
   "status": "active",
   "repository": {
     "url": "https://github.com/schemacrawler/SchemaCrawler-AI",
@@ -11,75 +11,75 @@
   "version": "v16.28.3-1",
   "packages": [
     {
-      "registry_type": "oci",
-      "registry_base_url": "https://docker.io",
+      "registryType": "oci",
+      "registryBaseUrl": "https://docker.io",
       "identifier": "schemacrawler/schemacrawler-ai",
       "version": "v16.28.3-1",
       "transport": {
         "type": "stdio"
       },
-      "environment_variables": [
+      "environmentVariables": [
         {
           "description": "Database user name. Can be optional depending on the database connection type.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": true,
+          "isSecret": true,
           "name": "SCHCRWLR_DATABASE_USER"
         },
         {
           "description": "Database user password. Can be optional depending on the database connection type.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": true,
+          "isSecret": true,
           "name": "SCHCRWLR_DATABASE_PASSWORD"
         },
         {
           "description": "JDBC URL for database connection. If this is provided, the server, host, port and database are not used.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_JDBC_URL"
         },
         {
           "description": "SchemaCrawler database plugin, for example, 'sqlserver' or 'sqlite'. Used only if the JDBC URL is not provided.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_SERVER"
         },
         {
           "description": "Database host. Defaults to localhost. Used only if the JDBC URL is not provided.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_HOST"
         },
         {
           "description": "Database port. Defaults to the default port for the server type. Used only if the JDBC URL is not provided.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_PORT"
         },
         {
           "description": "Database to connect to (optional). Used only if the JDBC URL is not provided.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_DATABASE"
         },
         {
           "description": "How much database metadata to retrieve. Values are 'minimum', 'standard', 'detailed' or 'maximum'.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_INFO_LEVEL"
         },
         {
           "description": "Logging verbosity level. Values are 'SEVERE', 'WARNING', 'INFO', 'CONFIG', or 'FINE'.",
-          "is_required": false,
+          "isRequired": false,
           "format": "string",
-          "is_secret": false,
+          "isSecret": false,
           "name": "SCHCRWLR_LOG_LEVEL"
         }
       ]
