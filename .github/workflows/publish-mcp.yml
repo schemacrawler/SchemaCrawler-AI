@@ -5,6 +5,7 @@ on:
 
 jobs:
   publish:
+    name: Publish SchemaCrawler AI MCP Server
     runs-on: ubuntu-latest
     permissions:
       id-token: write  # Required for OIDC authentication
