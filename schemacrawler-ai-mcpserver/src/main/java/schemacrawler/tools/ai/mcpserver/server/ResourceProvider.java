@@ -2,14 +2,10 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logException;
 import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.ReadResourceRequest;
 import java.util.Collection;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -21,7 +17,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
-import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
+import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
@@ -37,23 +33,14 @@ public class ResourceProvider {
       description = "Provides detailed database metadata for the specified routine.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
-      final ReadResourceRequest resourceRequest,
-      final McpSyncServerExchange exchange,
       @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
           final String routineName) {
-    try {
-      final Routine routine = lookupDatabaseObject(routineName, catalog.getRoutines());
-      final RoutineDocument document =
-          new CompactCatalogUtility()
-              .withAdditionalRoutineDetails(allRoutineDetails())
-              .getRoutineDocument(routine);
-      log(exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
-      return document.toObjectNode().toPrettyString();
-    } catch (final Exception e) {
-      logException(
-          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
-      throw e;
-    }
+    final Routine routine = lookupDatabaseObject(routineName, catalog.getRoutines());
+    final RoutineDocument document =
+        new CompactCatalogUtility()
+            .withAdditionalRoutineDetails(allRoutineDetails())
+            .getRoutineDocument(routine);
+    return document.toObjectNode().toPrettyString();
   }
 
   @McpResource(
@@ -62,23 +49,14 @@ public class ResourceProvider {
       description = "Provides detailed database metadata for the specified table.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
-      final ReadResourceRequest resourceRequest,
-      final McpSyncServerExchange exchange,
       @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)
           final String tableName) {
-    try {
-      final Table table = lookupDatabaseObject(tableName, catalog.getTables());
-      final TableDocument document =
-          new CompactCatalogUtility()
-              .withAdditionalTableDetails(allTableDetails())
-              .getTableDocument(table);
-      log(exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
-      return document.toObjectNode().toPrettyString();
-    } catch (final Exception e) {
-      logException(
-          exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
-      throw e;
-    }
+    final Table table = lookupDatabaseObject(tableName, catalog.getTables());
+    final TableDocument document =
+        new CompactCatalogUtility()
+            .withAdditionalTableDetails(allTableDetails())
+            .getTableDocument(table);
+    return document.toObjectNode().toPrettyString();
   }
 
   private <DO extends DatabaseObject> DO lookupDatabaseObject(
@@ -93,10 +71,10 @@ public class ResourceProvider {
                         || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
     if (databaseObjects.isEmpty()) {
-      throw new SchemaCrawlerException(String.format("<%s> not found", databaseObjectName));
+      throw new IORuntimeException(String.format("<%s> not found", databaseObjectName));
     }
     if (databaseObjects.size() > 1) {
-      throw new SchemaCrawlerException(
+      throw new IORuntimeException(
           String.format(
               "<%s> has too many matches - provide a fully-qualified name", databaseObjectName));
     }
