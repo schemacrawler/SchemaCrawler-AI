@@ -71,7 +71,7 @@ public class ToolProvider {
   }
 
   /**
-   * Creates a tool callbacks for SchemaCrawler tools.
+   * Creates tool callbacks for SchemaCrawler tools.
    *
    * @return Registers tool callbacks
    */
