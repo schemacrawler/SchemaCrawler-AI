@@ -36,7 +36,13 @@ jobs:
             ./server.json
           mcp-publisher publish
           mcp-publisher logout
-          # Show registered version
+
+      - id: show-mcp-registration
+        name: Show MCP registration
+        shell: bash
+        if: always()
+        run: |
+          # Show last registered version
           curl -s -X GET "https://registry.modelcontextprotocol.io/v0/servers?search=schemacrawler-ai" \
             -H "accept: application/json" | \
             jq '.servers[0] | {name, version, _meta}' > output.json
