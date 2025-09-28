@@ -2,6 +2,8 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
+import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logException;
 import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
 import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
@@ -20,7 +22,6 @@ import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
@@ -46,11 +47,10 @@ public class ResourceProvider {
           new CompactCatalogUtility()
               .withAdditionalRoutineDetails(allRoutineDetails())
               .getRoutineDocument(routine);
-      LoggingUtility.log(
-          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
+      log(exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      LoggingUtility.logException(
+      logException(
           exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }
@@ -72,11 +72,10 @@ public class ResourceProvider {
           new CompactCatalogUtility()
               .withAdditionalTableDetails(allTableDetails())
               .getTableDocument(table);
-      LoggingUtility.log(
-          exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
+      log(exchange, String.format("Located resource for <%s>", resourceRequest.uri()));
       return document.toObjectNode().toPrettyString();
     } catch (final Exception e) {
-      LoggingUtility.logException(
+      logException(
           exchange, String.format("Could not locate resource <%s>", resourceRequest.uri()), e);
       throw e;
     }

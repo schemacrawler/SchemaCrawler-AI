@@ -70,7 +70,7 @@ public class ToolHelper {
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
-      Content content;
+      final Content content;
       if (functionReturn == null) {
         content = new TextContent("");
       } else {
@@ -91,7 +91,8 @@ public class ToolHelper {
         new FunctionCallback<>(functionDefinition, catalog);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
-    return new McpServerFeatures.SyncToolSpecification(tool, null, toolCallHandler);
+    return new McpServerFeatures.SyncToolSpecification(
+        tool, /*deprecated handler */ null, toolCallHandler);
   }
 
   private <P extends FunctionParameters> Tool toTool(
