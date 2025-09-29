@@ -13,8 +13,6 @@
   <modules>
     <module>schemacrawler-ai-parent</module>
     <module>schemacrawler-ai-core</module>
-    <module>schemacrawler-ai-langchain4j</module>
-    <module>schemacrawler-ai-aichat</module>
     <module>schemacrawler-ai-mcpserver</module>
     <module>schemacrawler-ai-distrib</module>
   </modules>

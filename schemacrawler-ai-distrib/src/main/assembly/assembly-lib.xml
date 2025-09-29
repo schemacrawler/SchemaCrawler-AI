@@ -26,8 +26,6 @@
       <scope>runtime</scope>
       <includes>
         <include>us.fatehi:schemacrawler-ai-core</include>
-        <include>us.fatehi:schemacrawler-ai-aichat</include>
-        <include>us.fatehi:schemacrawler-ai-langchain4j</include>
         <include>us.fatehi:schemacrawler-ai-mcpserver</include>
       </includes>
     </dependencySet>

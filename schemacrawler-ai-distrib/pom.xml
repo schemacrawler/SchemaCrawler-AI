@@ -23,16 +23,6 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-langchain4j</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-aichat</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-mcpserver</artifactId>
       <version>${project.version}</version>
     </dependency>
