@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.function.test;
+package schemacrawler.tools.ai.function.test;
 
 import java.sql.Connection;
 import org.junit.jupiter.api.Test;
@@ -17,7 +17,7 @@ import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionParameters;
-import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
+import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 
 @WithTestDatabase
 @ResolveTestContext

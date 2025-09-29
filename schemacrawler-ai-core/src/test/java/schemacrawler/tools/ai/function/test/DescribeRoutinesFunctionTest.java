@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.function.test;
+package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.test.utility.FileHasContent.classpathResource;
@@ -24,7 +24,7 @@ import schemacrawler.test.utility.TestWriter;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
-import schemacrawler.tools.command.aichat.tools.utility.FunctionExecutionTestUtility;
+import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 
 @WithTestDatabase
 @ResolveTestContext

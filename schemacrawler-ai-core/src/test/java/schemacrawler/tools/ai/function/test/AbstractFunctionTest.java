@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.command.aichat.function.test;
+package schemacrawler.tools.ai.function.test;
 
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
