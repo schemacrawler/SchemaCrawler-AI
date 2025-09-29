@@ -8,10 +8,11 @@
 
 package schemacrawler.tools.ai.functions;
 
+import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
 import schemacrawler.tools.ai.tools.NoParameters;
 
 public final class ServerInformationFunctionDefinition
-    extends AbstractMcpServerFunctionDefinition<NoParameters> {
+    extends AbstractFunctionDefinition<NoParameters> {
 
   @Override
   public String getDescription() {

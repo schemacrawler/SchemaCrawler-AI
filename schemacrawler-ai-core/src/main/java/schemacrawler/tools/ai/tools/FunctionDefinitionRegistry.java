@@ -20,7 +20,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import java.util.stream.Collectors;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
-import schemacrawler.tools.ai.functions.AbstractMcpServerFunctionDefinition;
 import schemacrawler.tools.registry.BasePluginRegistry;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -74,12 +73,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
     return functionDefinitionRegistry.values().stream().collect(Collectors.toList());
   }
 
-  public Collection<FunctionDefinition<?>> getMcpServerFunctionDefinitions() {
-    return functionDefinitionRegistry.values().stream()
-        .filter(AbstractMcpServerFunctionDefinition.class::isInstance)
-        .collect(Collectors.toList());
-  }
-
   @Override
   public String getName() {
     return "Function Definitions";
@@ -93,14 +86,6 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
           new PropertyName(functionDefinition.getName(), functionDefinition.getDescription()));
     }
     return registeredPlugins;
-  }
-
-  public Collection<FunctionDefinition<?>> getTextFunctionDefinitions() {
-    return functionDefinitionRegistry.values().stream()
-        .filter(
-            functionDefinition ->
-                !(functionDefinition instanceof AbstractMcpServerFunctionDefinition))
-        .collect(Collectors.toList());
   }
 
   public boolean hasFunctionDefinition(final String functionName) {

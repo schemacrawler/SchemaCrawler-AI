@@ -13,6 +13,8 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.functions.JsonFunctionReturn;
 import schemacrawler.tools.ai.functions.TextFunctionReturn;
@@ -24,9 +26,13 @@ import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
+import us.fatehi.utility.string.StringFormat;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
     extends AbstractSchemaCrawlerFunctionExecutor<P> {
+
+  private static final Logger LOGGER =
+      Logger.getLogger(AbstractExecutableFunctionExecutor.class.getCanonicalName());
 
   protected AbstractExecutableFunctionExecutor(final PropertyName functionName) {
     super(functionName);
@@ -63,18 +69,23 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       }
     }
 
+    final String results = writer.toString();
     switch (functionReturnType) {
       case JSON:
-        final String results = writer.toString();
         try {
           final JsonNode node = mapper.readTree(results);
           return new JsonFunctionReturn(node);
         } catch (final Exception e) {
-          return () -> results;
+          LOGGER.log(
+              Level.WARNING,
+              e,
+              new StringFormat(
+                  "Could not convert results from <%s> to JSON", getCommandName().getName()));
+          return new TextFunctionReturn(results);
         }
       case TEXT:
       default:
-        return () -> writer.toString();
+        return new TextFunctionReturn(results);
     }
   }
 

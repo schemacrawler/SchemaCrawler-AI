@@ -8,8 +8,10 @@
 
 package schemacrawler.tools.ai.functions;
 
+import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
+
 public final class DescribeTablesFunctionDefinition
-    extends AbstractMcpServerFunctionDefinition<DescribeTablesFunctionParameters> {
+    extends AbstractFunctionDefinition<DescribeTablesFunctionParameters> {
 
   @Override
   public String getDescription() {
