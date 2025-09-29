@@ -9,11 +9,10 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-
+import java.util.Collection;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import java.util.Collection;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -55,13 +54,13 @@ public final class ServerInformationFunctionExecutor
     final ArrayNode serverInfoArray = databaseInfo.putArray("server-info");
     final Collection<Property> serverInfo = catalog.getDatabaseInfo().getServerInfo();
     for (final Property serverProperty : serverInfo) {
-      if (serverProperty == null) {
+      if (serverProperty == null || serverProperty.getValue() == null) {
         continue;
       }
       final ObjectNode serverPropertyNode = serverInfoArray.addObject();
       serverPropertyNode.put("name", serverProperty.getName());
       serverPropertyNode.put("description", serverProperty.getDescription());
-      serverPropertyNode.put("value", String.valueOf(serverProperty.getValue()));
+      serverPropertyNode.put("value", serverProperty.getValue().toString());
     }
 
     return databaseInfo;
