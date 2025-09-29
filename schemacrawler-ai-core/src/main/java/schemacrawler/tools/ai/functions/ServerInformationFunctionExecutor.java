@@ -61,7 +61,7 @@ public final class ServerInformationFunctionExecutor
       final ObjectNode serverPropertyNode = serverInfoArray.addObject();
       serverPropertyNode.put("name", serverProperty.getName());
       serverPropertyNode.put("description", serverProperty.getDescription());
-      serverPropertyNode.put("value", serverProperty.getValue().toString());
+      serverPropertyNode.put("value", String.valueOf(serverProperty.getValue()));
     }
 
     return databaseInfo;
