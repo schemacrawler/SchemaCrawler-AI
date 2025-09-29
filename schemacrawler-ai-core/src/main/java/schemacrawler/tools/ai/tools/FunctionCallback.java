@@ -19,7 +19,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
-import schemacrawler.tools.ai.functions.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
@@ -62,10 +61,6 @@ public final class FunctionCallback<P extends FunctionParameters> {
       LOGGER.log(
           Level.FINER,
           String.format("Executing%n%s", toCallObject(argumentsString).toPrettyString()));
-    }
-
-    if (functionDefinition == null) {
-      return new JsonFunctionReturn();
     }
 
     try {
