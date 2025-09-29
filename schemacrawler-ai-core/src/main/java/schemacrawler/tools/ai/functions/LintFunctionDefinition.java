@@ -8,8 +8,10 @@
 
 package schemacrawler.tools.ai.functions;
 
+import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
+
 public final class LintFunctionDefinition
-    extends AbstractMcpServerFunctionDefinition<LintFunctionParameters> {
+    extends AbstractFunctionDefinition<LintFunctionParameters> {
 
   @Override
   public String getDescription() {
