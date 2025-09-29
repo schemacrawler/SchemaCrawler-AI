@@ -9,6 +9,11 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.modelcontextprotocol.server.McpServerFeatures;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
+import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -19,10 +24,6 @@ import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import io.modelcontextprotocol.server.McpServerFeatures;
-import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import schemacrawler.Version;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
@@ -79,7 +80,7 @@ public class ToolProvider {
   public List<McpServerFeatures.SyncToolSpecification> schemaCrawlerTools() {
     final List<McpServerFeatures.SyncToolSpecification> tools = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
-        functionDefinitionRegistry.getMcpServerFunctionDefinitions()) {
+        functionDefinitionRegistry.getFunctionDefinitions()) {
       LOGGER.log(
           Level.INFO,
           new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
