@@ -1,3 +1,11 @@
+/*
+ * SchemaCrawler AI
+ * http://www.schemacrawler.com
+ * Copyright (c) 2000-2025, Sualeh Fatehi <sualeh@hotmail.com>.
+ * All rights reserved.
+ * SPDX-License-Identifier: CC-BY-NC-4.0
+ */
+
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
@@ -28,7 +36,7 @@ public class ResourceProvider {
   @Autowired public Catalog catalog;
 
   @McpResource(
-      uri = "routine:{routine-name}",
+      uri = "catalog://routines/{routine-name}",
       name = "routine-details",
       title = "Routine metadata details",
       description = "Provides detailed database metadata for the specified routine, as JSON.",
@@ -45,7 +53,7 @@ public class ResourceProvider {
   }
 
   @McpResource(
-      uri = "table:{table-name}",
+      uri = "catalog://tables/{table-name}",
       name = "table-details",
       title = "Table metadata details",
       description = "Provides detailed database metadata for the specified table, as JSON.",
