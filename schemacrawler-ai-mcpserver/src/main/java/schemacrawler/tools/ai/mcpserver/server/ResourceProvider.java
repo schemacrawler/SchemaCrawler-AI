@@ -28,7 +28,7 @@ public class ResourceProvider {
   @Autowired public Catalog catalog;
 
   @McpResource(
-      uri = "routine:{routine-name}",
+      uri = "catalog://routines/{routine-name}",
       name = "routine-details",
       title = "Routine metadata details",
       description = "Provides detailed database metadata for the specified routine, as JSON.",
@@ -45,7 +45,7 @@ public class ResourceProvider {
   }
 
   @McpResource(
-      uri = "table:{table-name}",
+      uri = "catalog://tables/{table-name}",
       name = "table-details",
       title = "Table metadata details",
       description = "Provides detailed database metadata for the specified table, as JSON.",
