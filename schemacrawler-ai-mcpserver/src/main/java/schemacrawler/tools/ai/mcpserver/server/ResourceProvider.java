@@ -28,9 +28,10 @@ public class ResourceProvider {
   @Autowired public Catalog catalog;
 
   @McpResource(
-      uri = "routines://{routine-name}",
+      uri = "routine:{routine-name}",
       name = "routine-details",
-      description = "Provides detailed database metadata for the specified routine.",
+      title = "Routine metadata details",
+      description = "Provides detailed database metadata for the specified routine, as JSON.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
       @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
@@ -44,9 +45,10 @@ public class ResourceProvider {
   }
 
   @McpResource(
-      uri = "tables://{table-name}",
+      uri = "table:{table-name}",
       name = "table-details",
-      description = "Provides detailed database metadata for the specified table.",
+      title = "Table metadata details",
+      description = "Provides detailed database metadata for the specified table, as JSON.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
       @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)

@@ -109,7 +109,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
       final JsonNode arguments = mapper.readTree(functionArguments);
       objectNode.set("arguments", arguments);
     } catch (final Exception e) {
-      objectNode.set("arguments", mapper.createObjectNode());
+      objectNode.put("arguments", argumentsString);
     }
 
     return objectNode;
