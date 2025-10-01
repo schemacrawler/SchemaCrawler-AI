@@ -19,7 +19,7 @@ import org.springaicommunity.mcp.annotation.McpTool;
 import org.springframework.stereotype.Service;
 
 @Service
-public class ImageTool {
+public class Playground {
 
   // Example base64-encoded PNG image (small red dot)
   final String base64Image =
