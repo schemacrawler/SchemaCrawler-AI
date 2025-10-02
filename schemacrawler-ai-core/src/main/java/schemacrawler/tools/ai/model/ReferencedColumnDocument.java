@@ -31,6 +31,7 @@ public final class ReferencedColumnDocument implements Document {
   private final String schemaName;
   private final String tableName;
   private final String columnName;
+  private final String remarks;
 
   public ReferencedColumnDocument(final Column column) {
     requireNonNull(column, "No column provided");
@@ -40,11 +41,17 @@ public final class ReferencedColumnDocument implements Document {
     final Table table = column.getParent();
     schemaName = trimToEmpty(table.getSchema().getFullName());
     tableName = table.getName();
+
+    remarks = column.getRemarks();
   }
 
   @Override
   public String getName() {
     return columnName;
+  }
+
+  public String getRemarks() {
+    return remarks;
   }
 
   @JsonProperty("schema")
