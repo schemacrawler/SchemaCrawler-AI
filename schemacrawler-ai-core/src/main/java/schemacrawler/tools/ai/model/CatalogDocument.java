@@ -17,9 +17,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -27,31 +25,6 @@ import java.util.Map;
 public final class CatalogDocument implements Document {
 
   private static final long serialVersionUID = -1937966351313941597L;
-
-  public static Map<AdditionalRoutineDetails, Boolean> allRoutineDetails() {
-    final Map<AdditionalRoutineDetails, Boolean> details;
-    details = new EnumMap<>(AdditionalRoutineDetails.class);
-
-    for (final AdditionalRoutineDetails additionalRoutineDetails :
-        AdditionalRoutineDetails.values()) {
-      if (!details.containsKey(additionalRoutineDetails)) {
-        details.put(additionalRoutineDetails, true);
-      }
-    }
-    return details;
-  }
-
-  public static Map<AdditionalTableDetails, Boolean> allTableDetails() {
-    final Map<AdditionalTableDetails, Boolean> details;
-    details = new EnumMap<>(AdditionalTableDetails.class);
-
-    for (final AdditionalTableDetails additionalTableDetails : AdditionalTableDetails.values()) {
-      if (!details.containsKey(additionalTableDetails)) {
-        details.put(additionalTableDetails, true);
-      }
-    }
-    return details;
-  }
 
   private final String databaseProductName;
   private final List<TableDocument> tables;

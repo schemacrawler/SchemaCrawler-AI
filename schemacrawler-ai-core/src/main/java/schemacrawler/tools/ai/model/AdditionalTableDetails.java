@@ -13,6 +13,7 @@ public enum AdditionalTableDetails {
   REFERENCED_TABLES,
   INDEXES,
   TRIGGERS,
+  USED_BY_OBJECTS,
   ATTRIBUTES,
   DEFINIITION
 }
