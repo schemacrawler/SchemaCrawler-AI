@@ -15,7 +15,9 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
+import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
@@ -35,11 +37,11 @@ import java.util.Map;
 import java.util.Objects;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
+import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
-import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -53,6 +55,7 @@ import schemacrawler.utility.MetaDataUtility;
   "referenced-tables",
   "indexes",
   "triggers",
+  "using-objects",
   "attributes",
   "definition"
 })
@@ -69,6 +72,7 @@ public final class TableDocument implements Document {
   private final Collection<DatabaseObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final Collection<TriggerDocument> triggers;
+  private final Collection<DatabaseObjectDocument> usedByObjects;
   private final Map<String, String> attributes;
 
   private final String definition;
@@ -81,7 +85,7 @@ public final class TableDocument implements Document {
     this.schemaName = trimToEmpty(schemaName);
 
     tableName = table.getName();
-    type = MetaDataUtility.getSimpleTypeName(table).name();
+    type = getTypeName(table).toLowerCase();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();
@@ -135,6 +139,17 @@ public final class TableDocument implements Document {
       }
     } else {
       triggers = null;
+    }
+
+    if (details.get(USED_BY_OBJECTS)) {
+      final Collection<DatabaseObject> usedByDatabaseObjects = table.getUsedByObjects();
+      Collections.sort(new ArrayList<>(usedByDatabaseObjects));
+      usedByObjects = new ArrayList<>();
+      for (final DatabaseObject usingDatabaseObject : usedByDatabaseObjects) {
+        usedByObjects.add(new DatabaseObjectDocument(usingDatabaseObject));
+      }
+    } else {
+      usedByObjects = null;
     }
 
     if (details.get(DEFINIITION) && table.hasDefinition()) {
@@ -202,6 +217,10 @@ public final class TableDocument implements Document {
 
   public String getType() {
     return type;
+  }
+
+  public Collection<DatabaseObjectDocument> getUsedByObjects() {
+    return usedByObjects;
   }
 
   @Override

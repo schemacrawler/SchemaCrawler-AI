@@ -10,7 +10,7 @@ package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,43 +19,30 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schema.Column;
+import schemacrawler.schema.Table;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
-public final class ColumnDocument implements Document {
+@JsonPropertyOrder({"schema", "table", "name"})
+public final class ReferencedColumnDocument implements Document {
 
-  private static final long serialVersionUID = 5110252842937512910L;
+  private static final long serialVersionUID = -4296619897674250692L;
 
+  private final String schemaName;
+  private final String tableName;
   private final String columnName;
-  private final String dataType;
   private final String remarks;
-  private final ReferencedColumnDocument referencedColumn;
 
-  public ColumnDocument(final Column column, final Column pkColumn) {
+  public ReferencedColumnDocument(final Column column) {
     requireNonNull(column, "No column provided");
 
     columnName = column.getName();
 
-    dataType = column.getColumnDataType().getName();
+    final Table table = column.getParent();
+    schemaName = trimToEmpty(table.getSchema().getFullName());
+    tableName = table.getName();
 
-    final String remarks = column.getRemarks();
-    if (!isBlank(remarks)) {
-      this.remarks = remarks;
-    } else {
-      this.remarks = null;
-    }
-
-    if (pkColumn == null) {
-      referencedColumn = null;
-    } else {
-      referencedColumn = new ReferencedColumnDocument(pkColumn);
-    }
-  }
-
-  @JsonProperty("data-type")
-  public String getDataType() {
-    return dataType;
+    remarks = column.getRemarks();
   }
 
   @Override
@@ -63,14 +50,18 @@ public final class ColumnDocument implements Document {
     return columnName;
   }
 
-  @JsonProperty("referenced-column")
-  public ReferencedColumnDocument getReferencedColumn() {
-    return referencedColumn;
-  }
-
-  @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
+  }
+
+  @JsonProperty("schema")
+  public String getSchemaName() {
+    return schemaName;
+  }
+
+  @JsonProperty("table")
+  public String getTableName() {
+    return tableName;
   }
 
   @Override

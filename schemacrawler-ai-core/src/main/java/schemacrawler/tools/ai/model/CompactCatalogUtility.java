@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.EnumMap;
-import java.util.Map;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
@@ -67,17 +66,6 @@ public final class CompactCatalogUtility {
     return this;
   }
 
-  public CompactCatalogUtility withAdditionalRoutineDetails(
-      final Map<AdditionalRoutineDetails, Boolean> withAdditionalRoutineDetails) {
-    if (withAdditionalRoutineDetails == null || withAdditionalRoutineDetails.isEmpty()) {
-      return this;
-    }
-    additionalRoutineDetails.clear();
-    additionalRoutineDetails.putAll(withAdditionalRoutineDetails);
-
-    return this;
-  }
-
   public CompactCatalogUtility withAdditionalTableDetails(
       final Collection<AdditionalTableDetails> withAdditionalTableDetails) {
     if (withAdditionalTableDetails == null || withAdditionalTableDetails.isEmpty()) {
@@ -86,17 +74,6 @@ public final class CompactCatalogUtility {
     for (final AdditionalTableDetails additionalTableDetail : withAdditionalTableDetails) {
       additionalTableDetails.put(additionalTableDetail, true);
     }
-    return this;
-  }
-
-  public CompactCatalogUtility withAdditionalTableDetails(
-      final Map<AdditionalTableDetails, Boolean> withAdditionalTableDetails) {
-    if (withAdditionalTableDetails == null || withAdditionalTableDetails.isEmpty()) {
-      return this;
-    }
-    additionalTableDetails.clear();
-    additionalTableDetails.putAll(withAdditionalTableDetails);
-
     return this;
   }
 }

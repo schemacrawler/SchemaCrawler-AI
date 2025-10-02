@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,9 +20,6 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.schema.DatabaseObject;
-import schemacrawler.schema.Sequence;
-import schemacrawler.schema.Synonym;
-import schemacrawler.schema.TypedObject;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -44,16 +42,7 @@ public final class DatabaseObjectDocument implements Document {
       schemaName = null;
     }
     databaseObjectName = databaseObject.getName();
-
-    if (databaseObject instanceof final TypedObject typedObject) {
-      type = typedObject.getType().toString();
-    } else if (databaseObject instanceof Sequence) {
-      type = "sequence";
-    } else if (databaseObject instanceof Synonym) {
-      type = "synonym";
-    } else {
-      type = null;
-    }
+    type = getTypeName(databaseObject);
   }
 
   @Override

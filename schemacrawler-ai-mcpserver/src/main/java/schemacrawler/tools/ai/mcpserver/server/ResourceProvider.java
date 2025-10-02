@@ -10,11 +10,10 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
-import static schemacrawler.tools.ai.model.CatalogDocument.allRoutineDetails;
-import static schemacrawler.tools.ai.model.CatalogDocument.allTableDetails;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.util.Collection;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.springaicommunity.mcp.annotation.McpArg;
@@ -26,6 +25,8 @@ import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.IORuntimeException;
+import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
+import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
@@ -45,9 +46,11 @@ public class ResourceProvider {
       @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
           final String routineName) {
     final Routine routine = lookupDatabaseObject(routineName, catalog.getRoutines());
+    final EnumSet<AdditionalRoutineDetails> allRoutineDetails =
+        EnumSet.allOf(AdditionalRoutineDetails.class);
     final RoutineDocument document =
         new CompactCatalogUtility()
-            .withAdditionalRoutineDetails(allRoutineDetails())
+            .withAdditionalRoutineDetails(allRoutineDetails)
             .getRoutineDocument(routine);
     return document.toObjectNode().toPrettyString();
   }
@@ -62,9 +65,11 @@ public class ResourceProvider {
       @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)
           final String tableName) {
     final Table table = lookupDatabaseObject(tableName, catalog.getTables());
+    final EnumSet<AdditionalTableDetails> allTableDetails =
+        EnumSet.allOf(AdditionalTableDetails.class);
     final TableDocument document =
         new CompactCatalogUtility()
-            .withAdditionalTableDetails(allTableDetails())
+            .withAdditionalTableDetails(allTableDetails)
             .getTableDocument(table);
     return document.toObjectNode().toPrettyString();
   }
