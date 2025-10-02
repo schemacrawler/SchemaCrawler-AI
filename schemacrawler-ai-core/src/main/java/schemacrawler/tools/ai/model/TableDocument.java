@@ -17,6 +17,7 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TAB
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
@@ -41,7 +42,6 @@ import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
-import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -85,7 +85,7 @@ public final class TableDocument implements Document {
     this.schemaName = trimToEmpty(schemaName);
 
     tableName = table.getName();
-    type = MetaDataUtility.getSimpleTypeName(table).name();
+    type = getTypeName(table).toLowerCase();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();

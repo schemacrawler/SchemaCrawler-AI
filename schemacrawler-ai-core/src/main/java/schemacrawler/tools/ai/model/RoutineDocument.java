@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.model;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.REFERENCED_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -29,7 +30,6 @@ import java.util.Objects;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
-import schemacrawler.utility.MetaDataUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -76,7 +76,7 @@ public final class RoutineDocument implements Document {
     this.schemaName = trimToEmpty(schemaName);
 
     routineName = routine.getName();
-    type = MetaDataUtility.getSimpleTypeName(routine).name();
+    type = getTypeName(routine);
 
     parameters = new ArrayList<>();
     for (final RoutineParameter<? extends Routine> routineParameter : routine.getParameters()) {
