@@ -37,7 +37,8 @@ public record DescribeTablesFunctionParameters(
             """
             Indicates what details of the database table or view to return -
             columns, primary key, foreign keys, indexes, triggers, attributes,
-            and table definition.
+            and table definition. Also returns which objects reference a given table
+            as "used by objects".
             Columns, foreign key references to other tables, and remarks or comments
             are always returned by default. The other details can be requested.
             The results could be large.
@@ -52,6 +53,7 @@ public record DescribeTablesFunctionParameters(
     REFERENCED_TABLES(AdditionalTableDetails.REFERENCED_TABLES),
     INDEXES(AdditionalTableDetails.INDEXES),
     TRIGGERS(AdditionalTableDetails.TRIGGERS),
+    USED_BY_OBJECTS(AdditionalTableDetails.USED_BY_OBJECTS),
     ATTRIBUTES(AdditionalTableDetails.ATTRIBUTES),
     DEFINIITION(AdditionalTableDetails.DEFINIITION);
 
