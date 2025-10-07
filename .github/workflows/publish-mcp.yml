@@ -66,7 +66,8 @@ jobs:
           # Show last registered version
           curl -s -X GET "https://registry.modelcontextprotocol.io/v0/servers?search=schemacrawler-ai" \
             -H "accept: application/json" | \
-            jq '.servers[0] | {name, version, _meta}' > output.json
+          jq '.servers[] | select(._meta["io.modelcontextprotocol.registry/official"].isLatest == true) | {name: .server.name, version: .server.version, _meta}' > \
+            output.json
           echo '```json' >> $GITHUB_STEP_SUMMARY
           cat output.json >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
