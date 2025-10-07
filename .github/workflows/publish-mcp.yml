@@ -31,9 +31,12 @@ jobs:
           arch="$(uname -m | sed 's/x86_64/amd64/;s/aarch64/arm64/')"
           filename="mcp-publisher_${version}_${platform}_${arch}.tar.gz"
           # Download and extract
+          echo "Downloading installer $filename"
           curl -L "https://github.com/modelcontextprotocol/registry/releases/download/${latest_tag}/${filename}" | tar xz mcp-publisher
           # Move to /usr/local/bin
           sudo mv mcp-publisher /usr/local/bin/
+          # Print installed version
+          echo "MCP Publisher: `mcp-publisher --version`"
 
       - id: install-jq
         name: Install jq
