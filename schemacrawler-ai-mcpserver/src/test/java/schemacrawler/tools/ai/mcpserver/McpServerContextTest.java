@@ -70,9 +70,9 @@ public class McpServerContextTest {
 
     // Assert
     assertThat(options, notNullValue());
-    assertThat(options.getLoadOptions(), notNullValue());
-    assertThat(options.getLimitOptions(), notNullValue());
-    assertThat(options.getLoadOptions().getSchemaInfoLevel().getTag(), is("detailed"));
+    assertThat(options.loadOptions(), notNullValue());
+    assertThat(options.limitOptions(), notNullValue());
+    assertThat(options.loadOptions().schemaInfoLevel().getTag(), is("detailed"));
   }
 
   @Test
