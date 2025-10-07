@@ -50,8 +50,8 @@ jobs:
           mcp-publisher --version
           mcp-publisher login github-oidc
           cp \
-          ./schemacrawler-ai-mcpserver/mcp-server-registration.json \
-          ./server.json
+            ./schemacrawler-ai-mcpserver/mcp-server-registration.json \
+            ./server.json
           mcp-publisher publish
           mcp-publisher logout
 
@@ -62,8 +62,8 @@ jobs:
         run: |
           # Show last registered version
           curl -s -X GET "https://registry.modelcontextprotocol.io/v0/servers?search=schemacrawler-ai" \
-          -H "accept: application/json" | \
-          jq '.servers[0] | {name, version, _meta}' > output.json
+            -H "accept: application/json" | \
+            jq '.servers[0] | {name, version, _meta}' > output.json
           echo '```json' >> $GITHUB_STEP_SUMMARY
           cat output.json >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY
