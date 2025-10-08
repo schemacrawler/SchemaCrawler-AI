@@ -6,13 +6,11 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.functions;
+package schemacrawler.tools.ai.tools;
 
 import static us.fatehi.utility.Utility.trimToEmpty;
 
-import schemacrawler.tools.ai.tools.FunctionReturn;
-
-public class TextFunctionReturn implements FunctionReturn {
+public final class TextFunctionReturn implements FunctionReturn {
 
   private final String text;
 

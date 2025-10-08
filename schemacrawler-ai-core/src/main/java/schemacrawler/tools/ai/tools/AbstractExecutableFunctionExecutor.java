@@ -16,8 +16,6 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.functions.JsonFunctionReturn;
-import schemacrawler.tools.ai.functions.TextFunctionReturn;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;

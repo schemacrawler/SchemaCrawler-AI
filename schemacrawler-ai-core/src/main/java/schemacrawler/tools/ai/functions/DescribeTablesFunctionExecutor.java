@@ -23,6 +23,7 @@ import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DescribeTablesFunctionExecutor

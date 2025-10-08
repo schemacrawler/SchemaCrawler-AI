@@ -6,16 +6,14 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.functions;
+package schemacrawler.tools.ai.tools;
 
-import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-
 import com.fasterxml.jackson.databind.node.ObjectNode;
-import schemacrawler.tools.ai.tools.FunctionReturn;
+import static java.util.Objects.requireNonNull;
 import schemacrawler.tools.ai.utility.ExceptionInfo;
 
-public class ExceptionFunctionReturn implements FunctionReturn {
+public final class ExceptionFunctionReturn implements FunctionReturn {
 
   private final Exception exception;
 

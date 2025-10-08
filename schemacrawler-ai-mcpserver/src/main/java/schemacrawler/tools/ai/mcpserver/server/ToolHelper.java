@@ -28,7 +28,7 @@ import java.util.function.BiFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
+import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
