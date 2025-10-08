@@ -8,21 +8,16 @@
 
 package schemacrawler.tools.ai.tools;
 
-import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.tools.ai.utility.ExceptionInfo;
 
-public final class ExceptionFunctionReturn implements FunctionReturn {
+public record ExceptionFunctionReturn(Exception exception) implements FunctionReturn {
 
-  private final Exception exception;
-
-  public ExceptionFunctionReturn(final Exception exception) {
-    this.exception = requireNonNull(exception, "No exception provided");
-  }
-
-  public Exception getException() {
-    return exception;
+  public ExceptionFunctionReturn {
+    exception = requireNonNull(exception, "No exception provided");
   }
 
   @Override
