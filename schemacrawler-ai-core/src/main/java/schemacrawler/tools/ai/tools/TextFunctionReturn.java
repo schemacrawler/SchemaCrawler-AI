@@ -10,12 +10,10 @@ package schemacrawler.tools.ai.tools;
 
 import static us.fatehi.utility.Utility.trimToEmpty;
 
-public final class TextFunctionReturn implements FunctionReturn {
+public record TextFunctionReturn(String text) implements FunctionReturn {
 
-  private final String text;
-
-  public TextFunctionReturn(final String text) {
-    this.text = trimToEmpty(text);
+  public TextFunctionReturn {
+    text = trimToEmpty(text);
   }
 
   @Override
