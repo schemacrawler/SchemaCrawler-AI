@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
@@ -9,17 +10,16 @@
     <version>16.29.1-1</version>
     <relativePath>../schemacrawler-ai-parent</relativePath>
   </parent>
-
   <artifactId>schemacrawler-ai-core</artifactId>
   <packaging>jar</packaging>
-  <name>SchemaCrawler AI</name>
-  <description>Integrates SchemaCrawler with AI chat services.</description>
+  <name>SchemaCrawler AI - Core</name>
+  <description>Integrates SchemaCrawler with AI services.</description>
 
   <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler</artifactId>
-    </dependency>    
+    </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-scripting</artifactId>
@@ -82,6 +82,30 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-jar-plugin</artifactId>
+        <version>3.3.0</version>
+        <configuration>
+          <archive>
+            <manifest>
+              <addDefaultImplementationEntries>true</addDefaultImplementationEntries>
+              <addDefaultSpecificationEntries>true</addDefaultSpecificationEntries>
+            </manifest>
+            <manifestEntries>
+              <Implementation-Title>schemacrawler-ai-core</Implementation-Title>
+              <Implementation-Version>${project.version}</Implementation-Version>
+              <Implementation-Vendor>${project.organization.name}</Implementation-Vendor>
+              <Product>SchemaCrawler AI - Core</Product>
+              <Version>${project.version}</Version>
+              <Author>Sualeh Fatehi sualeh@hotmail.com</Author>
+              <Copyright>Copyright (c) 2000-2025, Sualeh Fatehi</Copyright>
+              <Website>https://www.SchemaCrawler.com</Website>
+              <Automatic-Module-Name>us.fatehi.schemacrawler-ai-core</Automatic-Module-Name>
+            </manifestEntries>
+          </archive>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-jar-plugin</artifactId>
         <executions>
           <execution>
             <id>create-test-jar</id>
@@ -90,7 +114,7 @@
             </goals>
           </execution>
         </executions>
-      </plugin>	
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
