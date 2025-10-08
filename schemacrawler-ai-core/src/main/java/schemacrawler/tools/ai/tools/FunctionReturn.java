@@ -10,5 +10,5 @@ package schemacrawler.tools.ai.tools;
 
 import java.util.function.Supplier;
 
-// NOTE: This class reserves the space to return an object instead of a string in the future
-public interface FunctionReturn extends Supplier<String> {}
+public sealed interface FunctionReturn extends Supplier<String>
+    permits TextFunctionReturn, JsonFunctionReturn, ExceptionFunctionReturn {}

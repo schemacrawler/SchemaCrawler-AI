@@ -18,7 +18,6 @@ import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.functions.ExceptionFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
