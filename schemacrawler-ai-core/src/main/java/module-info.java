@@ -1,11 +1,12 @@
 module us.fatehi.schemacrawler.ai_core {
-  // Public API dependencies
-  requires transitive us.fatehi.schemacrawler.schemacrawler;
-  requires transitive us.fatehi.schemacrawler.scripting;
-  requires transitive us.fatehi.schemacrawler.offline;
-  requires transitive us.fatehi.schemacrawler.lint;
-
-  // Implementation dependencies
+  // Dependencies
+  requires us.fatehi.schemacrawler.schemacrawler;
+  requires us.fatehi.schemacrawler.scripting;
+  requires us.fatehi.schemacrawler.offline;
+  requires us.fatehi.schemacrawler.lint;
+  requires java.logging;
+  requires java.sql;
+  requires com.fasterxml.jackson.module.jsonSchema;
   requires com.fasterxml.jackson.core;
   requires com.fasterxml.jackson.databind;
 
@@ -14,7 +15,9 @@ module us.fatehi.schemacrawler.ai_core {
   exports schemacrawler.tools.ai.utility;
 
   // Keep internal implementation packages encapsulated
-  // - functions: not exported outside module
-  // - model: not exported, but open to Jackson for reflection
-  opens schemacrawler.tools.ai.model to com.fasterxml.jackson.databind;
+  // not exported, but open to Jackson for reflection
+  opens schemacrawler.tools.ai.model to
+      com.fasterxml.jackson.databind;
+  opens schemacrawler.tools.ai.functions to
+      com.fasterxml.jackson.databind;
 }
