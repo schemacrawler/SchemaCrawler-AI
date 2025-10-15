@@ -22,8 +22,8 @@ import schemacrawler.test.utility.ResolveTestContext;
 import schemacrawler.test.utility.WithSystemProperty;
 import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import us.fatehi.utility.datasource.ConnectionDatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.datasource.DatabaseConnectionSourceUtility;
 
 @WithTestDatabase
 @ResolveTestContext
@@ -49,8 +49,7 @@ public abstract class AbstractFunctionTest {
             .withLimitOptions(limitOptionsBuilder.toOptions())
             .withLoadOptions(loadOptionsBuilder.toOptions());
 
-    final DatabaseConnectionSource dataSource =
-        DatabaseConnectionSourceUtility.newTestDatabaseConnectionSource(connection);
+    final DatabaseConnectionSource dataSource = new ConnectionDatabaseConnectionSource(connection);
     catalog = SchemaCrawlerUtility.getCatalog(dataSource, schemaCrawlerOptions);
   }
 }
