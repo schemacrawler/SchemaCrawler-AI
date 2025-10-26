@@ -11,23 +11,23 @@ package schemacrawler.tools.command.mcpserver.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
+import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
+import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
+import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
 import java.io.IOException;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.PluginCommandTestUtility;
-import schemacrawler.test.utility.ResolveTestContext;
-import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestWriter;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.command.mcpserver.McpServerCommand;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
+import us.fatehi.test.utility.TestWriter;
+import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.test.utility.extensions.TestContext;
 
 @ResolveTestContext
 public class McpServerCommandProviderTest {

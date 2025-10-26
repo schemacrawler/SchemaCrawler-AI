@@ -9,20 +9,19 @@
 package schemacrawler.tools.ai.utility.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
-import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
+import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
+import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
 import java.io.IOException;
 import java.sql.Connection;
 import schemacrawler.schema.Catalog;
-import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestWriter;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import us.fatehi.test.utility.TestWriter;
+import us.fatehi.test.utility.extensions.TestContext;
 
 public class FunctionExecutionTestUtility {
 
@@ -44,7 +43,7 @@ public class FunctionExecutionTestUtility {
       }
       final FunctionReturn functionReturn = executor.call();
       final String results = functionReturn.get();
-      if (!hasResults && isBlank(results)) {
+      if (!hasResults && results.isBlank()) {
         return;
       }
       out.write(results);

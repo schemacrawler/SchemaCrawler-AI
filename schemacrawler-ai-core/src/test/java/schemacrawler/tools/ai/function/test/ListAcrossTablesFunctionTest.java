@@ -10,30 +10,28 @@ package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasEntry;
-import static schemacrawler.test.utility.FileHasContent.classpathResource;
-import static schemacrawler.test.utility.FileHasContent.hasSameContentAs;
-import static schemacrawler.test.utility.FileHasContent.outputOf;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.COLUMNS;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.FOREIGN_KEYS;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.INDEXES;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.TRIGGERS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
+import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
+import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.test.utility.ResolveTestContext;
-import schemacrawler.test.utility.TestContext;
-import schemacrawler.test.utility.TestWriter;
-import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import us.fatehi.test.utility.TestWriter;
+import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.test.utility.extensions.TestContext;
 
-@WithTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ListAcrossTablesFunctionTest extends AbstractFunctionTest {
