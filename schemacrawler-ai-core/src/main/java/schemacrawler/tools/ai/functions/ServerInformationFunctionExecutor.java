@@ -16,7 +16,6 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.Collection;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
 import us.fatehi.utility.property.Property;
@@ -30,7 +29,7 @@ public final class ServerInformationFunctionExecutor
   }
 
   @Override
-  public FunctionReturn call() throws Exception {
+  public JsonFunctionReturn call() throws Exception {
     // No need to refilter, but leave this boilerplate
     // refilterCatalog();
 
