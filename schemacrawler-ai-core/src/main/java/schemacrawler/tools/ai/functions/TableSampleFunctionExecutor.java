@@ -8,15 +8,8 @@
 
 package schemacrawler.tools.ai.functions;
 
-import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
-import schemacrawler.schemacrawler.GrepOptionsBuilder;
-import schemacrawler.schemacrawler.LimitOptionsBuilder;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.AbstractExecutableFunctionExecutor;
-import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
-import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;
 
 public final class TableSampleFunctionExecutor
@@ -27,38 +20,12 @@ public final class TableSampleFunctionExecutor
   }
 
   @Override
-  public boolean usesConnection() {
-    return true;
-  }
-
-  @Override
-  protected Config createAdditionalConfig() {
-    final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
-    return schemaTextOptionsBuilder.noInfo().toConfig();
-  }
-
-  @Override
-  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
-    final GrepOptionsBuilder grepOptionsBuilder =
-        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
-    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-        .withLimitOptions(limitOptionsBuilder.toOptions())
-        .withGrepOptions(grepOptionsBuilder.toOptions());
-  }
-
-  @Override
   protected String getCommand() {
     return "tablesample";
   }
 
   @Override
-  protected boolean hasResults() {
-    return !catalog.getTables().isEmpty();
+  protected InclusionRule grepTablesInclusionRule() {
+    return makeInclusionRule(commandOptions.tableName());
   }
 }

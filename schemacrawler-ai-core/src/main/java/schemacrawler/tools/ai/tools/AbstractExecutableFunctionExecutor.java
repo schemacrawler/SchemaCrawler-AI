@@ -15,7 +15,13 @@ import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schemacrawler.GrepOptionsBuilder;
+import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
@@ -87,11 +93,38 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  protected abstract Config createAdditionalConfig();
+  @Override
+  public boolean usesConnection() {
+    return true;
+  }
+
+  protected Config createAdditionalConfig() {
+    final SchemaTextOptionsBuilder schemaTextOptionsBuilder = SchemaTextOptionsBuilder.builder();
+    return schemaTextOptionsBuilder.noInfo().toConfig();
+  }
+
+  @Override
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final LimitOptionsBuilder limitOptionsBuilder =
+        LimitOptionsBuilder.builder()
+            .includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll())
+            .includeRoutines(new ExcludeAll());
+    final InclusionRule grepTablesPattern = grepTablesInclusionRule();
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
+    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+        .withLimitOptions(limitOptionsBuilder.toOptions())
+        .withGrepOptions(grepOptionsBuilder.toOptions());
+  }
 
   protected abstract String getCommand();
 
-  protected abstract boolean hasResults();
+  protected abstract InclusionRule grepTablesInclusionRule();
+
+  protected boolean hasResults() {
+    return !catalog.getTables().isEmpty();
+  }
 
   private SchemaCrawlerExecutable createExecutable() {
 
