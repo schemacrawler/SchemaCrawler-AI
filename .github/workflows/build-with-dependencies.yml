@@ -62,7 +62,7 @@ jobs:
 
     - id: upload-aichat-distrib
       name: Upload SchemaCrawler AI distribution
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
         name: _ai-distrib
         path: ./_ai-distrib
