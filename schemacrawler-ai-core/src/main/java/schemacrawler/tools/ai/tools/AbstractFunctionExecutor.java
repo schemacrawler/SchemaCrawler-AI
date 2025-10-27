@@ -47,4 +47,9 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
     return Pattern.compile(pattern, flags);
   }
+
+  @Override
+  public final String toString() {
+    return command.getName();
+  }
 }
