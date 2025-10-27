@@ -9,8 +9,13 @@
 package schemacrawler.tools.ai.tools;
 
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
+import java.util.regex.Pattern;
+import schemacrawler.inclusionrule.IncludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 
@@ -21,17 +26,25 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     super(requireNonNull(functionName, "Function name not provided"));
   }
 
-  @Override
-  public void initialize() {
-    // No-op
+  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+
+  protected InclusionRule makeInclusionRule(final String objectName) {
+    final InclusionRule inclusionRule;
+    if (isBlank(objectName)) {
+      inclusionRule = new IncludeAll();
+    } else {
+      final Pattern dependantObjectPattern = makeNameInclusionPattern(objectName);
+      inclusionRule = new RegularExpressionInclusionRule(dependantObjectPattern);
+    }
+    return inclusionRule;
   }
 
-  @Override
-  public final String toString() {
-    return String.format(
-        "function %s(%s)%n\"%s\"",
-        command.getName(),
-        new KebabCaseStrategy().translate(commandOptions.getClass().getSimpleName()),
-        command.getDescription());
+  private Pattern makeNameInclusionPattern(final String name) {
+    if (isBlank(name)) {
+      throw new IllegalArgumentException("Blank name provided");
+    }
+    final String pattern = String.format(".*%s.*", name);
+    final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
+    return Pattern.compile(pattern, flags);
   }
 }

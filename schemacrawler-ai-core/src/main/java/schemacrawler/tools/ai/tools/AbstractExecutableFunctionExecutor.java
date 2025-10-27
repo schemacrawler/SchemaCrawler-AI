@@ -27,7 +27,7 @@ import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
-    extends AbstractSchemaCrawlerFunctionExecutor<P> {
+    extends AbstractFunctionExecutor<P> {
 
   private static final Logger LOGGER =
       Logger.getLogger(AbstractExecutableFunctionExecutor.class.getCanonicalName());
