@@ -2,8 +2,8 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v17.1.2-1"></a>
-## Release 17.1.2-1 - 2025-09-29
+<a name="v17.1.3-1"></a>
+## Release 17.1.3-1 - 2025-09-29
 
 - Build against latest SchemaCrawler version
 
