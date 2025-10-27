@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.functions;
 
-import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
+import schemacrawler.tools.ai.tools.base.AbstractFunctionDefinition;
 
 public final class TableSampleFunctionDefinition
     extends AbstractFunctionDefinition<TableSampleFunctionParameters> {

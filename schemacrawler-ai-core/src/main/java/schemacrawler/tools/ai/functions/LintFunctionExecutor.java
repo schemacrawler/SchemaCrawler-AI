@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import schemacrawler.inclusionrule.InclusionRule;
-import schemacrawler.tools.ai.tools.AbstractExecutableFunctionExecutor;
+import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
 
 public final class LintFunctionExecutor

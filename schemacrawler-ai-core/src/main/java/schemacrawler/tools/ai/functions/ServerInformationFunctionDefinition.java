@@ -8,8 +8,8 @@
 
 package schemacrawler.tools.ai.functions;
 
-import schemacrawler.tools.ai.tools.AbstractFunctionDefinition;
 import schemacrawler.tools.ai.tools.NoParameters;
+import schemacrawler.tools.ai.tools.base.AbstractFunctionDefinition;
 
 public final class ServerInformationFunctionDefinition
     extends AbstractFunctionDefinition<NoParameters> {
