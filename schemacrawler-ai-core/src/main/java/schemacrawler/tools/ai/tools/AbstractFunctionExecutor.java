@@ -11,30 +11,14 @@ package schemacrawler.tools.ai.tools;
 import static java.util.Objects.requireNonNull;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import java.util.UUID;
 import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     extends BaseCommand<P, FunctionReturn> implements FunctionExecutor<P> {
 
-  private final PropertyName functionName;
-  private final UUID executorInstanceId;
-
   protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
-    this.functionName = functionName;
-    executorInstanceId = UUID.randomUUID();
-  }
-
-  @Override
-  public final String getDescription() {
-    return functionName.getDescription();
-  }
-
-  @Override
-  public final UUID getExecutorInstanceId() {
-    return executorInstanceId;
   }
 
   @Override
@@ -48,6 +32,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
         "function %s(%s)%n\"%s\"",
         command.getName(),
         new KebabCaseStrategy().translate(commandOptions.getClass().getSimpleName()),
-        getDescription());
+        command.getDescription());
   }
 }
