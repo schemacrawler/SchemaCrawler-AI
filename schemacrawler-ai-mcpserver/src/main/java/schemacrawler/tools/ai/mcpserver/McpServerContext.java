@@ -167,7 +167,7 @@ final class McpServerContext {
    * @param value The transport string to check
    * @return McpServerTransportType Non-null value
    */
-  protected McpServerTransportType readTransport() {
+  private McpServerTransportType readTransport() {
     requireNonNull(envAccessor, "No environmental accessor provided");
 
     final McpServerTransportType defaultValue = McpServerTransportType.stdio;
