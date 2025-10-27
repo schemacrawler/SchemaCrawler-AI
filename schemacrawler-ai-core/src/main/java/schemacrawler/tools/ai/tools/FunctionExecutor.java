@@ -8,12 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
-import java.util.UUID;
 import schemacrawler.tools.executable.Command;
 
-public interface FunctionExecutor<P extends FunctionParameters> extends Command<P, FunctionReturn> {
-
-  String getDescription();
-
-  UUID getExecutorInstanceId();
-}
+public interface FunctionExecutor<P extends FunctionParameters>
+    extends Command<P, FunctionReturn> {}

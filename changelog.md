@@ -2,8 +2,14 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v17.1.1-2"></a>
-## Release 16.28.2-2 - 2025-09-29
+<a name="v17.1.3-1"></a>
+## Release 17.1.3-1 - 2025-09-29
+
+- Build against latest SchemaCrawler version
+
+
+<a name="16.29.1-1"></a>
+## Release 16.29.1-1 - 2025-09-29
 
 - Remove "aichat" command
 

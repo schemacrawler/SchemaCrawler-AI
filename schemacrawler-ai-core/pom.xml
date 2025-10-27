@@ -7,7 +7,7 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-ai-parent</artifactId>
-    <version>17.1.1-1</version>
+    <version>17.1.3-1</version>
     <relativePath>../schemacrawler-ai-parent</relativePath>
   </parent>
   <artifactId>schemacrawler-ai-core</artifactId>
@@ -50,14 +50,8 @@
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-api</artifactId>
-      <type>test-jar</type>
-      <scope>test</scope>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-tools</artifactId>
-      <type>test-jar</type>
+      <artifactId>schemacrawler-test-utility</artifactId>
+      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>

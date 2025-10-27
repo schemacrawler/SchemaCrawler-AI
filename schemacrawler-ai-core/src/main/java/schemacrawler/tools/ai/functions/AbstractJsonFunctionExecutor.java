@@ -9,17 +9,21 @@
 package schemacrawler.tools.ai.functions;
 
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.tools.AbstractSchemaCrawlerFunctionExecutor;
+import schemacrawler.tools.ai.tools.AbstractFunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
-    extends AbstractSchemaCrawlerFunctionExecutor<P> {
+    extends AbstractFunctionExecutor<P> {
 
   protected AbstractJsonFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
+
+  @Override
+  public abstract JsonFunctionReturn call() throws Exception;
 
   protected final void refilterCatalog() {
     final SchemaCrawlerOptions options = createSchemaCrawlerOptions();

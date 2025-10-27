@@ -23,7 +23,6 @@ import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters.Routi
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
-import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
@@ -35,7 +34,7 @@ public final class DescribeRoutinesFunctionExecutor
   }
 
   @Override
-  public FunctionReturn call() throws Exception {
+  public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
     final Collection<AdditionalRoutineDetails> routineDetails = getRoutineDetails();

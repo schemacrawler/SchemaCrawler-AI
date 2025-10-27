@@ -24,7 +24,6 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
-import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import us.fatehi.utility.property.PropertyName;
 
@@ -36,7 +35,7 @@ public final class ListFunctionExecutor
   }
 
   @Override
-  public FunctionReturn call() throws Exception {
+  public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
     final Collection<DatabaseObject> databaseObjects = new ArrayList<>();

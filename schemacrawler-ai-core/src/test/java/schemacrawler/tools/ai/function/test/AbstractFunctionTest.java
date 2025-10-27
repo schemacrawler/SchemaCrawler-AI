@@ -18,14 +18,14 @@ import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaInfoLevelBuilder;
-import schemacrawler.test.utility.ResolveTestContext;
-import schemacrawler.test.utility.WithSystemProperty;
-import schemacrawler.test.utility.WithTestDatabase;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.test.utility.extensions.UsingTestDatabase;
+import us.fatehi.test.utility.extensions.WithSystemProperty;
 import us.fatehi.utility.datasource.ConnectionDatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-@WithTestDatabase
+@UsingTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractFunctionTest {
