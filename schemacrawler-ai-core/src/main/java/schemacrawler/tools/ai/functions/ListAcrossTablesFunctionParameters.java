@@ -17,7 +17,7 @@ import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
-import schemacrawler.tools.ai.utility.JsonUtility;
+import schemacrawler.tools.ai.tools.base.ParameterUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record ListAcrossTablesFunctionParameters(
@@ -80,7 +80,7 @@ public record ListAcrossTablesFunctionParameters(
 
   @Override
   public String toString() {
-    return JsonUtility.parametersToString(this);
+    return ParameterUtility.parametersToString(this);
   }
 
   @JsonIgnore
