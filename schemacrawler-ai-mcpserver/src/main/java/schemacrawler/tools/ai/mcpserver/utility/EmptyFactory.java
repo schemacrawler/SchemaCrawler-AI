@@ -10,9 +10,11 @@ package schemacrawler.tools.ai.mcpserver.utility;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
+import java.sql.DriverManager;
 import schemacrawler.schema.Catalog;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-public class CatalogFactory {
+public class EmptyFactory {
 
   public static Catalog createEmptyCatalog(final Exception e) {
     final String baseErrorMessage =
@@ -49,5 +51,29 @@ public class CatalogFactory {
     return (Catalog)
         Proxy.newProxyInstance(
             Catalog.class.getClassLoader(), new Class<?>[] {Catalog.class}, handler);
+  }
+
+  public static DatabaseConnectionSource createEmptyDatabaseConnectionSource() {
+
+    final InvocationHandler handler =
+        (proxy, method, args) -> {
+          switch (method.getName()) {
+            case "get":
+              return DriverManager.getConnection("jdbc:hsqldb::memory:");
+            case "releaseConnection":
+              return true;
+            case "close":
+            case "setFirstConnectionInitializer":
+              return null; // No-op
+            default:
+              throw new UnsupportedOperationException("Method not supported: " + method.getName());
+          }
+        };
+
+    return (DatabaseConnectionSource)
+        Proxy.newProxyInstance(
+            DatabaseConnectionSource.class.getClassLoader(),
+            new Class<?>[] {DatabaseConnectionSource.class},
+            handler);
   }
 }

@@ -16,7 +16,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
-import schemacrawler.tools.ai.mcpserver.utility.CatalogFactory;
+import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
@@ -48,7 +48,7 @@ public class McpServerInitializer
         throw e;
       }
       isInErrorState = true;
-      connectionSource = new EmptyDatabaseConnectionSource();
+      connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
     }
     this.connectionSource = connectionSource;
     this.isInErrorState = isInErrorState;
@@ -70,7 +70,7 @@ public class McpServerInitializer
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
       }
-      catalog = CatalogFactory.createEmptyCatalog(e);
+      catalog = EmptyFactory.createEmptyCatalog(e);
       isInErrorState = true;
     }
     this.catalog = catalog;
@@ -84,7 +84,7 @@ public class McpServerInitializer
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
       }
-      connectionSource = new EmptyDatabaseConnectionSource();
+      connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
     }
     this.connectionSource = connectionSource;
   }
