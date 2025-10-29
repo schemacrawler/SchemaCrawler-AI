@@ -1,6 +1,6 @@
 module us.fatehi.schemacrawler.ai_core {
   // Dependencies
-  requires us.fatehi.schemacrawler.schemacrawler;
+  requires transitive us.fatehi.schemacrawler.schemacrawler;
   requires us.fatehi.schemacrawler.scripting;
   requires us.fatehi.schemacrawler.offline;
   requires us.fatehi.schemacrawler.lint;
@@ -8,7 +8,7 @@ module us.fatehi.schemacrawler.ai_core {
   requires java.sql;
   requires com.fasterxml.jackson.module.jsonSchema;
   requires com.fasterxml.jackson.core;
-  requires com.fasterxml.jackson.databind;
+  requires transitive com.fasterxml.jackson.databind;
 
   // Export only the public API packages
   exports schemacrawler.tools.ai.tools;

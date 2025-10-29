@@ -25,6 +25,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListFunctionExecutor

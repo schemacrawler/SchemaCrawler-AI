@@ -6,17 +6,20 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.tools;
+package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
+import com.fasterxml.jackson.databind.node.ObjectNode;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionParameters;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
 
-  private String toString;
+  private JsonNode definition;
 
   @JsonIgnore
   @Override
@@ -32,26 +35,18 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
 
   @Override
   public String toString() {
-    buildToString();
-    return toString;
+    if (definition == null) {
+      definition = buildDefinition();
+    }
+    return definition.toPrettyString();
   }
 
-  private void buildToString() {
-    if (toString != null) {
-      return;
-    }
+  private JsonNode buildDefinition() {
+    final ObjectNode objectNode = mapper.createObjectNode();
 
-    String parameters;
-    try {
-      final FunctionParameters parametersObject =
-          getParametersClass().getDeclaredConstructor().newInstance();
-      parameters = mapper.writeValueAsString(parametersObject);
-    } catch (final Exception e) {
-      parameters =
-          new KebabCaseStrategy()
-              .translate(getParametersClass().getSimpleName())
-              .replace("-function-parameters", "");
-    }
-    toString = String.format("function %s%n\"%s\"%n%s", getName(), getDescription(), parameters);
+    objectNode.put("name", getName());
+    objectNode.put("description", getDescription());
+
+    return objectNode;
   }
 }

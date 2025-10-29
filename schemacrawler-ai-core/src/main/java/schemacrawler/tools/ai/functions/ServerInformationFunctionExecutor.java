@@ -18,6 +18,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
+import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.Property;
 import us.fatehi.utility.property.PropertyName;
 

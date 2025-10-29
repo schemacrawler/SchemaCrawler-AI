@@ -6,10 +6,9 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.functions;
+package schemacrawler.tools.ai.tools.base;
 
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.tools.AbstractFunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.utility.MetaDataUtility;

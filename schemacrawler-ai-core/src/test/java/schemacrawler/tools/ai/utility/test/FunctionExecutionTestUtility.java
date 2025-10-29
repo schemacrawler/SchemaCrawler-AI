@@ -13,7 +13,6 @@ import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
-import java.io.IOException;
 import java.sql.Connection;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -32,7 +31,7 @@ public class FunctionExecutionTestUtility {
       final Catalog catalog,
       final Connection connection,
       final boolean hasResults)
-      throws Exception, IOException {
+      throws Exception {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       final FunctionExecutor<P> executor = functionDefinition.newExecutor();

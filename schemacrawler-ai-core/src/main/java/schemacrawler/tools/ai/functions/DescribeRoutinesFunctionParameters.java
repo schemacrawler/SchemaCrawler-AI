@@ -18,7 +18,7 @@ import java.util.Collection;
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
-import schemacrawler.tools.ai.utility.JsonUtility;
+import schemacrawler.tools.ai.tools.base.ParameterUtility;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 public record DescribeRoutinesFunctionParameters(
@@ -72,7 +72,7 @@ public record DescribeRoutinesFunctionParameters(
 
   @Override
   public String toString() {
-    return JsonUtility.parametersToString(this);
+    return ParameterUtility.parametersToString(this);
   }
 
   @JsonIgnore

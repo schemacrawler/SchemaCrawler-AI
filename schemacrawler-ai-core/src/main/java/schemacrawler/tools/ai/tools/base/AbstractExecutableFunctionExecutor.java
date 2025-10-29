@@ -6,21 +6,25 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.tools;
+package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnType;
+import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;

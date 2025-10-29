@@ -30,7 +30,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
 
   private static final Logger LOGGER = Logger.getLogger(FunctionCallback.class.getCanonicalName());
 
-  private FunctionDefinition<P> functionDefinition;
+  private final FunctionDefinition<P> functionDefinition;
   private final Catalog catalog;
 
   /**

@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.tools;
+package schemacrawler.tools.ai.tools.base;
 
 import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
@@ -16,6 +16,9 @@ import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.tools.ai.tools.FunctionExecutor;
+import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.executable.BaseCommand;
 import us.fatehi.utility.property.PropertyName;
 
