@@ -13,7 +13,12 @@ import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.nio.file.Path;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Objects;
+import java.util.Set;
 import java.util.logging.Level;
+import java.util.stream.Collectors;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -31,6 +36,12 @@ import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
 
 /** Inner class that handles the MCP server setup. */
 final class McpServerContext {
+
+  private static final String EXCLUDE_TOOLS = "SCHCRWLR_EXCLUDE_TOOLS";
+  private static final String INFO_LEVEL = "SCHCRWLR_INFO_LEVEL";
+  private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
+  private static final String MCP_SERVER_TRANSPORT = "SCHCRWLR_MCP_SERVER_TRANSPORT";
+  private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
   private final EnvironmentVariableAccessor envAccessor;
   private final McpServerTransportType transport;
@@ -57,8 +68,7 @@ final class McpServerContext {
   }
 
   protected DatabaseConnectionSource buildCatalogDatabaseConnectionSource() {
-    final String offlineDatabasePathString =
-        trimToEmpty(envAccessor.getenv("SCHCRWLR_OFFLINE_DATABASE"));
+    final String offlineDatabasePathString = trimToEmpty(envAccessor.getenv(OFFLINE_DATABASE));
     if (isBlank(offlineDatabasePathString)) {
       return buildOperationsDatabaseConnectionSource();
     }
@@ -80,11 +90,6 @@ final class McpServerContext {
     return databaseConnectionSource;
   }
 
-  /**
-   * Adds SchemaCrawler specific arguments to the arguments list.
-   *
-   * @param arguments The list of arguments to add to
-   */
   protected SchemaCrawlerOptions buildSchemaCrawlerOptions() {
     final InfoLevel infoLevel = readInfoLevel();
 
@@ -102,6 +107,18 @@ final class McpServerContext {
             .withLoadOptions(loadOptions)
             .withLimitOptions(limitOptions);
     return schemaCrawlerOptions;
+  }
+
+  protected Collection<String> excludeTools() {
+    final String input = trimToEmpty(envAccessor.getenv(EXCLUDE_TOOLS));
+    final Set<String> result =
+        Arrays.stream(input.split(","))
+            .filter(Objects::nonNull)
+            .map(String::strip)
+            .filter(s -> !s.isEmpty())
+            .collect(Collectors.toSet());
+
+    return result;
   }
 
   protected Catalog getCatalog() {
@@ -129,7 +146,7 @@ final class McpServerContext {
 
     final InfoLevel defaultValue = InfoLevel.standard;
     try {
-      final String value = envAccessor.getenv("SCHCRWLR_INFO_LEVEL");
+      final String value = envAccessor.getenv(INFO_LEVEL);
       InfoLevel infoLevel = InfoLevel.valueOfFromString(value);
       if (infoLevel == InfoLevel.unknown) {
         infoLevel = defaultValue;
@@ -150,7 +167,7 @@ final class McpServerContext {
 
     final Level defaultValue = Level.INFO;
 
-    final String value = envAccessor.getenv("SCHCRWLR_LOG_LEVEL");
+    final String value = envAccessor.getenv(LOG_LEVEL);
     if (isBlank(value)) {
       return defaultValue;
     }
@@ -172,7 +189,7 @@ final class McpServerContext {
 
     final McpServerTransportType defaultValue = McpServerTransportType.stdio;
 
-    final String value = envAccessor.getenv("SCHCRWLR_MCP_SERVER_TRANSPORT");
+    final String value = envAccessor.getenv(MCP_SERVER_TRANSPORT);
     if (isBlank(value)) {
       return defaultValue;
     }
