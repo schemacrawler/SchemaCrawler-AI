@@ -17,7 +17,7 @@ import java.util.logging.Logger;
 import schemacrawler.schemacrawler.exceptions.DatabaseAccessException;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-public class EmptyDatabaseConnectionSource implements DatabaseConnectionSource {
+class EmptyDatabaseConnectionSource implements DatabaseConnectionSource {
 
   private static final Logger LOGGER =
       Logger.getLogger(EmptyDatabaseConnectionSource.class.getName());

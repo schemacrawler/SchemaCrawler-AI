@@ -24,6 +24,7 @@ import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DescribeRoutinesFunctionExecutor

@@ -16,6 +16,7 @@ import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
+import schemacrawler.tools.ai.mcpserver.utility.CatalogFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
@@ -23,6 +24,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 public class McpServerInitializer
     implements ApplicationContextInitializer<GenericApplicationContext> {
 
+  private final boolean isInErrorState;
   private final Catalog catalog;
   private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
@@ -37,6 +39,7 @@ public class McpServerInitializer
       throw new SchemaCrawlerException("Unknown MCP Server transport type");
     }
 
+    boolean isInErrorState = false;
     DatabaseConnectionSource connectionSource;
     try {
       connectionSource = DatabaseConnectionSources.fromConnection(connection);
@@ -44,9 +47,11 @@ public class McpServerInitializer
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
       }
+      isInErrorState = true;
       connectionSource = new EmptyDatabaseConnectionSource();
     }
     this.connectionSource = connectionSource;
+    this.isInErrorState = isInErrorState;
 
     this.catalog = requireNonNull(catalog, "No catalog provided");
   }
@@ -57,6 +62,7 @@ public class McpServerInitializer
     mcpTransport = context.getMcpTransport();
 
     // Load the catalog with the catalog data source
+    boolean isInErrorState = false;
     Catalog catalog;
     try {
       catalog = context.getCatalog();
@@ -64,9 +70,11 @@ public class McpServerInitializer
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
       }
-      catalog = new EmptyCatalog(e);
+      catalog = CatalogFactory.createEmptyCatalog(e);
+      isInErrorState = true;
     }
     this.catalog = catalog;
+    this.isInErrorState = isInErrorState;
 
     // Once the catalog is loaded, use the operations database connection source
     DatabaseConnectionSource connectionSource;
@@ -88,7 +96,7 @@ public class McpServerInitializer
         "databaseConnectionSource", DatabaseConnectionSource.class, () -> connectionSource);
     context.registerAlias("databaseConnectionSource", "connectionSource");
     context.registerBean("catalog", Catalog.class, () -> catalog);
-    context.registerBean("isInErrorState", Boolean.class, () -> catalog instanceof EmptyCatalog);
+    context.registerBean("isInErrorState", Boolean.class, () -> isInErrorState);
     // Register services
     context.registerBean(
         "functionDefinitionRegistry",

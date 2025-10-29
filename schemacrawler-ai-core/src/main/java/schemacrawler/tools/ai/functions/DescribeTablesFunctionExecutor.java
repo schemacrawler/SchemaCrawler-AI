@@ -13,6 +13,7 @@ import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -23,6 +24,7 @@ import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
 import schemacrawler.tools.ai.model.CompactCatalogUtility;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DescribeTablesFunctionExecutor
@@ -62,7 +64,8 @@ public final class DescribeTablesFunctionExecutor
         LimitOptionsBuilder.builder()
             .includeSynonyms(new ExcludeAll())
             .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
+            .includeRoutines(new ExcludeAll())
+            .includeTables(new IncludeAll());
     final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);

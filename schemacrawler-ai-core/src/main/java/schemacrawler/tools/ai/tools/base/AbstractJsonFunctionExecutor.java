@@ -6,12 +6,11 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.functions;
+package schemacrawler.tools.ai.tools.base;
 
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
-import schemacrawler.tools.ai.tools.base.AbstractFunctionExecutor;
 import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
