@@ -8,9 +8,12 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.util.Collections.emptySet;
+import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
+import java.util.Collection;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.lang.NonNull;
@@ -28,11 +31,13 @@ public class McpServerInitializer
   private final Catalog catalog;
   private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
+  private final Collection<String> excludeTools;
 
   public McpServerInitializer(
       final Catalog catalog,
       final Connection connection,
-      final McpServerTransportType mcpTransport) {
+      final McpServerTransportType mcpTransport,
+      final Collection<String> excludeTools) {
 
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
@@ -54,6 +59,12 @@ public class McpServerInitializer
     this.isInErrorState = isInErrorState;
 
     this.catalog = requireNonNull(catalog, "No catalog provided");
+
+    if (excludeTools == null) {
+      this.excludeTools = emptySet();
+    } else {
+      this.excludeTools = unmodifiableCollection(excludeTools);
+    }
   }
 
   public McpServerInitializer(final McpServerContext context) {
@@ -87,6 +98,8 @@ public class McpServerInitializer
       connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
     }
     this.connectionSource = connectionSource;
+
+    excludeTools = context.excludeTools();
   }
 
   @Override
@@ -102,5 +115,6 @@ public class McpServerInitializer
         "functionDefinitionRegistry",
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
+    context.registerBean("excludeTools", Collection.class, () -> excludeTools);
   }
 }

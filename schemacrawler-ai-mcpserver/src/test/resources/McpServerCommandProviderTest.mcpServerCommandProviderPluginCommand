@@ -5,4 +5,7 @@ command:mcpserver
 transport
 Type of MCP server to start
 
+exclude-tools
+Comma-separated list of tools to exclude
+
 Add command options to the `execute` command in the SchemaCrawler Shell

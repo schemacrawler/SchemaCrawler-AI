@@ -13,12 +13,8 @@ import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.Objects;
-import java.util.Set;
 import java.util.logging.Level;
-import java.util.stream.Collectors;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -27,6 +23,7 @@ import schemacrawler.schemacrawler.LoadOptions;
 import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.tools.ai.mcpserver.utility.CollectionsUtility;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
@@ -110,15 +107,7 @@ final class McpServerContext {
   }
 
   protected Collection<String> excludeTools() {
-    final String input = trimToEmpty(envAccessor.getenv(EXCLUDE_TOOLS));
-    final Set<String> result =
-        Arrays.stream(input.split(","))
-            .filter(Objects::nonNull)
-            .map(String::strip)
-            .filter(s -> !s.isEmpty())
-            .collect(Collectors.toSet());
-
-    return result;
+    return CollectionsUtility.setOfStrings(envAccessor.getenv(EXCLUDE_TOOLS));
   }
 
   protected Catalog getCatalog() {

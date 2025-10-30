@@ -1,1 +1,1 @@
-PluginCommand[name='mcpserver', options=[PluginCommandOption[name='transport', valueClass=schemacrawler.tools.ai.mcpserver.McpServerTransportType]]]
+PluginCommand[name='mcpserver', options=[PluginCommandOption[name='transport', valueClass=schemacrawler.tools.ai.mcpserver.McpServerTransportType], PluginCommandOption[name='exclude-tools', valueClass=java.lang.String]]]

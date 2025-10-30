@@ -9,8 +9,12 @@
 package schemacrawler.tools.command.mcpserver;
 
 import static schemacrawler.tools.ai.mcpserver.McpServerTransportType.unknown;
+
+import java.util.Collection;
+import java.util.Collections;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
+import schemacrawler.tools.ai.mcpserver.utility.CollectionsUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
 
@@ -23,17 +27,20 @@ public final class McpServerCommandOptionsBuilder
   }
 
   private McpServerTransportType mcpTransport;
+  private Collection<String> excludeTools;
 
   private McpServerCommandOptionsBuilder() {
     // MCP Server transport needs to be explicitly specified,
     // so default to known
     mcpTransport = unknown;
+    excludeTools = Collections.emptySet();
   }
 
   @Override
   public McpServerCommandOptionsBuilder fromConfig(final Config config) {
     if (config != null) {
       mcpTransport = config.getEnumValue("transport", unknown);
+      excludeTools = CollectionsUtility.setOfStrings(config.getStringValue("exclude-tools", ""));
     }
 
     return this;
@@ -43,18 +50,19 @@ public final class McpServerCommandOptionsBuilder
   public McpServerCommandOptionsBuilder fromOptions(final McpServerCommandOptions options) {
     if (options != null) {
       mcpTransport = options.mcpTransport();
+      excludeTools = options.excludeTools();
     }
     return this;
   }
 
   @Override
   public Config toConfig() {
-    throw new UnsupportedOperationException("Cannot load transport from config file");
+    throw new UnsupportedOperationException("Cannot load MCP Server options from config file");
   }
 
   @Override
   public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions(mcpTransport);
+    return new McpServerCommandOptions(mcpTransport, excludeTools);
   }
 
   public McpServerCommandOptionsBuilder withMcpTransport(

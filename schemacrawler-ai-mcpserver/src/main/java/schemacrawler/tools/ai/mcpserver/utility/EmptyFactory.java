@@ -12,8 +12,10 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
 import java.sql.DriverManager;
 import schemacrawler.schema.Catalog;
+import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
+@UtilityMarker
 public class EmptyFactory {
 
   public static Catalog createEmptyCatalog(final Exception e) {
