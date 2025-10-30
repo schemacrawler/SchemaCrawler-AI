@@ -15,6 +15,8 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -57,6 +59,11 @@ public class SchemaCrawlerMCPServerTest {
     @Bean
     boolean isInErrorState() {
       return false;
+    }
+
+    @Bean
+    Collection<String> excludeTools() {
+      return Collections.emptyList();
     }
 
     @Bean

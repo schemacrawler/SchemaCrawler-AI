@@ -15,6 +15,7 @@ import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -42,6 +43,7 @@ public class ToolProvider {
   @Autowired private ServerHealth serverHealth;
   @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
   @Autowired private ToolHelper toolHelper;
+  @Autowired private Collection<String> excludeTools;
 
   @McpTool(
       name = "mcp-server-health",
@@ -81,9 +83,14 @@ public class ToolProvider {
     final List<McpServerFeatures.SyncToolSpecification> tools = new ArrayList<>();
     for (final FunctionDefinition<?> functionDefinition :
         functionDefinitionRegistry.getFunctionDefinitions()) {
-      LOGGER.log(
-          Level.INFO,
-          new StringFormat("Adding callback for:%n%s", functionDefinition.getFunctionName()));
+      final String functionName = functionDefinition.getFunctionName().getName();
+      if (excludeTools == null || excludeTools.contains(functionName)) {
+        LOGGER.log(Level.WARNING, new StringFormat("Excluding tool <%s>", functionName));
+        continue;
+      }
+      LOGGER.log(Level.INFO, new StringFormat("Adding callback for <%s>", functionName));
+      LOGGER.log(Level.FINE, new StringFormat("%s", functionDefinition.getFunctionName()));
+
       final McpServerFeatures.SyncToolSpecification toolSpecification =
           toolHelper.toSyncToolSpecification(functionDefinition);
       tools.add(toolSpecification);
