@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import java.sql.Connection;
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -51,9 +52,10 @@ public class McpServerMain {
   public static void startMcpServer(
       final Catalog catalog,
       final Connection connection,
-      final McpServerTransportType mcpTransport) {
+      final McpServerTransportType mcpTransport,
+      final Collection<String> excludeTools) {
     new SpringApplicationBuilder(McpServer.class)
-        .initializers(new McpServerInitializer(catalog, connection, mcpTransport))
+        .initializers(new McpServerInitializer(catalog, connection, mcpTransport, excludeTools))
         .profiles(mcpTransport.name())
         .run();
     LOGGER.log(

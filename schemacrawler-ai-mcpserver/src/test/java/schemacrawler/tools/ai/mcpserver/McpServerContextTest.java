@@ -31,6 +31,59 @@ public class McpServerContextTest {
   }
 
   @Test
+  @DisplayName("Should build SchemaCrawler options when context is created")
+  void shouldBuildSchemaCrawlerOptions() {
+    // Arrange
+    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    context = new McpServerContext(envAccessor);
+
+    // Act
+    final SchemaCrawlerOptions options = context.getSchemaCrawlerOptions();
+
+    // Assert
+    assertThat(options, notNullValue());
+    assertThat(options.loadOptions(), notNullValue());
+    assertThat(options.limitOptions(), notNullValue());
+    assertThat(options.loadOptions().schemaInfoLevel().getTag(), is("detailed"));
+  }
+
+  @Test
+  @DisplayName("Should handle blanks, spaces, and duplicates in exclude tools")
+  void shouldHandleBlanksSpacesAndDuplicatesInExcludeTools() {
+    // Arrange
+    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "  toolA , , toolB,toolA ,  ,ToolA  ");
+    context = new McpServerContext(envAccessor);
+
+    // Act
+    final java.util.Collection<String> excluded = context.excludeTools();
+
+    // Assert
+    // "toolA" appears twice but should be included once due to Set semantics
+    assertThat(excluded.contains("toolA"), is(true));
+    assertThat(excluded.contains("toolB"), is(true));
+    // "ToolA" (different case) is a different entry because matching is case-sensitive
+    assertThat(excluded.contains("ToolA"), is(true));
+    assertThat(excluded.size(), is(3));
+  }
+
+  @Test
+  @DisplayName("Should parse comma-separated exclude tools list")
+  void shouldParseExcludeToolsList() {
+    // Arrange
+    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "tool1,tool2,tool3");
+    context = new McpServerContext(envAccessor);
+
+    // Act
+    final java.util.Collection<String> excluded = context.excludeTools();
+
+    // Assert
+    assertThat(excluded.contains("tool1"), is(true));
+    assertThat(excluded.contains("tool2"), is(true));
+    assertThat(excluded.contains("tool3"), is(true));
+    assertThat(excluded.size(), is(3));
+  }
+
+  @Test
   @DisplayName("Should read info level with custom values when environment variables are set")
   void shouldReadInfoLevelWithCustomValues() {
     // Arrange
@@ -59,20 +112,25 @@ public class McpServerContextTest {
   }
 
   @Test
-  @DisplayName("Should build SchemaCrawler options when context is created")
-  void shouldBuildSchemaCrawlerOptions() {
-    // Arrange
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+  @DisplayName("Should return empty set when SCHCRWLR_EXCLUDE_TOOLS is unset or empty")
+  void shouldReturnEmptySetWhenExcludeToolsUnsetOrEmpty() {
+    // Unset (null)
+    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", null);
     context = new McpServerContext(envAccessor);
+    java.util.Collection<String> excluded = context.excludeTools();
+    assertThat(excluded.size(), is(0));
 
-    // Act
-    final SchemaCrawlerOptions options = context.getSchemaCrawlerOptions();
+    // Empty string
+    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "");
+    context = new McpServerContext(envAccessor);
+    excluded = context.excludeTools();
+    assertThat(excluded.size(), is(0));
 
-    // Assert
-    assertThat(options, notNullValue());
-    assertThat(options.loadOptions(), notNullValue());
-    assertThat(options.limitOptions(), notNullValue());
-    assertThat(options.loadOptions().schemaInfoLevel().getTag(), is("detailed"));
+    // Only commas and spaces
+    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", ", , ,  ,");
+    context = new McpServerContext(envAccessor);
+    excluded = context.excludeTools();
+    assertThat(excluded.size(), is(0));
   }
 
   @Test

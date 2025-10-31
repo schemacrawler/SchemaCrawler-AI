@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.command.mcpserver;
 
+import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.mcpserver.McpServerMain;
@@ -35,7 +36,8 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
   @Override
   public void execute() {
     final McpServerTransportType mcpTransport = commandOptions.mcpTransport();
-    McpServerMain.startMcpServer(catalog, connection, mcpTransport);
+    final Collection<String> excludeTools = commandOptions.excludeTools();
+    McpServerMain.startMcpServer(catalog, connection, mcpTransport, excludeTools);
   }
 
   @Override

@@ -30,6 +30,8 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
     final PluginCommand pluginCommand = newPluginCommand(COMMAND);
     pluginCommand.addOption(
         "transport", McpServerTransportType.class, "Type of MCP server to start");
+    pluginCommand.addOption(
+        "exclude-tools", String.class, "Comma-separated list of tools to exclude");
     return pluginCommand;
   }
 
