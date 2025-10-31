@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.server.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
@@ -49,13 +50,18 @@ public class ToolProviderTest {
     }
 
     @Bean
-    boolean isInErrorState() {
-      return false;
+    Collection<String> excludeTools() {
+      return Collections.singleton("server-information");
     }
 
     @Bean
-    Collection<String> excludeTools() {
-      return Collections.emptyList();
+    FunctionDefinitionRegistry functionDefinitionRegistry() {
+      return FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    }
+
+    @Bean
+    boolean isInErrorState() {
+      return false;
     }
 
     @Bean
@@ -66,11 +72,6 @@ public class ToolProviderTest {
     @Bean
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);
-    }
-
-    @Bean
-    FunctionDefinitionRegistry functionDefinitionRegistry() {
-      return FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
     }
 
     @Bean
@@ -86,6 +87,13 @@ public class ToolProviderTest {
   @DisplayName("ToolProvider should return the right tools")
   public void testToolProvider() throws Exception {
     final List<SyncToolSpecification> schemaCrawlerTools = toolProvider.schemaCrawlerTools();
-    assertThat(schemaCrawlerTools.size(), is(7));
+    assertThat(schemaCrawlerTools.size(), is(6));
+
+    final List<String> actualToolNames =
+        schemaCrawlerTools.stream().map(function -> function.tool().name()).toList();
+    final String[] expectedToolNames = {
+      "table-sample", "lint", "describe-tables", "describe-routines", "list-across-tables", "list"
+    };
+    assertThat(actualToolNames, contains(expectedToolNames));
   }
 }
