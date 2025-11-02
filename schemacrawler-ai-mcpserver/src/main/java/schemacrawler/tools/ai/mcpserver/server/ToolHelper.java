@@ -53,10 +53,7 @@ public class ToolHelper {
       FunctionReturn functionReturn;
       try {
         final String arguments = mapper.writeValueAsString(request.arguments());
-        log(
-            exchange,
-            String.format(
-                "Executing:%n%s", functionCallback.toCallObject(arguments).toPrettyString()));
+        log(exchange, "Executing", functionCallback.toCallObject(arguments));
         final Connection connection = ConnectionService.getConnection();
         functionReturn = functionCallback.execute(arguments, connection);
       } catch (final Exception e) {

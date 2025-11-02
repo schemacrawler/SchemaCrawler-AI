@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -49,7 +50,7 @@ public class ToolProvider {
       name = "mcp-server-health",
       description = "Gets the SchemaCrawler AI MCP Server version and uptime status",
       annotations = @McpAnnotations(readOnlyHint = true, destructiveHint = false))
-  public String getSchemaCrawlerVersion(
+  public JsonNode getSchemaCrawlerVersion(
       final McpSyncServerExchange exchange,
       @McpArg(description = "MCP Client identification, if available.", required = false)
           final String clientId,
@@ -67,10 +68,10 @@ public class ToolProvider {
       if (clientInfo != null) {
         clientNode.putPOJO("client-info", clientInfo);
       }
-      log(exchange, objectNode.toPrettyString());
+      log(exchange, "MCP Server Health", objectNode);
     }
 
-    return objectNode.toString();
+    return objectNode;
   }
 
   /**
