@@ -8,8 +8,8 @@
 
 package schemacrawler.tools.ai.mcpserver.server.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
@@ -35,6 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HealthController;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -58,6 +59,11 @@ public class HealthControllerTest {
     }
 
     @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
+    }
+
+    @Bean
     boolean isInErrorState() {
       return false;
     }
@@ -71,22 +77,14 @@ public class HealthControllerTest {
     ServerHealth serverHealth() {
       final ServerHealth serverHealth = mock(ServerHealth.class);
       when(serverHealth.currentState()).thenReturn(currentState());
-      when(serverHealth.currentStateString())
-          .thenReturn(
-              "SchemaCrawler AI MCP Server Test\n"
-                  + "in-error-state=false; server-uptime=PT0S; transport=stdio");
-
       return serverHealth;
     }
   }
 
-  static Map<String, String> currentState() {
-    final Map<String, String> state = new HashMap<>();
-    state.put("_server", "SchemaCrawler AI MCP Server Test");
-    state.put("current-timestamp", "2025-01-01T00:00:00");
-    state.put("in-error-state", "false");
-    state.put("server-uptime", "PT0S");
-    state.put("transport", "stdio");
+  static Map<String, Object> currentState() {
+    final Map<String, Object> state = new HashMap<>();
+    state.put("_server", "Test Server");
+    state.put("some-junk", true);
     return state;
   }
 
@@ -103,10 +101,12 @@ public class HealthControllerTest {
             .andExpect(content().contentTypeCompatibleWith(MediaType.APPLICATION_JSON))
             .andReturn();
 
+    // -- Validate the message
     final String currentStatusJson = mvcResult.getResponse().getContentAsString();
     final JsonNode node = mapper.readTree(currentStatusJson);
-    final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
     assertThat("Parsed JSON should not be null", node, notNullValue());
-    assertThat("Current state should match", currentStateMap, is(currentState()));
+
+    final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
+    assertThat("Current state should match", currentStateMap, equalTo(currentState()));
   }
 }

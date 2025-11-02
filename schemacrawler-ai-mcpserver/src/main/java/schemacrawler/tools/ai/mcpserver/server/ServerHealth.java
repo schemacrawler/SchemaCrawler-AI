@@ -17,6 +17,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 
 @Component
@@ -29,23 +30,18 @@ public class ServerHealth {
   private String serverVersion;
 
   @Autowired private boolean isInErrorState;
-
   @Autowired private McpServerTransportType mcpTransport;
+  @Autowired private ExcludeTools excludeTools;
 
-  public Map<String, String> currentState() {
-    final Map<String, String> currentState = new HashMap<>();
+  public Map<String, Object> currentState() {
+    final Map<String, Object> currentState = new HashMap<>();
     currentState.put("_server", getServerName());
     currentState.put("current-timestamp", String.valueOf(ZonedDateTime.now(ZoneOffset.UTC)));
-    currentState.put("in-error-state", Boolean.toString(isInErrorState));
+    currentState.put("in-error-state", isInErrorState);
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
+    currentState.put("exclude-tools", excludeTools.excludeTools());
     return currentState;
-  }
-
-  public String currentStateString() {
-    return String.format(
-        "%s%nin-error-state=%s; server-uptime=%s; transport=%s",
-        getServerName(), isInErrorState, getServerUptime(), mcpTransport);
   }
 
   public McpServerTransportType getMcpTransport() {

@@ -35,13 +35,13 @@ public class HeartbeatLogger {
 
   private final Supplier<String> heartbeatMessage =
       () -> {
-        final Map<String, String> heartbeatMessage = serverHealth.currentState();
+        final Map<String, Object> heartbeatMessage = serverHealth.currentState();
         try {
           return "\n"
               + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(heartbeatMessage);
         } catch (final JsonProcessingException e) {
           LOGGER.log(Level.WARNING, "Could not convert server state to JSON", e);
-          return serverHealth.currentStateString();
+          return heartbeatMessage.toString();
         }
       };
 

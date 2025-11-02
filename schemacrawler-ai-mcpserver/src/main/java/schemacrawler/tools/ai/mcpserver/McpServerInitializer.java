@@ -8,8 +8,6 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import static java.util.Collections.emptySet;
-import static java.util.Collections.unmodifiableCollection;
 import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
@@ -31,7 +29,7 @@ public class McpServerInitializer
   private final Catalog catalog;
   private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
-  private final Collection<String> excludeTools;
+  private final ExcludeTools excludeTools;
 
   public McpServerInitializer(
       final Catalog catalog,
@@ -61,9 +59,9 @@ public class McpServerInitializer
     this.catalog = requireNonNull(catalog, "No catalog provided");
 
     if (excludeTools == null) {
-      this.excludeTools = emptySet();
+      this.excludeTools = new ExcludeTools(null);
     } else {
-      this.excludeTools = unmodifiableCollection(excludeTools);
+      this.excludeTools = new ExcludeTools(excludeTools);
     }
   }
 
@@ -99,7 +97,7 @@ public class McpServerInitializer
     }
     this.connectionSource = connectionSource;
 
-    excludeTools = context.excludeTools();
+    excludeTools = new ExcludeTools(context.excludeTools());
   }
 
   @Override
@@ -115,6 +113,6 @@ public class McpServerInitializer
         "functionDefinitionRegistry",
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
-    context.registerBean("excludeTools", Collection.class, () -> excludeTools);
+    context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
   }
 }

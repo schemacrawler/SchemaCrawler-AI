@@ -15,7 +15,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -31,6 +30,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -62,8 +62,8 @@ public class SchemaCrawlerMCPServerTest {
     }
 
     @Bean
-    Collection<String> excludeTools() {
-      return Collections.emptyList();
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
     }
 
     @Bean
@@ -90,17 +90,14 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeEach
   public void _stubServerHealth() {
-    final Map<String, String> state = new HashMap<>();
+    final Map<String, Object> state = new HashMap<>();
     state.put("_server", "SchemaCrawler AI MCP Server Test");
     state.put("current-timestamp", "2025-01-01T00:00:00");
-    state.put("in-error-state", "false");
+    state.put("in-error-state", false);
     state.put("server-uptime", "PT0S");
     state.put("transport", "stdio");
+    state.put("exclude-tools", Collections.emptySet());
     when(serverHealth.currentState()).thenReturn(state);
-    when(serverHealth.currentStateString())
-        .thenReturn(
-            "SchemaCrawler AI MCP Server Test\n"
-                + "in-error-state=false; server-uptime=PT0S; transport=stdio");
   }
 
   @Test

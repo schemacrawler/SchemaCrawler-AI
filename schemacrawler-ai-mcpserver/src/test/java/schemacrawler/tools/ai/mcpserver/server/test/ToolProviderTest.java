@@ -14,9 +14,8 @@ import static org.hamcrest.Matchers.contains;
 import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -26,6 +25,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
@@ -50,8 +50,8 @@ public class ToolProviderTest {
     }
 
     @Bean
-    Collection<String> excludeTools() {
-      return Collections.singleton("server-information");
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(Set.of("server-information"));
     }
 
     @Bean

@@ -24,7 +24,7 @@ public class HealthController {
   @GetMapping(
       value = {"/", "/health"},
       produces = APPLICATION_JSON_VALUE)
-  public Map<String, String> healthCheck() {
+  public Map<String, Object> healthCheck() {
     return serverHealth.currentState();
   }
 }

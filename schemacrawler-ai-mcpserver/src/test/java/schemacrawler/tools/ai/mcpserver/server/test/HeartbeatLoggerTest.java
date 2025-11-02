@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.mcpserver.server.test;
 
+import static org.hamcrest.CoreMatchers.equalTo;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
@@ -34,6 +35,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HeartbeatLogger;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -57,6 +59,11 @@ public class HeartbeatLoggerTest {
     }
 
     @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
+    }
+
+    @Bean
     boolean isInErrorState() {
       return false;
     }
@@ -70,24 +77,14 @@ public class HeartbeatLoggerTest {
     ServerHealth serverHealth() {
       final ServerHealth serverHealth = mock(ServerHealth.class);
       when(serverHealth.currentState()).thenReturn(currentState());
-      when(serverHealth.currentStateString())
-          .thenReturn(
-              """
-              SchemaCrawler AI MCP Server Test
-              in-error-state=false; server-uptime=PT0S; transport=stdio
-              """);
-
       return serverHealth;
     }
   }
 
-  static Map<String, String> currentState() {
-    final Map<String, String> state = new HashMap<>();
-    state.put("_server", "SchemaCrawler AI MCP Server Test");
-    state.put("current-timestamp", "2025-01-01T00:00:00");
-    state.put("in-error-state", "false");
-    state.put("server-uptime", "PT0S");
-    state.put("transport", "stdio");
+  static Map<String, Object> currentState() {
+    final Map<String, Object> state = new HashMap<>();
+    state.put("_server", "Test Server");
+    state.put("some-junk", true);
     return state;
   }
 
@@ -126,11 +123,14 @@ public class HeartbeatLoggerTest {
 
       // Assert
       assertThat("A heartbeat message should be logged", messages.isEmpty(), is(false));
+
+      // -- Validate the message
       final String currentStatusJson = messages.get(messages.size() - 1);
       final JsonNode node = mapper.readTree(currentStatusJson);
-      final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
       assertThat("Parsed JSON should not be null", node, notNullValue());
-      assertThat("Current state should match", currentStateMap, is(currentState()));
+
+      final Map<String, Object> currentStateMap = mapper.convertValue(node, HashMap.class);
+      assertThat("Current state should match", currentStateMap, equalTo(currentState()));
     } finally {
       logger.removeHandler(handler);
       logger.setLevel(previousLevel);
