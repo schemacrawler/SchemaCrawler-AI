@@ -20,6 +20,13 @@
       },
       "environmentVariables": [
         {
+          "description": "MCP Server transport type - valid values are 'http' or 'stdio', defaulting to 'stdio'.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "SCHCRWLR_MCP_SERVER_TRANSPORT"
+        },
+        {
           "description": "Database user name. Can be optional depending on the database connection type.",
           "isRequired": false,
           "format": "string",
@@ -81,6 +88,13 @@
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_LOG_LEVEL"
+        },
+        {
+          "description": "MCP Server tools to exclude, as a comma-separated list.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "SCHCRWLR_EXCLUDE_TOOLS"
         }
       ]
     }
