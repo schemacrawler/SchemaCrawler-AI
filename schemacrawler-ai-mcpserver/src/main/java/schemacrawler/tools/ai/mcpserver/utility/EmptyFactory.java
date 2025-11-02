@@ -67,6 +67,8 @@ public class EmptyFactory {
             case "close":
             case "setFirstConnectionInitializer":
               return null; // No-op
+            case "toString":
+              return "empty-data-source"; // For debugging
             default:
               throw new UnsupportedOperationException("Method not supported: " + method.getName());
           }

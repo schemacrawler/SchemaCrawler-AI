@@ -33,14 +33,14 @@ public class ServerHealth {
   @Autowired private McpServerTransportType mcpTransport;
   @Autowired private ExcludeTools excludeTools;
 
-  public Map<String, String> currentState() {
-    final Map<String, String> currentState = new HashMap<>();
+  public Map<String, Object> currentState() {
+    final Map<String, Object> currentState = new HashMap<>();
     currentState.put("_server", getServerName());
     currentState.put("current-timestamp", String.valueOf(ZonedDateTime.now(ZoneOffset.UTC)));
-    currentState.put("in-error-state", Boolean.toString(isInErrorState));
+    currentState.put("in-error-state", isInErrorState);
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
-    currentState.put("exclude-tools", excludeTools.excludeTools().toString());
+    currentState.put("exclude-tools", excludeTools.excludeTools());
     return currentState;
   }
 

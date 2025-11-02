@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -89,13 +90,13 @@ public class SchemaCrawlerMCPServerTest {
 
   @BeforeEach
   public void _stubServerHealth() {
-    final Map<String, String> state = new HashMap<>();
+    final Map<String, Object> state = new HashMap<>();
     state.put("_server", "SchemaCrawler AI MCP Server Test");
     state.put("current-timestamp", "2025-01-01T00:00:00");
-    state.put("in-error-state", "false");
+    state.put("in-error-state", false);
     state.put("server-uptime", "PT0S");
     state.put("transport", "stdio");
-    state.put("exclude-tools", "[]");
+    state.put("exclude-tools", Collections.emptySet());
     when(serverHealth.currentState()).thenReturn(state);
   }
 

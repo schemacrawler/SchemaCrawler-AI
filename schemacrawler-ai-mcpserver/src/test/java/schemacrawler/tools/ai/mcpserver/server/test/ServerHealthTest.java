@@ -16,6 +16,7 @@ import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
 
 import java.time.Duration;
+import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -63,24 +64,31 @@ public class ServerHealthTest {
   @Test
   @DisplayName("ServerHealth.currentState should include expected keys and values")
   public void currentState_hasExpectedEntries() {
-    final Map<String, String> state = serverHealth.currentState();
+    final Map<String, Object> state = serverHealth.currentState();
 
     assertThat(state, is(notNullValue()));
     assertThat(
         state.keySet(),
-        hasItems("_server", "current-timestamp", "in-error-state", "server-uptime", "transport"));
+        hasItems(
+            "_server",
+            "current-timestamp",
+            "in-error-state",
+            "server-uptime",
+            "transport",
+            "exclude-tools"));
 
     assertThat(state.get("_server"), is("SchemaCrawler AI MCP Server TEST"));
-    assertThat(state.get("in-error-state"), is("false"));
+    assertThat(state.get("in-error-state"), is(false));
     assertThat(state.get("transport"), is("http"));
+    assertThat(state.get("exclude-tools"), is(Collections.emptySet()));
 
     // server-uptime should be a valid ISO-8601 duration (e.g., PT123S)
-    final String uptimeStr = state.get("server-uptime");
+    final String uptimeStr = String.valueOf(state.get("server-uptime"));
     assertThat(uptimeStr, not(emptyOrNullString()));
     // Will throw if invalid
     Duration.parse(uptimeStr);
 
-    final String timestamp = state.get("current-timestamp");
+    final String timestamp = String.valueOf(state.get("current-timestamp"));
     assertThat(timestamp, not(emptyOrNullString()));
   }
 }

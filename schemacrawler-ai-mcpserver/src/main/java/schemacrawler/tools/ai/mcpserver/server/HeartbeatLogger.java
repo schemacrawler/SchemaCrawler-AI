@@ -35,7 +35,7 @@ public class HeartbeatLogger {
 
   private final Supplier<String> heartbeatMessage =
       () -> {
-        final Map<String, String> heartbeatMessage = serverHealth.currentState();
+        final Map<String, Object> heartbeatMessage = serverHealth.currentState();
         try {
           return "\n"
               + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(heartbeatMessage);
