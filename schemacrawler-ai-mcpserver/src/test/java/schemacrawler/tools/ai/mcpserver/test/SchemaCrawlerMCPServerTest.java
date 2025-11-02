@@ -15,8 +15,6 @@ import static org.hamcrest.Matchers.nullValue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -62,8 +61,8 @@ public class SchemaCrawlerMCPServerTest {
     }
 
     @Bean
-    Collection<String> excludeTools() {
-      return Collections.emptyList();
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
     }
 
     @Bean
@@ -96,6 +95,7 @@ public class SchemaCrawlerMCPServerTest {
     state.put("in-error-state", "false");
     state.put("server-uptime", "PT0S");
     state.put("transport", "stdio");
+    state.put("exclude-tools", "[]");
     when(serverHealth.currentState()).thenReturn(state);
     when(serverHealth.currentStateString())
         .thenReturn(

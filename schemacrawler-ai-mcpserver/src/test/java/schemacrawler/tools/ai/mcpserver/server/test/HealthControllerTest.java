@@ -35,6 +35,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HealthController;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -55,6 +56,11 @@ public class HealthControllerTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
     }
 
     @Bean

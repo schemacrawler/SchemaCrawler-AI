@@ -14,6 +14,7 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.Set;
 import java.util.logging.Level;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
@@ -23,10 +24,10 @@ import schemacrawler.schemacrawler.LoadOptions;
 import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.ai.mcpserver.utility.CollectionsUtility;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import us.fatehi.utility.CollectionsUtility;
 import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
@@ -107,7 +108,7 @@ final class McpServerContext {
   }
 
   protected Collection<String> excludeTools() {
-    return CollectionsUtility.setOfStrings(envAccessor.getenv(EXCLUDE_TOOLS));
+    return Set.of(CollectionsUtility.splitList(envAccessor.getenv(EXCLUDE_TOOLS)));
   }
 
   protected Catalog getCatalog() {

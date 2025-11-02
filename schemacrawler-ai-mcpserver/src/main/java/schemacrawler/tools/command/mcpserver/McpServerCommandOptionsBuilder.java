@@ -12,11 +12,12 @@ import static schemacrawler.tools.ai.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Set;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
-import schemacrawler.tools.ai.mcpserver.utility.CollectionsUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigOptionsBuilder;
+import us.fatehi.utility.CollectionsUtility;
 
 public final class McpServerCommandOptionsBuilder
     implements OptionsBuilder<McpServerCommandOptionsBuilder, McpServerCommandOptions>,
@@ -40,7 +41,8 @@ public final class McpServerCommandOptionsBuilder
   public McpServerCommandOptionsBuilder fromConfig(final Config config) {
     if (config != null) {
       mcpTransport = config.getEnumValue("transport", unknown);
-      excludeTools = CollectionsUtility.setOfStrings(config.getStringValue("exclude-tools", ""));
+      excludeTools =
+          Set.of(CollectionsUtility.splitList(config.getStringValue("exclude-tools", "")));
     }
 
     return this;

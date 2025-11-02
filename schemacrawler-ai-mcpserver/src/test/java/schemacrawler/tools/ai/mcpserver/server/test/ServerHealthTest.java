@@ -27,6 +27,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 
@@ -45,6 +46,11 @@ public class ServerHealthTest {
     @Bean
     boolean isInErrorState() {
       return false;
+    }
+
+    @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
     }
 
     @Bean

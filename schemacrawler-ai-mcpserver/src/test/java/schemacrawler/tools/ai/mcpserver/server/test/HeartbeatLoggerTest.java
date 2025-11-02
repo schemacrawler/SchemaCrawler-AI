@@ -34,6 +34,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HeartbeatLogger;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -54,6 +55,11 @@ public class HeartbeatLoggerTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools(null);
     }
 
     @Bean

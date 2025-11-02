@@ -15,7 +15,6 @@ import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -26,6 +25,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.Version;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -43,7 +43,7 @@ public class ToolProvider {
   @Autowired private ServerHealth serverHealth;
   @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
   @Autowired private ToolHelper toolHelper;
-  @Autowired private Collection<String> excludeTools;
+  @Autowired private ExcludeTools excludeTools;
 
   @McpTool(
       name = "mcp-server-health",
@@ -84,7 +84,7 @@ public class ToolProvider {
     for (final FunctionDefinition<?> functionDefinition :
         functionDefinitionRegistry.getFunctionDefinitions()) {
       final String functionName = functionDefinition.getFunctionName().getName();
-      if (excludeTools == null || excludeTools.contains(functionName)) {
+      if (excludeTools == null || excludeTools.excludeTools().contains(functionName)) {
         LOGGER.log(Level.WARNING, new StringFormat("Excluding tool <%s>", functionName));
         continue;
       }
