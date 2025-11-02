@@ -29,7 +29,7 @@
         <include>us.fatehi:schemacrawler-ai-mcpserver</include>
       </includes>
     </dependencySet>
-    <!-- Include only new depdencies from this project,
+    <!-- Include only new dependencies from this project,
          not dependencies inherited from schemacrawler -->
     <dependencySet>
       <outputDirectory>.</outputDirectory>
@@ -51,6 +51,8 @@
         <exclude>org.junit.platform:*</exclude>
         <exclude>org.opentest4j:*</exclude>
         <exclude>org.yaml:*</exclude>
+        <exclude>org.graalvm.*:*</exclude>
+        <!--  SchemaCrawler dependencies -->
         <exclude>us.fatehi:schemacrawler</exclude>
         <exclude>us.fatehi:schemacrawler-api</exclude>
         <exclude>us.fatehi:schemacrawler-tools</exclude>
