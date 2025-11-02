@@ -64,7 +64,7 @@ jobs:
         # Move SchemaCrawler AI distribution
         echo "Move SchemaCrawler AI distribution"
         pwd
-        mv ./schemacrawler-ai-distrib/_ai-distrib .
+        mv ./schemacrawler-ai-distrib/target/_ai-distrib .
         ls -l ./_ai-distrib
 
 
