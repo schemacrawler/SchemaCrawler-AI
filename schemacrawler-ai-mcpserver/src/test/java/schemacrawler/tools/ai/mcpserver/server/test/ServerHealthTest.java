@@ -9,7 +9,6 @@
 package schemacrawler.tools.ai.mcpserver.server.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.containsString;
 import static org.hamcrest.Matchers.emptyOrNullString;
 import static org.hamcrest.Matchers.hasItems;
 import static org.hamcrest.Matchers.is;
@@ -83,16 +82,5 @@ public class ServerHealthTest {
 
     final String timestamp = state.get("current-timestamp");
     assertThat(timestamp, not(emptyOrNullString()));
-  }
-
-  @Test
-  @DisplayName("ServerHealth.currentStateString should include key info")
-  public void currentStateString_includesInfo() {
-    final String summary = serverHealth.currentStateString();
-
-    assertThat(summary, containsString("SchemaCrawler AI MCP Server TEST"));
-    assertThat(summary, containsString("in-error-state=false"));
-    assertThat(summary, containsString("transport=http"));
-    assertThat(summary, containsString("server-uptime="));
   }
 }

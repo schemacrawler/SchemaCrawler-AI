@@ -97,10 +97,6 @@ public class SchemaCrawlerMCPServerTest {
     state.put("transport", "stdio");
     state.put("exclude-tools", "[]");
     when(serverHealth.currentState()).thenReturn(state);
-    when(serverHealth.currentStateString())
-        .thenReturn(
-            "SchemaCrawler AI MCP Server Test\n"
-                + "in-error-state=false; server-uptime=PT0S; transport=stdio");
   }
 
   @Test

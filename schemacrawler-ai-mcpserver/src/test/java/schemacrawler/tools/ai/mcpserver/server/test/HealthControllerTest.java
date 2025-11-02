@@ -77,11 +77,6 @@ public class HealthControllerTest {
     ServerHealth serverHealth() {
       final ServerHealth serverHealth = mock(ServerHealth.class);
       when(serverHealth.currentState()).thenReturn(currentState());
-      when(serverHealth.currentStateString())
-          .thenReturn(
-              "SchemaCrawler AI MCP Server Test\n"
-                  + "in-error-state=false; server-uptime=PT0S; transport=stdio");
-
       return serverHealth;
     }
   }

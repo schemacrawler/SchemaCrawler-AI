@@ -44,12 +44,6 @@ public class ServerHealth {
     return currentState;
   }
 
-  public String currentStateString() {
-    return String.format(
-        "%s%nin-error-state=%s; server-uptime=%s; transport=%s",
-        getServerName(), isInErrorState, getServerUptime(), mcpTransport);
-  }
-
   public McpServerTransportType getMcpTransport() {
     return mcpTransport;
   }
