@@ -20,7 +20,9 @@ RUN \
   mvn \
     --no-transfer-progress \
     --batch-mode \
-    clean package
+    clean package \
+&& \
+    mv ./schemacrawler-ai-distrib/target/_ai-distrib .
 
 
 # PRODUCTION stage - Create SchemaCrawler AI image

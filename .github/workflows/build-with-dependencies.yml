@@ -49,6 +49,17 @@ jobs:
           -Dmaven.javadoc.skip=true \
           clean install
 
+    - id: move-distrib
+      name: Move SchemaCrawler-AI distribution
+      shell: bash
+      run: |
+        # Move SchemaCrawler-AI distribution
+        echo "Move SchemaCrawler-AI distribution"
+        pwd
+        mv ./schemacrawler-ai-distrib/target/_ai-distrib .
+        ls -l ./_ai-distrib
+
+
 # BUILD AND TEST
     - id: build-test
       name: Build and run tests

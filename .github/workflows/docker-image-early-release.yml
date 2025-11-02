@@ -57,13 +57,16 @@ jobs:
           --batch-mode \
           clean package
 
-    - id: debug-schemacrawler-ai
-      name: Verify SchemaCrawler-AI distribution
+    - id: move-distrib
+      name: Move SchemaCrawler AI distribution
       shell: bash
       run: |
-        # DEBUG
+        # Move SchemaCrawler AI distribution
+        echo "Move SchemaCrawler AI distribution"
         pwd
+        mv ./schemacrawler-ai-distrib/_ai-distrib .
         ls -l ./_ai-distrib
+
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
