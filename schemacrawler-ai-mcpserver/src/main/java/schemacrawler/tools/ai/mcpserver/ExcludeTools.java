@@ -8,9 +8,9 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import jakarta.annotation.Nullable;
 import java.util.Collection;
 import java.util.Collections;
-import jakarta.annotation.Nullable;
 
 /** Wrapper for bean that would otherwise have a collection of strings */
 public record ExcludeTools(@Nullable Collection<String> excludeTools) {
@@ -18,5 +18,9 @@ public record ExcludeTools(@Nullable Collection<String> excludeTools) {
     if (excludeTools == null) {
       excludeTools = Collections.emptySet();
     }
+  }
+
+  public ExcludeTools() {
+    this(Collections.emptySet());
   }
 }

@@ -60,7 +60,7 @@ public class HeartbeatLoggerTest {
 
     @Bean
     ExcludeTools excludeTools() {
-      return new ExcludeTools(null);
+      return new ExcludeTools();
     }
 
     @Bean

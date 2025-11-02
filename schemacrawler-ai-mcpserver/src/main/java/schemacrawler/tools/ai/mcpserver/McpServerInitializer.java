@@ -59,7 +59,7 @@ public class McpServerInitializer
     this.catalog = requireNonNull(catalog, "No catalog provided");
 
     if (excludeTools == null) {
-      this.excludeTools = new ExcludeTools(null);
+      this.excludeTools = new ExcludeTools();
     } else {
       this.excludeTools = new ExcludeTools(excludeTools);
     }
