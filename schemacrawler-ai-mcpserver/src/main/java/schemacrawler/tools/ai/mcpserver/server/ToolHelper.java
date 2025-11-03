@@ -89,7 +89,7 @@ public class ToolHelper {
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
     return new McpServerFeatures.SyncToolSpecification(
-        tool, /*deprecated handler */ null, toolCallHandler);
+        tool, /* deprecated handler */ null, toolCallHandler);
   }
 
   private <P extends FunctionParameters> Tool toTool(
