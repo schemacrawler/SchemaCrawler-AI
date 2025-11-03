@@ -61,7 +61,7 @@ public class EmptyFactory {
         (proxy, method, args) -> {
           switch (method.getName()) {
             case "get":
-              return DriverManager.getConnection("jdbc:hsqldb::memory:");
+              return DriverManager.getConnection("jdbc:hsqldb:mem:testdb");
             case "releaseConnection":
               return true;
             case "close":

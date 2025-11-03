@@ -108,6 +108,11 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>schemacrawler-hsqldb</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <!-- Use a version consistent with Spring Boot provided by Spring AI -->
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
