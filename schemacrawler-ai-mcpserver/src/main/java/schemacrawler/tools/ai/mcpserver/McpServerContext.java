@@ -29,6 +29,7 @@ import schemacrawler.schemacrawler.LoadOptions;
 import schemacrawler.schemacrawler.LoadOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
+import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.options.Config;
@@ -135,19 +136,24 @@ final class McpServerContext {
     return Set.of(CollectionsUtility.splitList(envAccessor.getenv(EXCLUDE_TOOLS)));
   }
 
-  protected Catalog getCatalog() {
+  protected SchemaCrawlerOptions getSchemaCrawlerOptions() {
+    return schemaCrawlerOptions;
+  }
+
+  protected Catalog loadCatalog() {
     final DatabaseConnectionSource connectionSource = buildCatalogDatabaseConnectionSource();
     final SchemaCrawlerOptions schemaCrawlerOptions = getSchemaCrawlerOptions();
-    final Catalog catalog = SchemaCrawlerUtility.getCatalog(connectionSource, schemaCrawlerOptions);
+    final SchemaRetrievalOptions schemaRetrievalOptions =
+        SchemaCrawlerUtility.matchSchemaRetrievalOptions(connectionSource);
+    final Config config = config();
+    final Catalog catalog =
+        SchemaCrawlerUtility.getCatalog(
+            connectionSource, schemaRetrievalOptions, schemaCrawlerOptions, config);
     return catalog;
   }
 
   protected McpServerTransportType mcpTransport() {
     return transport;
-  }
-
-  protected SchemaCrawlerOptions getSchemaCrawlerOptions() {
-    return schemaCrawlerOptions;
   }
 
   /**

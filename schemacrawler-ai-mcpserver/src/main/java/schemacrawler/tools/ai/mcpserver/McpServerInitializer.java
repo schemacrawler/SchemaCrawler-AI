@@ -83,7 +83,7 @@ public class McpServerInitializer
     boolean isInErrorState = false;
     Catalog catalog;
     try {
-      catalog = context.getCatalog();
+      catalog = context.loadCatalog();
     } catch (final Exception e) {
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
