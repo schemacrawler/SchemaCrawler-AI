@@ -14,12 +14,9 @@ import java.util.Collection;
 import org.jspecify.annotations.NonNull;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.CommandOptions;
-import schemacrawler.tools.options.Config;
 
 public record McpServerCommandOptions(
-    @NonNull McpServerTransportType mcpTransport,
-    @NonNull Collection<String> excludeTools,
-    @NonNull Config config)
+    @NonNull McpServerTransportType mcpTransport, @NonNull Collection<String> excludeTools)
     implements CommandOptions {
 
   public McpServerCommandOptions {
@@ -27,6 +24,5 @@ public record McpServerCommandOptions(
       throw new IllegalArgumentException("No MCP Server transport specified");
     }
     requireNonNull(excludeTools, "No exclude tools list provided");
-    requireNonNull(config, "No config provided");
   }
 }
