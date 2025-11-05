@@ -19,6 +19,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.options.Config;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
@@ -30,12 +31,14 @@ public class McpServerInitializer
   private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
   private final ExcludeTools excludeTools;
+  private final Config config;
 
   public McpServerInitializer(
       final Catalog catalog,
       final Connection connection,
       final McpServerTransportType mcpTransport,
-      final Collection<String> excludeTools) {
+      final Collection<String> excludeTools,
+      final Config config) {
 
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
@@ -63,12 +66,18 @@ public class McpServerInitializer
     } else {
       this.excludeTools = new ExcludeTools(excludeTools);
     }
+
+    if (config == null) {
+      this.config = new Config();
+    } else {
+      this.config = new Config(config);
+    }
   }
 
   public McpServerInitializer(final McpServerContext context) {
     requireNonNull(context, "No context provided");
 
-    mcpTransport = context.getMcpTransport();
+    mcpTransport = context.mcpTransport();
 
     // Load the catalog with the catalog data source
     boolean isInErrorState = false;
@@ -98,6 +107,7 @@ public class McpServerInitializer
     this.connectionSource = connectionSource;
 
     excludeTools = new ExcludeTools(context.excludeTools());
+    config = new Config(context.config());
   }
 
   @Override
@@ -114,5 +124,6 @@ public class McpServerInitializer
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
+    context.registerBean("config", Config.class, () -> config);
   }
 }

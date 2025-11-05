@@ -14,6 +14,7 @@ import java.util.logging.Logger;
 import schemacrawler.tools.ai.mcpserver.McpServerMain;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.BaseSchemaCrawlerCommand;
+import schemacrawler.tools.options.Config;
 import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in. */
@@ -37,7 +38,8 @@ public final class McpServerCommand extends BaseSchemaCrawlerCommand<McpServerCo
   public void execute() {
     final McpServerTransportType mcpTransport = commandOptions.mcpTransport();
     final Collection<String> excludeTools = commandOptions.excludeTools();
-    McpServerMain.startMcpServer(catalog, connection, mcpTransport, excludeTools);
+    final Config config = commandOptions.config();
+    McpServerMain.startMcpServer(catalog, connection, mcpTransport, excludeTools, config);
   }
 
   @Override

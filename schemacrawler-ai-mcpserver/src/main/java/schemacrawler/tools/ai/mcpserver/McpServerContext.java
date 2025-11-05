@@ -9,13 +9,18 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static java.util.Objects.requireNonNull;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
+import com.fasterxml.jackson.databind.JsonNode;
 import java.nio.file.Path;
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
+import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -26,6 +31,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
+import schemacrawler.tools.options.Config;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.CollectionsUtility;
 import us.fatehi.utility.LoggingConfig;
@@ -35,6 +41,9 @@ import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
 /** Inner class that handles the MCP server setup. */
 final class McpServerContext {
 
+  private static final Logger LOGGER = Logger.getLogger(McpServerContext.class.getName());
+
+  private static final String ADDITIONAL_CONFIG = "SCHCRWLR_ADDITIONAL_CONFIG";
   private static final String EXCLUDE_TOOLS = "SCHCRWLR_EXCLUDE_TOOLS";
   private static final String INFO_LEVEL = "SCHCRWLR_INFO_LEVEL";
   private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
@@ -107,6 +116,21 @@ final class McpServerContext {
     return schemaCrawlerOptions;
   }
 
+  protected Config config() {
+    final String additionalConfigString = envAccessor.getenv(ADDITIONAL_CONFIG);
+    if (isBlank(additionalConfigString)) {
+      return new Config();
+    }
+    try {
+      final JsonNode configNode = mapper.readTree(additionalConfigString);
+      final Map<String, Object> configMap = mapper.convertValue(configNode, HashMap.class);
+      return new Config(configMap);
+    } catch (final Exception e) {
+      LOGGER.log(Level.WARNING, "Could not load config <%s>" + additionalConfigString, e);
+      return new Config();
+    }
+  }
+
   protected Collection<String> excludeTools() {
     return Set.of(CollectionsUtility.splitList(envAccessor.getenv(EXCLUDE_TOOLS)));
   }
@@ -118,7 +142,7 @@ final class McpServerContext {
     return catalog;
   }
 
-  protected McpServerTransportType getMcpTransport() {
+  protected McpServerTransportType mcpTransport() {
     return transport;
   }
 

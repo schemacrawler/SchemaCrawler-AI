@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.options.Config;
 import us.fatehi.utility.string.StringFormat;
 
 /**
@@ -40,7 +41,7 @@ public class McpServerMain {
 
   public static void startMcpServer() {
     final McpServerContext context = new McpServerContext();
-    final McpServerTransportType mcpTransport = context.getMcpTransport();
+    final McpServerTransportType mcpTransport = context.mcpTransport();
     new SpringApplicationBuilder(McpServer.class)
         .initializers(new McpServerInitializer(context))
         .profiles(mcpTransport.name())
@@ -53,9 +54,11 @@ public class McpServerMain {
       final Catalog catalog,
       final Connection connection,
       final McpServerTransportType mcpTransport,
-      final Collection<String> excludeTools) {
+      final Collection<String> excludeTools,
+      final Config config) {
     new SpringApplicationBuilder(McpServer.class)
-        .initializers(new McpServerInitializer(catalog, connection, mcpTransport, excludeTools))
+        .initializers(
+            new McpServerInitializer(catalog, connection, mcpTransport, excludeTools, config))
         .profiles(mcpTransport.name())
         .run();
     LOGGER.log(

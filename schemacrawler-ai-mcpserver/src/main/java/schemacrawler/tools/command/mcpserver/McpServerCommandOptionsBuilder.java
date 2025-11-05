@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -29,12 +30,14 @@ public final class McpServerCommandOptionsBuilder
 
   private McpServerTransportType mcpTransport;
   private Collection<String> excludeTools;
+  private Config config;
 
   private McpServerCommandOptionsBuilder() {
     // MCP Server transport needs to be explicitly specified,
     // so default to known
     mcpTransport = unknown;
     excludeTools = Collections.emptySet();
+    config = new Config();
   }
 
   @Override
@@ -43,6 +46,7 @@ public final class McpServerCommandOptionsBuilder
       mcpTransport = config.getEnumValue("transport", unknown);
       excludeTools =
           Set.of(CollectionsUtility.splitList(config.getStringValue("exclude-tools", "")));
+      this.config = new Config(config);
     }
 
     return this;
@@ -64,7 +68,21 @@ public final class McpServerCommandOptionsBuilder
 
   @Override
   public McpServerCommandOptions toOptions() {
-    return new McpServerCommandOptions(mcpTransport, excludeTools);
+    return new McpServerCommandOptions(mcpTransport, excludeTools, config);
+  }
+
+  public McpServerCommandOptionsBuilder withConfig(final Config config) {
+    this.config = new Config(config);
+    return this;
+  }
+
+  public McpServerCommandOptionsBuilder withExcludeTools(final Collection<String> excludeTools) {
+    if (excludeTools == null) {
+      this.excludeTools = Collections.emptySet();
+    } else {
+      this.excludeTools = new HashSet<>(excludeTools);
+    }
+    return this;
   }
 
   public McpServerCommandOptionsBuilder withMcpTransport(
