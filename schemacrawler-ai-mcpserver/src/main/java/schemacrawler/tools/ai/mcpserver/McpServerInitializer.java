@@ -65,8 +65,10 @@ public class McpServerInitializer
     }
   }
 
-  public McpServerInitializer(final McpServerContext context) {
-    requireNonNull(context, "No context provided");
+  public McpServerInitializer(
+      final SchemaCrawlerContext scContext, final McpServerContext context) {
+    requireNonNull(scContext, "No SchemaCrawler context provided");
+    requireNonNull(context, "No MCP Server context provided");
 
     mcpTransport = context.mcpTransport();
 
@@ -74,7 +76,7 @@ public class McpServerInitializer
     boolean isInErrorState = false;
     Catalog catalog;
     try {
-      catalog = context.loadCatalog();
+      catalog = scContext.loadCatalog();
     } catch (final Exception e) {
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
@@ -88,7 +90,7 @@ public class McpServerInitializer
     // Once the catalog is loaded, use the operations database connection source
     DatabaseConnectionSource connectionSource;
     try {
-      connectionSource = context.buildOperationsDatabaseConnectionSource();
+      connectionSource = scContext.buildOperationsDatabaseConnectionSource();
     } catch (final Exception e) {
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
