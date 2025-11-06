@@ -48,6 +48,35 @@ public class SchemaCrawlerContextTest {
   }
 
   @Test
+  @DisplayName("Should handle invalid JSON in SCHCRWLR_ADDITIONAL_CONFIG gracefully")
+  void shouldHandleInvalidAdditionalConfigJson() {
+    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "this-is-not-json");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    final schemacrawler.tools.options.Config config = context.readAdditionalConfig();
+    // Should fall back to empty config
+    assertThat(config.getStringValue("any", "default"), is("default"));
+  }
+
+  @Test
+  @DisplayName("Should parse valid JSON from SCHCRWLR_ADDITIONAL_CONFIG into Config")
+  void shouldParseValidAdditionalConfigJson() {
+    final String json =
+        "{\n"
+            + "  \"transport\": \"http\",\n"
+            + "  \"exclude-tools\": \"tool1,tool2\",\n"
+            + "  \"custom-key\": \"custom-value\"\n"
+            + "}";
+    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", json);
+    context = new SchemaCrawlerContext(envAccessor);
+
+    final schemacrawler.tools.options.Config config = context.readAdditionalConfig();
+    assertThat(config.getStringValue("transport", ""), is("http"));
+    assertThat(config.getStringValue("exclude-tools", ""), is("tool1,tool2"));
+    assertThat(config.getStringValue("custom-key", ""), is("custom-value"));
+  }
+
+  @Test
   @DisplayName("Should read info level with custom values when environment variables are set")
   void shouldReadInfoLevelWithCustomValues() {
     // Arrange
@@ -73,6 +102,25 @@ public class SchemaCrawlerContextTest {
 
     // Assert
     assertThat(infoLevel, is(InfoLevel.standard));
+  }
+
+  @Test
+  @DisplayName("Should return empty additional config when unset or blank")
+  void shouldReturnEmptyAdditionalConfigWhenUnsetOrBlank() {
+    // Unset
+    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", null);
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
+
+    // Empty
+    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
+
+    // Whitespace
+    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "   \t  \n  ");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
   }
 
   @Test
