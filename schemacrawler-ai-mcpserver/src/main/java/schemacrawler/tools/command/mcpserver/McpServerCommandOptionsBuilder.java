@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.mcpserver.McpServerTransportType.unknown;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Set;
 import schemacrawler.schemacrawler.OptionsBuilder;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -65,6 +66,15 @@ public final class McpServerCommandOptionsBuilder
   @Override
   public McpServerCommandOptions toOptions() {
     return new McpServerCommandOptions(mcpTransport, excludeTools);
+  }
+
+  public McpServerCommandOptionsBuilder withExcludeTools(final Collection<String> excludeTools) {
+    if (excludeTools == null) {
+      this.excludeTools = Collections.emptySet();
+    } else {
+      this.excludeTools = new HashSet<>(excludeTools);
+    }
+    return this;
   }
 
   public McpServerCommandOptionsBuilder withMcpTransport(

@@ -11,11 +11,12 @@ package schemacrawler.tools.command.mcpserver;
 import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
+import org.jspecify.annotations.NonNull;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.CommandOptions;
 
 public record McpServerCommandOptions(
-    McpServerTransportType mcpTransport, Collection<String> excludeTools)
+    @NonNull McpServerTransportType mcpTransport, @NonNull Collection<String> excludeTools)
     implements CommandOptions {
 
   public McpServerCommandOptions {

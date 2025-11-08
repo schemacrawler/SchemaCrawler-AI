@@ -39,10 +39,11 @@ public class McpServerMain {
   }
 
   public static void startMcpServer() {
+    final SchemaCrawlerContext scContext = new SchemaCrawlerContext();
     final McpServerContext context = new McpServerContext();
-    final McpServerTransportType mcpTransport = context.getMcpTransport();
+    final McpServerTransportType mcpTransport = context.mcpTransport();
     new SpringApplicationBuilder(McpServer.class)
-        .initializers(new McpServerInitializer(context))
+        .initializers(new McpServerInitializer(scContext, context))
         .profiles(mcpTransport.name())
         .run();
     LOGGER.log(
