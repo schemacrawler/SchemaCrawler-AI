@@ -17,24 +17,24 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
+import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableMap;
 
 @DisplayName("SchemaCrawler configuration tests")
 public class SchemaCrawlerContextTest {
 
-  private MockEnvironmentVariableAccessor envAccessor;
+  private MockEnvironmentVariableMap envAccessor;
   private SchemaCrawlerContext context;
 
   @BeforeEach
   void setUp() {
-    envAccessor = new MockEnvironmentVariableAccessor();
+    envAccessor = new MockEnvironmentVariableMap();
   }
 
   @Test
   @DisplayName("Should build SchemaCrawler options when context is created")
   void shouldBuildSchemaCrawlerOptions() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "detailed");
     context = new SchemaCrawlerContext(envAccessor);
 
     // Act
@@ -50,7 +50,7 @@ public class SchemaCrawlerContextTest {
   @Test
   @DisplayName("Should handle invalid JSON in SCHCRWLR_ADDITIONAL_CONFIG gracefully")
   void shouldHandleInvalidAdditionalConfigJson() {
-    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "this-is-not-json");
+    envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "this-is-not-json");
     context = new SchemaCrawlerContext(envAccessor);
 
     final schemacrawler.tools.options.Config config = context.readAdditionalConfig();
@@ -67,7 +67,7 @@ public class SchemaCrawlerContextTest {
             + "  \"exclude-tools\": \"tool1,tool2\",\n"
             + "  \"custom-key\": \"custom-value\"\n"
             + "}";
-    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", json);
+    envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", json);
     context = new SchemaCrawlerContext(envAccessor);
 
     final schemacrawler.tools.options.Config config = context.readAdditionalConfig();
@@ -80,7 +80,7 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should read info level with custom values when environment variables are set")
   void shouldReadInfoLevelWithCustomValues() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "detailed");
     context = new SchemaCrawlerContext(envAccessor);
 
     // Act
@@ -94,7 +94,7 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should read info level with default values when environment variables are not set")
   void shouldReadInfoLevelWithDefaults() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", null);
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", null);
     context = new SchemaCrawlerContext(envAccessor);
 
     // Act
@@ -108,17 +108,17 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should return empty additional config when unset or blank")
   void shouldReturnEmptyAdditionalConfigWhenUnsetOrBlank() {
     // Unset
-    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", null);
+    envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", null);
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
 
     // Empty
-    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "");
+    envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
 
     // Whitespace
-    envAccessor.setenv("SCHCRWLR_ADDITIONAL_CONFIG", "   \t  \n  ");
+    envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "   \t  \n  ");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
   }
@@ -127,32 +127,32 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should validate info levels correctly")
   void shouldValidateInfoLevels() {
     // Test standard level
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "standard");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "standard");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.standard));
 
     // Test detailed level
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "detailed");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "detailed");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.detailed));
 
     // Test maximum level
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "maximum");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "maximum");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.maximum));
 
     // Test null defaults to standard
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", null);
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", null);
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.standard));
 
     // Test empty string defaults to standard
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.standard));
 
     // Test invalid value defaults to standard
-    envAccessor.setenv("SCHCRWLR_INFO_LEVEL", "invalid");
+    envAccessor.put("SCHCRWLR_INFO_LEVEL", "invalid");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.standard));
   }
@@ -161,37 +161,37 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should validate log levels correctly")
   void shouldValidateLogLevels() {
     // Test INFO level
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "INFO");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "INFO");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("INFO"));
 
     // Test WARNING level
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "WARNING");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "WARNING");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("WARNING"));
 
     // Test SEVERE level
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "SEVERE");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "SEVERE");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("SEVERE"));
 
     // Test FINE level
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "FINE");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "FINE");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("FINE"));
 
     // Test null defaults to INFO
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", null);
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", null);
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("INFO"));
 
     // Test empty string defaults to INFO
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("INFO"));
 
     // Test invalid value defaults to INFO
-    envAccessor.setenv("SCHCRWLR_LOG_LEVEL", "invalid");
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "invalid");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readLogLevel().getName(), is("INFO"));
   }

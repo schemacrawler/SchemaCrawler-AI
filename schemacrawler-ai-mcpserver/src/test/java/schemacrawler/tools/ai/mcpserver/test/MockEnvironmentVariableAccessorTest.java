@@ -24,35 +24,19 @@ public class MockEnvironmentVariableAccessorTest {
   @DisplayName("Should allow setting and unsetting environment variables")
   void shouldAllowSettingAndUnsetting() {
     // Arrange
-    final MockEnvironmentVariableAccessor accessor = new MockEnvironmentVariableAccessor();
+    final MockEnvironmentVariableMap accessor = new MockEnvironmentVariableMap();
 
     // Act & Assert - Setting
-    accessor.setenv("VAR1", "value1");
-    assertThat(accessor.getenv("VAR1"), is("value1"));
+    accessor.put("VAR1", "value1");
+    assertThat(accessor.getStringValue("VAR1", null), is("value1"));
 
     // Act & Assert - Updating
-    accessor.setenv("VAR1", "new_value");
-    assertThat(accessor.getenv("VAR1"), is("new_value"));
+    accessor.put("VAR1", "new_value");
+    assertThat(accessor.getStringValue("VAR1", null), is("new_value"));
 
     // Act & Assert - Unsetting
-    accessor.unsetenv("VAR1");
-    assertThat(accessor.getenv("VAR1"), nullValue());
-  }
-
-  @Test
-  @DisplayName("Should clear all environment variables")
-  void shouldClearAllVariables() {
-    // Arrange
-    final MockEnvironmentVariableAccessor accessor = new MockEnvironmentVariableAccessor();
-    accessor.setenv("VAR1", "value1");
-    accessor.setenv("VAR2", "value2");
-
-    // Act
-    accessor.clearenv();
-
-    // Assert
-    assertThat(accessor.getenv("VAR1"), nullValue());
-    assertThat(accessor.getenv("VAR2"), nullValue());
+    accessor.remove("VAR1");
+    assertThat(accessor.getStringValue("VAR1", null), nullValue());
   }
 
   @Test
@@ -64,32 +48,31 @@ public class MockEnvironmentVariableAccessorTest {
     initialEnv.put("VAR2", "value2");
 
     // Act
-    final MockEnvironmentVariableAccessor accessor =
-        new MockEnvironmentVariableAccessor(initialEnv);
+    final MockEnvironmentVariableMap accessor = new MockEnvironmentVariableMap(initialEnv);
 
     // Assert
-    assertThat(accessor.getenv("VAR1"), is("value1"));
-    assertThat(accessor.getenv("VAR2"), is("value2"));
+    assertThat(accessor.getStringValue("VAR1", null), is("value1"));
+    assertThat(accessor.getStringValue("VAR2", null), is("value2"));
   }
 
   @Test
   @DisplayName("Should return environment variable value if it has been set")
   void shouldReturnEnvironmentVariableValue() {
     // Arrange
-    final MockEnvironmentVariableAccessor accessor = new MockEnvironmentVariableAccessor();
-    accessor.setenv("TEST_VAR", "test_value");
+    final MockEnvironmentVariableMap accessor = new MockEnvironmentVariableMap();
+    accessor.put("TEST_VAR", "test_value");
 
     // Act & Assert
-    assertThat(accessor.getenv("TEST_VAR"), is("test_value"));
+    assertThat(accessor.getStringValue("TEST_VAR", null), is("test_value"));
   }
 
   @Test
   @DisplayName("Should return null for non-existent environment variable")
   void shouldReturnNullForNonExistentVariable() {
     // Arrange
-    final MockEnvironmentVariableAccessor accessor = new MockEnvironmentVariableAccessor();
+    final MockEnvironmentVariableMap accessor = new MockEnvironmentVariableMap();
 
     // Act & Assert
-    assertThat(accessor.getenv("NONEXISTENT_VAR"), nullValue());
+    assertThat(accessor.getStringValue("NONEXISTENT_VAR", null), nullValue());
   }
 }

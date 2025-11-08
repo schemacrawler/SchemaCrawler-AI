@@ -14,7 +14,8 @@ import static us.fatehi.utility.Utility.isBlank;
 import java.util.Collection;
 import java.util.Set;
 import us.fatehi.utility.CollectionsUtility;
-import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
+import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
+import us.fatehi.utility.ioresource.StringValueConfig;
 
 /** Inner class that handles the MCP server setup. */
 public final class McpServerContext {
@@ -22,22 +23,22 @@ public final class McpServerContext {
   private static final String EXCLUDE_TOOLS = "SCHCRWLR_EXCLUDE_TOOLS";
   private static final String MCP_SERVER_TRANSPORT = "SCHCRWLR_MCP_SERVER_TRANSPORT";
 
-  private final EnvironmentVariableAccessor envAccessor;
+  private final StringValueConfig envMap;
   private final McpServerTransportType transport;
   private final Collection<String> excludeTools;
 
   /** Default constructor that uses System.getenv */
   public McpServerContext() {
-    this(System::getenv);
+    this((EnvironmentVariableConfig) System::getenv);
   }
 
   /**
    * Constructor with environment variable accessor for testing
    *
-   * @param envAccessor The environment variable accessor
+   * @param envMap The environment variable accessor
    */
-  public McpServerContext(final EnvironmentVariableAccessor envAccessor) {
-    this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
+  public McpServerContext(final StringValueConfig envMap) {
+    this.envMap = requireNonNull(envMap, "No environment accessor provided");
     transport = readTransport();
     excludeTools = readExcludeTools();
   }
@@ -51,7 +52,7 @@ public final class McpServerContext {
   }
 
   Collection<String> readExcludeTools() {
-    return Set.of(CollectionsUtility.splitList(envAccessor.getenv(EXCLUDE_TOOLS)));
+    return Set.of(CollectionsUtility.splitList(envMap.getStringValue(EXCLUDE_TOOLS, "")));
   }
 
   /**
@@ -63,7 +64,7 @@ public final class McpServerContext {
   McpServerTransportType readTransport() {
     final McpServerTransportType defaultValue = McpServerTransportType.stdio;
 
-    final String value = envAccessor.getenv(MCP_SERVER_TRANSPORT);
+    final String value = envMap.getStringValue(MCP_SERVER_TRANSPORT, "");
     if (isBlank(value)) {
       return defaultValue;
     }

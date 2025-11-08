@@ -15,24 +15,24 @@ import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableAccessor;
+import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableMap;
 
 @DisplayName("MCP Server configuration tests")
 public class McpServerContextTest {
 
-  private MockEnvironmentVariableAccessor envAccessor;
+  private MockEnvironmentVariableMap envAccessor;
   private McpServerContext context;
 
   @BeforeEach
   void setUp() {
-    envAccessor = new MockEnvironmentVariableAccessor();
+    envAccessor = new MockEnvironmentVariableMap();
   }
 
   @Test
   @DisplayName("Should handle blanks, spaces, and duplicates in exclude tools")
   void shouldHandleBlanksSpacesAndDuplicatesInExcludeTools() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "  toolA , , toolB,toolA ,  ,ToolA  ");
+    envAccessor.put("SCHCRWLR_EXCLUDE_TOOLS", "  toolA , , toolB,toolA ,  ,ToolA  ");
     context = new McpServerContext(envAccessor);
 
     // Act
@@ -51,7 +51,7 @@ public class McpServerContextTest {
   @DisplayName("Should parse comma-separated exclude tools list")
   void shouldParseExcludeToolsList() {
     // Arrange
-    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "tool1,tool2,tool3");
+    envAccessor.put("SCHCRWLR_EXCLUDE_TOOLS", "tool1,tool2,tool3");
     context = new McpServerContext(envAccessor);
 
     // Act
@@ -68,19 +68,19 @@ public class McpServerContextTest {
   @DisplayName("Should return empty set when SCHCRWLR_EXCLUDE_TOOLS is unset or empty")
   void shouldReturnEmptySetWhenExcludeToolsUnsetOrEmpty() {
     // Unset (null)
-    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", null);
+    envAccessor.put("SCHCRWLR_EXCLUDE_TOOLS", null);
     context = new McpServerContext(envAccessor);
     Collection<String> excluded = context.excludeTools();
     assertThat(excluded.size(), is(0));
 
     // Empty string
-    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", "");
+    envAccessor.put("SCHCRWLR_EXCLUDE_TOOLS", "");
     context = new McpServerContext(envAccessor);
     excluded = context.excludeTools();
     assertThat(excluded.size(), is(0));
 
     // Only commas and spaces
-    envAccessor.setenv("SCHCRWLR_EXCLUDE_TOOLS", ", , ,  ,");
+    envAccessor.put("SCHCRWLR_EXCLUDE_TOOLS", ", , ,  ,");
     context = new McpServerContext(envAccessor);
     excluded = context.excludeTools();
     assertThat(excluded.size(), is(0));
@@ -90,27 +90,27 @@ public class McpServerContextTest {
   @DisplayName("Should validate transport correctly")
   void shouldValidateTransport() {
     // Test stdio transport
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "stdio");
+    envAccessor.put("SCHCRWLR_MCP_SERVER_TRANSPORT", "stdio");
     context = new McpServerContext(envAccessor);
     assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
 
     // Test http transport
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "http");
+    envAccessor.put("SCHCRWLR_MCP_SERVER_TRANSPORT", "http");
     context = new McpServerContext(envAccessor);
     assertThat(context.mcpTransport(), is(McpServerTransportType.http));
 
     // Test unknown value defaults to stdio
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "unknown");
+    envAccessor.put("SCHCRWLR_MCP_SERVER_TRANSPORT", "unknown");
     context = new McpServerContext(envAccessor);
     assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
 
     // Test null defaults to stdio
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", null);
+    envAccessor.put("SCHCRWLR_MCP_SERVER_TRANSPORT", null);
     context = new McpServerContext(envAccessor);
     assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
 
     // Test empty string defaults to stdio
-    envAccessor.setenv("SCHCRWLR_MCP_SERVER_TRANSPORT", "");
+    envAccessor.put("SCHCRWLR_MCP_SERVER_TRANSPORT", "");
     context = new McpServerContext(envAccessor);
     assertThat(context.mcpTransport(), is(McpServerTransportType.stdio));
   }

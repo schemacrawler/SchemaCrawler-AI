@@ -10,18 +10,18 @@ package schemacrawler.tools.ai.mcpserver.test;
 
 import java.util.HashMap;
 import java.util.Map;
-import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
+import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
 
 /**
  * Mock implementation of EnvironmentVariableAccessor for testing. Allows setting and getting
  * environment variables without affecting the actual system environment.
  */
-public class MockEnvironmentVariableAccessor implements EnvironmentVariableAccessor {
+public final class MockEnvironmentVariableMap implements EnvironmentVariableConfig {
 
   private final Map<String, String> environmentVariables;
 
   /** Creates a new instance with an empty environment. */
-  public MockEnvironmentVariableAccessor() {
+  public MockEnvironmentVariableMap() {
     environmentVariables = new HashMap<>();
   }
 
@@ -30,18 +30,18 @@ public class MockEnvironmentVariableAccessor implements EnvironmentVariableAcces
    *
    * @param variables initial environment variables
    */
-  public MockEnvironmentVariableAccessor(final Map<String, String> variables) {
+  public MockEnvironmentVariableMap(final Map<String, String> variables) {
     environmentVariables = new HashMap<>(variables);
   }
 
-  /** Clears all environment variables. */
-  public void clearenv() {
-    environmentVariables.clear();
+  @Override
+  public String getStringValue(String propertyName, String defaultValue) {
+    return environmentVariables.getOrDefault(propertyName, defaultValue);
   }
 
   @Override
-  public String getenv(final String name) {
-    return environmentVariables.get(name);
+  public Map<String, String> getenv() {
+    throw new UnsupportedOperationException();
   }
 
   /**
@@ -51,7 +51,7 @@ public class MockEnvironmentVariableAccessor implements EnvironmentVariableAcces
    * @param value the value of the environment variable
    * @return the previous value of the environment variable, or null if it did not have one
    */
-  public String setenv(final String name, final String value) {
+  public String put(final String name, final String value) {
     return environmentVariables.put(name, value);
   }
 
@@ -61,7 +61,7 @@ public class MockEnvironmentVariableAccessor implements EnvironmentVariableAcces
    * @param name the name of the environment variable
    * @return the previous value of the environment variable, or null if it did not have one
    */
-  public String unsetenv(final String name) {
+  public String remove(final String name) {
     return environmentVariables.remove(name);
   }
 }

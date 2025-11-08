@@ -34,7 +34,7 @@ import schemacrawler.tools.options.Config;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.ioresource.EnvironmentVariableAccessor;
+import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
 
 /** Inner class that handles the MCP server setup. */
 public final class SchemaCrawlerContext {
@@ -46,13 +46,13 @@ public final class SchemaCrawlerContext {
   private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
   private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
-  private final EnvironmentVariableAccessor envAccessor;
+  private final EnvironmentVariableConfig envAccessor;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
   private final Config additionalConfig;
 
   /** Default constructor that uses System.getenv */
   public SchemaCrawlerContext() {
-    this(System::getenv);
+    this((EnvironmentVariableConfig) System::getenv);
   }
 
   /**
@@ -60,7 +60,7 @@ public final class SchemaCrawlerContext {
    *
    * @param envAccessor The environment variable accessor
    */
-  public SchemaCrawlerContext(final EnvironmentVariableAccessor envAccessor) {
+  public SchemaCrawlerContext(final EnvironmentVariableConfig envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
 
     final Level logLevel = readLogLevel();
@@ -97,7 +97,8 @@ public final class SchemaCrawlerContext {
   }
 
   DatabaseConnectionSource buildCatalogDatabaseConnectionSource() {
-    final String offlineDatabasePathString = trimToEmpty(envAccessor.getenv(OFFLINE_DATABASE));
+    final String offlineDatabasePathString =
+        trimToEmpty(envAccessor.getStringValue(OFFLINE_DATABASE, ""));
     if (isBlank(offlineDatabasePathString)) {
       return buildOperationsDatabaseConnectionSource();
     }
@@ -128,7 +129,7 @@ public final class SchemaCrawlerContext {
   }
 
   Config readAdditionalConfig() {
-    final String additionalConfigString = envAccessor.getenv(ADDITIONAL_CONFIG);
+    final String additionalConfigString = envAccessor.getStringValue(ADDITIONAL_CONFIG, "");
     if (isBlank(additionalConfigString)) {
       return new Config();
     }
@@ -152,7 +153,7 @@ public final class SchemaCrawlerContext {
 
     final InfoLevel defaultValue = InfoLevel.standard;
     try {
-      final String value = envAccessor.getenv(INFO_LEVEL);
+      final String value = envAccessor.getStringValue(INFO_LEVEL, "");
       InfoLevel infoLevel = InfoLevel.valueOfFromString(value);
       if (infoLevel == InfoLevel.unknown) {
         infoLevel = defaultValue;
@@ -173,7 +174,7 @@ public final class SchemaCrawlerContext {
 
     final Level defaultValue = Level.INFO;
 
-    final String value = envAccessor.getenv(LOG_LEVEL);
+    final String value = envAccessor.getStringValue(LOG_LEVEL, "");
     if (isBlank(value)) {
       return defaultValue;
     }
