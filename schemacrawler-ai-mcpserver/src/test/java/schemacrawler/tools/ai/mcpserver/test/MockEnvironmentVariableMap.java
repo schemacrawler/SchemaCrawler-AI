@@ -35,13 +35,13 @@ public final class MockEnvironmentVariableMap implements EnvironmentVariableConf
   }
 
   @Override
-  public String getStringValue(String propertyName, String defaultValue) {
-    return environmentVariables.getOrDefault(propertyName, defaultValue);
+  public Map<String, String> getenv() {
+    throw new UnsupportedOperationException();
   }
 
   @Override
-  public Map<String, String> getenv() {
-    throw new UnsupportedOperationException();
+  public String getStringValue(final String propertyName, final String defaultValue) {
+    return environmentVariables.getOrDefault(propertyName, defaultValue);
   }
 
   /**
