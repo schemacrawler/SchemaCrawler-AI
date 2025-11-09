@@ -8,17 +8,16 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.trimToEmpty;
-
-import com.fasterxml.jackson.databind.JsonNode;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import com.fasterxml.jackson.databind.JsonNode;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -31,10 +30,12 @@ import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
 import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
+import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
+import us.fatehi.utility.readconfig.ReadConfig;
 
 /** Inner class that handles the MCP server setup. */
 public final class SchemaCrawlerContext {
@@ -46,7 +47,7 @@ public final class SchemaCrawlerContext {
   private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
   private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
-  private final EnvironmentVariableConfig envAccessor;
+  private final ReadConfig envAccessor;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
   private final Config additionalConfig;
 
@@ -60,7 +61,7 @@ public final class SchemaCrawlerContext {
    *
    * @param envAccessor The environment variable accessor
    */
-  public SchemaCrawlerContext(final EnvironmentVariableConfig envAccessor) {
+  public SchemaCrawlerContext(final ReadConfig envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
 
     final Level logLevel = readLogLevel();
@@ -136,7 +137,7 @@ public final class SchemaCrawlerContext {
     try {
       final JsonNode configNode = mapper.readTree(additionalConfigString);
       final Map<String, Object> configMap = mapper.convertValue(configNode, HashMap.class);
-      return new Config(configMap);
+      return ConfigUtility.fromMap(configMap);
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, "Could not load config <%s>" + additionalConfigString, e);
       return new Config();

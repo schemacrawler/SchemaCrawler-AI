@@ -8,9 +8,10 @@
 
 package schemacrawler.tools.ai.mcpserver.test;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
+import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
 
 /**
  * Mock implementation of EnvironmentVariableAccessor for testing. Allows setting and getting
@@ -36,12 +37,7 @@ public final class MockEnvironmentVariableMap implements EnvironmentVariableConf
 
   @Override
   public Map<String, String> getenv() {
-    throw new UnsupportedOperationException();
-  }
-
-  @Override
-  public String getStringValue(final String propertyName, final String defaultValue) {
-    return environmentVariables.getOrDefault(propertyName, defaultValue);
+    return Collections.unmodifiableMap(environmentVariables);
   }
 
   /**
@@ -53,15 +49,5 @@ public final class MockEnvironmentVariableMap implements EnvironmentVariableConf
    */
   public String put(final String name, final String value) {
     return environmentVariables.put(name, value);
-  }
-
-  /**
-   * Removes an environment variable.
-   *
-   * @param name the name of the environment variable
-   * @return the previous value of the environment variable, or null if it did not have one
-   */
-  public String remove(final String name) {
-    return environmentVariables.remove(name);
   }
 }

@@ -21,7 +21,7 @@ import org.junit.jupiter.api.Test;
 public class MockEnvironmentVariableAccessorTest {
 
   @Test
-  @DisplayName("Should allow setting and unsetting environment variables")
+  @DisplayName("Should allow setting environment variables")
   void shouldAllowSettingAndUnsetting() {
     // Arrange
     final MockEnvironmentVariableMap accessor = new MockEnvironmentVariableMap();
@@ -33,10 +33,6 @@ public class MockEnvironmentVariableAccessorTest {
     // Act & Assert - Updating
     accessor.put("VAR1", "new_value");
     assertThat(accessor.getStringValue("VAR1", null), is("new_value"));
-
-    // Act & Assert - Unsetting
-    accessor.remove("VAR1");
-    assertThat(accessor.getStringValue("VAR1", null), nullValue());
   }
 
   @Test

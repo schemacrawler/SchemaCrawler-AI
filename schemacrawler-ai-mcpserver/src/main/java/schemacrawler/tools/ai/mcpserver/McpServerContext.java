@@ -8,14 +8,13 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
-
 import java.util.Collection;
 import java.util.Set;
+import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 import us.fatehi.utility.CollectionsUtility;
-import us.fatehi.utility.ioresource.EnvironmentVariableConfig;
-import us.fatehi.utility.ioresource.StringValueConfig;
+import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
+import us.fatehi.utility.readconfig.ReadConfig;
 
 /** Inner class that handles the MCP server setup. */
 public final class McpServerContext {
@@ -23,7 +22,7 @@ public final class McpServerContext {
   private static final String EXCLUDE_TOOLS = "SCHCRWLR_EXCLUDE_TOOLS";
   private static final String MCP_SERVER_TRANSPORT = "SCHCRWLR_MCP_SERVER_TRANSPORT";
 
-  private final StringValueConfig envMap;
+  private final ReadConfig envMap;
   private final McpServerTransportType transport;
   private final Collection<String> excludeTools;
 
@@ -37,7 +36,7 @@ public final class McpServerContext {
    *
    * @param envMap The environment variable accessor
    */
-  public McpServerContext(final StringValueConfig envMap) {
+  public McpServerContext(final ReadConfig envMap) {
     this.envMap = requireNonNull(envMap, "No environment accessor provided");
     transport = readTransport();
     excludeTools = readExcludeTools();
