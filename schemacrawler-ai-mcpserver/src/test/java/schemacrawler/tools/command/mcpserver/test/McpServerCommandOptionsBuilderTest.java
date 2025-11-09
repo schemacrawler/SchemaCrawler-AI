@@ -17,28 +17,13 @@ import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandOptionsBuilder;
 import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 
 public class McpServerCommandOptionsBuilderTest {
 
   @Test
-  public void mcpServerCommandOptionsBuilderTimeout() {
-
-    final McpServerCommandOptionsBuilder optionsBuilder = McpServerCommandOptionsBuilder.builder();
-
-    assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
-
-    optionsBuilder.withMcpTransport(McpServerTransportType.http);
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("http"));
-
-    optionsBuilder.withMcpTransport(McpServerTransportType.stdio);
-    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
-  }
-
-  @Test
   public void fromConfig() {
-    Config config;
-
-    config = new Config();
+    final Config config = ConfigUtility.newConfig();
     config.put("transport", "http");
     final McpServerCommandOptions options =
         McpServerCommandOptionsBuilder.builder().fromConfig(config).toOptions();
@@ -49,6 +34,13 @@ public class McpServerCommandOptionsBuilderTest {
   public void fromNullConfig() {
     final McpServerCommandOptionsBuilder optionsBuilder =
         McpServerCommandOptionsBuilder.builder().fromConfig(null);
+    assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
+  }
+
+  @Test
+  public void fromNullOptions() {
+    final McpServerCommandOptionsBuilder optionsBuilder =
+        McpServerCommandOptionsBuilder.builder().fromOptions(null);
     assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
   }
 
@@ -64,10 +56,17 @@ public class McpServerCommandOptionsBuilderTest {
   }
 
   @Test
-  public void fromNullOptions() {
-    final McpServerCommandOptionsBuilder optionsBuilder =
-        McpServerCommandOptionsBuilder.builder().fromOptions(null);
+  public void mcpServerCommandOptionsBuilderTimeout() {
+
+    final McpServerCommandOptionsBuilder optionsBuilder = McpServerCommandOptionsBuilder.builder();
+
     assertThrows(IllegalArgumentException.class, () -> optionsBuilder.toOptions());
+
+    optionsBuilder.withMcpTransport(McpServerTransportType.http);
+    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("http"));
+
+    optionsBuilder.withMcpTransport(McpServerTransportType.stdio);
+    assertThat(optionsBuilder.toOptions().mcpTransport().name(), is("stdio"));
   }
 
   @Test

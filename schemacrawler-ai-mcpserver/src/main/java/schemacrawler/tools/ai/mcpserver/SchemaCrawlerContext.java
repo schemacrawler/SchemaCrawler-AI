@@ -8,16 +8,17 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
+
+import com.fasterxml.jackson.databind.JsonNode;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.trimToEmpty;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -49,7 +50,6 @@ public final class SchemaCrawlerContext {
 
   private final ReadConfig envAccessor;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
-  private final Config additionalConfig;
 
   /** Default constructor that uses System.getenv */
   public SchemaCrawlerContext() {
@@ -68,7 +68,6 @@ public final class SchemaCrawlerContext {
     new LoggingConfig(logLevel);
 
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
-    additionalConfig = readAdditionalConfig();
   }
 
   /**
@@ -86,10 +85,10 @@ public final class SchemaCrawlerContext {
     final DatabaseConnectionSource connectionSource = buildCatalogDatabaseConnectionSource();
     final SchemaRetrievalOptions schemaRetrievalOptions =
         SchemaCrawlerUtility.matchSchemaRetrievalOptions(connectionSource);
-    final Config config = readAdditionalConfig();
+    final Config additionalConfig = readAdditionalConfig();
     final Catalog catalog =
         SchemaCrawlerUtility.getCatalog(
-            connectionSource, schemaRetrievalOptions, schemaCrawlerOptions, config);
+            connectionSource, schemaRetrievalOptions, schemaCrawlerOptions, additionalConfig);
     return catalog;
   }
 
@@ -132,7 +131,7 @@ public final class SchemaCrawlerContext {
   Config readAdditionalConfig() {
     final String additionalConfigString = envAccessor.getStringValue(ADDITIONAL_CONFIG, "");
     if (isBlank(additionalConfigString)) {
-      return new Config();
+      return ConfigUtility.newConfig();
     }
     try {
       final JsonNode configNode = mapper.readTree(additionalConfigString);
@@ -140,7 +139,7 @@ public final class SchemaCrawlerContext {
       return ConfigUtility.fromMap(configMap);
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, "Could not load config <%s>" + additionalConfigString, e);
-      return new Config();
+      return ConfigUtility.newConfig();
     }
   }
 

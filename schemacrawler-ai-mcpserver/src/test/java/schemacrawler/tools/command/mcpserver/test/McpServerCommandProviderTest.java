@@ -25,6 +25,7 @@ import schemacrawler.tools.command.mcpserver.McpServerCommandOptions;
 import schemacrawler.tools.command.mcpserver.McpServerCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 import us.fatehi.test.utility.TestWriter;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
@@ -49,13 +50,13 @@ public class McpServerCommandProviderTest {
     final McpServerCommandProvider commandProvider = new McpServerCommandProvider();
     assertThrows(
         IllegalArgumentException.class,
-        () -> commandProvider.newSchemaCrawlerCommand("bad-command", new Config()));
+        () -> commandProvider.newSchemaCrawlerCommand("bad-command", ConfigUtility.newConfig()));
 
     assertThrows(
         ExecutionRuntimeException.class,
-        () -> commandProvider.newSchemaCrawlerCommand("mcpserver", new Config()));
+        () -> commandProvider.newSchemaCrawlerCommand("mcpserver", ConfigUtility.newConfig()));
 
-    final Config config = new Config();
+    final Config config = ConfigUtility.newConfig();
     config.put("transport", McpServerTransportType.stdio);
     final McpServerCommand command = commandProvider.newSchemaCrawlerCommand("mcpserver", config);
     final McpServerCommandOptions commandOptions = command.getCommandOptions();
