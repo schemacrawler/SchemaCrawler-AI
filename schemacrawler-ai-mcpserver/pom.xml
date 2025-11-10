@@ -38,14 +38,14 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>1.1.0-M4</version>
+        <version>1.1.0-RC1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
