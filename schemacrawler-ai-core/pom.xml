@@ -23,27 +23,38 @@
     <skip.signing.artifacts>false</skip.signing.artifacts>
     <schemacrawler.version>17.1.5</schemacrawler.version>
   </properties>
-  
+
+  <dependencyManagement>
+    <dependencies>
+
+      <!-- SchemaCrawler library -->
+      <dependency>
+        <groupId>us.fatehi</groupId>
+        <artifactId>schemacrawler-library-bom</artifactId>
+        <version>17.1.5</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+
+    </dependencies>
+  </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler</artifactId>
-	  <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-scripting</artifactId>
-	  <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-offline</artifactId>
-	  <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-lint</artifactId>
-	  <version>${schemacrawler.version}</version>
     </dependency>
 
     <dependency>
@@ -59,31 +70,26 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-testdb</artifactId>
-	  <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-test-utility</artifactId>
-	  <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-commandline</artifactId>
-	  <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-hsqldb</artifactId>
-	  <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-sqlite</artifactId>
-	  <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
