@@ -8,10 +8,10 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>17.1.4</version>
+    <version>17.1.5</version>
   </parent>
   <artifactId>schemacrawler-ai-distrib</artifactId>
-  <version>17.1.4-1</version>
+  <version>17.1.5-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI Distribution</name>

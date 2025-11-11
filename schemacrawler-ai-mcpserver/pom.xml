@@ -8,10 +8,10 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>17.1.4</version>
+    <version>17.1.5</version>
   </parent>
   <artifactId>schemacrawler-ai-mcpserver</artifactId>
-  <version>17.1.4-1</version>
+  <version>17.1.5-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI - MCP Server</name>
@@ -20,7 +20,7 @@
   <properties>
     <java.version>21</java.version>
     <skip.signing.artifacts>false</skip.signing.artifacts>
-    <schemacrawler.version>17.1.4</schemacrawler.version>
+    <schemacrawler.version>17.1.5</schemacrawler.version>
   </properties>
 
   <dependencyManagement>
