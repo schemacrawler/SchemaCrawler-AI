@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project
+  xmlns="http://maven.apache.org/POM/4.0.0"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>us.fatehi</groupId>
-    <artifactId>schemacrawler-ai-parent</artifactId>
-    <version>17.1.4-1</version>
-    <relativePath>../schemacrawler-ai-parent</relativePath>
+    <artifactId>schemacrawler-parent</artifactId>
+    <version>17.1.4</version>
   </parent>
-
   <artifactId>schemacrawler-ai-distrib</artifactId>
+  <version>17.1.4-1</version>
   <packaging>jar</packaging>
+
   <name>SchemaCrawler AI Distribution</name>
   <description>Distribution module for SchemaCrawler AI</description>
 
@@ -35,8 +37,9 @@
         <artifactId>maven-enforcer-plugin</artifactId>
         <executions>
           <execution>
-            <id>enforce-dependencies</id> <!-- Must match the ID from parent -->
-            <phase>none</phase> <!-- This disables the execution -->
+            <id>enforce-dependencies</id>
+            <!-- This disables the execution -->
+            <phase>none</phase>
           </execution>
         </executions>
       </plugin>	
@@ -86,7 +89,7 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
         <configuration>
-          <skip>true</skip>
+          <skip>false</skip>
         </configuration>
       </plugin>
     </plugins>

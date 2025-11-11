@@ -1,64 +1,57 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project
   xmlns="http://maven.apache.org/POM/4.0.0"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
+
   <parent>
     <groupId>us.fatehi</groupId>
-    <artifactId>schemacrawler-ai-parent</artifactId>
-    <version>17.1.4-1</version>
-    <relativePath>../schemacrawler-ai-parent</relativePath>
+    <artifactId>schemacrawler-parent</artifactId>
+    <version>17.1.4</version>
   </parent>
   <artifactId>schemacrawler-ai-mcpserver</artifactId>
+  <version>17.1.4-1</version>
   <packaging>jar</packaging>
+
   <name>SchemaCrawler AI - MCP Server</name>
   <description>MCP server using Spring Boot AI</description>
-  <repositories>
-    <repository>
-      <id>spring-milestones</id>
-      <name>Spring Milestones</name>
-      <url>https://repo.spring.io/milestone</url>
-    </repository>
-    <repository>
-      <id>spring-snapshots</id>
-      <name>Spring Snapshots</name>
-      <url>https://repo.spring.io/snapshot</url>
-      <snapshots>
-        <enabled>true</enabled>
-      </snapshots>
-    </repository>
-    <repository>
-      <id>spring-releases</id>
-      <name>Spring Releases</name>
-      <url>https://repo.spring.io/release</url>
-    </repository>
-  </repositories>
+
+  <properties>
+    <java.version>21</java.version>
+    <skip.signing.artifacts>false</skip.signing.artifacts>
+    <schemacrawler.version>17.1.4</schemacrawler.version>
+  </properties>
+
   <dependencyManagement>
     <dependencies>
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>3.5.5</version>
+        <version>3.5.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>1.1.0-M4</version>
+        <version>1.1.0-RC1</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
     </dependencies>
   </dependencyManagement>
+
   <dependencies>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler</artifactId>
+      <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-commandline</artifactId>
+      <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
@@ -83,10 +76,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-testdb</artifactId>
+      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -98,18 +93,21 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-api</artifactId>
+      <version>${schemacrawler.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-tools</artifactId>
+      <version>${schemacrawler.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-hsqldb</artifactId>
+      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
@@ -119,11 +117,41 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+
+  <repositories>
+    <repository>
+      <id>spring-milestones</id>
+      <name>Spring Milestones</name>
+      <url>https://repo.spring.io/milestone</url>
+    </repository>
+    <repository>
+      <id>spring-snapshots</id>
+      <name>Spring Snapshots</name>
+      <url>https://repo.spring.io/snapshot</url>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+    <repository>
+      <id>spring-releases</id>
+      <name>Spring Releases</name>
+      <url>https://repo.spring.io/release</url>
+    </repository>
+  </repositories>
+
   <build>
     <plugins>
-      <!--
-      <plugin><groupId>org.springframework.boot</groupId><artifactId>spring-boot-maven-plugin</artifactId><executions><execution><goals><goal>repackage</goal></goals><configuration><attach>false</attach></configuration></execution></executions></plugin>
-      -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-enforcer-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>enforce-dependencies</id>
+            <!-- This disables the execution -->
+            <phase>none</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-deploy-plugin</artifactId>
@@ -131,16 +159,7 @@
           <skip>false</skip>
         </configuration>
       </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-enforcer-plugin</artifactId>
-        <executions>
-          <execution>
-            <id>enforce-dependencies</id> <!-- Must match the ID from parent -->
-            <phase>none</phase> <!-- This disables the execution -->
-          </execution>
-        </executions>
-      </plugin>
     </plugins>
   </build>
+
 </project>
