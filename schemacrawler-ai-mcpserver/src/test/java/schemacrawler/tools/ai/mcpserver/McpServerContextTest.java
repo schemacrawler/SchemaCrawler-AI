@@ -10,22 +10,22 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableMap;
+import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 
 @DisplayName("MCP Server configuration tests")
 public class McpServerContextTest {
 
-  private MockEnvironmentVariableMap envAccessor;
+  private Config envAccessor;
   private McpServerContext context;
 
   @BeforeEach
   void setUp() {
-    envAccessor = new MockEnvironmentVariableMap();
+    envAccessor = ConfigUtility.newConfig();
   }
 
   @Test
