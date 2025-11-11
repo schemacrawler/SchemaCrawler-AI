@@ -8,11 +8,11 @@
     "url": "https://github.com/schemacrawler/SchemaCrawler-AI",
     "source": "github"
   },
-  "version": "v17.1.4-1",
+  "version": "v17.1.5-1",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "docker.io/schemacrawler/schemacrawler-ai:v17.1.4-1",
+      "identifier": "docker.io/schemacrawler/schemacrawler-ai:v17.1.5-1",
       "transport": {
         "type": "stdio"
       },
