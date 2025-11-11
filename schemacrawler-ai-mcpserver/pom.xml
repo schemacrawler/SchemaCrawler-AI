@@ -25,6 +25,15 @@
 
   <dependencyManagement>
     <dependencies>
+      <!-- SchemaCrawler library -->
+      <dependency>
+        <groupId>us.fatehi</groupId>
+        <artifactId>schemacrawler-library-bom</artifactId>
+        <version>17.1.5</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- Other libraries -->
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
@@ -46,18 +55,18 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler</artifactId>
-      <version>${schemacrawler.version}</version>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-commandline</artifactId>
-      <version>${schemacrawler.version}</version>
     </dependency>
+
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-core</artifactId>
       <version>${project.version}</version>
     </dependency>
+
     <dependency>
       <groupId>org.springframework.ai</groupId>
       <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
@@ -81,35 +90,31 @@
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-testdb</artifactId>
-      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-test-utility</artifactId>
-      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-api</artifactId>
-      <version>${schemacrawler.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-tools</artifactId>
-      <version>${schemacrawler.version}</version>
       <type>test-jar</type>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-hsqldb</artifactId>
-      <version>${schemacrawler.version}</version>
       <scope>test</scope>
     </dependency>
+
     <dependency>
       <!-- Use a version consistent with Spring Boot provided by Spring AI -->
       <groupId>org.springframework.boot</groupId>

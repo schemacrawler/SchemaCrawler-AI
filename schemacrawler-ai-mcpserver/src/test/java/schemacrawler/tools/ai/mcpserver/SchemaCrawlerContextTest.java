@@ -11,23 +11,23 @@ package schemacrawler.tools.ai.mcpserver;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
-import schemacrawler.tools.ai.mcpserver.test.MockEnvironmentVariableMap;
+import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 
 @DisplayName("SchemaCrawler configuration tests")
 public class SchemaCrawlerContextTest {
 
-  private MockEnvironmentVariableMap envAccessor;
+  private Config envAccessor;
   private SchemaCrawlerContext context;
 
   @BeforeEach
   void setUp() {
-    envAccessor = new MockEnvironmentVariableMap();
+    envAccessor = ConfigUtility.newConfig();
   }
 
   @Test
