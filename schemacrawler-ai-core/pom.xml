@@ -20,8 +20,7 @@
 
   <properties>
     <java.version>21</java.version>
-    <skip.signing.artifacts>false</skip.signing.artifacts>
-    <schemacrawler.version>17.1.5</schemacrawler.version>
+    <skip.signing.artifacts>true</skip.signing.artifacts>
   </properties>
 
   <dependencyManagement>
