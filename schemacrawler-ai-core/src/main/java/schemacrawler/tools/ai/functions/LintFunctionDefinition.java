@@ -26,6 +26,7 @@ public final class LintFunctionDefinition
     identifying reserved word usage, and flagging structural antipatterns such as single-column
     tables or all-nullable columns. Running this tool can help with database performance
     tuning, schema quality assurance, and architectural governance.
+    Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")

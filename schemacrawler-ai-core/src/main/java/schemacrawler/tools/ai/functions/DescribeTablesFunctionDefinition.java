@@ -16,10 +16,12 @@ public final class DescribeTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Get the details and description of database tables or views,
-    including columns, primary key, foreign keys, indexes and triggers.
-    This could return a lot of information if not limited by a
-    parameter specifying one or more tables.
+    Generates detailed documentation for database tables and views, based on metadata
+    inspection. It captures column definitions (names, data types, constraints, nullability),
+    primary and foreign key relationships, index and trigger information, table attributes, and
+    complete DDL definitions. This helps with schema documentation, data modeling, relationship
+    mapping, and reverse engineering. Tool parameters support filtering table names by regular
+    expressions and selective detail scopes to optimize tool performance.
     Returns data as a JSON object.
     """
         .stripIndent()
