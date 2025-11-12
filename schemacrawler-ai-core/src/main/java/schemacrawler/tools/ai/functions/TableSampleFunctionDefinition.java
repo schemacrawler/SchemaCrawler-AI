@@ -16,12 +16,17 @@ public final class TableSampleFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Gets a few sample rows of data from a table.
-    These rows are selected at random, and so different
-    rows may be returned each time they are requested.
-    Do not use this as a substitute for running a query
-    on a table, but rather to infer what the table may
-    contain.
+    Provides data profiling and sampling for table content analysis, retrieving random sample
+    rows to support data discovery, content validation, and data quality assessment without
+    requiring full table scans. These rows are selected at random, so different rows may be
+    returned each time they are requested. This should not be used as a substitute for running
+    a query on a table, but rather as a way to infer what the table may contain. This helps
+    with understanding data patterns, validating data types, identifying data quality issues,
+    and supporting ETL development. Designed for data analysts, developers, and data engineers,
+    it enables quick insight into table contents before writing queries or designing pipelines.
+    Results return as actual data samples, offering a practical foundation for informed
+    decision-making.
+    Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")
