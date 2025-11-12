@@ -30,7 +30,7 @@ public final class LintFunctionDefinition
     """
         .stripIndent()
         .replace("\n", " ")
-        .strip();
+        .trim();
   }
 
   @Override
