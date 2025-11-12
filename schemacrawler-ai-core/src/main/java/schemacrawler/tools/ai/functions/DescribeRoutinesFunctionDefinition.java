@@ -16,11 +16,13 @@ public final class DescribeRoutinesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Get the details and description of database routine
-    (stored procedures or functions),
-    including parameters and return types.
-    This could return a lot of information if not limited by a
-    parameter specifying one or more routines.
+    Generates detailed documentation for database routines (stored procedures and functions).
+    It extracts detailed metadata including parameter definitions (input/ output parameters,
+    data types, default values), return type specifications, dependencies on tables, views and
+    other routines, and complete DDL definitions. This helps with code documentation and
+    comprehension, business logic discovery, and dependency analysis. Tool parameters support
+    filtering routine names by regular expressions and selective detail scopes to optimize tool
+    performance.
     Returns data as a JSON object.
     """
         .stripIndent()
