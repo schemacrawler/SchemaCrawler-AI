@@ -16,10 +16,15 @@ public final class ListAcrossTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    List names of names of database objects like columns, indexes, triggers,
-    and foreign keys for tables across the whole database.
-    The corresponding tables are identified, and details can be
-    obtained later by describing those tables.
+    Discovers and catalogs table-dependent objects across the entire database schema, including
+    columns, indexes, foreign key relationships, triggers, and constraints. This is an
+    essential starting point for impact analysis, dependency tracking, performance
+    optimization, and database refactoring, enabling comprehensive relationship discovery
+    without the need to inspect individual tables. It is particularly effective for identifying
+    naming patterns, locating orphaned objects, and understanding cross-schema dependencies.
+    The corresponding tables are identified, and their details can be obtained later by
+    describing those tables. Tool parameters support filtering table names by regular
+    expressions and selective detail scopes to optimize tool performance.
     Returns JSON data.
     """
         .stripIndent()
