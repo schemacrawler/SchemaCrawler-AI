@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
@@ -45,6 +46,7 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     final ObjectNode objectNode = mapper.createObjectNode();
 
     objectNode.put("name", getName());
+    objectNode.put("title", getTitle());
     objectNode.put("description", getDescription());
 
     return objectNode;

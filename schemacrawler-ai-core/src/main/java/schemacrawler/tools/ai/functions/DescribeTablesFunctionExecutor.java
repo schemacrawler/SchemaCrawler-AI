@@ -46,18 +46,6 @@ public final class DescribeTablesFunctionExecutor
     return new JsonFunctionReturn(catalogDocument);
   }
 
-  private Collection<AdditionalTableDetails> getTableDetails() {
-    final Collection<AdditionalTableDetails> tableDetails = new ArrayList<>();
-    final Collection<TableDescriptionScope> descriptionScopes = commandOptions.descriptionScope();
-    for (final TableDescriptionScope descriptionScope : descriptionScopes) {
-      if (descriptionScope == null || descriptionScope == DEFAULT) {
-        continue;
-      }
-      tableDetails.add(descriptionScope.toAdditionalTableDetails());
-    }
-    return tableDetails;
-  }
-
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     final LimitOptionsBuilder limitOptionsBuilder =
@@ -72,5 +60,17 @@ public final class DescribeTablesFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
         .withLimitOptions(limitOptionsBuilder.toOptions())
         .withGrepOptions(grepOptionsBuilder.toOptions());
+  }
+
+  private Collection<AdditionalTableDetails> getTableDetails() {
+    final Collection<AdditionalTableDetails> tableDetails = new ArrayList<>();
+    final Collection<TableDescriptionScope> descriptionScopes = commandOptions.descriptionScope();
+    for (final TableDescriptionScope descriptionScope : descriptionScopes) {
+      if (descriptionScope == null || descriptionScope == DEFAULT) {
+        continue;
+      }
+      tableDetails.add(descriptionScope.toAdditionalTableDetails());
+    }
+    return tableDetails;
   }
 }

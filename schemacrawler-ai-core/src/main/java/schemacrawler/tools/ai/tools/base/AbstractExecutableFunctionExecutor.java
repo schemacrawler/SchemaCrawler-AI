@@ -9,11 +9,12 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;

@@ -46,18 +46,6 @@ public final class DescribeRoutinesFunctionExecutor
     return new JsonFunctionReturn(catalogDocument);
   }
 
-  private Collection<AdditionalRoutineDetails> getRoutineDetails() {
-    final Collection<AdditionalRoutineDetails> routineDetails = new ArrayList<>();
-    final Collection<RoutineDescriptionScope> descriptionScopes = commandOptions.descriptionScope();
-    for (final RoutineDescriptionScope descriptionScope : descriptionScopes) {
-      if (descriptionScope == null || descriptionScope == DEFAULT) {
-        continue;
-      }
-      routineDetails.add(descriptionScope.toAdditionalRoutineDetails());
-    }
-    return routineDetails;
-  }
-
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     final LimitOptionsBuilder limitOptionsBuilder =
@@ -73,5 +61,17 @@ public final class DescribeRoutinesFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
         .withLimitOptions(limitOptionsBuilder.toOptions())
         .withGrepOptions(grepOptionsBuilder.toOptions());
+  }
+
+  private Collection<AdditionalRoutineDetails> getRoutineDetails() {
+    final Collection<AdditionalRoutineDetails> routineDetails = new ArrayList<>();
+    final Collection<RoutineDescriptionScope> descriptionScopes = commandOptions.descriptionScope();
+    for (final RoutineDescriptionScope descriptionScope : descriptionScopes) {
+      if (descriptionScope == null || descriptionScope == DEFAULT) {
+        continue;
+      }
+      routineDetails.add(descriptionScope.toAdditionalRoutineDetails());
+    }
+    return routineDetails;
   }
 }

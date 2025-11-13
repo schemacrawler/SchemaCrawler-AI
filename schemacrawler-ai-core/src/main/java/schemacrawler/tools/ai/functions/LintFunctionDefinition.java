@@ -39,6 +39,11 @@ public final class LintFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "Validate database schema";
+  }
+
+  @Override
   public LintFunctionExecutor newExecutor() {
     return new LintFunctionExecutor(getFunctionName());
   }

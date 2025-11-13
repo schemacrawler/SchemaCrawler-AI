@@ -89,8 +89,8 @@ public class ToolProvider {
         LOGGER.log(Level.WARNING, new StringFormat("Excluding tool <%s>", functionName));
         continue;
       }
-      LOGGER.log(Level.INFO, new StringFormat("Adding callback for <%s>", functionName));
-      LOGGER.log(Level.FINE, new StringFormat("%s", functionDefinition.getFunctionName()));
+      LOGGER.log(Level.INFO, new StringFormat("Adding tool specification <%s>", functionName));
+      LOGGER.log(Level.FINE, new StringFormat("%s", functionDefinition));
 
       final McpServerFeatures.SyncToolSpecification toolSpecification =
           toolHelper.toSyncToolSpecification(functionDefinition);

@@ -103,6 +103,7 @@ public class ToolHelper {
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
             .name(toolName)
+            .title(functionDefinition.getTitle())
             .description(functionDefinition.getDescription())
             .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
             .build();

@@ -34,6 +34,11 @@ public final class ListFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "List database objects";
+  }
+
+  @Override
   public ListFunctionExecutor newExecutor() {
     return new ListFunctionExecutor(getFunctionName());
   }

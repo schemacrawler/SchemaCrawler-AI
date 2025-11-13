@@ -22,5 +22,7 @@ public interface FunctionDefinition<P extends FunctionParameters> {
 
   Class<P> getParametersClass();
 
+  String getTitle();
+
   FunctionExecutor<P> newExecutor();
 }

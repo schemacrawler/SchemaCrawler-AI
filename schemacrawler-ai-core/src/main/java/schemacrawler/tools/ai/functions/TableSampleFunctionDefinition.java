@@ -39,6 +39,11 @@ public final class TableSampleFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "Sample table data";
+  }
+
+  @Override
   public TableSampleFunctionExecutor newExecutor() {
     return new TableSampleFunctionExecutor(getFunctionName());
   }
