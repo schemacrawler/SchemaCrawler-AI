@@ -35,6 +35,11 @@ public final class DescribeTablesFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "Describe tables and views";
+  }
+
+  @Override
   public DescribeTablesFunctionExecutor newExecutor() {
     return new DescribeTablesFunctionExecutor(getFunctionName());
   }

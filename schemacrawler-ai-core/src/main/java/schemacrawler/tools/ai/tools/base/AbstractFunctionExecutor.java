@@ -29,6 +29,11 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     super(requireNonNull(functionName, "Function name not provided"));
   }
 
+  @Override
+  public final String toString() {
+    return command.getName();
+  }
+
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
 
   protected InclusionRule makeInclusionRule(final String objectName) {
@@ -49,10 +54,5 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     final String pattern = String.format(".*%s.*", name);
     final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
     return Pattern.compile(pattern, flags);
-  }
-
-  @Override
-  public final String toString() {
-    return command.getName();
   }
 }

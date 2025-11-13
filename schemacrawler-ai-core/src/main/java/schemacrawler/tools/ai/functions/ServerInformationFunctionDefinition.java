@@ -38,6 +38,11 @@ public final class ServerInformationFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "Show database server information";
+  }
+
+  @Override
   public ServerInformationFunctionExecutor newExecutor() {
     return new ServerInformationFunctionExecutor(getFunctionName());
   }

@@ -38,6 +38,11 @@ public final class ListAcrossTablesFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "List dependent database objects across tables";
+  }
+
+  @Override
   public ListAcrossTablesFunctionExecutor newExecutor() {
     return new ListAcrossTablesFunctionExecutor(getFunctionName());
   }

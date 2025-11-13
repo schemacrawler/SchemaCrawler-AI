@@ -36,6 +36,11 @@ public final class DescribeRoutinesFunctionDefinition
   }
 
   @Override
+  public String getTitle() {
+    return "Describe stored procedures and functions";
+  }
+
+  @Override
   public DescribeRoutinesFunctionExecutor newExecutor() {
     return new DescribeRoutinesFunctionExecutor(getFunctionName());
   }
