@@ -62,6 +62,11 @@ public class ToolHelperTest {
     }
 
     @Override
+    public String getTitle() {
+      return "Trivial function";
+    }
+
+    @Override
     public FunctionExecutor<NoParameters> newExecutor() {
       return new FunctionExecutor<>() {
         private Connection connection;
