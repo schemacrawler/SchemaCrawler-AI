@@ -14,6 +14,8 @@ import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
 import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -40,6 +42,23 @@ public class LoggingUtility {
     // Log to server
     final String serverLogMessage = "\n" + toServerLog(exchange, message, logData);
     LOGGER.log(Level.INFO, serverLogMessage);
+  }
+
+  public static void logExceptionToClient(
+      final McpSyncServerExchange exchange, final String message, final Exception e) {
+    if (exchange == null || e == null) {
+      return;
+    }
+    // Log to client
+    final StringWriter stWriter = new StringWriter();
+    e.printStackTrace(new PrintWriter(stWriter));
+    final String clientLogMessage = message + "\n" + stWriter.toString().indent(2);
+    exchange.loggingNotification(
+        LoggingMessageNotification.builder()
+            .logger(LOGGER.getName())
+            .level(LoggingLevel.ERROR)
+            .data(clientLogMessage)
+            .build());
   }
 
   private static String toServerLog(
