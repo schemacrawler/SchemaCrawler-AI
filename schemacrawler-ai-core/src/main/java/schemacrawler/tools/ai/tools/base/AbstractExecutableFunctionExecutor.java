@@ -11,7 +11,6 @@ package schemacrawler.tools.ai.tools.base;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,6 +24,7 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.NoResultsFunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import schemacrawler.tools.command.text.schema.options.SchemaTextOptionsBuilder;
 import schemacrawler.tools.executable.SchemaCrawlerExecutable;
@@ -67,15 +67,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     executable.execute();
 
     if (!hasResults()) {
-      switch (functionReturnType) {
-        case JSON:
-          final ObjectNode objectNode = mapper.createObjectNode();
-          objectNode.put("message", "No results");
-          return new JsonFunctionReturn(objectNode);
-        case TEXT:
-        default:
-          return new TextFunctionReturn("There were no matching results for your query.");
-      }
+      return new NoResultsFunctionReturn();
     }
 
     final String results = writer.toString();
