@@ -16,8 +16,7 @@ public final class DiagramFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates an editable database diagram, and makes it available as an embedded
-    resource to the client.
+    Generates a database diagram in the specified format.
     """
         .stripIndent()
         .replace("\n", " ")
@@ -31,7 +30,7 @@ public final class DiagramFunctionDefinition
 
   @Override
   public String getTitle() {
-    return "Generate editable database diagram";
+    return "Generate database diagram";
   }
 
   @Override

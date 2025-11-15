@@ -40,7 +40,6 @@ public record DiagramFunctionParameters(
     implements FunctionParameters {
 
   public enum DiagramType {
-    GRAPHVIZ(null, "https://sketchviz.com/new"),
     PLANTUML("/scripts/plantuml.py", "https://editor.plantuml.com/"),
     MERMAID("/scripts/mermaid.py", "https://mermaid.live/"),
     DBML("/scripts/dbml.py", "https://dbdiagram.io/d"),
@@ -68,7 +67,7 @@ public record DiagramFunctionParameters(
       tableName = "";
     }
     if (diagramType == null) {
-      diagramType = DiagramType.GRAPHVIZ;
+      diagramType = DiagramType.PLANTUML;
     }
   }
 
