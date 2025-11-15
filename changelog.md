@@ -2,6 +2,13 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.1.5-2"></a>
+## Release 17.1.5-2 - 2025-11-14
+
+- Add tool to generate database diagrams
+- Update tool descriptions
+
+
 <a name="v17.1.5-1"></a>
 ## Release 17.1.5-1 - 2025-11-11
 
