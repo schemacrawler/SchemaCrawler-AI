@@ -1,5 +1,6 @@
 schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition
 schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition
+schemacrawler.tools.ai.functions.DiagramFunctionDefinition
 schemacrawler.tools.ai.functions.LintFunctionDefinition
 schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition
 schemacrawler.tools.ai.functions.ListFunctionDefinition

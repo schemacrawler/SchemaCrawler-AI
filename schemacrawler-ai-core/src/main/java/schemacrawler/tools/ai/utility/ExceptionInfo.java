@@ -16,45 +16,25 @@ import com.fasterxml.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"error-message", "error-type", "stack-trace"})
+@JsonPropertyOrder({"error-message", "error-type"})
 public class ExceptionInfo {
-
-  public static String getStackTraceHead(final Throwable ex, final int maxLines) {
-    final StringBuilder sb = new StringBuilder();
-    sb.append(ex.toString()).append("\n");
-
-    final StackTraceElement[] elements = ex.getStackTrace();
-    for (int i = 0; i < Math.min(maxLines, elements.length); i++) {
-      sb.append("\tat ").append(elements[i].toString()).append("\n");
-    }
-
-    return sb.toString();
-  }
 
   public final String type;
   public final String message;
-  public final String stackTrace;
 
   public ExceptionInfo(final Exception ex) {
     if (ex == null) {
       type = "";
       message = "An unknown error occurred";
-      stackTrace = "";
-      return;
+    } else {
+      type = ex.getClass().getName();
+      message = ex.getMessage();
     }
-    type = ex.getClass().getName();
-    message = ex.getMessage();
-    stackTrace = getStackTraceHead(ex, 8);
   }
 
   @JsonProperty("error-message")
   public String getMessage() {
     return message;
-  }
-
-  @JsonProperty("stack-trace")
-  public String getStackTrace() {
-    return stackTrace;
   }
 
   @JsonProperty("error-type")

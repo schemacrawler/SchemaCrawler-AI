@@ -21,6 +21,7 @@ import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
@@ -32,7 +33,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 7;
+  private static final int NUM_FUNCTIONS = 8;
 
   @Test
   public void name() {
@@ -60,6 +61,7 @@ public class FunctionDefinitionRegistryTest {
             "lint",
             "list",
             "list-across-tables",
+            "diagram",
             "server-information",
             "table-sample"));
   }
@@ -80,6 +82,7 @@ public class FunctionDefinitionRegistryTest {
             LintFunctionDefinition.class.getSimpleName(),
             ListFunctionDefinition.class.getSimpleName(),
             ListAcrossTablesFunctionDefinition.class.getSimpleName(),
+            DiagramFunctionDefinition.class.getSimpleName(),
             ServerInformationFunctionDefinition.class.getSimpleName(),
             TableSampleFunctionDefinition.class.getSimpleName()));
   }

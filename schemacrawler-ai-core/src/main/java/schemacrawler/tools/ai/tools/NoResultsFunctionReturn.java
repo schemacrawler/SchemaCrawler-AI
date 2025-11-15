@@ -8,10 +8,10 @@
 
 package schemacrawler.tools.ai.tools;
 
-import java.util.function.Supplier;
+public record NoResultsFunctionReturn() implements FunctionReturn {
 
-public sealed interface FunctionReturn extends Supplier<String>
-    permits NoResultsFunctionReturn,
-        TextFunctionReturn,
-        JsonFunctionReturn,
-        ExceptionFunctionReturn {}
+  @Override
+  public String get() {
+    return "No results returned from tool call.";
+  }
+}

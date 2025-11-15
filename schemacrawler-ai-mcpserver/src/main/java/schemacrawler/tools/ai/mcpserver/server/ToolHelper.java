@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.databind.JsonNode;
@@ -57,6 +58,10 @@ public class ToolHelper {
         final Connection connection = ConnectionService.getConnection();
         functionReturn = functionCallback.execute(arguments, connection);
       } catch (final Exception e) {
+        logExceptionToClient(
+            exchange,
+            functionCallback.getFunctionName().getName() + ":\n" + request.arguments(),
+            e);
         functionReturn = new ExceptionFunctionReturn(e);
       }
       final List<Content> content = createContent(functionReturn);
