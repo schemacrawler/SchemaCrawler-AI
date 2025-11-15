@@ -17,15 +17,11 @@ public final class ServerInformationFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Provides database environment and server configuration information, delivering metadata
-    such as database engine type and version, collation settings, character encoding,
-    configuration parameters, server capabilities, and platform information. This helps with
-    compatibility assessment, migration planning, performance tuning, and environment
-    documentation, adapting its output to the specific database platform (Oracle, SQL Server,
-    PostgreSQL, MySQL, etc.) to ensure relevant details. (Details may vary depending on the
-    database platform.) This metadata provides essential context for generating SQL and for
-    analyzing the schema with other tools, ensuring that queries and validations are tailored
-    to the specific database environment.
+    Provides database environment and server configuration metadata, including
+    engine type and version, collation, encoding, parameters, capabilities, and
+    platform details. Adapts output to the specific database (such as Oracle, SQL
+    Server, PostgreSQL and so on) to support platform-aware SQL generation and
+    schema analysis.
     """
         .stripIndent()
         .replace("\n", " ")

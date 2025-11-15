@@ -16,12 +16,11 @@ public final class DescribeTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates detailed documentation for database tables and views, based on metadata
-    inspection. It captures column definitions (names, data types, constraints, nullability),
-    primary and foreign key relationships, index and trigger information, table attributes, and
-    complete DDL definitions. This helps with schema documentation, data modeling, relationship
-    mapping, and reverse engineering. Tool parameters support filtering table names by regular
-    expressions and selective detail scopes to optimize tool performance.
+    Generates detailed documentation for database tables and views, including
+    column definitions (names, data types, constraints, nullability), primary and
+    foreign key relationships, index and trigger information, table attributes,
+    and complete DDL definitions. Supports regex-based table name filtering and
+    configurable detail levels to optimize tool performance.
     Returns data as a JSON object.
     """
         .stripIndent()

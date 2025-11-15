@@ -16,11 +16,10 @@ public final class ListFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Provides a comprehensive database object inventory offering organized listings of all
-    schema objects such as tables, views, stored procedures, functions, sequences, synonyms,
-    and more. This is an essential starting point for database exploration, database asset
-    management, and schema analysis. The tool supports object type filtering and pattern-based
-    searching to streamline navigation across large databases.
+    Makes an inventory of database schema objects such as tables, views, stored
+    procedures, functions, sequences, synonyms, and more. This is an essential
+    starting point for database exploration, database asset management, and schema
+    analysis. The tool supports object type filtering and pattern-based searching.
     Returns JSON data.
     """
         .stripIndent()

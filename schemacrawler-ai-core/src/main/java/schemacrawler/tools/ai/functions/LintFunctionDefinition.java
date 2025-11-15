@@ -16,16 +16,12 @@ public final class LintFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Does comprehensive database schema analysis and validation, combining index
-    recommendations, schema validation, and design quality assessment into a single process. It
-    performs index analysis by detecting foreign keys without supporting indexes, redundant
-    indexes, unique indexes with nullable columns, and tables lacking indexes. It enforces
-    schema validation by checking data type consistency across tables with identical column
-    names, validating primary key and surrogate key patterns, and ensuring naming convention
-    compliance. It evaluates design quality by assessing table documentation completeness,
-    identifying reserved word usage, and flagging structural antipatterns such as single-column
-    tables or all-nullable columns. Running this tool can help with database performance
-    tuning, schema quality assurance, and architectural governance.
+    Analyzes and validates database schema structure and design. Detects missing
+    or redundant indexes, foreign keys without supporting indexes, and unique
+    indexes with nullable columns. Checks data type consistency across similarly
+    named columns, validates key patterns, and enforces naming conventions.
+    Assesses design quality by inspecting documentation completeness, reserved
+    word usage, and structural anomalies like single-column or all-nullable tables.
     Returns data as a JSON object.
     """
         .stripIndent()
