@@ -1,4 +1,4 @@
-name: Build and Publish SchemaCrawler AI Early Release Docker Image
+name: Create Early Access Release Docker Image
 
 on:
   workflow_dispatch:
@@ -12,8 +12,15 @@ concurrency:
 
 jobs:
   build:
-    name: Build and Publish SchemaCrawler AI Early Release Docker Image
+    name: Create Early Access Release
+    if: |
+      (github.event.pull_request.merged == true &&
+      github.event.pull_request.base.ref == 'main') ||
+      github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write  # Required for OIDC authentication
+      contents: write # Required to create a new tag
     steps:
 
 # SETUP BUILD ENVIRONMENT
@@ -46,17 +53,16 @@ jobs:
           -Dmaven.javadoc.skip=true \
           clean install
 
-# BUILD AND TEST
-    - id: build-test
-      name: Build and run tests
+# BUILD FOR DISTRIBUTION
+    - id: build
+      name: Build and test for distribution
       shell: bash
       run: |
         # Build
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          clean package
-
+          clean verify
     - id: move-distrib
       name: Move SchemaCrawler AI distribution
       shell: bash
@@ -67,6 +73,44 @@ jobs:
         mv ./schemacrawler-ai-distrib/target/_ai-distrib .
         ls -l ./_ai-distrib
 
+
+# CREATE GITHUB RELEASE AND ADD ASSETS
+    - id: install-gitsign
+      name: Install gitsign for commit signing
+      # See https://github.com/chainguard-dev/actions/blob/main/setup-gitsign/action.yml
+      uses: chainguard-dev/actions/setup-gitsign@87966c10ea9ee2c3a45da2dc41040ee57ab8376d
+    - id: move-tag
+      name: Move early-access-release tag
+      env:
+        GITSIGN_CONNECTOR_ID: "https://github.com/login/oauth"
+        GITSIGN_TOKEN_PROVIDER: "github-actions"
+      shell: bash
+      run: |
+        # Move early-access-release tag
+        # Set up user
+        git config user.name "Sualeh Fatehi"
+        git config user.email "sualeh@hotmail.com"
+        # Confirm gitsign is installed
+        gitsign --version
+        # Move tag
+        git tag -d early-access-release || true
+        git push --delete origin early-access-release || true
+        git tag -a early-access-release -m "SchemaCrawler AI Early Access Release"
+        git push --follow-tags origin early-access-release
+        git show early-access-release
+    - id: create-release
+      name: Create GitHub early access release
+      uses: softprops/action-gh-release@v2
+      with:
+        target_commitish: ${{ github.sha }}
+        tag_name: early-access-release
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: early-access-release
+        draft: false
+        prerelease: true
+        body: |
+          SchemaCrawler AI early access release at last commit ${{ github.sha }}
+        generate_release_notes: true
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
@@ -84,8 +128,8 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - id: build-docker-early-release
-      name: Build and push SchemaCrawler AI Early Release Docker image
+    - id: build-docker-image
+      name: Build and Push Docker Image
       uses: docker/build-push-action@v6
       with:
         file: ./Dockerfile.early-access-release
@@ -95,4 +139,6 @@ jobs:
           linux/arm64
         tags: |-
           schemacrawler/schemacrawler-ai:early-access-release
+        sbom: true
+        provenance: true
         push: true
