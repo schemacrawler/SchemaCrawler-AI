@@ -2,6 +2,12 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.1.5-3"></a>
+## Release 17.1.5-3 - 2025-11-16
+
+- Update to use Spring AI 1.1.0 GA
+
+
 <a name="v17.1.5-2"></a>
 ## Release 17.1.5-2 - 2025-11-14
 
