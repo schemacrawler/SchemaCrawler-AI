@@ -15,9 +15,6 @@ import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.SortedMap;
-import java.util.TreeMap;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
@@ -27,10 +24,10 @@ import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters;
 import schemacrawler.tools.ai.functions.ListFunctionParameters;
 import schemacrawler.tools.ai.functions.TableSampleFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.ToolUtility;
+import schemacrawler.tools.ai.tools.JsonSchemaGenerator;
 import us.fatehi.test.utility.TestWriter;
 
-public class JsonSchemaToolUtilityTest {
+public class JsonSchemaGeneratorTest {
 
   @Test
   public void functionParameters() {
@@ -48,14 +45,12 @@ public class JsonSchemaToolUtilityTest {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       for (final Class<?> parametersClass : functionParameters) {
-        final SortedMap<String, JsonNode> parametersSchemaMap =
-            new TreeMap<>(ToolUtility.extractParametersSchemaMap(parametersClass));
+        final JsonNode schemaNode = JsonSchemaGenerator.generateSchema(parametersClass);
+        // final JsonNode schemaNode =
+        // ToolUtility.extractParametersSchemaNode(parametersClass);
 
         out.println(parametersClass.getSimpleName());
-        for (Entry<String, JsonNode> parameter : parametersSchemaMap.entrySet()) {
-          out.println(parameter.getKey().indent(2).stripTrailing() + ": ");
-          out.println(parameter.getValue().toPrettyString().indent(4).stripTrailing());
-        }
+        out.println(schemaNode.toPrettyString().indent(2));
         out.println();
         out.println();
       }
