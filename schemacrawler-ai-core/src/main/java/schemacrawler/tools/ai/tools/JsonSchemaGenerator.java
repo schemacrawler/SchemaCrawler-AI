@@ -10,6 +10,8 @@ package schemacrawler.tools.ai.tools;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import tools.jackson.databind.BeanDescription;
 import tools.jackson.databind.JavaType;
 import tools.jackson.databind.JsonNode;
@@ -25,6 +27,9 @@ import tools.jackson.databind.node.ObjectNode;
 
 public class JsonSchemaGenerator {
 
+  private static final Logger LOGGER =
+      Logger.getLogger(JsonSchemaGenerator.class.getCanonicalName());
+
   private static final ObjectMapper mapper = new ObjectMapper();
 
   public static JsonNode generateSchema(final Class<?> clazz) {
@@ -38,7 +43,7 @@ public class JsonSchemaGenerator {
     final List<String> required = new ArrayList<>();
     final List<BeanPropertyDefinition> propertyDefinitions = beanDesc.findProperties();
     for (final BeanPropertyDefinition propertyDefinition : propertyDefinitions) {
-      System.out.println(propertyDefinition.getGetter().getFullName());
+      LOGGER.log(Level.FINE, propertyDefinition.getGetter().getFullName());
 
       final String propertyName = propertyDefinition.getName();
       final JavaType javaType = propertyDefinition.getPrimaryType();
