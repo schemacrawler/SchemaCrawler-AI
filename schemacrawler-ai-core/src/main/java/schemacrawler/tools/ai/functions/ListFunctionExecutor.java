@@ -14,7 +14,6 @@ import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -26,6 +25,7 @@ import schemacrawler.tools.ai.model.DatabaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
+import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListFunctionExecutor

@@ -13,7 +13,6 @@ import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
@@ -25,6 +24,7 @@ import schemacrawler.tools.ai.functions.ListFunctionParameters;
 import schemacrawler.tools.ai.functions.TableSampleFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.JsonSchemaGenerator;
+import tools.jackson.databind.JsonNode;
 import us.fatehi.test.utility.TestWriter;
 
 public class JsonSchemaGeneratorTest {

@@ -9,13 +9,13 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static tools.jackson.databind.util.NamingStrategyImpls.KEBAB_CASE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.PropertyNamingStrategies.KebabCaseStrategy;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
@@ -29,7 +29,7 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public final String getName() {
-    return new KebabCaseStrategy()
+    return KEBAB_CASE
         .translate(this.getClass().getSimpleName())
         .replace("-function-definition", "");
   }

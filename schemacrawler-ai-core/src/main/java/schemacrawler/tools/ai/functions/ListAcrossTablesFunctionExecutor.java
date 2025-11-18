@@ -11,8 +11,6 @@ package schemacrawler.tools.ai.functions;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
@@ -35,6 +33,8 @@ import schemacrawler.tools.ai.model.IndexDocument;
 import schemacrawler.tools.ai.model.TriggerDocument;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
 
 public final class ListAcrossTablesFunctionExecutor

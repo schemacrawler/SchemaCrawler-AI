@@ -8,16 +8,17 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.isBlank;
+
 import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import static java.util.Objects.requireNonNull;
-import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 

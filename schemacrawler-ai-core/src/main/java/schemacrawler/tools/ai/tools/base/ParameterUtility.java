@@ -8,9 +8,9 @@
 
 package schemacrawler.tools.ai.tools.base;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.utility.JsonUtility;
+import tools.jackson.core.JacksonException;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
@@ -22,7 +22,7 @@ public class ParameterUtility {
     }
     try {
       return JsonUtility.mapper.writeValueAsString(parameters);
-    } catch (final JsonProcessingException e) {
+    } catch (final JacksonException e) {
       return "";
     }
   }

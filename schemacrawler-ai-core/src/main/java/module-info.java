@@ -7,8 +7,8 @@ module us.fatehi.schemacrawler.ai_core {
   requires java.logging;
   requires java.sql;
   requires com.fasterxml.jackson.module.jsonSchema;
-  requires com.fasterxml.jackson.core;
-  requires transitive com.fasterxml.jackson.databind;
+  requires tools.jackson.core;
+  requires transitive tools.jackson.databind;
 
   // Export only the public API packages
   exports schemacrawler.tools.ai.tools;
@@ -17,7 +17,7 @@ module us.fatehi.schemacrawler.ai_core {
   // Keep internal implementation packages encapsulated
   // not exported, but open to Jackson for reflection
   opens schemacrawler.tools.ai.model to
-      com.fasterxml.jackson.databind;
+      tools.jackson.databind;
   opens schemacrawler.tools.ai.functions to
-      com.fasterxml.jackson.databind;
+      tools.jackson.databind;
 }

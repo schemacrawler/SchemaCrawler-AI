@@ -8,18 +8,20 @@
 
 package schemacrawler.tools.ai.tools;
 
-import com.fasterxml.jackson.databind.BeanDescription;
-import com.fasterxml.jackson.databind.JavaType;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.PropertyMetadata;
-import com.fasterxml.jackson.databind.SerializationConfig;
-import com.fasterxml.jackson.databind.introspect.BeanPropertyDefinition;
-import com.fasterxml.jackson.databind.node.ArrayNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
-import com.fasterxml.jackson.databind.type.TypeFactory;
 import java.util.ArrayList;
 import java.util.List;
+import tools.jackson.databind.BeanDescription;
+import tools.jackson.databind.JavaType;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.PropertyMetadata;
+import tools.jackson.databind.SerializationConfig;
+import tools.jackson.databind.introspect.AnnotatedClass;
+import tools.jackson.databind.introspect.BasicClassIntrospector;
+import tools.jackson.databind.introspect.BeanPropertyDefinition;
+import tools.jackson.databind.introspect.ClassIntrospector;
+import tools.jackson.databind.node.ArrayNode;
+import tools.jackson.databind.node.ObjectNode;
 
 public class JsonSchemaGenerator {
 
@@ -27,9 +29,7 @@ public class JsonSchemaGenerator {
 
   public static JsonNode generateSchema(final Class<?> clazz) {
 
-    final SerializationConfig config = mapper.getSerializationConfig();
-    final BeanDescription beanDesc =
-        config.introspect(TypeFactory.defaultInstance().constructType(clazz));
+    final BeanDescription beanDesc = createBeanDescription(clazz);
 
     final ObjectNode schemaNode = mapper.createObjectNode();
 
@@ -66,6 +66,18 @@ public class JsonSchemaGenerator {
     schemaNode.put("additionalProperties", false);
 
     return schemaNode;
+  }
+
+  private static BeanDescription createBeanDescription(final Class<?> clazz) {
+
+    final SerializationConfig config = mapper.serializationConfig();
+    final ClassIntrospector introspector = new BasicClassIntrospector().forOperation(config);
+
+    final JavaType type = mapper.getTypeFactory().constructType(clazz);
+    final AnnotatedClass classDef = introspector.introspectClassAnnotations(type);
+    final BeanDescription beanDesc = introspector.introspectForSerialization(type, classDef);
+
+    return beanDesc;
   }
 
   private static void setEnumValues(final ObjectNode node, final JavaType javaType) {

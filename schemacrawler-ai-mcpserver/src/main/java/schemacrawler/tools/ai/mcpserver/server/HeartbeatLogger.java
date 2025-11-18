@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
@@ -21,6 +20,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import tools.jackson.core.JacksonException;
 
 @Component
 @EnableScheduling
@@ -39,7 +39,7 @@ public class HeartbeatLogger {
         try {
           return "\n"
               + mapper.writerWithDefaultPrettyPrinter().writeValueAsString(heartbeatMessage);
-        } catch (final JsonProcessingException e) {
+        } catch (final JacksonException e) {
           LOGGER.log(Level.WARNING, "Could not convert server state to JSON", e);
           return heartbeatMessage.toString();
         }

@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.utility;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
