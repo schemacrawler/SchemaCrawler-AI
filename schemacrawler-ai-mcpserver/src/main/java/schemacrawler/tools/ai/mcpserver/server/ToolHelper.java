@@ -13,7 +13,6 @@ import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -34,7 +33,8 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.ToolUtility;
+import schemacrawler.tools.ai.tools.JsonSchemaGenerator;
+import tools.jackson.databind.JsonNode;
 
 @Component
 public class ToolHelper {
@@ -103,7 +103,7 @@ public class ToolHelper {
     final String toolName = functionDefinition.getName();
 
     final Class<P> parametersClass = functionDefinition.getParametersClass();
-    final JsonNode parametersSchemaNode = ToolUtility.extractParametersSchemaNode(parametersClass);
+    final JsonNode parametersSchemaNode = JsonSchemaGenerator.generateSchema(parametersClass);
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()

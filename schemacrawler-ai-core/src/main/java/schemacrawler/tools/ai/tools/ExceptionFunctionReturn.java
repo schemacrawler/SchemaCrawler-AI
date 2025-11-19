@@ -11,8 +11,8 @@ package schemacrawler.tools.ai.tools;
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import schemacrawler.tools.ai.utility.ExceptionInfo;
+import tools.jackson.databind.node.ObjectNode;
 
 public record ExceptionFunctionReturn(Exception exception) implements FunctionReturn {
 

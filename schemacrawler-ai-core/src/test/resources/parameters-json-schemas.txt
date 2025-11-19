@@ -1,0 +1,140 @@
+DescribeTablesFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "table-name" : {
+        "type" : "string",
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be returned, but the results could be large."
+      },
+      "description-scope" : {
+        "type" : "array",
+        "description" : "Indicates what details of the database table or view to return - columns, primary key, foreign keys, indexes, triggers, attributes, and table definition. Also returns which objects reference a given table as \"used by objects\". Columns, foreign key references to other tables, and remarks or comments are always returned by default. The other details can be requested. The results could be large.",
+        "items" : {
+          "type" : "string",
+          "enum" : [ "DEFAULT", "PRIMARY_KEY", "REFERENCED_TABLES", "INDEXES", "TRIGGERS", "USED_BY_OBJECTS", "ATTRIBUTES", "DEFINIITION" ]
+        }
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+
+
+
+DescribeRoutinesFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "routine-name" : {
+        "type" : "string",
+        "description" : "Name of database routine (stored procedure or function) to describe. May be specified as a regular expression matching the fully qualified stored procedure or function names (including the schema). Use an empty string if all routines are requested. If not specified, all routines are returned, but the results could be large."
+      },
+      "description-scope" : {
+        "type" : "array",
+        "description" : "Indicates what details of the database stored procedure or function to return - parameters (including return types), attributes, and routine definition. Parameters, return types, and remarks or comments are always returned.",
+        "items" : {
+          "type" : "string",
+          "enum" : [ "DEFAULT", "REFERENCED_OBJECTS", "ATTRIBUTES", "DEFINIITION" ]
+        }
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+
+
+
+LintFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "table-name" : {
+        "type" : "string",
+        "description" : "May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be processed, but the results could be large, and execution time may be longer."
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+
+
+
+ListFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "database-object-type" : {
+        "type" : "string",
+        "description" : "Type of database object to list, like tables (including views), routines (that is, stored procedures and functions), schemas (that is, catalogs), sequences, or synonyms. If the parameter is not provided, all database objects are listed.",
+        "enum" : [ "ALL", "TABLES", "ROUTINES", "SEQUENCES", "SYNONYMS" ]
+      },
+      "database-object-name" : {
+        "type" : "string",
+        "description" : "Name of database object to list. Is a regular expression, matching the fully qualified database object name (including the schema). May match more than one database object. Use an empty string if all database objects are requested."
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+
+
+
+ListAcrossTablesFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "dependant-object-type" : {
+        "type" : "string",
+        "description" : "Type of database table dependant objects, like columns, indexes, foreign keys or triggers.",
+        "enum" : [ "NONE", "COLUMNS", "INDEXES", "FOREIGN_KEYS", "TRIGGERS" ]
+      },
+      "dependant-object-name" : {
+        "type" : "string",
+        "description" : "Name of table dependant object. May be a regular expression, matching the fully qualified dependant object name (including the schema and table). May match more than one dependant object. Use an empty string if all dependant objects are requested. If not specified, all table dependant objects will be returned, but the results could be large."
+      },
+      "table-name" : {
+        "type" : "string",
+        "description" : "Name of database table for which dependant objects are described. May be a regular expression, matching the fully qualified table name (including the schema), in which case, multiple tables may be returned. Use an empty string if all tables are requested. If not specified, all tables will be returned, but the results could be large."
+      }
+    },
+    "required" : [ "dependant-object-type" ],
+    "additionalProperties" : false
+  }
+
+
+
+DiagramFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "table-name" : {
+        "type" : "string",
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be returned, but the results could be large."
+      },
+      "diagram-type" : {
+        "type" : "string",
+        "description" : "Indicates database schema diagram format - Graphviz, PlantUML, Mermaid or DBML from dbdiagram.io.",
+        "enum" : [ "PLANTUML", "MERMAID", "DBML" ]
+      }
+    },
+    "required" : [ "diagram-type" ],
+    "additionalProperties" : false
+  }
+
+
+
+TableSampleFunctionParameters
+  {
+    "type" : "object",
+    "properties" : {
+      "table-name" : {
+        "type" : "string",
+        "description" : "May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be processed, but the results could be large, and execution time may be longer."
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+
+
+

@@ -1,8 +1,8 @@
 package schemacrawler.tools.ai.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import java.io.Serializable;
+import tools.jackson.databind.node.ObjectNode;
 
 public interface Document extends Serializable {
 

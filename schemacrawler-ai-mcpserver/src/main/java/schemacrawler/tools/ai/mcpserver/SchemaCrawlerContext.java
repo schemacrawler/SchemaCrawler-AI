@@ -13,7 +13,6 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
-import com.fasterxml.jackson.databind.JsonNode;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,6 +32,7 @@ import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.readconfig.EnvironmentVariableConfig;

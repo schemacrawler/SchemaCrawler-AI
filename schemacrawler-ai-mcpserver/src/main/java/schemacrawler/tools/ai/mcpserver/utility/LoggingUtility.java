@@ -8,8 +8,6 @@
 
 package schemacrawler.tools.ai.mcpserver.utility;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
@@ -19,6 +17,8 @@ import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.utility.JsonUtility;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
