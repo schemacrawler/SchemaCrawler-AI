@@ -6,7 +6,6 @@ module us.fatehi.schemacrawler.ai_core {
   requires us.fatehi.schemacrawler.lint;
   requires java.logging;
   requires java.sql;
-  requires com.fasterxml.jackson.module.jsonSchema;
   requires tools.jackson.core;
   requires transitive tools.jackson.databind;
 
