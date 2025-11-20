@@ -65,6 +65,11 @@
       <groupId>tools.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>
+    <dependency>
+      <groupId>us.fatehi</groupId>
+      <artifactId>mcp-json-schema</artifactId>
+      <version>1.0.1</version>
+    </dependency>
 
     <!-- Test dependencies -->
     <dependency>

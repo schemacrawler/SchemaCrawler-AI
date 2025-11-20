@@ -33,8 +33,8 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.JsonSchemaGenerator;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 
 @Component
 public class ToolHelper {
@@ -103,7 +103,7 @@ public class ToolHelper {
     final String toolName = functionDefinition.getName();
 
     final Class<P> parametersClass = functionDefinition.getParametersClass();
-    final JsonNode parametersSchemaNode = JsonSchemaGenerator.generateSchema(parametersClass);
+    final JsonNode parametersSchemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()

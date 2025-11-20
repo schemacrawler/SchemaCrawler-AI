@@ -23,8 +23,8 @@ import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters;
 import schemacrawler.tools.ai.functions.ListFunctionParameters;
 import schemacrawler.tools.ai.functions.TableSampleFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.JsonSchemaGenerator;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 import us.fatehi.test.utility.TestWriter;
 
 public class JsonSchemaGeneratorTest {
@@ -45,7 +45,7 @@ public class JsonSchemaGeneratorTest {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       for (final Class<?> parametersClass : functionParameters) {
-        final JsonNode schemaNode = JsonSchemaGenerator.generateSchema(parametersClass);
+        final JsonNode schemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
         // final JsonNode schemaNode =
         // ToolUtility.extractParametersSchemaNode(parametersClass);
 
