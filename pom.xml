@@ -15,5 +15,8 @@
     <module>schemacrawler-ai-mcpserver</module>
     <module>schemacrawler-ai-distrib</module>
   </modules>
+  <properties>
+    <maven.compiler.release>17</maven.compiler.release>
+  </properties>
 
 </project>
