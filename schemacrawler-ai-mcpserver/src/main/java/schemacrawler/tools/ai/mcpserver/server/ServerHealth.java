@@ -49,7 +49,7 @@ public class ServerHealth {
   }
 
   public String getServerName() {
-    return String.format("%s %s", serverName, serverVersion);
+    return "%s %s".formatted(serverName, serverVersion);
   }
 
   public Duration getServerUptime() {

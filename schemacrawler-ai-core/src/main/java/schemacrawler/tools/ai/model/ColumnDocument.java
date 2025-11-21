@@ -15,6 +15,7 @@ import static us.fatehi.utility.Utility.isBlank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import schemacrawler.schema.Column;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -25,7 +26,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
 public final class ColumnDocument implements Document {
 
-  private static final long serialVersionUID = 5110252842937512910L;
+  @Serial private static final long serialVersionUID = 5110252842937512910L;
 
   private final String columnName;
   private final String dataType;

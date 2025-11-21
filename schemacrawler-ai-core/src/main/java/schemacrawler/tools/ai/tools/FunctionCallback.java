@@ -59,8 +59,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
 
     if (LOGGER.isLoggable(Level.FINER)) {
       LOGGER.log(
-          Level.FINER,
-          String.format("Executing%n%s", toCallObject(argumentsString).toPrettyString()));
+          Level.FINER, "Executing%n%s".formatted(toCallObject(argumentsString).toPrettyString()));
     }
 
     try {

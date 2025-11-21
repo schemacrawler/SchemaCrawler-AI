@@ -127,9 +127,6 @@ public class ToolHelperTest {
 
   @Autowired private ToolHelper toolHelper;
 
-  @Autowired
-  ToolHelperTest(final ConnectionService connectionService) {}
-
   @Test
   public void testToolCallHandler() throws Exception {
     final TrivialFunctionDefinition functionDefinition = new TrivialFunctionDefinition();

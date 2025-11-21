@@ -51,7 +51,7 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     if (isBlank(name)) {
       throw new IllegalArgumentException("Blank name provided");
     }
-    final String pattern = String.format(".*%s.*", name);
+    final String pattern = ".*%s.*".formatted(name);
     final int flags = Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE;
     return Pattern.compile(pattern, flags);
   }

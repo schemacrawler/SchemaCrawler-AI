@@ -13,6 +13,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.List;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -24,7 +25,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonPropertyOrder({"db", "tables", "routines"})
 public final class CatalogDocument implements Document {
 
-  private static final long serialVersionUID = -1937966351313941597L;
+  @Serial private static final long serialVersionUID = -1937966351313941597L;
 
   private final String databaseProductName;
   private final List<TableDocument> tables;

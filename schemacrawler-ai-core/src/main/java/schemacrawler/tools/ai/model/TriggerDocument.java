@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import java.util.List;
 import java.util.Objects;
 import java.util.stream.Collectors;
@@ -33,7 +34,7 @@ import tools.jackson.databind.node.ObjectNode;
 })
 public final class TriggerDocument implements Document {
 
-  private static final long serialVersionUID = 1873929712139211255L;
+  @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String triggerName;
   private final String actionCondition;
