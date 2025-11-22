@@ -15,6 +15,7 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.Table;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -26,7 +27,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonPropertyOrder({"schema", "table", "name"})
 public final class ReferencedColumnDocument implements Document {
 
-  private static final long serialVersionUID = -4296619897674250692L;
+  @Serial private static final long serialVersionUID = -4296619897674250692L;
 
   private final String schemaName;
   private final String tableName;

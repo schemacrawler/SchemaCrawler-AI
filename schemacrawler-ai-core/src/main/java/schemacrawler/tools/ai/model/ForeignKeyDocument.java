@@ -14,6 +14,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Table;
@@ -26,7 +27,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonPropertyOrder({"name", "referenced-table"})
 public final class ForeignKeyDocument implements Document {
 
-  private static final long serialVersionUID = 1873929712139211255L;
+  @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String foreignKeyName;
   private final String referencedTableName;

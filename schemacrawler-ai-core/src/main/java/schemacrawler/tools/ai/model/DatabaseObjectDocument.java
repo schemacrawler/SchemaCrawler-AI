@@ -16,6 +16,7 @@ import static us.fatehi.utility.Utility.isBlank;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import schemacrawler.schema.DatabaseObject;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -26,7 +27,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonPropertyOrder({"schema", "name", "type"})
 public final class DatabaseObjectDocument implements Document {
 
-  private static final long serialVersionUID = -2159895984317222363L;
+  @Serial private static final long serialVersionUID = -2159895984317222363L;
 
   private final String schemaName;
   private final String databaseObjectName;

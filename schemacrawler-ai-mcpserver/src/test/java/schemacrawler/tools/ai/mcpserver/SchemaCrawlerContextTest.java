@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -62,11 +63,13 @@ public class SchemaCrawlerContextTest {
   @DisplayName("Should parse valid JSON from SCHCRWLR_ADDITIONAL_CONFIG into Config")
   void shouldParseValidAdditionalConfigJson() {
     final String json =
-        "{\n"
-            + "  \"transport\": \"http\",\n"
-            + "  \"exclude-tools\": \"tool1,tool2\",\n"
-            + "  \"custom-key\": \"custom-value\"\n"
-            + "}";
+        """
+        {
+          "transport": "http",
+          "exclude-tools": "tool1,tool2",
+          "custom-key": "custom-value"
+        }\
+        """;
     envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", json);
     context = new SchemaCrawlerContext(envAccessor);
 

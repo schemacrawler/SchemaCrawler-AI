@@ -24,6 +24,7 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import java.io.Serial;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -61,7 +62,7 @@ import tools.jackson.databind.node.ObjectNode;
 })
 public final class TableDocument implements Document {
 
-  private static final long serialVersionUID = 1873929712139211255L;
+  @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String schemaName;
   private final String tableName;

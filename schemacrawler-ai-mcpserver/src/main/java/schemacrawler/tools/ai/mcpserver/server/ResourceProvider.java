@@ -86,12 +86,12 @@ public class ResourceProvider {
                         || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
     if (databaseObjects.isEmpty()) {
-      throw new IORuntimeException(String.format("<%s> not found", databaseObjectName));
+      throw new IORuntimeException("<%s> not found".formatted(databaseObjectName));
     }
     if (databaseObjects.size() > 1) {
       throw new IORuntimeException(
-          String.format(
-              "<%s> has too many matches - provide a fully-qualified name", databaseObjectName));
+          "<%s> has too many matches - provide a fully-qualified name"
+              .formatted(databaseObjectName));
     }
 
     final DO databaseObject = databaseObjects.get(0);

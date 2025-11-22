@@ -12,9 +12,9 @@ import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
 import java.util.Collection;
+import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.lang.NonNull;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.SchemaCrawlerException;
 import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
