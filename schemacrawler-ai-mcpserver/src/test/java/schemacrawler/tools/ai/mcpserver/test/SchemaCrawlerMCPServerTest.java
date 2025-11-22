@@ -24,11 +24,11 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.context.TestConfiguration;
-import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.boot.test.web.server.LocalServerPort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestClient;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
@@ -57,13 +57,18 @@ public class SchemaCrawlerMCPServerTest {
     }
 
     @Bean
-    boolean isInErrorState() {
-      return false;
+    ExcludeTools excludeTools() {
+      return new ExcludeTools();
     }
 
     @Bean
-    ExcludeTools excludeTools() {
-      return new ExcludeTools();
+    FunctionDefinitionRegistry functionDefinitionRegistry() {
+      return FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    }
+
+    @Bean
+    boolean isInErrorState() {
+      return false;
     }
 
     @Bean
@@ -75,16 +80,11 @@ public class SchemaCrawlerMCPServerTest {
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);
     }
-
-    @Bean
-    FunctionDefinitionRegistry functionDefinitionRegistry() {
-      return FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
-    }
   }
 
   @LocalServerPort private int port;
 
-  @Autowired private TestRestTemplate restTemplate;
+  @Autowired private RestClient.Builder restClientBuilder;
 
   @Autowired private ServerHealth serverHealth;
 
@@ -109,8 +109,9 @@ public class SchemaCrawlerMCPServerTest {
   @Test
   @DisplayName("Health endpoint returns status UP in integration test")
   public void healthEndpoint() {
+    final RestClient restClient = restClientBuilder.baseUrl("http://localhost:" + port).build();
     final ResponseEntity<Map> response =
-        restTemplate.getForEntity("http://localhost:" + port + "/health", Map.class);
+        restClient.get().uri("/health").retrieve().toEntity(Map.class);
 
     assertThat(response.getStatusCode(), is(HttpStatus.OK));
 
