@@ -43,14 +43,12 @@
         <exclude>org.slf4j:*</exclude>
         <exclude>ch.qos.logback:*</exclude>
         <exclude>com.azure:azure-core-test</exclude>
-        <exclude>com.fasterxml.jackson.*:*</exclude>
         <exclude>info.picocli:*</exclude>
         <exclude>javax.validation:*</exclude>
         <exclude>org.apache.ant:*</exclude>
         <exclude>org.junit.jupiter:*</exclude>
         <exclude>org.junit.platform:*</exclude>
         <exclude>org.opentest4j:*</exclude>
-        <exclude>org.yaml:*</exclude>
         <exclude>org.graalvm.*:*</exclude>
         <!--  SchemaCrawler dependencies -->
         <exclude>us.fatehi:schemacrawler</exclude>

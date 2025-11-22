@@ -13,7 +13,7 @@ LABEL \
 
 # Copy SchemaCrawler AI extra distribution jars from the build directory
 COPY \
-  ./_ai-distrib/ \
+  ./schemacrawler-ai-distrib/target/_ai-distrib/ \
   /opt/schemacrawler/
 
 CMD ["bash", "/opt/schemacrawler/bin/schemacrawler-ai.sh"]

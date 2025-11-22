@@ -68,10 +68,8 @@ jobs:
       shell: bash
       run: |
         # Move SchemaCrawler AI distribution
-        echo "Move SchemaCrawler AI distribution"
-        pwd
-        mv ./schemacrawler-ai-distrib/target/_ai-distrib .
-        ls -l ./_ai-distrib
+        echo "NO NEED TO MOVE DISTRIBUTION"
+        echo "The Early Access Release Docker Image build will pick it up from the target directory"
 
 
 # CREATE GITHUB RELEASE AND ADD ASSETS
