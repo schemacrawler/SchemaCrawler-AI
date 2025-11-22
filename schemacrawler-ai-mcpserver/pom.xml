@@ -67,6 +67,7 @@
       <version>${project.version}</version>
     </dependency>
 
+	<!-- Spring AI WebMVC starter, with substitued dependencies -->
     <dependency>
       <groupId>org.springframework.ai</groupId>
       <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
@@ -75,11 +76,20 @@
           <groupId>org.springframework.boot</groupId>
           <artifactId>spring-boot-starter</artifactId>
         </exclusion>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-web</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
+    <!-- Replace excluded dependencies -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
@@ -111,6 +121,7 @@
       <scope>test</scope>
     </dependency>
 
+	<!-- Spring Boot test starters -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>

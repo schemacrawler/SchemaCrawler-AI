@@ -1,5 +1,5 @@
 lib/
-tree.txt
+*.txt
 **/gpl*.*
 .idea/
 _ai-distrib/
