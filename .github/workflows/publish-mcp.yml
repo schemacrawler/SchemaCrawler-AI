@@ -15,7 +15,7 @@ jobs:
 
       - id: checkout-code
         name: Checkout code
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
 
       - id: install-mcp-publisher
         name: Install MCP Publisher
