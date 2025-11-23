@@ -2,6 +2,19 @@
 
 SchemaCrawler AI release notes.
 
+
+<a name="v17.1.6-2"></a>
+## Release 17.1.6-2 - 2025-11-23
+
+- Add ability to generate Graphviz diagrams
+
+
+<a name="v17.1.6-1"></a>
+## Release 17.1.6-1 - 2025-11-20
+
+- Support Jackson 3
+
+
 <a name="v17.1.5-3"></a>
 ## Release 17.1.5-3 - 2025-11-16
 

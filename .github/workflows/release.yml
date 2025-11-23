@@ -87,4 +87,4 @@ jobs:
         git push --delete origin docker-mcp-registry || true
         git tag -a docker-mcp-registry -m "SchemaCrawler AI Early Access Release"
         git push --follow-tags origin docker-mcp-registry
-        git show docker-mcp-registry
+        git show --no-patch docker-mcp-registry
