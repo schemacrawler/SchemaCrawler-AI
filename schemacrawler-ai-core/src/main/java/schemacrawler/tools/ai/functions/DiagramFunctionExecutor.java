@@ -41,10 +41,10 @@ public final class DiagramFunctionExecutor
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     final FilterOptionsBuilder filterOptionsBuilder = FilterOptionsBuilder.builder();
-    if (commandOptions.includeChildren()) {
+    if (commandOptions.includeChildTables()) {
       filterOptionsBuilder.childTableFilterDepth(1);
     }
-    if (commandOptions.includeParents()) {
+    if (commandOptions.includeReferencedTables()) {
       filterOptionsBuilder.parentTableFilterDepth(1);
     }
 

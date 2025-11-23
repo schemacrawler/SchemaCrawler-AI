@@ -15,7 +15,6 @@ import java.util.Collection;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
-import schemacrawler.schemacrawler.FilterOptionsBuilder;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -56,21 +55,12 @@ public final class DescribeTablesFunctionExecutor
             .includeRoutines(new ExcludeAll())
             .includeTables(new IncludeAll());
 
-    final FilterOptionsBuilder filterOptionsBuilder = FilterOptionsBuilder.builder();
-    if (commandOptions.includeChildren()) {
-      filterOptionsBuilder.childTableFilterDepth(1);
-    }
-    if (commandOptions.includeParents()) {
-      filterOptionsBuilder.parentTableFilterDepth(1);
-    }
-
     final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
 
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
         .withLimitOptions(limitOptionsBuilder.toOptions())
-        .withFilterOptions(filterOptionsBuilder.build())
         .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 

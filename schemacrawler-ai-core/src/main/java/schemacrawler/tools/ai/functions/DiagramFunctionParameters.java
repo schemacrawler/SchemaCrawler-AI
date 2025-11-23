@@ -22,23 +22,24 @@ public record DiagramFunctionParameters(
             Name of database table or view to describe.
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
-            Do not use a regular expression that will match all tables, but instead
-            try to match a subset, since otherwise results may be large.
+            Try not to match all tables, but instead use a regular expression
+            to match a subset, since otherwise results may be large.
             """)
         @JsonProperty(required = false)
         String tableName,
     @JsonPropertyDescription(
             """
-            Also include children (or dependent) tables for the selected tables.
+            If true, also include child (or dependent) tables for the selected tables.
             """)
         @JsonProperty(required = false, defaultValue = "false")
-        boolean includeChildren,
+        boolean includeChildTables,
     @JsonPropertyDescription(
             """
-            Also include parent tables for (or tables that are referenced by) the selected tables.
+            If true, also include tables that are referenced by the selected tables.
+            (These are sometimes known as parent tables.)
             """)
         @JsonProperty(required = false, defaultValue = "false")
-        boolean includeParents,
+        boolean includeReferencedTables,
     @JsonPropertyDescription(
             """
             Indicates database schema diagram format - Graphviz, PlantUML, Mermaid
