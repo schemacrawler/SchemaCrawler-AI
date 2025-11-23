@@ -1,1 +1,6 @@
-{"table-name":"AUTHORS","include-children":false,"include-parents":false,"description-scope":[]}
+{
+  "table-name" : "AUTHORS",
+  "include-children" : false,
+  "include-parents" : false,
+  "description-scope" : [ ]
+}

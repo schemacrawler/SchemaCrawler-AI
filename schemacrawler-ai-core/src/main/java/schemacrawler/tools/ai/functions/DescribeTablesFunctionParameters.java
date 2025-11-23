@@ -34,13 +34,13 @@ public record DescribeTablesFunctionParameters(
             """
             Also include children (or dependent) tables for the selected tables.
             """)
-        @JsonProperty(required = false)
+        @JsonProperty(required = false, defaultValue = "false")
         boolean includeChildren,
     @JsonPropertyDescription(
             """
             Also include parent tables for (or tables that are referenced by) the selected tables.
             """)
-        @JsonProperty(required = false)
+        @JsonProperty(required = false, defaultValue = "false")
         boolean includeParents,
     @JsonPropertyDescription(
             """
