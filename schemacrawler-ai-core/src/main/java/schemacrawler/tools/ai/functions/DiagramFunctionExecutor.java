@@ -8,10 +8,14 @@
 
 package schemacrawler.tools.ai.functions;
 
+import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.tools.ai.functions.DiagramFunctionParameters.DiagramType;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
+import schemacrawler.tools.ai.tools.base.ExecutionParameters;
 import schemacrawler.tools.options.Config;
+import schemacrawler.tools.options.ConfigUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DiagramFunctionExecutor
@@ -22,18 +26,17 @@ public final class DiagramFunctionExecutor
   }
 
   @Override
-  protected String getCommand() {
-    return "script";
+  public FunctionReturn call() {
+    final Config additionalConfig = createAdditionalConfig();
+    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final ExecutionParameters executionParameters =
+        new ExecutionParameters("script", additionalConfig, grepTablesInclusionRule, "text");
+    final Path outputFilePath = execute(executionParameters);
+    return returnText(outputFilePath);
   }
 
-  @Override
-  protected InclusionRule grepTablesInclusionRule() {
-    return makeInclusionRule(commandOptions.tableName());
-  }
-
-  @Override
-  protected Config createAdditionalConfig() {
-    final Config additionalConfig = super.createAdditionalConfig();
+  private Config createAdditionalConfig() {
+    final Config additionalConfig = ConfigUtility.newConfig();
 
     final DiagramType diagramType = commandOptions.diagramType();
     additionalConfig.put("script-language", "python");

@@ -15,7 +15,6 @@ import java.util.regex.Pattern;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -33,8 +32,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   public final String toString() {
     return command.getName();
   }
-
-  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
 
   protected InclusionRule makeInclusionRule(final String objectName) {
     final InclusionRule inclusionRule;

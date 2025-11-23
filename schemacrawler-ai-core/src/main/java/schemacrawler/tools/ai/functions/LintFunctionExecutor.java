@@ -8,8 +8,12 @@
 
 package schemacrawler.tools.ai.functions;
 
+import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
+import schemacrawler.tools.ai.tools.base.ExecutionParameters;
+import schemacrawler.tools.command.lint.options.LintReportOutputFormat;
 import us.fatehi.utility.property.PropertyName;
 
 public final class LintFunctionExecutor
@@ -20,12 +24,12 @@ public final class LintFunctionExecutor
   }
 
   @Override
-  protected String getCommand() {
-    return "lint";
-  }
-
-  @Override
-  protected InclusionRule grepTablesInclusionRule() {
-    return makeInclusionRule(commandOptions.tableName());
+  public FunctionReturn call() {
+    final String outputFormat = LintReportOutputFormat.json.name();
+    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final ExecutionParameters executionParameters =
+        new ExecutionParameters("lint", grepTablesInclusionRule, outputFormat);
+    final Path outputFilePath = execute(executionParameters);
+    return returnJson(outputFilePath);
   }
 }

@@ -24,6 +24,8 @@ public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
   @Override
   public abstract JsonFunctionReturn call() throws Exception;
 
+  protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+
   protected final void refilterCatalog() {
     final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
     MetaDataUtility.reduceCatalog(catalog, options);

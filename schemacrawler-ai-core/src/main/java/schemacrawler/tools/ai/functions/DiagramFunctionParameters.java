@@ -8,11 +8,9 @@
 
 package schemacrawler.tools.ai.functions;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.base.ParameterUtility;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -48,7 +46,7 @@ public record DiagramFunctionParameters(
     private final String script;
     private final String onlineEditorUrl;
 
-    private DiagramType(final String script, final String url) {
+    DiagramType(final String script, final String url) {
       this.script = script;
       onlineEditorUrl = url;
     }
@@ -74,11 +72,5 @@ public record DiagramFunctionParameters(
   @Override
   public String toString() {
     return ParameterUtility.parametersToString(this);
-  }
-
-  @JsonIgnore
-  @Override
-  public final FunctionReturnType getFunctionReturnType() {
-    return FunctionReturnType.TEXT;
   }
 }

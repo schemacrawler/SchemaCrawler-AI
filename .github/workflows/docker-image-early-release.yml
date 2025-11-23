@@ -19,7 +19,7 @@ jobs:
       github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     permissions:
-      id-token: write  # Required for OIDC authentication
+      id-token: write # Required for OIDC authentication
       contents: write # Required to create a new tag
     steps:
 
@@ -72,7 +72,22 @@ jobs:
         echo "The Early Access Release Docker Image build will pick it up from the target directory"
 
 
-# CREATE GITHUB RELEASE AND ADD ASSETS
+# CREATE GITHUB RELEASE
+    - id: create-release
+      name: Create GitHub early access release
+      uses: softprops/action-gh-release@v2
+      with:
+        target_commitish: ${{ github.sha }}
+        tag_name: early-access-release
+        token: ${{ secrets.GITHUB_TOKEN }}
+        name: early-access-release
+        draft: false
+        prerelease: true
+        body: |
+          SchemaCrawler AI early access release at last commit ${{ github.sha }}
+        generate_release_notes: true
+
+# MOVE GITHUB TAG
     - id: install-gitsign
       name: Install gitsign for commit signing
       # See https://github.com/chainguard-dev/actions/blob/main/setup-gitsign/action.yml
@@ -96,19 +111,6 @@ jobs:
         git tag -a early-access-release -m "SchemaCrawler AI Early Access Release"
         git push --follow-tags origin early-access-release
         git show early-access-release
-    - id: create-release
-      name: Create GitHub early access release
-      uses: softprops/action-gh-release@v2
-      with:
-        target_commitish: ${{ github.sha }}
-        tag_name: early-access-release
-        token: ${{ secrets.GITHUB_TOKEN }}
-        name: early-access-release
-        draft: false
-        prerelease: true
-        body: |
-          SchemaCrawler AI early access release at last commit ${{ github.sha }}
-        generate_release_notes: true
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu

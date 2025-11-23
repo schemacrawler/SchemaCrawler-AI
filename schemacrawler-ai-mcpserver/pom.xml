@@ -90,6 +90,19 @@
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
+    <!-- Apache Tika core: MIME type detection -->
+    <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-core</artifactId>
+        <version>3.2.3</version>
+    </dependency>
+    <!-- Tika parsers for content extraction (PDF, DOCX, etc.) -->
+    <dependency>
+        <groupId>org.apache.tika</groupId>
+        <artifactId>tika-parsers-standard-package</artifactId>
+        <version>3.2.3</version>
+    </dependency>
+
     <!-- Test dependencies -->
     <dependency>
       <groupId>us.fatehi</groupId>

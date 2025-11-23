@@ -14,6 +14,9 @@ jobs:
   build:
     name: Create Release
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC authentication
+      contents: write # Required to create a new tag
     steps:
 
 # VALIDATE TAGS
@@ -60,3 +63,28 @@ jobs:
         body: |
           SchemaCrawler AI ${{ github.event.release.tag_name }} release at last commit ${{ github.sha }}
         generate_release_notes: true
+
+# MOVE GITHUB TAG
+    - id: install-gitsign
+      name: Install gitsign for commit signing
+      # See https://github.com/chainguard-dev/actions/blob/main/setup-gitsign/action.yml
+      uses: chainguard-dev/actions/setup-gitsign@3e8a2a226fad9e1ecbf2d359b8a7697554a4ac6d
+    - id: move-tag
+      name: Move docker-mcp-registry tag
+      env:
+        GITSIGN_CONNECTOR_ID: "https://github.com/login/oauth"
+        GITSIGN_TOKEN_PROVIDER: "github-actions"
+      shell: bash
+      run: |
+        # Move docker-mcp-registry tag
+        # Set up user
+        git config user.name "Sualeh Fatehi"
+        git config user.email "sualeh@hotmail.com"
+        # Confirm gitsign is installed
+        gitsign --version
+        # Move tag
+        git tag -d docker-mcp-registry || true
+        git push --delete origin docker-mcp-registry || true
+        git tag -a docker-mcp-registry -m "SchemaCrawler AI Early Access Release"
+        git push --follow-tags origin docker-mcp-registry
+        git show docker-mcp-registry
