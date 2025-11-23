@@ -31,7 +31,6 @@ import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.NoResultsFunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
@@ -42,11 +41,9 @@ import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
 import schemacrawler.utility.MetaDataUtility;
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
     extends AbstractFunctionExecutor<P> {
@@ -61,6 +58,10 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   @Override
   public boolean usesConnection() {
     return true;
+  }
+
+  protected Config createAdditionalConfig() {
+    return null;
   }
 
   @Override
@@ -78,8 +79,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
         .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
-  protected final Path execute(
-      final String command, final Config additionalConfig, final String outputFormat) {
+  protected final Path execute(final String command, final String outputFormat) {
 
     requireNotBlank(command, "No command provided");
 
@@ -97,7 +97,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     final OutputOptions outputOptions = createOutputOptions(outputFormatValue, outputFilePath);
 
     final Config config = SchemaTextOptionsBuilder.builder().noInfo().toConfig();
-    config.merge(additionalConfig);
+    config.merge(createAdditionalConfig());
 
     final SchemaCrawlerExecutable executable = createExecutable(command);
     executable.setOutputOptions(outputOptions);
@@ -113,45 +113,42 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     return !catalog.getTables().isEmpty();
   }
 
-  protected final FunctionReturn returnFileUrl(final Path outputFilePath) {
-    if (!outputFileHasResults(outputFilePath)) {
-      return new NoResultsFunctionReturn();
-    }
-
-    final ObjectNode node = mapper.createObjectNode();
-    node.put("url-path", "/temp/" + outputFilePath.getFileName());
-    node.put(
-        "instructions",
-        """
-        The output is file that is available from a web URL.
-        Construct the URL using the external host and port of
-        the MCP server, and add the "url-path" to it.
-        Instruct the user to obtain the output from that URL.
-        """);
-
-    return new JsonFunctionReturn(node);
-  }
-
   protected final FunctionReturn returnJson(final Path outputFilePath) {
     if (!outputFileHasResults(outputFilePath)) {
       return new NoResultsFunctionReturn();
     }
 
     try {
-      String results = Files.readString(outputFilePath);
+      final String results = Files.readString(outputFilePath);
       try {
         final JsonNode node = mapper.readTree(results);
         return new JsonFunctionReturn(node);
       } catch (final Exception e) {
         LOGGER.log(
             Level.WARNING,
-            e,
-            new StringFormat(
-                "Could not convert results from <%s> to JSON", getCommandName().getName()));
+            "Could not convert results from <%s> to JSON".formatted(getCommandName().getName()),
+            e);
         return new TextFunctionReturn(results);
       }
     } catch (IOException e) {
       return new ExceptionFunctionReturn(e);
+    } finally {
+      deleteTempFile(outputFilePath);
+    }
+  }
+
+  protected final FunctionReturn returnText(final Path outputFilePath) {
+    if (!outputFileHasResults(outputFilePath)) {
+      return new NoResultsFunctionReturn();
+    }
+
+    try {
+      final String results = Files.readString(outputFilePath);
+      return new TextFunctionReturn(results);
+    } catch (IOException e) {
+      return new ExceptionFunctionReturn(e);
+    } finally {
+      deleteTempFile(outputFilePath);
     }
   }
 
@@ -191,6 +188,18 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     return outputOptions;
   }
 
+  private void deleteTempFile(final Path outputFilePath) {
+    if (outputFilePath == null) {
+      return;
+    }
+    try {
+      Files.deleteIfExists(outputFilePath);
+    } catch (IOException e) {
+      LOGGER.log(
+          Level.WARNING, "Could not delete temporary file <%s>".formatted(outputFilePath), e);
+    }
+  }
+
   private boolean outputFileHasResults(final Path outputFilePath) {
     if (outputFilePath == null
         || !Files.exists(outputFilePath)
@@ -208,10 +217,6 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       return false;
     }
 
-    final FunctionReturnType functionReturnType = commandOptions.getFunctionReturnType();
-    if (functionReturnType != FunctionReturnType.JSON) {
-      return false;
-    }
     return true;
   }
 }

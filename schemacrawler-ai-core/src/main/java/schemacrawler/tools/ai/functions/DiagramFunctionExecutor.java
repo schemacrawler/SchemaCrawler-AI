@@ -26,21 +26,22 @@ public final class DiagramFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final Path outputFilePath = execute("script", createAdditionalConfig(), "json");
-    return returnFileUrl(outputFilePath);
+    final Path outputFilePath = execute("script", "text");
+    return returnText(outputFilePath);
   }
 
   @Override
-  protected InclusionRule grepTablesInclusionRule() {
-    return makeInclusionRule(commandOptions.tableName());
-  }
-
-  private Config createAdditionalConfig() {
+  protected Config createAdditionalConfig() {
     final Config additionalConfig = ConfigUtility.newConfig();
 
     final DiagramType diagramType = commandOptions.diagramType();
     additionalConfig.put("script-language", "python");
     additionalConfig.put("script", diagramType.script());
     return additionalConfig;
+  }
+
+  @Override
+  protected InclusionRule grepTablesInclusionRule() {
+    return makeInclusionRule(commandOptions.tableName());
   }
 }

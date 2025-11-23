@@ -23,7 +23,7 @@ public final class TableSampleFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final Path outputFilePath = execute("tablesample", null, "json");
+    final Path outputFilePath = execute("tablesample", "json");
     return returnJson(outputFilePath);
   }
 

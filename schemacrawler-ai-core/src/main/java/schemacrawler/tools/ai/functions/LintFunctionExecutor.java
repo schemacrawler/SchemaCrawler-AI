@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
+import schemacrawler.tools.command.lint.options.LintReportOutputFormat;
 import us.fatehi.utility.property.PropertyName;
 
 public final class LintFunctionExecutor
@@ -23,7 +24,8 @@ public final class LintFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final Path outputFilePath = execute("lint", null, "json");
+    final String outputFormat = LintReportOutputFormat.json.name();
+    final Path outputFilePath = execute("lint", outputFormat);
     return returnJson(outputFilePath);
   }
 

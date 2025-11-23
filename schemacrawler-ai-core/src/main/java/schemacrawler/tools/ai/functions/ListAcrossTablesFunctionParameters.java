@@ -10,11 +10,9 @@ package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionReturnType;
 import schemacrawler.tools.ai.tools.base.ParameterUtility;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -81,11 +79,5 @@ public record ListAcrossTablesFunctionParameters(
   @Override
   public String toString() {
     return ParameterUtility.parametersToString(this);
-  }
-
-  @JsonIgnore
-  @Override
-  public final FunctionReturnType getFunctionReturnType() {
-    return FunctionReturnType.JSON;
   }
 }
