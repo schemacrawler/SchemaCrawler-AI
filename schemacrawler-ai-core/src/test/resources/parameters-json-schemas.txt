@@ -4,15 +4,7 @@ DescribeTablesFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Do not use a regular expression that will match all tables, but instead try to match a subset, since otherwise results may be large."
-      },
-      "include-children" : {
-        "type" : "boolean",
-        "description" : "Also include children (or dependent) tables for the selected tables."
-      },
-      "include-parents" : {
-        "type" : "boolean",
-        "description" : "Also include parent tables for (or tables that are referenced by) the selected tables."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset, since otherwise results may be large."
       },
       "description-scope" : {
         "type" : "array",
@@ -35,7 +27,7 @@ DescribeRoutinesFunctionParameters
     "properties" : {
       "routine-name" : {
         "type" : "string",
-        "description" : "Name of database routine (stored procedure or function) to describe. May be specified as a regular expression matching the fully qualified stored procedure or function names (including the schema). Use an empty string if all routines are requested. If not specified, all routines are returned, but the results could be large."
+        "description" : "Name of database routine (stored procedure or function) to describe. May be specified as a regular expression matching the fully qualified stored procedure or function names (including the schema). Try not to match all routines, but instead use a regular expression to match a subset, since otherwise results may be large."
       },
       "description-scope" : {
         "type" : "array",
@@ -117,15 +109,15 @@ DiagramFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Do not use a regular expression that will match all tables, but instead try to match a subset, since otherwise results may be large."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset, since otherwise results may be large."
       },
-      "include-children" : {
+      "include-child-tables" : {
         "type" : "boolean",
-        "description" : "Also include children (or dependent) tables for the selected tables."
+        "description" : "If true, also include child (or dependent) tables for the selected tables."
       },
-      "include-parents" : {
+      "include-referenced-tables" : {
         "type" : "boolean",
-        "description" : "Also include parent tables for (or tables that are referenced by) the selected tables."
+        "description" : "If true, also include tables that are referenced by the selected tables. (These are sometimes known as parent tables.)"
       },
       "diagram-type" : {
         "type" : "string",
