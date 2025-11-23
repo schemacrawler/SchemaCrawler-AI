@@ -25,12 +25,23 @@ public record DescribeTablesFunctionParameters(
             Name of database table or view to describe.
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
-            Use an empty string if all tables are requested.
-            If not specified, all tables will be returned, but the results
-            could be large.
+            Do not use a regular expression that will match all tables, but instead
+            try to match a subset, since otherwise results may be large.
             """)
         @JsonProperty(required = false)
         String tableName,
+    @JsonPropertyDescription(
+            """
+            Also include children (or dependent) tables for the selected tables.
+            """)
+        @JsonProperty(required = false)
+        boolean includeChildren,
+    @JsonPropertyDescription(
+            """
+            Also include parent tables for (or tables that are referenced by) the selected tables.
+            """)
+        @JsonProperty(required = false)
+        boolean includeParents,
     @JsonPropertyDescription(
             """
             Indicates what details of the database table or view to return -
@@ -73,6 +84,11 @@ public record DescribeTablesFunctionParameters(
     if (descriptionScope == null) {
       descriptionScope = new ArrayList<>();
     }
+  }
+
+  public DescribeTablesFunctionParameters(
+      String tableName, Collection<TableDescriptionScope> descriptionScope) {
+    this(tableName, false, false, descriptionScope);
   }
 
   @Override

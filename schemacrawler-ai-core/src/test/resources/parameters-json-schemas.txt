@@ -4,7 +4,15 @@ DescribeTablesFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be returned, but the results could be large."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Do not use a regular expression that will match all tables, but instead try to match a subset, since otherwise results may be large."
+      },
+      "include-children" : {
+        "type" : "boolean",
+        "description" : "Also include children (or dependent) tables for the selected tables."
+      },
+      "include-parents" : {
+        "type" : "boolean",
+        "description" : "Also include parent tables for (or tables that are referenced by) the selected tables."
       },
       "description-scope" : {
         "type" : "array",
@@ -109,7 +117,15 @@ DiagramFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Use an empty string if all tables are requested. If not specified, all tables will be returned, but the results could be large."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Do not use a regular expression that will match all tables, but instead try to match a subset, since otherwise results may be large."
+      },
+      "include-children" : {
+        "type" : "boolean",
+        "description" : "Also include children (or dependent) tables for the selected tables."
+      },
+      "include-parents" : {
+        "type" : "boolean",
+        "description" : "Also include parent tables for (or tables that are referenced by) the selected tables."
       },
       "diagram-type" : {
         "type" : "string",

@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.functions;
 
 import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schemacrawler.FilterOptionsBuilder;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -39,11 +40,21 @@ public final class DiagramFunctionExecutor
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final FilterOptionsBuilder filterOptionsBuilder = FilterOptionsBuilder.builder();
+    if (commandOptions.includeChildren()) {
+      filterOptionsBuilder.childTableFilterDepth(1);
+    }
+    if (commandOptions.includeParents()) {
+      filterOptionsBuilder.parentTableFilterDepth(1);
+    }
+
     final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
+
     final SchemaCrawlerOptions schemaCrawlerOptions =
         SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+            .withFilterOptions(filterOptionsBuilder.build())
             .withGrepOptions(grepOptionsBuilder.toOptions());
     return schemaCrawlerOptions;
   }
