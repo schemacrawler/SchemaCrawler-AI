@@ -25,9 +25,8 @@ public record DescribeRoutinesFunctionParameters(
             Name of database routine (stored procedure or function) to describe.
             May be specified as a regular expression matching the fully qualified
             stored procedure or function names (including the schema).
-            Use an empty string if all routines are requested.
-            If not specified, all routines are returned, but the results
-            could be large.
+            Try not to match all routines, but instead use a regular expression
+            to match a subset, since otherwise results may be large.
             """)
         @JsonProperty(required = false)
         String routineName,

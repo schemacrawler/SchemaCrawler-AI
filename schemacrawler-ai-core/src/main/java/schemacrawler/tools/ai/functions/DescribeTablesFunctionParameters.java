@@ -25,9 +25,9 @@ public record DescribeTablesFunctionParameters(
             Name of database table or view to describe.
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
-            Use an empty string if all tables are requested.
-            If not specified, all tables will be returned, but the results
-            could be large.
+            Try not to match all tables, but instead use a regular expression
+            to match a subset or match a single table, since otherwise results may
+            be large.
             """)
         @JsonProperty(required = false)
         String tableName,

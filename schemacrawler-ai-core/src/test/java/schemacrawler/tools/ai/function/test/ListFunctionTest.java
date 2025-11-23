@@ -8,7 +8,6 @@
 
 package schemacrawler.tools.ai.function.test;
 
-import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
@@ -64,10 +63,15 @@ public class ListFunctionTest extends AbstractFunctionTest {
   }
 
   @Test
-  public void parameters() throws Exception {
+  public void parameters(final TestContext testContext) throws Exception {
     final ListFunctionParameters args = new ListFunctionParameters(ALL, null);
+
+    final TestWriter testout = new TestWriter();
+    try (final TestWriter out = testout) {
+      out.write(args.toString());
+    }
     assertThat(
-        args.toString(), is("{\"database-object-type\":\"ALL\",\"database-object-name\":null}"));
+        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
   }
 
   @Test

@@ -54,9 +54,11 @@ public final class DescribeTablesFunctionExecutor
             .includeSequences(new ExcludeAll())
             .includeRoutines(new ExcludeAll())
             .includeTables(new IncludeAll());
+
     final InclusionRule grepTablesPattern = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesPattern);
+
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
         .withLimitOptions(limitOptionsBuilder.toOptions())
         .withGrepOptions(grepOptionsBuilder.toOptions());
