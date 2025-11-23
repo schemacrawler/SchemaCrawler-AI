@@ -10,6 +10,9 @@ package schemacrawler.tools.ai.functions;
 
 import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schemacrawler.GrepOptionsBuilder;
+import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.DiagramFunctionParameters.DiagramType;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
@@ -28,9 +31,9 @@ public final class DiagramFunctionExecutor
   @Override
   public FunctionReturn call() {
     final Config additionalConfig = createAdditionalConfig();
-    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final SchemaCrawlerOptions schemaCrawlerOptions = createSchemaCrawlerOptions();
     final ExecutionParameters executionParameters =
-        new ExecutionParameters("script", additionalConfig, grepTablesInclusionRule, "text");
+        new ExecutionParameters("script", additionalConfig, schemaCrawlerOptions, "text");
     final Path outputFilePath = execute(executionParameters);
     return returnText(outputFilePath);
   }
@@ -42,5 +45,15 @@ public final class DiagramFunctionExecutor
     additionalConfig.put("script-language", "python");
     additionalConfig.put("script", diagramType.script());
     return additionalConfig;
+  }
+
+  private SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
+    final SchemaCrawlerOptions schemaCrawlerOptions =
+        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+            .withGrepOptions(grepOptionsBuilder.toOptions());
+    return schemaCrawlerOptions;
   }
 }
