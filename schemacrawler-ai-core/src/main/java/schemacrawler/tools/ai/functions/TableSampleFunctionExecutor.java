@@ -12,6 +12,7 @@ import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
+import schemacrawler.tools.ai.tools.base.ExecutionParameters;
 import us.fatehi.utility.property.PropertyName;
 
 public final class TableSampleFunctionExecutor
@@ -23,12 +24,10 @@ public final class TableSampleFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final Path outputFilePath = execute("tablesample", "json");
+    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final ExecutionParameters executionParameters =
+        new ExecutionParameters("tablesample", grepTablesInclusionRule, "json");
+    final Path outputFilePath = execute(executionParameters);
     return returnJson(outputFilePath);
-  }
-
-  @Override
-  protected InclusionRule grepTablesInclusionRule() {
-    return makeInclusionRule(commandOptions.tableName());
   }
 }

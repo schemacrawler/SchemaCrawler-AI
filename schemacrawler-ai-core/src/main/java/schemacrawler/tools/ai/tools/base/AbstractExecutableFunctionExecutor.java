@@ -8,9 +8,8 @@
 
 package schemacrawler.tools.ai.tools.base;
 
+import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
-import static us.fatehi.utility.Utility.requireNotBlank;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -40,6 +39,7 @@ import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
 import schemacrawler.utility.MetaDataUtility;
+import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
@@ -60,54 +60,45 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     return true;
   }
 
-  protected Config createAdditionalConfig() {
-    return null;
-  }
+  protected final Path execute(final ExecutionParameters executionParameters) {
 
-  @Override
-  protected final SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final LimitOptionsBuilder limitOptionsBuilder =
-        LimitOptionsBuilder.builder()
-            .includeSynonyms(new ExcludeAll())
-            .includeSequences(new ExcludeAll())
-            .includeRoutines(new ExcludeAll());
-    final InclusionRule grepTablesInclusionRule = grepTablesInclusionRule();
-    final GrepOptionsBuilder grepOptionsBuilder =
-        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
-    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-        .withLimitOptions(limitOptionsBuilder.toOptions())
-        .withGrepOptions(grepOptionsBuilder.toOptions());
-  }
+    requireNonNull(executionParameters, "No execution parameters provided");
 
-  protected final Path execute(final String command, final String outputFormat) {
+    // Crate SchemaCrawler options
+    final SchemaCrawlerOptions options =
+        createSchemaCrawlerOptions(executionParameters.grepTablesInclusionRule());
 
-    requireNotBlank(command, "No command provided");
+    // Re-filter catalog
+    MetaDataUtility.reduceCatalog(catalog, options);
 
-    final String outputFormatValue;
-    if (isBlank(outputFormat)) {
-      outputFormatValue = "txt";
-    } else {
-      outputFormatValue = outputFormat.strip();
-    }
-
+    // Create output file path
+    final String outputFormatValue = executionParameters.outputFormat();
     final Path outputFilePath =
         Paths.get(System.getProperty("java.io.tmpdir"))
-            .resolve(UUID.randomUUID().toString() + "." + outputFormat);
+            .resolve(UUID.randomUUID().toString() + "." + outputFormatValue);
 
+    // Create output options
     final OutputOptions outputOptions = createOutputOptions(outputFormatValue, outputFilePath);
 
-    final Config config = SchemaTextOptionsBuilder.builder().noInfo().toConfig();
-    config.merge(createAdditionalConfig());
+    // Create additional config
+    final Config config = createAdditionalConfig(executionParameters.additionalConfig());
 
-    final SchemaCrawlerExecutable executable = createExecutable(command);
+    // Create executable
+    final SchemaCrawlerExecutable executable =
+        new SchemaCrawlerExecutable(executionParameters.command());
+    executable.setSchemaCrawlerOptions(options);
+    executable.setCatalog(catalog);
+    if (connection != null) {
+      final DatabaseConnectionSource databaseConnectionSource =
+          DatabaseConnectionSources.fromConnection(connection);
+      executable.setDataSource(databaseConnectionSource);
+    }
     executable.setOutputOptions(outputOptions);
     executable.setAdditionalConfiguration(config);
     executable.execute();
 
     return outputFilePath;
   }
-
-  protected abstract InclusionRule grepTablesInclusionRule();
 
   protected boolean hasResults() {
     return !catalog.getTables().isEmpty();
@@ -123,14 +114,14 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       try {
         final JsonNode node = mapper.readTree(results);
         return new JsonFunctionReturn(node);
-      } catch (final Exception e) {
+      } catch (final JacksonException e) {
         LOGGER.log(
             Level.WARNING,
             "Could not convert results from <%s> to JSON".formatted(getCommandName().getName()),
             e);
         return new TextFunctionReturn(results);
       }
-    } catch (IOException e) {
+    } catch (final Exception e) {
       return new ExceptionFunctionReturn(e);
     } finally {
       deleteTempFile(outputFilePath);
@@ -152,23 +143,10 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  private SchemaCrawlerExecutable createExecutable(final String command) {
-
-    final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
-
-    // Re-filter catalog
-    MetaDataUtility.reduceCatalog(catalog, options);
-
-    final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable(command);
-    executable.setSchemaCrawlerOptions(options);
-    executable.setCatalog(catalog);
-    if (connection != null) {
-      final DatabaseConnectionSource databaseConnectionSource =
-          DatabaseConnectionSources.fromConnection(connection);
-      executable.setDataSource(databaseConnectionSource);
-    }
-
-    return executable;
+  private Config createAdditionalConfig(final Config additionalConfig) {
+    final Config config = SchemaTextOptionsBuilder.builder().noInfo().toConfig();
+    config.merge(additionalConfig);
+    return config;
   }
 
   private OutputOptions createOutputOptions(final String outputFormatValue, final Path filePath) {
@@ -186,6 +164,20 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
             .withOutputFormatValue(outputFormatValue)
             .toOptions();
     return outputOptions;
+  }
+
+  private final SchemaCrawlerOptions createSchemaCrawlerOptions(
+      final InclusionRule grepTablesInclusionRule) {
+    final LimitOptionsBuilder limitOptionsBuilder =
+        LimitOptionsBuilder.builder()
+            .includeSynonyms(new ExcludeAll())
+            .includeSequences(new ExcludeAll())
+            .includeRoutines(new ExcludeAll());
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
+    return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+        .withLimitOptions(limitOptionsBuilder.toOptions())
+        .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
   private void deleteTempFile(final Path outputFilePath) {
