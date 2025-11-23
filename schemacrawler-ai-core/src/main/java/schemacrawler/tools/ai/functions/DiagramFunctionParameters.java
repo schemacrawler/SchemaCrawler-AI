@@ -23,7 +23,8 @@ public record DiagramFunctionParameters(
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
             Try not to match all tables, but instead use a regular expression
-            to match a subset, since otherwise results may be large.
+            to match a subset or match a single table, since otherwise results may
+            be large.
             """)
         @JsonProperty(required = false)
         String tableName,
@@ -42,29 +43,46 @@ public record DiagramFunctionParameters(
         boolean includeReferencedTables,
     @JsonPropertyDescription(
             """
-            Indicates database schema diagram format - Graphviz, PlantUML, Mermaid
-            or DBML from dbdiagram.io.
+            Indicates database schema diagram format - Graphviz DOT format, PlantUML,
+            Mermaid or DBML from dbdiagram.io.
             """)
         @JsonProperty(required = true)
         DiagramType diagramType)
     implements FunctionParameters {
 
   public enum DiagramType {
-    PLANTUML("/scripts/plantuml.py", "https://editor.plantuml.com/"),
-    MERMAID("/scripts/mermaid.py", "https://mermaid.live/"),
-    DBML("/scripts/dbml.py", "https://dbdiagram.io/d"),
+    PLANTUML("script", "text", "/scripts/plantuml.py", "https://editor.plantuml.com/"),
+    MERMAID("script", "text", "/scripts/mermaid.py", "https://mermaid.live/"),
+    DBML("script", "text", "/scripts/dbml.py", "https://dbdiagram.io/d"),
+    GRAPHVIZ("diagram", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/"),
     ;
 
+    private final String command;
+    private final String outputFormatValue;
     private final String script;
     private final String onlineEditorUrl;
 
-    DiagramType(final String script, final String url) {
+    DiagramType(
+        final String command,
+        final String outputFormatValue,
+        final String script,
+        final String url) {
+      this.command = command;
+      this.outputFormatValue = outputFormatValue;
       this.script = script;
       onlineEditorUrl = url;
     }
 
+    public String getCommand() {
+      return command;
+    }
+
     public String getOnlineEditorUrl() {
       return onlineEditorUrl;
+    }
+
+    public String getOutputFormatValue() {
+      return outputFormatValue;
     }
 
     public String script() {

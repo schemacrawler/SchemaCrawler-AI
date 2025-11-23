@@ -26,7 +26,8 @@ public record DescribeTablesFunctionParameters(
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
             Try not to match all tables, but instead use a regular expression
-            to match a subset, since otherwise results may be large.
+            to match a subset or match a single table, since otherwise results may
+            be large.
             """)
         @JsonProperty(required = false)
         String tableName,

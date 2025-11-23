@@ -4,7 +4,7 @@ DescribeTablesFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset, since otherwise results may be large."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset or match a single table, since otherwise results may be large."
       },
       "description-scope" : {
         "type" : "array",
@@ -109,7 +109,7 @@ DiagramFunctionParameters
     "properties" : {
       "table-name" : {
         "type" : "string",
-        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset, since otherwise results may be large."
+        "description" : "Name of database table or view to describe. May be specified as a regular expression, matching the fully qualified table name (including the schema). Try not to match all tables, but instead use a regular expression to match a subset or match a single table, since otherwise results may be large."
       },
       "include-child-tables" : {
         "type" : "boolean",
@@ -121,8 +121,8 @@ DiagramFunctionParameters
       },
       "diagram-type" : {
         "type" : "string",
-        "description" : "Indicates database schema diagram format - Graphviz, PlantUML, Mermaid or DBML from dbdiagram.io.",
-        "enum" : [ "PLANTUML", "MERMAID", "DBML" ]
+        "description" : "Indicates database schema diagram format - Graphviz DOT format, PlantUML, Mermaid or DBML from dbdiagram.io.",
+        "enum" : [ "PLANTUML", "MERMAID", "DBML", "GRAPHVIZ" ]
       }
     },
     "required" : [ "diagram-type" ],

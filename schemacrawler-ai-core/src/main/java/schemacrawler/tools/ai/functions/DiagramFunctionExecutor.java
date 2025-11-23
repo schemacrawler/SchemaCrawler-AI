@@ -31,9 +31,11 @@ public final class DiagramFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final Config additionalConfig = createAdditionalConfig();
+    final DiagramType diagramType = commandOptions.diagramType();
+    final Config additionalConfig = createAdditionalConfig(diagramType);
     final ExecutionParameters executionParameters =
-        new ExecutionParameters("script", additionalConfig, "text");
+        new ExecutionParameters(
+            diagramType.getCommand(), additionalConfig, diagramType.getOutputFormatValue());
     final Path outputFilePath = execute(executionParameters);
     return returnText(outputFilePath);
   }
@@ -59,12 +61,15 @@ public final class DiagramFunctionExecutor
     return schemaCrawlerOptions;
   }
 
-  private Config createAdditionalConfig() {
+  private Config createAdditionalConfig(final DiagramType diagramType) {
     final Config additionalConfig = ConfigUtility.newConfig();
+    if (diagramType == null || diagramType == DiagramType.GRAPHVIZ) {
+      return additionalConfig;
+    }
 
-    final DiagramType diagramType = commandOptions.diagramType();
     additionalConfig.put("script-language", "python");
     additionalConfig.put("script", diagramType.script());
+
     return additionalConfig;
   }
 }
