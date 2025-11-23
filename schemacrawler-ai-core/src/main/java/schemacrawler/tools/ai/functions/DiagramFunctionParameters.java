@@ -54,7 +54,7 @@ public record DiagramFunctionParameters(
     PLANTUML("script", "text", "/scripts/plantuml.py", "https://editor.plantuml.com/"),
     MERMAID("script", "text", "/scripts/mermaid.py", "https://mermaid.live/"),
     DBML("script", "text", "/scripts/dbml.py", "https://dbdiagram.io/d"),
-    GRAPHVIZ("diagram", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/"),
+    GRAPHVIZ("schema", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/"),
     ;
 
     private final String command;

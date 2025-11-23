@@ -42,6 +42,7 @@ import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
+import us.fatehi.utility.string.StringFormat;
 
 public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParameters>
     extends AbstractFunctionExecutor<P> {
@@ -81,8 +82,9 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     final Config config = createAdditionalConfig(executionParameters.additionalConfig());
 
     // Create executable
-    final SchemaCrawlerExecutable executable =
-        new SchemaCrawlerExecutable(executionParameters.command());
+    final String command = executionParameters.command();
+    LOGGER.log(Level.INFO, new StringFormat("Executing SchemaCrawler command <%s>", command));
+    final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable(command);
     executable.setSchemaCrawlerOptions(options);
     executable.setCatalog(catalog);
     if (connection != null) {
