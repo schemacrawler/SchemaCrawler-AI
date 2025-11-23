@@ -95,24 +95,14 @@ public final class ListAcrossTablesFunctionExecutor
   private ObjectNode createDependentObjectNode(
       final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
 
-    final Document document;
-    switch (dependantObjectType) {
-      case COLUMNS:
-        document = new ColumnDocument((Column) dependantObject, null);
-        break;
-      case INDEXES:
-        document = new IndexDocument((Index) dependantObject);
-        break;
-      case FOREIGN_KEYS:
-        document = new ForeignKeyDocument((ForeignKey) dependantObject);
-        break;
-      case TRIGGERS:
-        document = new TriggerDocument((Trigger) dependantObject);
-        break;
-      default:
-        document = null;
-        break;
-    }
+    final Document document =
+        switch (dependantObjectType) {
+          case COLUMNS -> new ColumnDocument((Column) dependantObject, null);
+          case INDEXES -> new IndexDocument((Index) dependantObject);
+          case FOREIGN_KEYS -> new ForeignKeyDocument((ForeignKey) dependantObject);
+          case TRIGGERS -> new TriggerDocument((Trigger) dependantObject);
+          default -> null;
+        };
     if (document == null) {
       return mapper.createObjectNode();
     }

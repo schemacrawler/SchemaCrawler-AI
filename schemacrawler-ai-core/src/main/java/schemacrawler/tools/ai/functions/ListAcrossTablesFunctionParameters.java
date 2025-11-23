@@ -69,7 +69,7 @@ public record ListAcrossTablesFunctionParameters(
 
     private final String nameAttribute;
 
-    private DependantObjectType(String nameAttribute) {
+    DependantObjectType(String nameAttribute) {
       this.nameAttribute = nameAttribute;
     }
 

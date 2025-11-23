@@ -8,7 +8,9 @@
 
 package schemacrawler.tools.ai.functions;
 
+import java.nio.file.Path;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractExecutableFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
 
@@ -20,8 +22,9 @@ public final class LintFunctionExecutor
   }
 
   @Override
-  protected String getCommand() {
-    return "lint";
+  public FunctionReturn call() {
+    final Path outputFilePath = execute("lint", null, "json");
+    return returnJson(outputFilePath);
   }
 
   @Override

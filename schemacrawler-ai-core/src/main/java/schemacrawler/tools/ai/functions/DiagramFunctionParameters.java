@@ -48,7 +48,7 @@ public record DiagramFunctionParameters(
     private final String script;
     private final String onlineEditorUrl;
 
-    private DiagramType(final String script, final String url) {
+    DiagramType(final String script, final String url) {
       this.script = script;
       onlineEditorUrl = url;
     }
