@@ -3,26 +3,15 @@ package schemacrawler.tools.ai.tools.base;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.requireNotBlank;
 
-import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.options.Config;
 
-public record ExecutionParameters(
-    String command,
-    Config additionalConfig,
-    SchemaCrawlerOptions schemaCrawlerOptions,
-    String outputFormat) {
+public record ExecutionParameters(String command, Config additionalConfig, String outputFormat) {
 
-  public ExecutionParameters(
-      String command,
-      Config additionalConfig,
-      SchemaCrawlerOptions schemaCrawlerOptions,
-      String outputFormat) {
+  public ExecutionParameters(String command, Config additionalConfig, String outputFormat) {
     this.command = requireNotBlank(command, "Command not provided");
 
     // Can be null
     this.additionalConfig = additionalConfig;
-    // Can be null
-    this.schemaCrawlerOptions = schemaCrawlerOptions;
 
     final String outputFormatValue;
     if (isBlank(outputFormat)) {
@@ -33,8 +22,7 @@ public record ExecutionParameters(
     this.outputFormat = outputFormatValue;
   }
 
-  public ExecutionParameters(
-      String command, SchemaCrawlerOptions schemaCrawlerOptions, String outputFormat) {
-    this(command, null, schemaCrawlerOptions, outputFormat);
+  public ExecutionParameters(String command, String outputFormat) {
+    this(command, null, outputFormat);
   }
 }

@@ -27,14 +27,13 @@ public final class TableSampleFunctionExecutor
 
   @Override
   public FunctionReturn call() {
-    final SchemaCrawlerOptions schemaCrawlerOptions = createSchemaCrawlerOptions();
-    final ExecutionParameters executionParameters =
-        new ExecutionParameters("tablesample", schemaCrawlerOptions, "json");
+    final ExecutionParameters executionParameters = new ExecutionParameters("tablesample", "json");
     final Path outputFilePath = execute(executionParameters);
     return returnJson(outputFilePath);
   }
 
-  private SchemaCrawlerOptions createSchemaCrawlerOptions() {
+  @Override
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);

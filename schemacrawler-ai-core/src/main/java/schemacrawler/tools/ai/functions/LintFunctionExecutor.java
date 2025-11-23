@@ -29,14 +29,13 @@ public final class LintFunctionExecutor
   @Override
   public FunctionReturn call() {
     final String outputFormat = LintReportOutputFormat.json.name();
-    final SchemaCrawlerOptions schemaCrawlerOptions = createSchemaCrawlerOptions();
-    final ExecutionParameters executionParameters =
-        new ExecutionParameters("lint", schemaCrawlerOptions, outputFormat);
+    final ExecutionParameters executionParameters = new ExecutionParameters("lint", outputFormat);
     final Path outputFilePath = execute(executionParameters);
     return returnJson(outputFilePath);
   }
 
-  private SchemaCrawlerOptions createSchemaCrawlerOptions() {
+  @Override
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
     final GrepOptionsBuilder grepOptionsBuilder =
         GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);

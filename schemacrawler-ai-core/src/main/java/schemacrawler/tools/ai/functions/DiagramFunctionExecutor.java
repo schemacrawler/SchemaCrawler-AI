@@ -31,11 +31,21 @@ public final class DiagramFunctionExecutor
   @Override
   public FunctionReturn call() {
     final Config additionalConfig = createAdditionalConfig();
-    final SchemaCrawlerOptions schemaCrawlerOptions = createSchemaCrawlerOptions();
     final ExecutionParameters executionParameters =
-        new ExecutionParameters("script", additionalConfig, schemaCrawlerOptions, "text");
+        new ExecutionParameters("script", additionalConfig, "text");
     final Path outputFilePath = execute(executionParameters);
     return returnText(outputFilePath);
+  }
+
+  @Override
+  protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
+    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
+    final GrepOptionsBuilder grepOptionsBuilder =
+        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
+    final SchemaCrawlerOptions schemaCrawlerOptions =
+        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
+            .withGrepOptions(grepOptionsBuilder.toOptions());
+    return schemaCrawlerOptions;
   }
 
   private Config createAdditionalConfig() {
@@ -45,15 +55,5 @@ public final class DiagramFunctionExecutor
     additionalConfig.put("script-language", "python");
     additionalConfig.put("script", diagramType.script());
     return additionalConfig;
-  }
-
-  private SchemaCrawlerOptions createSchemaCrawlerOptions() {
-    final InclusionRule grepTablesInclusionRule = makeInclusionRule(commandOptions.tableName());
-    final GrepOptionsBuilder grepOptionsBuilder =
-        GrepOptionsBuilder.builder().includeGreppedTables(grepTablesInclusionRule);
-    final SchemaCrawlerOptions schemaCrawlerOptions =
-        SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
-            .withGrepOptions(grepOptionsBuilder.toOptions());
-    return schemaCrawlerOptions;
   }
 }

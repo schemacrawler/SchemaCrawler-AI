@@ -63,8 +63,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     requireNonNull(executionParameters, "No execution parameters provided");
 
     // Crate SchemaCrawler options
-    final SchemaCrawlerOptions options =
-        adjustSchemaCrawlerOptions(executionParameters.schemaCrawlerOptions());
+    final SchemaCrawlerOptions options = adjustSchemaCrawlerOptions();
 
     // Re-filter catalog
     MetaDataUtility.reduceCatalog(catalog, options);
@@ -141,8 +140,9 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  private final SchemaCrawlerOptions adjustSchemaCrawlerOptions(
-      final SchemaCrawlerOptions options) {
+  private final SchemaCrawlerOptions adjustSchemaCrawlerOptions() {
+
+    final SchemaCrawlerOptions baseOptions = createSchemaCrawlerOptions();
     final LimitOptionsBuilder limitOptionsBuilder =
         LimitOptionsBuilder.builder()
             .includeSynonyms(new ExcludeAll())
@@ -151,11 +151,11 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     SchemaCrawlerOptions schemaCrawlerOptions =
         SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions()
             .withLimitOptions(limitOptionsBuilder.toOptions());
-    if (options != null) {
+    if (baseOptions != null) {
       schemaCrawlerOptions =
           schemaCrawlerOptions
-              .withFilterOptions(options.filterOptions())
-              .withGrepOptions(options.grepOptions());
+              .withFilterOptions(baseOptions.filterOptions())
+              .withGrepOptions(baseOptions.grepOptions());
     }
     return schemaCrawlerOptions;
   }
