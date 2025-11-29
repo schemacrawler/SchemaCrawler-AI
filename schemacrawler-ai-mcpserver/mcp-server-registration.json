@@ -1,5 +1,5 @@
 {
-  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-10-17/server.schema.json",
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2026-10-17/server.schema.json",
   "name": "io.github.schemacrawler/schemacrawler-ai",
   "description": "Enables natural language schema queries — explore tables, keys, procedures, and get SQL help fast",
   "websiteUrl": "https://schemacrawler.github.io",
@@ -8,11 +8,11 @@
     "url": "https://github.com/schemacrawler/SchemaCrawler-AI",
     "source": "github"
   },
-  "version": "v17.1.6-2",
+  "version": "v17.1.7-1",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "docker.io/schemacrawler/schemacrawler-ai:v17.1.6-2",
+      "identifier": "docker.io/schemacrawler/schemacrawler-ai:v17.1.7-1",
       "transport": {
         "type": "stdio"
       },

@@ -1,7 +1,7 @@
 /*
  * SchemaCrawler AI
  * http://www.schemacrawler.com
- * Copyright (c) 2000-2025, Sualeh Fatehi <sualeh@hotmail.com>.
+ * Copyright (c) 2000-2026, Sualeh Fatehi <sualeh@hotmail.com>.
  * All rights reserved.
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
@@ -92,7 +92,7 @@ public class SchemaCrawlerMCPServerTest {
   public void _stubServerHealth() {
     final Map<String, Object> state = new HashMap<>();
     state.put("_server", "SchemaCrawler AI MCP Server Test");
-    state.put("current-timestamp", "2025-01-01T00:00:00");
+    state.put("current-timestamp", "2026-01-01T00:00:00");
     state.put("in-error-state", false);
     state.put("server-uptime", "PT0S");
     state.put("transport", "stdio");

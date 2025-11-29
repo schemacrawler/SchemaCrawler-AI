@@ -8,11 +8,11 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>17.1.6</version>
+    <version>17.1.7</version>
     <relativePath/>
   </parent>
   <artifactId>schemacrawler-ai-core</artifactId>
-  <version>17.1.6-2</version>
+  <version>17.1.7-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI - Core</name>
@@ -31,7 +31,7 @@
       <dependency>
         <groupId>us.fatehi</groupId>
         <artifactId>schemacrawler-library-bom</artifactId>
-        <version>17.1.6</version>
+        <version>17.1.7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -112,7 +112,7 @@
             </manifest>
             <manifestEntries>
               <Author>Sualeh Fatehi sualeh@hotmail.com</Author>
-              <Copyright>Copyright (c) 2000-2025, Sualeh Fatehi</Copyright>
+              <Copyright>Copyright (c) 2000-2026, Sualeh Fatehi</Copyright>
               <Website>https://www.SchemaCrawler.com</Website>
               <Automatic-Module-Name>us.fatehi.schemacrawler.ai_core</Automatic-Module-Name>
             </manifestEntries>
