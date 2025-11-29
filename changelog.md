@@ -2,6 +2,12 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.1.7-1"></a>
+## Release 17.1.7-1 - 2025-11-29
+
+- Update Jackson patch version
+- Update copyright year to 2026
+
 
 <a name="v17.1.6-2"></a>
 ## Release 17.1.6-2 - 2025-11-23
