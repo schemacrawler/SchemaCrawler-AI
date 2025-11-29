@@ -1,13 +1,13 @@
 # ========================================================================
 # SchemaCrawler AI
 # http://www.schemacrawler.com
-# Copyright (c) 2000-2025, Sualeh Fatehi <sualeh@hotmail.com>.
+# Copyright (c) 2000-2026, Sualeh Fatehi <sualeh@hotmail.com>.
 # All rights reserved.
 # SPDX-License-Identifier: CC-BY-NC-4.0
 # ========================================================================
 
 # Provided arguments
-ARG FROM_IMAGE=schemacrawler/schemacrawler:v17.1.6
+ARG FROM_IMAGE=schemacrawler/schemacrawler:v17.1.7
 
 # BUILDER stage - Build SchemaCrawler AI
 FROM maven:3.9-eclipse-temurin-21 AS builder
