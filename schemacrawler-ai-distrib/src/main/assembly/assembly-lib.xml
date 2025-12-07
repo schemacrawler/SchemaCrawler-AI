@@ -52,14 +52,7 @@
         <exclude>org.graalvm.*:*</exclude>
         <!--  SchemaCrawler dependencies -->
         <exclude>us.fatehi:schemacrawler</exclude>
-        <exclude>us.fatehi:schemacrawler-api</exclude>
-        <exclude>us.fatehi:schemacrawler-tools</exclude>
-        <exclude>us.fatehi:schemacrawler-commandline</exclude>
-        <exclude>us.fatehi:schemacrawler-operations</exclude>
-        <exclude>us.fatehi:schemacrawler-offline</exclude>
-        <exclude>us.fatehi:schemacrawler-scripting</exclude>
-        <exclude>us.fatehi:schemacrawler-lint</exclude>
-        <exclude>us.fatehi:schemacrawler-testdb</exclude>
+        <exclude>us.fatehi:schemacrawler-*</exclude>
         <exclude>us.fatehi:schemacrawler-ai-*</exclude>
       </excludes>
     </dependencySet>
