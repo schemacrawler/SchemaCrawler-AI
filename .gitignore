@@ -4,7 +4,6 @@ lib/
 .idea/
 _ai-distrib/
 .mcpregistry*
-**/Playground.java
 **/dice.png
 
 # Created by https://www.toptal.com/developers/gitignore/api/java,eclipse,intellij+all,visualstudiocode,maven,gradle
