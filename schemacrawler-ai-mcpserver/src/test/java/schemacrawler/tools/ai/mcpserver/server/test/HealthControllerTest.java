@@ -26,8 +26,8 @@ import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.boot.webmvc.test.autoconfigure.WebMvcTest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
@@ -92,7 +92,7 @@ public class HealthControllerTest {
 
   @ParameterizedTest
   @ValueSource(strings = {"/", "/health"})
-  @DisplayName("Health endpoint should return status UP")
+  @DisplayName("Health endpoint should return status of UP")
   public void healthCheckEndpoint(final String endpoint) throws Exception {
     final MvcResult mvcResult =
         mockMvc
