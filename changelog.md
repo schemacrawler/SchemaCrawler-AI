@@ -2,6 +2,12 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.1.7-3"></a>
+## Release 17.1.7-3 - 2025-12-12
+
+- Remove playground code
+
+
 <a name="v17.1.7-2"></a>
 ## Release 17.1.7-2 - 2025-12-12
 
