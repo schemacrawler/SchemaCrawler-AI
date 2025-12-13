@@ -12,7 +12,7 @@
     <relativePath/>
   </parent>
   <artifactId>schemacrawler-ai-core</artifactId>
-  <version>17.1.7-2</version>
+  <version>17.1.7-3</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI - Core</name>
