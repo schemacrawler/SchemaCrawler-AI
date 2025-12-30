@@ -1,82 +1,37 @@
 {
   "[markdown]": {
-    "files.trimTrailingWhitespace": false,
     "editor.quickSuggestions": {
-      "comments": "off",
-      "strings": "off",
+      "comments": "on",
+      "strings": "on",
       "other": "on"
-    },
-    "editor.wordWrap": "bounded"
+    }
   },
-  "editor.foldingImportsByDefault": true,
-  "window.zoomLevel": 1.2,
+  "editor.fontSize": 14,
+  "editor.lineHeight": 24,
   "editor.minimap.enabled": false,
   "editor.overviewRulerBorder": false,
-  "editor.tabSize": 2,
   "editor.wrappingIndent": "indent",
-  "files.defaultLanguage": "markdown",
-  "files.exclude": {
-    "**/node_modules": true
-  },
+  "editor.foldingImportsByDefault": true,
+  "editor.tabSize": 2,
   "files.trimTrailingWhitespace": true,
-  "foam.edit.linkReferenceDefinitions": "withoutExtensions",
-  "foam.files.ignore": [
-    "README.md",
-    "Commonplace/*",
-    "Commonplace/**/*",
-    "Diary/*",
-    "Diary/**/*"
-  ],
-  "foam.openDailyNote.directory": "journal",
-  "foam.openDailyNote.titleFormat": "fullDate",
   "git.autofetch": true,
   "git.enableCommitSigning": true,
   "git.enableSmartCommit": true,
+  "git.autoStash": true,
+  "git.confirmSync": false,
   "git.postCommitCommand": "sync",
-  "markdown.preview.breaks": true,
-  "pasteImage.path": "${projectRoot}/image",
-  "pasteImage.showFilePathConfirmInputBox": true,
-  "workbench.editor.enablePreview": false,
-  "workbench.editorAssociations": {
-    "*.md": "vscode.markdown.preview.editor"
-  },
-  "cSpell.customDictionaries": {
-    "project-words": {
-      "name": "project-words",
-      "path": "${workspaceRoot}/project-words.txt",
-      "description": "Words used in this project",
-      "addWords": true
-    },
-    "custom": true, // Enable the `custom` dictionary
-    "internal-terms": true // Disable the `internal-terms` dictionary
-  },
-  "scm.showActionButton": false,
   "git.showActionButton": {
     "commit": false,
     "publish": false,
     "sync": false
   },
-  "git.followTagsWhenSync": true,
-  "git.rebaseWhenSync": true,
-  "todomd.activatePattern": "**/{todo,someday,todo.archive}.txt",
-  "todomd.autoArchiveTasks": true,
-  "todomd.closestDueDateIncludeWeekday": true,
-  "todomd.counterBadgeEnabled": true,
-  "todomd.defaultArchiveFile": "${workspaceFolder}/ToDo/todo.archive.txt",
-  "todomd.defaultFile": "${workspaceFolder}/ToDo/todo.txt",
-  "todomd.defaultSomedayFile": "${workspaceFolder}/ToDo/someday.txt",
-  "todomd.tabSize": 2,
-  "editor.wordWrap": "bounded",
-  "cSpell.words": [
-    "Vijay"
-  ],
-  "editor.quickSuggestions": {
-    "other": "off"
-  },
-  "markdown.editor.pasteUrlAsFormattedLink.enabled": "always",
-  "workbench.colorTheme": "Default Light Modern",
-  "workbench.iconTheme": "material-icon-theme",
-  "git.autoStash": true,
+  "scm.showActionButton": false,
+  "scm.showInputActionButton": false,
+  "window.zoomLevel": 1.2,
   "java.compile.nullAnalysis.mode": "automatic",
-  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx2G -Xms100m -Xlog:disable"
+  "java.jdt.ls.vmargs": "-XX:+UseParallelGC -XX:GCTimeRatio=4 -XX:AdaptiveSizePolicyWeight=90 -Dsun.zip.disableMemoryMapping=true -Xmx4G -Xms100m -Xlog:disable",
+  "workbench.editorAssociations": {
+    "*.md": "vscode.markdown.preview.editor"
+  },
+  "java.configuration.updateBuildConfiguration": "automatic"
 }

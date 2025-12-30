@@ -8,12 +8,12 @@
   <parent>
     <groupId>us.fatehi</groupId>
     <artifactId>schemacrawler-parent</artifactId>
-    <version>17.1.7</version>
+    <version>17.2.7</version>
     <relativePath />
   </parent>
   
   <artifactId>schemacrawler-ai-distrib</artifactId>
-  <version>17.1.7-3</version>
+  <version>17.2.7-3</version>
   <packaging>pom</packaging>
 
   <name>SchemaCrawler AI Distribution</name>
