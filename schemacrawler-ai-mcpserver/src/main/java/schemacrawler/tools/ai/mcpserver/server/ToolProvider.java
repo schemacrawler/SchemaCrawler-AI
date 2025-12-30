@@ -23,7 +23,7 @@ import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
-import schemacrawler.Version;
+import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
