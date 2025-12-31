@@ -100,7 +100,7 @@
       <scope>test</scope>
     </dependency>
 
-  <!-- Spring Boot test starters -->
+    <!-- Spring Boot test starters -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
