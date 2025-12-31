@@ -12,7 +12,7 @@
     <relativePath />
   </parent>
   <artifactId>schemacrawler-ai-mcpserver</artifactId>
-  <version>17.3.0-3</version>
+  <version>17.3.0-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI - MCP Server</name>
@@ -70,6 +70,12 @@
     <dependency>
       <groupId>org.springframework.ai</groupId>
       <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
+        <exclusions>
+          <exclusion>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-logging</artifactId>
+          </exclusion>
+        </exclusions>
     </dependency>
 
     <!-- Test dependencies -->
