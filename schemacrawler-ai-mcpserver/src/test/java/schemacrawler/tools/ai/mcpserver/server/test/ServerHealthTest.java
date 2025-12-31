@@ -30,6 +30,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
+import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @SpringJUnitConfig(classes = {ServerHealth.class, ServerHealthTest.MockConfig.class})
@@ -44,13 +45,13 @@ public class ServerHealthTest {
   @TestConfiguration
   static class MockConfig {
     @Bean
-    boolean isInErrorState() {
-      return false;
+    ExcludeTools excludeTools() {
+      return new ExcludeTools();
     }
 
     @Bean
-    ExcludeTools excludeTools() {
-      return new ExcludeTools();
+    boolean isInErrorState() {
+      return false;
     }
 
     @Bean
@@ -77,7 +78,7 @@ public class ServerHealthTest {
             "transport",
             "exclude-tools"));
 
-    assertThat(state.get("_server"), is("SchemaCrawler AI MCP Server TEST"));
+    assertThat(state.get("_server"), is(new SchemaCrawlerAiVersion().toString()));
     assertThat(state.get("in-error-state"), is(false));
     assertThat(state.get("transport"), is("http"));
     assertThat(state.get("exclude-tools"), is(Collections.emptySet()));

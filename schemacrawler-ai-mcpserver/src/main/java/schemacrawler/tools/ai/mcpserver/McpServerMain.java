@@ -10,12 +10,11 @@ package schemacrawler.tools.ai.mcpserver;
 
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
-import us.fatehi.utility.string.StringFormat;
+import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 
 /**
  * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
@@ -46,8 +45,8 @@ public class McpServerMain {
         .initializers(new McpServerInitializer(scContext, context))
         .profiles(mcpTransport.name())
         .run();
-    LOGGER.log(
-        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
+
+    LoggingUtility.logStartup(mcpTransport);
   }
 
   public static void startMcpServer(
@@ -59,7 +58,7 @@ public class McpServerMain {
         .initializers(new McpServerInitializer(catalog, connection, mcpTransport, excludeTools))
         .profiles(mcpTransport.name())
         .run();
-    LOGGER.log(
-        Level.INFO, new StringFormat("MCP server is running with <%s> transport", mcpTransport));
+
+    LoggingUtility.logStartup(mcpTransport);
   }
 }

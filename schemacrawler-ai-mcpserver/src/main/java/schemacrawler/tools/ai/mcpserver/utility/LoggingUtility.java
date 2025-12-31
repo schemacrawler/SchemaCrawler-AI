@@ -16,7 +16,10 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import schemacrawler.schemacrawler.Version;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.utility.JsonUtility;
+import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.UtilityMarker;
@@ -59,6 +62,38 @@ public class LoggingUtility {
             .level(LoggingLevel.ERROR)
             .data(clientLogMessage)
             .build());
+  }
+
+  public static void logStartup(final McpServerTransportType mcpTransport) {
+    if (!LOGGER.isLoggable(Level.INFO)) {
+      return;
+    }
+
+    try (final StringWriter stringWriter = new StringWriter();
+        final PrintWriter writer = new PrintWriter(stringWriter)) {
+
+      writer.println();
+      writer.println("-".repeat(80));
+
+      writer.println(new SchemaCrawlerAiVersion());
+      writer.println(Version.version());
+      writer.println(new SpringAiVersion());
+      writer.println(new SpringBootFrameworkVersion());
+      writer.println(new SpringFrameworkVersion());
+
+      writer.println();
+      writer.println(
+          "SchemaCrawler AI MCP Server is running with <%s> transport".formatted(mcpTransport));
+
+      writer.println("-".repeat(80));
+      writer.println();
+
+      writer.close();
+
+      LOGGER.log(Level.INFO, stringWriter.toString());
+    } catch (final Exception e) {
+      // Ignore exception
+    }
   }
 
   private static String toServerLog(

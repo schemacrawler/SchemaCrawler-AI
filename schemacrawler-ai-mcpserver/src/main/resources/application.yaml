@@ -6,7 +6,7 @@
 
 spring:
   main:
-    banner-mode: log
+    banner-mode: off
   application:
     name: schemacrawler-mcpserver
   ai:
@@ -16,8 +16,6 @@ spring:
         type: SYNC
         name: schemacrawler-mcpserver
 server:
-  name: SchemaCrawler AI MCP Server
-  version: "v17.3.0-1"
   heartbeat: true
 
 ---

@@ -15,19 +15,16 @@ import java.time.ZonedDateTime;
 import java.util.HashMap;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
+import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
+import us.fatehi.utility.property.ProductVersion;
 
 @Component
 public class ServerHealth {
 
-  @Value("${server.name}")
-  private String serverName;
-
-  @Value("${server.version}")
-  private String serverVersion;
+  private static final ProductVersion serverName = new SchemaCrawlerAiVersion();
 
   @Autowired private boolean isInErrorState;
   @Autowired private McpServerTransportType mcpTransport;
@@ -49,7 +46,7 @@ public class ServerHealth {
   }
 
   public String getServerName() {
-    return "%s %s".formatted(serverName, serverVersion);
+    return serverName.toString();
   }
 
   public Duration getServerUptime() {
