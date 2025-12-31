@@ -37,14 +37,14 @@
       <dependency>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-dependencies</artifactId>
-        <version>4.0.0</version>
+        <version>3.5.9</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>2.0.0-M1</version>
+        <version>1.1.2</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -67,15 +67,35 @@
       <version>${project.version}</version>
     </dependency>
 
+    <!-- NOTE: For Spring Boot 4:
+         - Just use spring-ai-starter-mcp-server-webmvc and fix Java imports
+         - Continue to exclude spring-boot-starter-logging since SchemaCrawler uses JUL
+    -->
     <dependency>
       <groupId>org.springframework.ai</groupId>
       <artifactId>spring-ai-starter-mcp-server-webmvc</artifactId>
-        <exclusions>
-          <exclusion>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-logging</artifactId>
-          </exclusion>
-        </exclusions>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Replace excluded dependencies -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.springframework.boot</groupId>
+          <artifactId>spring-boot-starter-logging</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <!-- Add Spring Boot web starter -->
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
 
     <!-- Test dependencies -->
@@ -100,17 +120,15 @@
       <scope>test</scope>
     </dependency>
 
-  <!-- Spring Boot test starters -->
+    <!-- Spring Boot test starters -->
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
     </dependency>
-    <dependency>
-      <groupId>org.springframework.boot</groupId>
-      <artifactId>spring-boot-starter-webmvc-test</artifactId>
-      <scope>test</scope>
-    </dependency>
+    <!-- NOTE: For Spring Boot 4:
+         - Add spring-boot-starter-webmvc-test
+    -->
 
   </dependencies>
 

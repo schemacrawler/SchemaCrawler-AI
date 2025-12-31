@@ -1,13 +1,18 @@
 module us.fatehi.schemacrawler.ai_core {
-  // Dependencies
+
+  // JDK dependencies
+  requires java.logging;
+  requires java.sql;
+
+  // SchemaCrawler dependencies
   requires transitive us.fatehi.schemacrawler.schemacrawler;
   requires us.fatehi.schemacrawler.text;
   requires us.fatehi.schemacrawler.diagram;
   requires us.fatehi.schemacrawler.scripting;
   requires us.fatehi.schemacrawler.offline;
   requires us.fatehi.schemacrawler.lint;
-  requires java.logging;
-  requires java.sql;
+
+  // Other dependencies
   requires tools.jackson.core;
   requires transitive tools.jackson.databind;
 
