@@ -17,7 +17,7 @@ spring:
         name: schemacrawler-mcpserver
 server:
   name: SchemaCrawler AI MCP Server
-  version: "v17.3.0-3"
+  version: "v17.3.0-1"
   heartbeat: true
 
 ---
