@@ -60,7 +60,7 @@ public class DockerImageHealthTest {
       new GenericContainer<>(DockerImageName.parse(DOCKER_IMAGE))
           .withExposedPorts(INTERNAL_CONTAINER_PORT)
           .withEnv(env)
-          .waitingFor(Wait.forLogMessage(".*SchemaCrawler AI MCP Server is running*\\R", 1))
+          .waitingFor(Wait.forLogMessage(".*SchemaCrawler AI MCP Server is running.*\\R", 1))
           .withStartupTimeout(Duration.ofSeconds(60));
 
   @Test
