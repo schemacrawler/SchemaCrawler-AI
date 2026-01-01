@@ -148,5 +148,5 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -Dtest=DockerImageHealthTest \
-          -pl schemacrawler-ai-mcpserver \
+          -pl schemacrawler-ai-integration \
           test

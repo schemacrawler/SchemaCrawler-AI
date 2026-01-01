@@ -19,7 +19,6 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
-import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
@@ -61,11 +60,7 @@ public class DockerImageHealthTest {
       new GenericContainer<>(DockerImageName.parse(DOCKER_IMAGE))
           .withExposedPorts(INTERNAL_CONTAINER_PORT)
           .withEnv(env)
-          .waitingFor(
-              Wait.forLogMessage(
-                  "SchemaCrawler AI MCP Server is running with <%s> transport"
-                      .formatted(McpServerTransportType.http),
-                  1))
+          .waitingFor(Wait.forLogMessage(".*SchemaCrawler AI MCP Server is running*\\R", 1))
           .withStartupTimeout(Duration.ofSeconds(60));
 
   @Test
@@ -90,9 +85,9 @@ public class DockerImageHealthTest {
     assertThat("Health endpoint should return HTTP 200", response.statusCode(), is(200));
 
     final JsonNode state = mapper.readTree(response.body());
-    assertThat(state.get("_server"), is(new SchemaCrawlerAiVersion().toString()));
-    assertThat(state.get("in-error-state"), is(false));
-    assertThat(state.get("transport"), is("http"));
-    assertThat(state.get("exclude-tools"), is(Collections.emptySet()));
+    assertThat(state.get("_server").asString(), is(new SchemaCrawlerAiVersion().toString()));
+    assertThat(state.get("in-error-state").asBoolean(), is(false));
+    assertThat(state.get("transport").asString(), is("http"));
+    assertThat(state.get("exclude-tools").isEmpty(), is(true));
   }
 }
