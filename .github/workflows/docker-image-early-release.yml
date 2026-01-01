@@ -147,6 +147,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
+          -Dintegration \
           -Dtest=DockerImageHealthTest \
           -pl schemacrawler-ai-integration \
           test
