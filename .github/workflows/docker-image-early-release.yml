@@ -29,9 +29,6 @@ jobs:
       uses: sualeh/prepare-maven-build@v1.6.1
       with:
         java-version: 21
-    - id: install-graphviz
-      name: Install Graphviz
-      uses: sualeh/install-graphviz@v1.0.3
 
 # BUILD DEPENDENCIES
     - id: build-schemacrawler-core
@@ -53,10 +50,11 @@ jobs:
       shell: bash
       run: |
         # Build
+        # ... and install (for later phase of Docker image tests)
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          clean verify
+          clean install
     - id: move-distrib
       name: Move SchemaCrawler AI distribution
       shell: bash
@@ -128,6 +126,8 @@ jobs:
       with:
         file: ./Dockerfile.early-access-release
         context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
         platforms: |-
           linux/amd64
           linux/arm64
