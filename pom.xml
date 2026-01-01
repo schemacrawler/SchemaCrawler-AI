@@ -6,7 +6,7 @@
 
   <groupId>us.fatehi</groupId>
   <artifactId>schemacrawler-ai-aggregator</artifactId>
-  <version>17.3.0-1</version>
+  <version>17.4.0-1</version>
   <packaging>pom</packaging>
   <name>SchemaCrawler AI [Aggregator]</name>
 
@@ -15,5 +15,19 @@
     <module>schemacrawler-ai-mcpserver</module>
     <module>schemacrawler-ai-distrib</module>
   </modules>
+
+  <profiles>
+    <profile>
+      <id>integration-tests</id>
+      <activation>
+        <property>
+          <name>integration</name>
+        </property>
+      </activation>
+      <modules>
+        <module>schemacrawler-ai-integration</module>
+      </modules>
+    </profile>
+  </profiles>
 
 </project>
