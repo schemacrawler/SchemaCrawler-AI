@@ -2,6 +2,13 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.4.0-1"></a>
+## Release 17.4.0-1 - 2026-01-01
+
+- Fix Docker image by reverting back to Spring AI 1
+- Add a test to ensure that the Docker image works, by running the image in Testcontainers
+
+
 <a name="v17.1.7-3"></a>
 ## Release 17.1.7-3 - 2025-12-12
 
