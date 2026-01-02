@@ -148,6 +148,5 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -Dverification \
-          -Dtest=DockerImageHealthTest \
           -pl schemacrawler-ai-verification \
           test
