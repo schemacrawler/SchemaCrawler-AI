@@ -36,20 +36,7 @@
   </dependencyManagement>
 
   <dependencies>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-commandline</artifactId>
-    </dependency>
 
-    <dependency>
-      <groupId>us.fatehi</groupId>
-      <artifactId>schemacrawler-ai-core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-mcpserver</artifactId>
@@ -78,11 +65,26 @@
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-deploy-plugin</artifactId>
+        <artifactId>maven-install-plugin</artifactId>
         <configuration>
-          <skip>false</skip>
+          <skip>true</skip>
         </configuration>
       </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-deploy-plugin</artifactId>
+        <configuration>
+          <skip>true</skip>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.sonatype.central</groupId>
+        <artifactId>central-publishing-maven-plugin</artifactId>
+        <configuration>
+          <skipPublishing>true</skipPublishing>
+        </configuration>
+      </plugin>
+
     </plugins>
   </build>
 
