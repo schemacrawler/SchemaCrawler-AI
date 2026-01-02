@@ -107,7 +107,7 @@ public class SchemaCrawlerMCPServerTest {
   }
 
   @Test
-  @DisplayName("Health endpoint returns status UP in integration test")
+  @DisplayName("Health endpoint returns status UP")
   public void healthEndpoint() {
     final RestClient restClient = restClientBuilder.baseUrl("http://localhost:" + port).build();
     final ResponseEntity<Map> response =

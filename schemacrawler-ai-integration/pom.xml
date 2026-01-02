@@ -11,11 +11,11 @@
     <version>17.4.0</version>
     <relativePath />
   </parent>
-  <artifactId>schemacrawler-ai-integration</artifactId>
+  <artifactId>schemacrawler-ai-verification</artifactId>
   <version>17.4.0-1</version>
   <packaging>jar</packaging>
 
-  <name>SchemaCrawler AI - Integration Tests</name>
+  <name>SchemaCrawler AI - Docker Verification Tests</name>
 
   <properties>
     <java.version>21</java.version>

@@ -18,14 +18,14 @@
 
   <profiles>
     <profile>
-      <id>integration-tests</id>
+      <id>verification-tests</id>
       <activation>
         <property>
-          <name>integration</name>
+          <name>verification</name>
         </property>
       </activation>
       <modules>
-        <module>schemacrawler-ai-integration</module>
+        <module>schemacrawler-ai-verification</module>
       </modules>
     </profile>
   </profiles>

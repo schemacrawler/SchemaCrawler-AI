@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: CC-BY-NC-4.0
  */
 
-package schemacrawler.tools.ai.mcpserver.integration_test;
+package schemacrawler.tools.ai.mcpserver.verification_test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
@@ -38,8 +38,8 @@ import tools.jackson.databind.JsonNode;
  */
 @Testcontainers
 @Tag("docker")
-@DisplayName("Docker Image Health Integration Test")
-public class DockerImageHealthTest {
+@DisplayName("Test Docker image build")
+public class DockerImageBuildTest {
 
   private static final String DOCKER_IMAGE = "schemacrawler/schemacrawler-ai:early-access-release";
   private static final int INTERNAL_CONTAINER_PORT = 8181;
