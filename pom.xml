@@ -21,11 +21,11 @@
       <id>verification-tests</id>
       <activation>
         <property>
-          <name>verification</name>
+          <name>verify</name>
         </property>
       </activation>
       <modules>
-        <module>schemacrawler-ai-verification</module>
+        <module>schemacrawler-ai-verify</module>
       </modules>
     </profile>
   </profiles>

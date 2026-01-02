@@ -147,6 +147,6 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
-          -Dverification \
-          -pl schemacrawler-ai-verification \
+          -Dverify \
+          -pl schemacrawler-ai-verify \
           test
