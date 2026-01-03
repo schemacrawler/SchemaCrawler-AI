@@ -135,25 +135,12 @@ jobs:
         cache-from: type=gha
         cache-to: type=gha,mode=max
         # Build only for runner platform
+        platforms: linux/amd64
         tags: ${{ steps.meta.outputs.tags }}
         sbom: true
         provenance: true
         load: true
         push: false
-
-    - id: show-meta
-      name: Show Docker image metadata
-      shell: bash
-      run: |
-        # Move early-access-release tag
-        echo "PROVIDED TAGS:"
-        echo ${{ steps.meta.outputs.tags }}
-        echo "PROVIDED LABELS:"
-        echo ${{ steps.meta.outputs.labels }}
-        echo "PROVIDED ANNOTATIONS:"
-        echo ${{ steps.meta.outputs.annotations }}
-        echo ""
-        docker image inspect schemacrawler/schemacrawler-ai
 
     - id: test-docker-image
       name: Test Docker image build
@@ -180,6 +167,8 @@ jobs:
           linux/amd64
           linux/arm64
         tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
         sbom: true
         provenance: true
         load: false
