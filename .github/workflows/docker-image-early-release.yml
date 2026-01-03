@@ -117,6 +117,12 @@ jobs:
           type=semver,pattern={{major}}.{{minor}},priority=920
           type=semver,pattern={{major}},priority=910
           type=sha
+        labels: |
+          maintainer=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.vendor=SchemaCrawler
+          org.opencontainers.image.licenses=(CC-BY-NC-4.0)
+          org.opencontainers.image.url=https://www.schemacrawler.com/
 
     - id: setup-qemu
       name: Setup QEMU
