@@ -142,9 +142,6 @@ jobs:
           ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
           type=raw,value=early-access-release,priority=1200
-          type=semver,pattern={{version}},priority=930
-          type=semver,pattern={{major}}.{{minor}},priority=920
-          type=semver,pattern={{major}},priority=910
           type=sha
         labels: |
           maintainer=Sualeh Fatehi <sualeh@hotmail.com>
@@ -165,7 +162,9 @@ jobs:
         cache-to: type=gha,mode=max
         # Build just for runner platform
         platforms: linux/amd64
+        tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
         load: true
         push: false
 
