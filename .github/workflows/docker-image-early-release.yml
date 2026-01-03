@@ -10,6 +10,10 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
+  DOCKERFILE_PATH: ./Dockerfile.early-access-release
+
 jobs:
   build:
     name: Create Early Access Release
@@ -125,7 +129,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         call: check
-        file: ./Dockerfile.early-access-release
+        file: ${{ env.DOCKERFILE_PATH }}
         context: .
         load: false
         push: false
@@ -135,7 +139,7 @@ jobs:
       uses: docker/metadata-action@v5
       with:
         images: |
-          schemacrawler/schemacrawler-ai
+          ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
           type=raw,value=early-access-release,priority=1200
           type=semver,pattern={{version}},priority=930
@@ -155,7 +159,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         call: build
-        file: ./Dockerfile.early-access-release
+        file: ${{ env.DOCKERFILE_PATH }}
         context: .
         cache-from: type=gha
         cache-to: type=gha,mode=max
@@ -183,7 +187,7 @@ jobs:
       uses: docker/build-push-action@v6
       with:
         call: build
-        file: ./Dockerfile.early-access-release
+        file: ${{ env.DOCKERFILE_PATH }}
         context: .
         cache-from: type=gha
         cache-to: type=gha,mode=max
