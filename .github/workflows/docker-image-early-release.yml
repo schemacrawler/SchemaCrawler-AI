@@ -12,6 +12,7 @@ concurrency:
 
 env:
   DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
+  DOCKER_IMAGE_TAG: early-access-release
   DOCKERFILE_PATH: ./Dockerfile.early-access-release
 
 jobs:
@@ -74,9 +75,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         target_commitish: ${{ github.sha }}
-        tag_name: early-access-release
+        tag_name: ${{ env.DOCKER_IMAGE_TAG }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        name: early-access-release
+        name: ${{ env.DOCKER_IMAGE_TAG }}
         draft: false
         prerelease: true
         body: |
@@ -102,11 +103,11 @@ jobs:
         # Confirm gitsign is installed
         gitsign --version
         # Move tag
-        git tag -d early-access-release || true
-        git push --delete origin early-access-release || true
-        git tag -a early-access-release -m "SchemaCrawler AI Early Access Release"
-        git push --follow-tags origin early-access-release
-        git show --no-patch early-access-release
+        git tag -d ${{ env.DOCKER_IMAGE_TAG }} || true
+        git push --delete origin ${{ env.DOCKER_IMAGE_TAG }} || true
+        git tag -a ${{ env.DOCKER_IMAGE_TAG }} -m "SchemaCrawler AI Early Access Release"
+        git push --follow-tags origin ${{ env.DOCKER_IMAGE_TAG }}
+        git show --no-patch ${{ env.DOCKER_IMAGE_TAG }}
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
@@ -141,7 +142,7 @@ jobs:
         images: |
           ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
-          type=raw,value=early-access-release,priority=1200
+          type=raw,value=${{ env.DOCKER_IMAGE_TAG }},priority=1200
           type=sha
         labels: |
           maintainer=Sualeh Fatehi <sualeh@hotmail.com>
