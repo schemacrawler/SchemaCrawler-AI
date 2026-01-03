@@ -58,6 +58,7 @@ public class DockerImageBuildTest {
   @Container
   private final GenericContainer<?> mcpServerContainer =
       new GenericContainer<>(DockerImageName.parse(DOCKER_IMAGE))
+          .withImagePullPolicy(imageName -> false)
           .withExposedPorts(INTERNAL_CONTAINER_PORT)
           .withEnv(env)
           .waitingFor(Wait.forLogMessage(".*SchemaCrawler AI MCP Server is running.*\\R", 1))
