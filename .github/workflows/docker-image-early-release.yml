@@ -123,6 +123,7 @@ jobs:
           org.opencontainers.image.vendor=SchemaCrawler
           org.opencontainers.image.licenses=(CC-BY-NC-4.0)
           org.opencontainers.image.url=https://www.schemacrawler.com/
+          org.opencontainers.image.documentation=https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage
 
     - id: setup-qemu
       name: Setup QEMU
