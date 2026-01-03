@@ -133,6 +133,33 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
+    - id: build-docker-image
+      name: Build Docker image locally
+      uses: docker/build-push-action@v6
+      with:
+        file: ./Dockerfile.early-access-release
+        context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        # Build just for runner platform
+        platforms: linux/amd64
+        labels: ${{ steps.meta.outputs.labels }}
+        load: true
+        push: false
+
+    - id: test-docker-image
+      name: Test Docker image build
+      shell: bash
+      run: |
+        # Run the Testcontainers integration test
+        # This will pull the Docker image, start it, and verify the health endpoint
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -Dverify \
+          -pl schemacrawler-ai-verify \
+          test
+
     - id: push-docker-image
       name: Build and push Docker image
       uses: docker/build-push-action@v6
@@ -151,16 +178,3 @@ jobs:
         provenance: true
         load: false
         push: true
-
-    - id: test-docker-image
-      name: Test Docker image build
-      shell: bash
-      run: |
-        # Run the Testcontainers integration test
-        # This will pull the Docker image, start it, and verify the health endpoint
-        mvn \
-          --no-transfer-progress \
-          --batch-mode \
-          -Dverify \
-          -pl schemacrawler-ai-verify \
-          test
