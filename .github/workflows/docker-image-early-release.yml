@@ -10,6 +10,11 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+env:
+  DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
+  DOCKER_IMAGE_TAG: early-access-release
+  DOCKERFILE_PATH: ./Dockerfile.early-access-release
+
 jobs:
   build:
     name: Create Early Access Release
@@ -70,9 +75,9 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         target_commitish: ${{ github.sha }}
-        tag_name: early-access-release
+        tag_name: ${{ env.DOCKER_IMAGE_TAG }}
         token: ${{ secrets.GITHUB_TOKEN }}
-        name: early-access-release
+        name: ${{ env.DOCKER_IMAGE_TAG }}
         draft: false
         prerelease: true
         body: |
@@ -98,11 +103,11 @@ jobs:
         # Confirm gitsign is installed
         gitsign --version
         # Move tag
-        git tag -d early-access-release || true
-        git push --delete origin early-access-release || true
-        git tag -a early-access-release -m "SchemaCrawler AI Early Access Release"
-        git push --follow-tags origin early-access-release
-        git show --no-patch early-access-release
+        git tag -d ${{ env.DOCKER_IMAGE_TAG }} || true
+        git push --delete origin ${{ env.DOCKER_IMAGE_TAG }} || true
+        git tag -a ${{ env.DOCKER_IMAGE_TAG }} -m "SchemaCrawler AI Early Access Release"
+        git push --follow-tags origin ${{ env.DOCKER_IMAGE_TAG }}
+        git show --no-patch ${{ env.DOCKER_IMAGE_TAG }}
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
@@ -120,24 +125,49 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - id: build-docker-image
-      name: Build and Push Docker Image
+    - id: validate-build-configuration
+      name: Validate build configuration
       uses: docker/build-push-action@v6
       with:
-        file: ./Dockerfile.early-access-release
+        call: check
+        file: ${{ env.DOCKERFILE_PATH }}
+        context: .
+        load: false
+        push: false
+
+    - id: meta
+      name: Set up Docker metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.DOCKER_IMAGE_NAME }}
+        tags: |
+          type=raw,value=${{ env.DOCKER_IMAGE_TAG }},priority=1200
+        labels: |
+          maintainer=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.vendor=SchemaCrawler
+          org.opencontainers.image.licenses=(CC-BY-NC-4.0)
+          org.opencontainers.image.url=https://www.schemacrawler.com/
+          org.opencontainers.image.documentation=https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage
+
+    - id: build-docker-image
+      name: Build Docker image locally
+      uses: docker/build-push-action@v6
+      with:
+        call: build
+        file: ${{ env.DOCKERFILE_PATH }}
         context: .
         cache-from: type=gha
         cache-to: type=gha,mode=max
-        platforms: |-
-          linux/amd64
-          linux/arm64
-        tags: |-
-          schemacrawler/schemacrawler-ai:early-access-release
-        sbom: true
-        provenance: true
-        push: true
+        # Build just for runner platform
+        platforms: linux/amd64
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
+        load: true
+        push: false
 
-# TEST DOCKER IMAGE
     - id: test-docker-image
       name: Test Docker image build
       shell: bash
@@ -148,5 +178,26 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -Dverify \
+          -Ddocker_image_tag=${{ env.DOCKER_IMAGE_TAG }} \
           -pl schemacrawler-ai-verify \
           test
+
+    - id: push-docker-image
+      name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        call: build
+        file: ${{ env.DOCKERFILE_PATH }}
+        context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        platforms: |-
+          linux/amd64
+          linux/arm64
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
+        sbom: true
+        provenance: true
+        load: false
+        push: true

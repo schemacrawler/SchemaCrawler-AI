@@ -1,7 +1,7 @@
 name: Build and Publish SchemaCrawler AI Docker Image
 
 on:
-  # workflow_dispatch:
+  workflow_dispatch:
   push:
     tags:
       - 'v*'
@@ -9,6 +9,11 @@ on:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+
+env:
+  DOCKER_IMAGE_NAME: schemacrawler/schemacrawler
+  DOCKER_IMAGE_TAG: latest
+  DOCKERFILE_PATH: ./Dockerfile
 
 jobs:
   build:
@@ -52,36 +57,83 @@ jobs:
         username: ${{ secrets.DOCKER_USERNAME }}
         password: ${{ secrets.DOCKER_PASSWORD }}
 
-    - id: build-docker-latest
-      name: Build and push SchemaCrawler AI latest Docker image
-      if: startsWith(github.ref, 'refs/tags/')
+    - id: validate-build-configuration
+      name: Validate build configuration
       uses: docker/build-push-action@v6
       with:
-        file: ./Dockerfile
+        call: check
+        file: ${{ env.DOCKERFILE_PATH }}
+        context: .
+        load: false
+        push: false
+
+    - id: meta
+      name: Set up Docker metadata
+      uses: docker/metadata-action@v5
+      with:
+        images: |
+          ${{ env.DOCKER_IMAGE_NAME }}
+        tags: |
+          type=raw,value=early-access-release,priority=1200	
+          type=semver,pattern={{version}},priority=930
+          type=semver,pattern={{major}}.{{minor}},priority=920
+          type=semver,pattern={{major}},priority=910
+          type=sha
+        labels: |
+          maintainer=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
+          org.opencontainers.image.vendor=SchemaCrawler
+          org.opencontainers.image.licenses=(CC-BY-NC-4.0)
+          org.opencontainers.image.url=https://www.schemacrawler.com/
+          org.opencontainers.image.documentation=https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage
+
+    - id: build-docker-image
+      name: Build Docker image locally
+      uses: docker/build-push-action@v6
+      with:
+        call: build
+        file: ${{ env.DOCKERFILE_PATH }}
+        context: .
+        cache-from: type=gha
+        cache-to: type=gha,mode=max
+        # Build just for runner platform
+        platforms: linux/amd64
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
+        load: true
+        push: false
+
+    - id: test-docker-image
+      name: Test Docker image build
+      shell: bash
+      run: |
+        # Run the Testcontainers integration test
+        # This will pull the Docker image, start it, and verify the health endpoint
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
+          -Dverify \
+          -Ddocker_image_tag=${{ env.DOCKER_IMAGE_TAG }} \
+          -pl schemacrawler-ai-verify \
+          test
+
+    - id: push-docker-image
+      name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        call: build
+        file: ${{ env.DOCKERFILE_PATH }}
         context: .
         cache-from: type=gha
         cache-to: type=gha,mode=max
         platforms: |-
           linux/amd64
           linux/arm64
-        tags: |-
-          schemacrawler/schemacrawler-ai:${{ github.ref_name }}
-          schemacrawler/schemacrawler-ai:latest
+        tags: ${{ steps.meta.outputs.tags }}
+        labels: ${{ steps.meta.outputs.labels }}
+        annotations: ${{ steps.meta.outputs.annotations }}
         sbom: true
         provenance: true
-        push: true
-
-    - id: build-docker-early-release
-      name: Build and push SchemaCrawler AI Early Release Docker image
-      uses: docker/build-push-action@v6
-      with:
-        file: ./Dockerfile
-        context: .
-        platforms: |-
-          linux/amd64
-          linux/arm64
-        tags: |-
-          schemacrawler/schemacrawler-ai:early-access-release
-        build-args: |
-          FROM_IMAGE=schemacrawler/schemacrawler:early-access-release
+        load: false
         push: true

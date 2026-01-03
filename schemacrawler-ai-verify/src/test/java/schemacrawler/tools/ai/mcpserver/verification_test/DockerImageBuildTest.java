@@ -20,6 +20,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.api.Test;
@@ -31,6 +33,7 @@ import org.testcontainers.utility.DockerImageName;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.utility.readconfig.SystemPropertiesConfig;
 
 /**
  * Integration test to verify the published Docker image is viable by starting it and checking the
@@ -41,7 +44,12 @@ import tools.jackson.databind.JsonNode;
 @DisplayName("Test Docker image build")
 public class DockerImageBuildTest {
 
-  private static final String DOCKER_IMAGE = "schemacrawler/schemacrawler-ai:early-access-release";
+  private static final Logger LOGGER =
+      Logger.getLogger(DockerImageBuildTest.class.getCanonicalName());
+
+  private static final DockerImageName DOCKER_IMAGE_NAME =
+      DockerImageName.parse("schemacrawler/schemacrawler-ai")
+          .withTag(new SystemPropertiesConfig().getStringValue("docker_image_tag", "latest"));
   private static final int INTERNAL_CONTAINER_PORT = 8181;
 
   private static final Map<String, String> env =
@@ -57,7 +65,8 @@ public class DockerImageBuildTest {
 
   @Container
   private final GenericContainer<?> mcpServerContainer =
-      new GenericContainer<>(DockerImageName.parse(DOCKER_IMAGE))
+      new GenericContainer<>(DOCKER_IMAGE_NAME)
+          .withImagePullPolicy(imageName -> false)
           .withExposedPorts(INTERNAL_CONTAINER_PORT)
           .withEnv(env)
           .waitingFor(Wait.forLogMessage(".*SchemaCrawler AI MCP Server is running.*\\R", 1))
@@ -66,6 +75,9 @@ public class DockerImageBuildTest {
   @Test
   @DisplayName("Docker image starts successfully and health endpoint returns valid JSON")
   public void testDockerImageHealth() throws IOException, InterruptedException {
+
+    LOGGER.log(Level.CONFIG, "Verifying " + DOCKER_IMAGE_NAME);
+
     // Get the mapped port for the MCP server
     final Integer mappedPort = mcpServerContainer.getMappedPort(INTERNAL_CONTAINER_PORT);
     assertThat("Container port should be mapped", mappedPort, is(notNullValue()));
