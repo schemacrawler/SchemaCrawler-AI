@@ -143,7 +143,6 @@ jobs:
           ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
           type=raw,value=${{ env.DOCKER_IMAGE_TAG }},priority=1200
-          type=sha
         labels: |
           maintainer=Sualeh Fatehi <sualeh@hotmail.com>
           org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
