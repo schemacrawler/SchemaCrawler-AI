@@ -105,11 +105,11 @@ jobs:
         git show --no-patch early-access-release
 
 # BUILD AND PUBLISH DOCKER IMAGE
-      - id: validate-build-configuration
-        name: Validate build configuration
-        uses: docker/build-push-action@v6
-        with:
-          call: check
+    - id: validate-build-configuration
+      name: Validate build configuration
+      uses: docker/build-push-action@v6
+      with:
+        call: check
 
     - id: meta
       name: Set up Docker metadata
