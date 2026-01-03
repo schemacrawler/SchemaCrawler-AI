@@ -179,6 +179,7 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -Dverify \
+          -Ddocker_image_tag=${{ env.DOCKER_IMAGE_TAG }} \
           -pl schemacrawler-ai-verify \
           test
 
