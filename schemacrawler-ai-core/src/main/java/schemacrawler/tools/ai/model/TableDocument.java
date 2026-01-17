@@ -33,6 +33,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import schemacrawler.ermodel.model.EntityType;
+import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.DatabaseObject;
@@ -50,6 +52,7 @@ import tools.jackson.databind.node.ObjectNode;
   "schema",
   "name",
   "type",
+  "entity-type",
   "remarks",
   "columns",
   "primary-key",
@@ -75,6 +78,7 @@ public final class TableDocument implements Document {
   private final Collection<TriggerDocument> triggers;
   private final Collection<DatabaseObjectDocument> usedByObjects;
   private final Map<String, String> attributes;
+  private final EntityType entityType;
 
   private final String definition;
 
@@ -167,6 +171,12 @@ public final class TableDocument implements Document {
     } else {
       attributes = null;
     }
+
+    EntityType entityType = EntityModelUtility.inferEntityType(table);
+    if (entityType == EntityType.unknown) {
+      entityType = null;
+    }
+    this.entityType = entityType;
   }
 
   public Map<String, String> getAttributes() {
@@ -179,6 +189,10 @@ public final class TableDocument implements Document {
 
   public String getDefinition() {
     return definition;
+  }
+
+  public EntityType getEntityType() {
+    return entityType;
   }
 
   public Collection<IndexDocument> getIndexes() {
