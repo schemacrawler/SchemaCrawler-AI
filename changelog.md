@@ -3,10 +3,11 @@
 SchemaCrawler AI release notes.
 
 <a name="v17.4.0-1"></a>
-## Release 17.4.0-1 - 2026-01-01
+## Release 17.4.0-1 - 2026-01-16
 
 - Fix Docker image by reverting back to Spring AI 1
 - Add a test to ensure that the Docker image works, by running the image in Testcontainers
+- Add ER modeling information - entity types and foreign key cardinality - to schema information returned by functions
 
 
 <a name="v17.1.7-3"></a>
