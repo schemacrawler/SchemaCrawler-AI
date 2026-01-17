@@ -15,6 +15,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
+import schemacrawler.ermodel.model.ForeignKeyCardinality;
+import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Table;
@@ -24,13 +26,14 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "referenced-table"})
+@JsonPropertyOrder({"name", "referenced-table", "cardinality"})
 public final class ForeignKeyDocument implements Document {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String foreignKeyName;
   private final String referencedTableName;
+  private final ForeignKeyCardinality cardinality;
 
   public ForeignKeyDocument(final ForeignKey foreignKey) {
     requireNonNull(foreignKey, "No foreign key provided");
@@ -43,6 +46,12 @@ public final class ForeignKeyDocument implements Document {
       break;
     }
     referencedTableName = parentTable.getName();
+
+    cardinality = EntityModelUtility.inferCardinality(foreignKey);
+  }
+
+  public ForeignKeyCardinality getCardinality() {
+    return cardinality;
   }
 
   @Override
