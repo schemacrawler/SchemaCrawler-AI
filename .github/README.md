@@ -9,7 +9,7 @@
 
 > [!NOTE]
 > * Please see the [SchemaCrawler website](https://www.schemacrawler.com/) for more details.
-> * See [SchemaCrawler AI MCP Server Usage](https://github.com/schemacrawler/SchemaCrawler-MCP-Server-Usage) for information on how to use the MCP Server
+> * See [SchemaCrawler AI MCP Server Usage](https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage) for information on how to use the MCP Server
 
 
 ## About
@@ -24,4 +24,4 @@
 
 ## Support
 
-**SchemaCrawler AI** is not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://sualeh.github.io/SchemaCrawler/consulting.html) for details.
+**SchemaCrawler AI** is not supported, unless you purchase a support incident. Please see [Guidelines for Support](https://www.schemacrawler.com/consulting.html) for details.
