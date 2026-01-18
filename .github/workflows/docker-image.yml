@@ -113,6 +113,11 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
+          -DskipTests \
+          install    
+        mvn \
+          --no-transfer-progress \
+          --batch-mode \
           -Dverify \
           -Ddocker_image_tag=${{ env.DOCKER_IMAGE_TAG }} \
           -pl schemacrawler-ai-verify \
