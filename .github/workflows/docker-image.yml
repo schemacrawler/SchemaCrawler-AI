@@ -75,6 +75,7 @@ jobs:
           ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
           type=raw,value=${{ env.DOCKER_IMAGE_TAG }},priority=1200
+          type=semver,pattern=v{{version}},priority=940
           type=semver,pattern={{version}},priority=930
           type=semver,pattern={{major}}.{{minor}},priority=920
           type=semver,pattern={{major}},priority=910
