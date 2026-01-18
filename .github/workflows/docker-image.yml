@@ -11,7 +11,7 @@ concurrency:
   cancel-in-progress: true
 
 env:
-  DOCKER_IMAGE_NAME: schemacrawler/schemacrawler
+  DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
   DOCKER_IMAGE_TAG: latest
   DOCKERFILE_PATH: ./Dockerfile
 
@@ -74,11 +74,10 @@ jobs:
         images: |
           ${{ env.DOCKER_IMAGE_NAME }}
         tags: |
-          type=raw,value=early-access-release,priority=1200	
+          type=raw,value=${{ env.DOCKER_IMAGE_TAG }},priority=1200
           type=semver,pattern={{version}},priority=930
           type=semver,pattern={{major}}.{{minor}},priority=920
           type=semver,pattern={{major}},priority=910
-          type=sha
         labels: |
           maintainer=Sualeh Fatehi <sualeh@hotmail.com>
           org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
@@ -114,7 +113,7 @@ jobs:
           --no-transfer-progress \
           --batch-mode \
           -DskipTests \
-          install    
+          install
         mvn \
           --no-transfer-progress \
           --batch-mode \
