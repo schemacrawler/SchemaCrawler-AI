@@ -15,7 +15,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
-import schemacrawler.ermodel.model.ForeignKeyCardinality;
+import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.ForeignKey;
@@ -33,7 +33,7 @@ public final class ForeignKeyDocument implements Document {
 
   private final String foreignKeyName;
   private final String referencedTableName;
-  private final ForeignKeyCardinality cardinality;
+  private final RelationshipCardinality cardinality;
 
   public ForeignKeyDocument(final ForeignKey foreignKey) {
     requireNonNull(foreignKey, "No foreign key provided");
@@ -50,7 +50,7 @@ public final class ForeignKeyDocument implements Document {
     cardinality = EntityModelUtility.inferCardinality(foreignKey);
   }
 
-  public ForeignKeyCardinality getCardinality() {
+  public RelationshipCardinality getCardinality() {
     return cardinality;
   }
 
