@@ -83,7 +83,7 @@ jobs:
           maintainer=Sualeh Fatehi <sualeh@hotmail.com>
           org.opencontainers.image.authors=Sualeh Fatehi <sualeh@hotmail.com>
           org.opencontainers.image.vendor=SchemaCrawler
-          org.opencontainers.image.licenses=(CC-BY-NC-4.0)
+          org.opencontainers.image.licenses=(BUSL-1.1)
           org.opencontainers.image.url=https://www.schemacrawler.com/
           org.opencontainers.image.documentation=https://github.com/schemacrawler/SchemaCrawler-AI-MCP-Server-Usage
 
