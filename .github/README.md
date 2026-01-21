@@ -19,7 +19,11 @@
 
 ## Licensing
 
-**SchemaCrawler AI** is licensed under the [Attribution-NonCommercial 4.0 International](https://creativecommons.org/licenses/by-nc/4.0/) license.
+**SchemaCrawler AI** is licensed under the Business Source License 1.1 (BUSL-1.1) license.
+
+This project may be distributed together with third-party components such as JDBC drivers and other libraries. Unless explicitly stated otherwise, the Business Source License 1.1 applies only to the SchemaCrawler AI MCP Server source code authored for this repository. All third-party components included in source or binary distributions are licensed separately by their respective copyright holders. See the documentation or the distribution package for third-party license information.
+
+Under the Business Source License 1.1, you are free to read, modify, and redistribute the source code, subject to the license terms. However, production or commercial use of SchemaCrawler AI MCP Server is restricted except as permitted by a separate commercial agreement. If you are interested in production or commercial use please see the [SchemaCrawler website](https://www.schemacrawler.com/consulting.html).
 
 
 ## Support
