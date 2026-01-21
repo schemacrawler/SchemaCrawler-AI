@@ -1,7 +1,7 @@
 schema_version = 1
 
 project {
-  license          = "CC-BY-NC-4.0"
+  license          = "BUSL-1.1"
   copyright_holder = "Sualeh Fatehi"
   copyright_year   = 2000
 
