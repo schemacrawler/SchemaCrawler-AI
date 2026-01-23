@@ -12,7 +12,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "docker.io/schemacrawler/schemacrawler-ai:v17.5.0-1",
+      "identifier": "schemacrawler/schemacrawler-ai:v17.5.0-1",
       "transport": {
         "type": "stdio"
       },
