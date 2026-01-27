@@ -1,4 +1,4 @@
-name: Create Early Access Release Docker Image
+name: Create Early Access Release
 
 on:
   workflow_dispatch:
@@ -14,6 +14,7 @@ env:
   DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
   DOCKER_IMAGE_TAG: early-access-release
   DOCKERFILE_PATH: ./Dockerfile.early-access-release
+  DOCKER_CONTEXT: ./
 
 jobs:
   build:
@@ -131,7 +132,7 @@ jobs:
       with:
         call: check
         file: ${{ env.DOCKERFILE_PATH }}
-        context: .
+        context: ${{ env.DOCKER_CONTEXT }}
         load: false
         push: false
 
@@ -188,7 +189,7 @@ jobs:
       with:
         call: build
         file: ${{ env.DOCKERFILE_PATH }}
-        context: .
+        context: ${{ env.DOCKER_CONTEXT }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
         platforms: |-
