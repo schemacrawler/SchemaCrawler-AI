@@ -12,7 +12,7 @@
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "schemacrawler/schemacrawler-ai:v17.6.0-1",
+      "identifier": "schemacrawler/schemacrawler-ai:17.6.0-1",
       "transport": {
         "type": "stdio"
       },
