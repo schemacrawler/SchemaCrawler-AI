@@ -14,7 +14,7 @@ env:
   DOCKER_IMAGE_NAME: schemacrawler/schemacrawler-ai
   DOCKER_IMAGE_TAG: early-access-release
   DOCKERFILE_PATH: ./Dockerfile.early-access-release
-  DOCKER_CONTEXT: ./
+  DOCKER_CONTEXT_PATH: ./
 
 jobs:
   build:
@@ -132,7 +132,7 @@ jobs:
       with:
         call: check
         file: ${{ env.DOCKERFILE_PATH }}
-        context: ${{ env.DOCKER_CONTEXT }}
+        context: ${{ env.DOCKER_CONTEXT_PATH }}
         load: false
         push: false
 
@@ -189,7 +189,7 @@ jobs:
       with:
         call: build
         file: ${{ env.DOCKERFILE_PATH }}
-        context: ${{ env.DOCKER_CONTEXT }}
+        context: ${{ env.DOCKER_CONTEXT_PATH }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
         platforms: |-
