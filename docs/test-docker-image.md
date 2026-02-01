@@ -7,7 +7,7 @@
 docker buildx build \
   --platform linux/arm64 \
   --file ./Dockerfile.early-access-release \
-  --tag schemacrawler/schemacrawler-ai:test \
+  --tag schemacrawler/schemacrawler-ai:local-test \
   --load \
   .
 ```
