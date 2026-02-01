@@ -12,7 +12,7 @@
     <relativePath />
   </parent>
   <artifactId>schemacrawler-ai-verify</artifactId>
-  <version>17.6.0-2</version>
+  <version>17.6.0-1</version>
   <packaging>jar</packaging>
 
   <name>SchemaCrawler AI - Docker Verification Tests</name>

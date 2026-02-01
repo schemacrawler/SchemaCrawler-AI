@@ -46,12 +46,6 @@ public class SchemaCrawlerMCPServerTest {
 
   @TestConfiguration
   static class MockConfig {
-
-    @Bean
-    RestClient.Builder restClientBuilder() {
-      return RestClient.builder();
-    }
-
     @Bean
     Catalog catalog() {
       return mock(Catalog.class);

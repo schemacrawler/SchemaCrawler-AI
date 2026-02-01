@@ -13,7 +13,7 @@
   </parent>
   
   <artifactId>schemacrawler-ai-distrib</artifactId>
-  <version>17.6.0-2</version>
+  <version>17.6.0-1</version>
   <packaging>pom</packaging>
 
   <name>SchemaCrawler AI Distribution</name>
