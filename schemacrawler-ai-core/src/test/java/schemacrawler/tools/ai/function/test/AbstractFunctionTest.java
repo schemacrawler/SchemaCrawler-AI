@@ -11,6 +11,8 @@ package schemacrawler.tools.ai.function.test;
 import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
+import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -31,6 +33,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 public abstract class AbstractFunctionTest {
 
   protected Catalog catalog;
+  protected ERModel erModel;
 
   @BeforeAll
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
@@ -51,5 +54,6 @@ public abstract class AbstractFunctionTest {
 
     final DatabaseConnectionSource dataSource = new ConnectionDatabaseConnectionSource(connection);
     catalog = SchemaCrawlerUtility.getCatalog(dataSource, schemaCrawlerOptions);
+    erModel = EntityModelUtility.buildERModel(catalog);
   }
 }

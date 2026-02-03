@@ -15,6 +15,7 @@ import static us.fatehi.utility.Utility.isBlank;
 import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import tools.jackson.databind.JsonNode;
@@ -33,6 +34,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
 
   private final FunctionDefinition<P> functionDefinition;
   private final Catalog catalog;
+  private final ERModel erModel;
 
   /**
    * Function callbacks are created and registered ahead of time, with the required context that is
@@ -42,9 +44,13 @@ public final class FunctionCallback<P extends FunctionParameters> {
    * @param catalog Database catalog.
    * @param connection A live connection to the database.
    */
-  public FunctionCallback(final FunctionDefinition<P> functionDefinition, final Catalog catalog) {
+  public FunctionCallback(
+      final FunctionDefinition<P> functionDefinition,
+      final Catalog catalog,
+      final ERModel erModel) {
     this.functionDefinition = requireNonNull(functionDefinition, "No function definition provided");
     this.catalog = catalog;
+    this.erModel = erModel;
   }
 
   /**
@@ -132,6 +138,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
     functionExecutor.configure(arguments);
     functionExecutor.initialize();
     functionExecutor.setCatalog(catalog);
+    functionExecutor.setERModel(erModel);
     if (functionExecutor.usesConnection()) {
       functionExecutor.setConnection(connection);
     }

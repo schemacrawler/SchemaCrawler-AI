@@ -164,6 +164,7 @@ public class ListAcrossTablesFunctionTest extends AbstractFunctionTest {
           functionDefinition.newExecutor();
       executor.configure(args);
       executor.setCatalog(catalog);
+      executor.setERModel(erModel);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }
