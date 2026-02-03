@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.mcpserver;
 
 import java.sql.Connection;
 import java.util.Collection;
-import java.util.logging.Logger;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
@@ -23,8 +22,6 @@ public class McpServerMain {
 
   @SpringBootApplication
   public static class McpServer {}
-
-  private static final Logger LOGGER = Logger.getLogger(McpServerMain.class.getName());
 
   /**
    * Main method that reads environment variables, constructs arguments, and runs SchemaCrawler MCP
