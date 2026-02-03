@@ -34,7 +34,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import schemacrawler.ermodel.model.EntityType;
-import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.DatabaseObject;
@@ -82,7 +81,10 @@ public final class TableDocument implements Document {
 
   private final String definition;
 
-  TableDocument(final Table table, final Map<AdditionalTableDetails, Boolean> tableDetails) {
+  TableDocument(
+      final Table table,
+      final EntityType entityType,
+      final Map<AdditionalTableDetails, Boolean> tableDetails) {
     Objects.requireNonNull(table, "No table provided");
     final Map<AdditionalTableDetails, Boolean> details = defaults(tableDetails);
 
@@ -172,11 +174,11 @@ public final class TableDocument implements Document {
       attributes = null;
     }
 
-    EntityType entityType = EntityModelUtility.inferEntityType(table);
     if (entityType == EntityType.unknown) {
-      entityType = null;
+      this.entityType = null;
+    } else {
+      this.entityType = entityType;
     }
-    this.entityType = entityType;
   }
 
   public Map<String, String> getAttributes() {
