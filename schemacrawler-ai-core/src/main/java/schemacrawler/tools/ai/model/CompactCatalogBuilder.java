@@ -12,18 +12,57 @@ import static java.util.Objects.requireNonNull;
 
 import java.util.Collection;
 import java.util.EnumMap;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
+import us.fatehi.utility.Builder;
 
-public final class CompactCatalogUtility {
+public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
 
+  public static CompactCatalogBuilder builder(final Catalog catalog, final ERModel erModel) {
+    return new CompactCatalogBuilder(catalog, erModel);
+  }
+
+  private final Catalog catalog;
+  private final ERModel erModel;
   private final EnumMap<AdditionalTableDetails, Boolean> additionalTableDetails;
   private final EnumMap<AdditionalRoutineDetails, Boolean> additionalRoutineDetails;
 
-  public CompactCatalogUtility() {
+  private CompactCatalogBuilder(final Catalog catalog, final ERModel erModel) {
+    this.catalog = requireNonNull(catalog, "No catalog provided");
+    this.erModel = requireNonNull(erModel, "No ER model provided");
     additionalTableDetails = new EnumMap<>(AdditionalTableDetails.class);
     additionalRoutineDetails = new EnumMap<>(AdditionalRoutineDetails.class);
+  }
+
+  @Override
+  public CatalogDocument build() {
+    requireNonNull(catalog, "No catalog provided");
+
+    final CatalogDocument catalogDocument =
+        new CatalogDocument(catalog.getDatabaseInfo().getDatabaseProductName());
+    for (final Table table : catalog.getTables()) {
+      final TableDocument tableDocument = buildTableDocument(table);
+      catalogDocument.addTable(tableDocument);
+    }
+    for (final Routine routine : catalog.getRoutines()) {
+      final RoutineDocument routineDocument = buildRoutineDocument(routine);
+      catalogDocument.addRoutine(routineDocument);
+    }
+    return catalogDocument;
+  }
+
+  public RoutineDocument buildRoutineDocument(final Routine routine) {
+    requireNonNull(routine, "No routine provided");
+    final RoutineDocument routineDocument = new RoutineDocument(routine, additionalRoutineDetails);
+    return routineDocument;
+  }
+
+  public TableDocument buildTableDocument(final Table table) {
+    requireNonNull(table, "No table provided");
+    final TableDocument tableDocument = new TableDocument(table, additionalTableDetails);
+    return tableDocument;
   }
 
   public CatalogDocument createCatalogDocument(final Catalog catalog) {
@@ -32,29 +71,17 @@ public final class CompactCatalogUtility {
     final CatalogDocument catalogDocument =
         new CatalogDocument(catalog.getDatabaseInfo().getDatabaseProductName());
     for (final Table table : catalog.getTables()) {
-      final TableDocument tableDocument = getTableDocument(table);
+      final TableDocument tableDocument = buildTableDocument(table);
       catalogDocument.addTable(tableDocument);
     }
     for (final Routine routine : catalog.getRoutines()) {
-      final RoutineDocument routineDocument = getRoutineDocument(routine);
+      final RoutineDocument routineDocument = buildRoutineDocument(routine);
       catalogDocument.addRoutine(routineDocument);
     }
     return catalogDocument;
   }
 
-  public RoutineDocument getRoutineDocument(final Routine routine) {
-    requireNonNull(routine, "No routine provided");
-    final RoutineDocument routineDocument = new RoutineDocument(routine, additionalRoutineDetails);
-    return routineDocument;
-  }
-
-  public TableDocument getTableDocument(final Table table) {
-    requireNonNull(table, "No table provided");
-    final TableDocument tableDocument = new TableDocument(table, additionalTableDetails);
-    return tableDocument;
-  }
-
-  public CompactCatalogUtility withAdditionalRoutineDetails(
+  public CompactCatalogBuilder withAdditionalRoutineDetails(
       final Collection<AdditionalRoutineDetails> withAdditionalRoutineDetails) {
     if (withAdditionalRoutineDetails == null || withAdditionalRoutineDetails.isEmpty()) {
       return this;
@@ -66,7 +93,7 @@ public final class CompactCatalogUtility {
     return this;
   }
 
-  public CompactCatalogUtility withAdditionalTableDetails(
+  public CompactCatalogBuilder withAdditionalTableDetails(
       final Collection<AdditionalTableDetails> withAdditionalTableDetails) {
     if (withAdditionalTableDetails == null || withAdditionalTableDetails.isEmpty()) {
       return this;
