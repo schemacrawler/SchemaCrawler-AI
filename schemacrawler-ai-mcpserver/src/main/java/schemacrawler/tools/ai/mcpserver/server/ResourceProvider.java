@@ -20,6 +20,7 @@ import org.springaicommunity.mcp.annotation.McpArg;
 import org.springaicommunity.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
@@ -27,7 +28,7 @@ import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.AdditionalTableDetails;
-import schemacrawler.tools.ai.model.CompactCatalogUtility;
+import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
 
@@ -35,6 +36,7 @@ import schemacrawler.tools.ai.model.TableDocument;
 public class ResourceProvider {
 
   @Autowired public Catalog catalog;
+  @Autowired public ERModel erModel;
 
   @McpResource(
       uri = "catalog://routines/{routine-name}",
@@ -49,9 +51,9 @@ public class ResourceProvider {
     final EnumSet<AdditionalRoutineDetails> allRoutineDetails =
         EnumSet.allOf(AdditionalRoutineDetails.class);
     final RoutineDocument document =
-        new CompactCatalogUtility()
+        CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalRoutineDetails(allRoutineDetails)
-            .getRoutineDocument(routine);
+            .buildRoutineDocument(routine);
     return document.toObjectNode().toPrettyString();
   }
 
@@ -68,9 +70,9 @@ public class ResourceProvider {
     final EnumSet<AdditionalTableDetails> allTableDetails =
         EnumSet.allOf(AdditionalTableDetails.class);
     final TableDocument document =
-        new CompactCatalogUtility()
+        CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalTableDetails(allTableDetails)
-            .getTableDocument(table);
+            .buildTableDocument(table);
     return document.toObjectNode().toPrettyString();
   }
 

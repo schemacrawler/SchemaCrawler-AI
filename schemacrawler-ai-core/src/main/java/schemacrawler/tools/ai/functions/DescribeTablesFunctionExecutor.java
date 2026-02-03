@@ -22,7 +22,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope;
 import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
-import schemacrawler.tools.ai.model.CompactCatalogUtility;
+import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
@@ -40,9 +40,9 @@ public final class DescribeTablesFunctionExecutor
 
     final Collection<AdditionalTableDetails> tableDetails = getTableDetails();
     final CatalogDocument catalogDocument =
-        new CompactCatalogUtility()
+        CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalTableDetails(tableDetails)
-            .createCatalogDocument(catalog);
+            .build();
     return new JsonFunctionReturn(catalogDocument);
   }
 

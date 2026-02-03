@@ -22,7 +22,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters.RoutineDescriptionScope;
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.CatalogDocument;
-import schemacrawler.tools.ai.model.CompactCatalogUtility;
+import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
@@ -40,9 +40,9 @@ public final class DescribeRoutinesFunctionExecutor
 
     final Collection<AdditionalRoutineDetails> routineDetails = getRoutineDetails();
     final CatalogDocument catalogDocument =
-        new CompactCatalogUtility()
+        CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalRoutineDetails(routineDetails)
-            .createCatalogDocument(catalog);
+            .build();
     return new JsonFunctionReturn(catalogDocument);
   }
 
