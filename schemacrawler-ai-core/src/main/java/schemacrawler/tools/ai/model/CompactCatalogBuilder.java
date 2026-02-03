@@ -13,6 +13,8 @@ import static java.util.Objects.requireNonNull;
 import java.util.Collection;
 import java.util.EnumMap;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.ermodel.model.Entity;
+import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
@@ -61,7 +63,9 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
 
   public TableDocument buildTableDocument(final Table table) {
     requireNonNull(table, "No table provided");
-    final TableDocument tableDocument = new TableDocument(table, additionalTableDetails);
+    final EntityType entityType = erModel.lookupEntity(table).map(Entity::getType).orElse(null);
+    final TableDocument tableDocument =
+        new TableDocument(table, entityType, additionalTableDetails);
     return tableDocument;
   }
 
