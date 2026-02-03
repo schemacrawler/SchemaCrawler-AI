@@ -36,6 +36,7 @@ public class ServerInformationFunctionTest extends AbstractFunctionTest {
     try (final TestWriter out = testout) {
       final FunctionExecutor<NoParameters> executor = functionDefinition.newExecutor();
       executor.setCatalog(catalog);
+      executor.setERModel(erModel);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

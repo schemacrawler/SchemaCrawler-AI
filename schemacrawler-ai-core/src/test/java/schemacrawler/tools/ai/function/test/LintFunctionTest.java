@@ -55,6 +55,6 @@ public class LintFunctionTest extends AbstractFunctionTest {
 
     final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, connection, hasResults);
+        testContext, functionDefinition, args, catalog, erModel, connection, hasResults);
   }
 }

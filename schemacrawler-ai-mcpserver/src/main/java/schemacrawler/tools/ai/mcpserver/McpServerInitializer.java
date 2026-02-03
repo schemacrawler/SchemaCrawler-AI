@@ -60,7 +60,11 @@ public class McpServerInitializer
     this.isInErrorState = isInErrorState;
 
     this.catalog = requireNonNull(catalog, "No catalog provided");
-    erModel = EntityModelUtility.buildERModel(catalog);
+    if (!isInErrorState) {
+      erModel = EntityModelUtility.buildERModel(catalog);
+    } else {
+      erModel = EmptyFactory.createEmptyERModel();
+    }
 
     if (excludeTools == null) {
       this.excludeTools = new ExcludeTools();
@@ -89,7 +93,11 @@ public class McpServerInitializer
       isInErrorState = true;
     }
     this.catalog = catalog;
-    erModel = EntityModelUtility.buildERModel(catalog);
+    if (!isInErrorState) {
+      erModel = EntityModelUtility.buildERModel(catalog);
+    } else {
+      erModel = EmptyFactory.createEmptyERModel();
+    }
     this.isInErrorState = isInErrorState;
 
     // Once the catalog is loaded, use the operations database connection source

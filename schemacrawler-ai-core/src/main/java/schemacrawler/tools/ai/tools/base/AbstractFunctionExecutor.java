@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.regex.Pattern;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
@@ -25,8 +26,15 @@ import us.fatehi.utility.property.PropertyName;
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     extends BaseCommand<P, FunctionReturn> implements FunctionExecutor<P> {
 
+  protected ERModel erModel;
+
   protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
+  }
+
+  @Override
+  public void setERModel(final ERModel erModel) {
+    this.erModel = erModel;
   }
 
   @Override

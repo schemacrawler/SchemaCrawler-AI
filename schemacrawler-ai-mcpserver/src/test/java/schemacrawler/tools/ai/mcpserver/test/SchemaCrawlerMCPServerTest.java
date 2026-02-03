@@ -29,6 +29,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestClient;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
@@ -54,6 +55,11 @@ public class SchemaCrawlerMCPServerTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    ERModel erModel() {
+      return mock(ERModel.class);
     }
 
     @Bean
