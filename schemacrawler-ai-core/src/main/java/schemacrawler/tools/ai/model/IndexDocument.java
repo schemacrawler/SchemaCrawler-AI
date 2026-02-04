@@ -35,7 +35,7 @@ public final class IndexDocument implements Document {
   private final List<String> columns;
   private final boolean isUnique;
 
-  public IndexDocument(final Index index) {
+  IndexDocument(final Index index) {
     requireNonNull(index, "No index provided");
 
     indexName = index.getName();
@@ -43,7 +43,7 @@ public final class IndexDocument implements Document {
     isUnique = index.isUnique();
   }
 
-  public IndexDocument(final PrimaryKey primaryKey) {
+  IndexDocument(final PrimaryKey primaryKey) {
     requireNonNull(primaryKey, "No index provided");
 
     indexName = primaryKey.getName();

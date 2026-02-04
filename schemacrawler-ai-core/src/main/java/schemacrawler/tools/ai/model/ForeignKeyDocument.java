@@ -34,8 +34,7 @@ public final class ForeignKeyDocument implements Document {
   private final String referencedTableName;
   private final RelationshipCardinality cardinality;
 
-  public ForeignKeyDocument(
-      final ForeignKey foreignKey, final RelationshipCardinality cardinality) {
+  ForeignKeyDocument(final ForeignKey foreignKey, final RelationshipCardinality cardinality) {
     requireNonNull(foreignKey, "No foreign key provided");
 
     foreignKeyName = foreignKey.getName();

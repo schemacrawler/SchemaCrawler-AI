@@ -19,9 +19,12 @@ import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schema.Column;
 import schemacrawler.schema.ForeignKey;
+import schemacrawler.schema.Index;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
+import schemacrawler.schema.Trigger;
 import us.fatehi.utility.Builder;
 
 public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
@@ -59,6 +62,12 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
     return catalogDocument;
   }
 
+  public ColumnDocument buildColumnDocument(final Column column) {
+    requireNonNull(column, "No column provided");
+    final ColumnDocument columnDocument = new ColumnDocument(column, null);
+    return columnDocument;
+  }
+
   public ForeignKeyDocument buildForeignKeyDocument(final ForeignKey foreignKey) {
     requireNonNull(foreignKey, "No foreign key provided");
     // Relationship cardinality is available for entities other than bridge tables
@@ -70,6 +79,12 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
             .orElseGet(() -> EntityModelUtility.inferCardinality(foreignKey));
     final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey, cardinality);
     return fkDocument;
+  }
+
+  public IndexDocument buildIndexDocument(final Index index) {
+    requireNonNull(index, "No index provided");
+    final IndexDocument indexDocument = new IndexDocument(index);
+    return indexDocument;
   }
 
   public RoutineDocument buildRoutineDocument(final Routine routine) {
@@ -84,6 +99,12 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
     final TableDocument tableDocument =
         new TableDocument(table, entityType, additionalTableDetails);
     return tableDocument;
+  }
+
+  public TriggerDocument buildTriggerDocument(final Trigger trigger) {
+    requireNonNull(trigger, "No trigger provided");
+    final TriggerDocument triggerDocument = new TriggerDocument(trigger);
+    return triggerDocument;
   }
 
   public CatalogDocument createCatalogDocument(final Catalog catalog) {
