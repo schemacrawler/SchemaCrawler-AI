@@ -27,8 +27,8 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
 import schemacrawler.tools.ai.model.ColumnDocument;
+import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.model.Document;
-import schemacrawler.tools.ai.model.ForeignKeyDocument;
 import schemacrawler.tools.ai.model.IndexDocument;
 import schemacrawler.tools.ai.model.TriggerDocument;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
@@ -99,7 +99,9 @@ public final class ListAcrossTablesFunctionExecutor
         switch (dependantObjectType) {
           case COLUMNS -> new ColumnDocument((Column) dependantObject, null);
           case INDEXES -> new IndexDocument((Index) dependantObject);
-          case FOREIGN_KEYS -> new ForeignKeyDocument((ForeignKey) dependantObject);
+          case FOREIGN_KEYS ->
+              CompactCatalogBuilder.builder(catalog, erModel)
+                  .buildForeignKeyDocument((ForeignKey) dependantObject);
           case TRIGGERS -> new TriggerDocument((Trigger) dependantObject);
           default -> null;
         };

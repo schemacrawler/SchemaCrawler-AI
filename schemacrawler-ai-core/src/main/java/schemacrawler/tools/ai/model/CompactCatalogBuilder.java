@@ -15,7 +15,11 @@ import java.util.EnumMap;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.model.Entity;
 import schemacrawler.ermodel.model.EntityType;
+import schemacrawler.ermodel.model.Relationship;
+import schemacrawler.ermodel.model.RelationshipCardinality;
+import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 import us.fatehi.utility.Builder;
@@ -53,6 +57,19 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
       catalogDocument.addRoutine(routineDocument);
     }
     return catalogDocument;
+  }
+
+  public ForeignKeyDocument buildForeignKeyDocument(final ForeignKey foreignKey) {
+    requireNonNull(foreignKey, "No foreign key provided");
+    // Relationship cardinality is available for entities other than bridge tables
+    // For bridge tables, infer it using the utility method
+    final RelationshipCardinality cardinality =
+        erModel
+            .lookupByTableReference(foreignKey)
+            .map(Relationship::getType)
+            .orElseGet(() -> EntityModelUtility.inferCardinality(foreignKey));
+    final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey, cardinality);
+    return fkDocument;
   }
 
   public RoutineDocument buildRoutineDocument(final Routine routine) {
