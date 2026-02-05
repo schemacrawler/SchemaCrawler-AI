@@ -107,22 +107,6 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
     return triggerDocument;
   }
 
-  public CatalogDocument createCatalogDocument(final Catalog catalog) {
-    requireNonNull(catalog, "No catalog provided");
-
-    final CatalogDocument catalogDocument =
-        new CatalogDocument(catalog.getDatabaseInfo().getDatabaseProductName());
-    for (final Table table : catalog.getTables()) {
-      final TableDocument tableDocument = buildTableDocument(table);
-      catalogDocument.addTable(tableDocument);
-    }
-    for (final Routine routine : catalog.getRoutines()) {
-      final RoutineDocument routineDocument = buildRoutineDocument(routine);
-      catalogDocument.addRoutine(routineDocument);
-    }
-    return catalogDocument;
-  }
-
   public CompactCatalogBuilder withAdditionalRoutineDetails(
       final Collection<AdditionalRoutineDetails> withAdditionalRoutineDetails) {
     if (withAdditionalRoutineDetails == null || withAdditionalRoutineDetails.isEmpty()) {
