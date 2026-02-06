@@ -16,7 +16,10 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
+import java.util.ArrayList;
+import java.util.Collection;
 import schemacrawler.ermodel.model.Entity;
+import schemacrawler.ermodel.model.EntityAttribute;
 import schemacrawler.ermodel.model.EntitySubtype;
 import schemacrawler.ermodel.model.EntityType;
 import tools.jackson.databind.PropertyNamingStrategies;
@@ -25,7 +28,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "entity-type", "supertype"})
+@JsonPropertyOrder({"schema", "name", "entity-type", "supertype", "attributes"})
 public final class EntityDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
@@ -34,8 +37,9 @@ public final class EntityDocument implements Document {
   private final String entityName;
   private final EntityType entityType;
   private final String supertype;
+  private final Collection<EntityAttributeDocument> entityAttributes;
 
-  public EntityDocument(final Entity entity) {
+  EntityDocument(final Entity entity) {
     requireNonNull(entity, "No entity provided");
 
     final String schema = entity.getTable().getSchema().getFullName();
@@ -52,6 +56,21 @@ public final class EntityDocument implements Document {
     } else {
       supertype = null;
     }
+
+    final Collection<EntityAttributeDocument> entityAttributes = new ArrayList<>();
+    for (final EntityAttribute entityAttribute : entity.getEntityAttributes()) {
+      entityAttributes.add(new EntityAttributeDocument(entityAttribute));
+    }
+    if (entityAttributes.isEmpty()) {
+      this.entityAttributes = null;
+    } else {
+      this.entityAttributes = entityAttributes;
+    }
+  }
+
+  @JsonProperty("attributes")
+  public Collection<EntityAttributeDocument> getEntityAttributes() {
+    return entityAttributes;
   }
 
   @JsonProperty("entity-type")
