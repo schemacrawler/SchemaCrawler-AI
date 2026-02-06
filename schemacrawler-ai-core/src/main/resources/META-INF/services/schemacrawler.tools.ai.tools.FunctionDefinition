@@ -6,3 +6,4 @@ schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition
 schemacrawler.tools.ai.functions.ListFunctionDefinition
 schemacrawler.tools.ai.functions.ServerInformationFunctionDefinition
 schemacrawler.tools.ai.functions.TableSampleFunctionDefinition
+schemacrawler.tools.ai.functions.DescribeEntitiesFunctionDefinition

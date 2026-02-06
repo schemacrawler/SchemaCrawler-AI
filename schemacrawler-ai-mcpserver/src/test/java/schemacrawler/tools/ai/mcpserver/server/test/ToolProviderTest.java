@@ -87,7 +87,7 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 7;
+  private static final int NUM_TOOLS = 8;
 
   @Autowired private ToolProvider toolProvider;
 
@@ -104,6 +104,7 @@ public class ToolProviderTest {
         containsInAnyOrder(
             "table-sample",
             "lint",
+            "describe-entities",
             "describe-tables",
             "describe-routines",
             "list-across-tables",
