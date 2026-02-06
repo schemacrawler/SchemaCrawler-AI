@@ -18,6 +18,8 @@ import schemacrawler.ermodel.model.Entity;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.ermodel.model.RelationshipCardinality;
+import schemacrawler.inclusionrule.IncludeAll;
+import schemacrawler.inclusionrule.InclusionRule;
 import us.fatehi.utility.Builder;
 
 public final class CompactERModelBuilder implements Builder<Collection<EntityDocument>> {
@@ -30,10 +32,13 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
   private EntityType entityType;
   private RelationshipCardinality cardinality;
 
+  private InclusionRule entityInclusionRule;
+
   private CompactERModelBuilder(final ERModel erModel) {
     this.erModel = requireNonNull(erModel, "No erModel provided");
     entityType = EntityType.unknown;
     cardinality = RelationshipCardinality.unknown;
+    entityInclusionRule = new IncludeAll();
   }
 
   @Override
@@ -59,7 +64,9 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
     }
 
     for (final Entity entity : entities) {
-      entityDocuments.add(buildEntityDocument(entity));
+      if (entityInclusionRule.test(entity.getFullName())) {
+        entityDocuments.add(buildEntityDocument(entity));
+      }
     }
 
     return List.copyOf(entityDocuments);
@@ -87,6 +94,15 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
     }
 
     return List.copyOf(relationshipDocuments);
+  }
+
+  public CompactERModelBuilder withEntityInclusionRule(final InclusionRule inclusionRule) {
+    if (inclusionRule != null) {
+      entityInclusionRule = inclusionRule;
+    } else {
+      entityInclusionRule = new IncludeAll();
+    }
+    return this;
   }
 
   public CompactERModelBuilder withEntityTypes(final EntityType entityType) {

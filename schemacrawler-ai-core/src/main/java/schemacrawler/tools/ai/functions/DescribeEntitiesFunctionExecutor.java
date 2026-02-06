@@ -11,6 +11,8 @@ package schemacrawler.tools.ai.functions;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.Collection;
+import schemacrawler.ermodel.model.EntityType;
+import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.model.CompactERModelBuilder;
@@ -31,8 +33,13 @@ public final class DescribeEntitiesFunctionExecutor
   public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
+    final EntityType entityType = commandOptions.entityType();
+    final InclusionRule inclusionRule = makeInclusionRule(commandOptions.entityName());
     final Collection<EntityDocument> entities =
-        CompactERModelBuilder.builder(erModel).withEntityTypes(commandOptions.entityType()).build();
+        CompactERModelBuilder.builder(erModel)
+            .withEntityTypes(entityType)
+            .withEntityInclusionRule(inclusionRule)
+            .build();
     final ArrayNode entitiesArray = createEntitiesArray(entities);
     return new JsonFunctionReturn(entitiesArray);
   }
