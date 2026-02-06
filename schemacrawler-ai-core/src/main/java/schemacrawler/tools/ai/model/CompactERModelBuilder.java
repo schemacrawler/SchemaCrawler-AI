@@ -33,12 +33,14 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
   private RelationshipCardinality cardinality;
 
   private InclusionRule entityInclusionRule;
+  private InclusionRule relationshipInclusionRule;
 
   private CompactERModelBuilder(final ERModel erModel) {
     this.erModel = requireNonNull(erModel, "No erModel provided");
     entityType = EntityType.unknown;
     cardinality = RelationshipCardinality.unknown;
     entityInclusionRule = new IncludeAll();
+    relationshipInclusionRule = new IncludeAll();
   }
 
   @Override
@@ -90,7 +92,9 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
     }
 
     for (final Relationship relationship : relationships) {
-      relationshipDocuments.add(buildRelationshipDocument(relationship));
+      if (relationshipInclusionRule.test(relationship.getFullName())) {
+        relationshipDocuments.add(buildRelationshipDocument(relationship));
+      }
     }
 
     return List.copyOf(relationshipDocuments);
@@ -114,12 +118,21 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
     return this;
   }
 
-  public CompactERModelBuilder withRelationshipCardinality(
+  public CompactERModelBuilder withRelationshipCardinalities(
       final RelationshipCardinality cardinality) {
     if (cardinality == null) {
       this.cardinality = RelationshipCardinality.unknown;
     } else {
       this.cardinality = cardinality;
+    }
+    return this;
+  }
+
+  public CompactERModelBuilder withRelationshipInclusionRule(final InclusionRule inclusionRule) {
+    if (inclusionRule != null) {
+      relationshipInclusionRule = inclusionRule;
+    } else {
+      relationshipInclusionRule = new IncludeAll();
     }
     return this;
   }

@@ -100,7 +100,7 @@ public class CompactERModelBuilderTest extends AbstractFunctionTest {
         erModel.getRelationships().iterator().next().getType();
 
     // Filter by cardinality
-    builder.withRelationshipCardinality(cardinality);
+    builder.withRelationshipCardinalities(cardinality);
     final Collection<RelationshipDocument> filteredRelationships =
         builder.buildRelationshipDocuments();
     for (final RelationshipDocument doc : filteredRelationships) {
@@ -108,7 +108,7 @@ public class CompactERModelBuilderTest extends AbstractFunctionTest {
     }
 
     // Reset filter
-    builder.withRelationshipCardinality(null);
+    builder.withRelationshipCardinalities(null);
     final Collection<RelationshipDocument> allRelationships = builder.buildRelationshipDocuments();
     assertThat(allRelationships.size(), is(equalTo(erModel.getRelationships().size())));
   }

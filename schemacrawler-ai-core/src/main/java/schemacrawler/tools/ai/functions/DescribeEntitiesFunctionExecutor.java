@@ -39,7 +39,7 @@ public final class DescribeEntitiesFunctionExecutor
         CompactERModelBuilder.builder(erModel)
             .withEntityTypes(entityType)
             .withEntityInclusionRule(inclusionRule)
-            .build();
+            .buildEntityDocuments();
     final ArrayNode entitiesArray = createEntitiesArray(entities);
     return new JsonFunctionReturn(entitiesArray);
   }

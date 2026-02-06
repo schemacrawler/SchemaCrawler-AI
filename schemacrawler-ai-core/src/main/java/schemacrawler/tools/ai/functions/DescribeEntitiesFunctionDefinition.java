@@ -17,8 +17,8 @@ public final class DescribeEntitiesFunctionDefinition
   public String getDescription() {
     return """
     Generates detailed documentation for entities in the ER model, including
-    entity type such as strong, weak and subtype entities, and attributes. Supports regex-based entity name filtering and
-    configurable detail levels to optimize tool performance.
+    entity type such as strong, weak and subtype entities, and attributes.
+    Supports regex-based entity name filtering to optimize tool performance.
     Returns data as a JSON object.
     """
         .stripIndent()

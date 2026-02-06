@@ -1,0 +1,1 @@
+[{"schema":"PUBLIC.\"PUBLISHER SALES\"","name":"FK_SALES_REGIONS","cardinality":"(1..many)","between":["SALES","REGIONS"],"uses-bridge-table":false}]
