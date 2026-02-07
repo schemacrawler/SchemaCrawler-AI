@@ -31,12 +31,12 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
-import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
+import schemacrawler.tools.ai.utility.EmptyFactory;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 

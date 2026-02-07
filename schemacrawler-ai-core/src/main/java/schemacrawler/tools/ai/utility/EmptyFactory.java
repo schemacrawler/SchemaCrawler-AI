@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.mcpserver.utility;
+package schemacrawler.tools.ai.utility;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Proxy;
