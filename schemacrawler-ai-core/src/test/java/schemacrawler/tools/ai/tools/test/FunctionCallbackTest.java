@@ -36,7 +36,11 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionCallbackTest {
 
-  public static record TestParameters(String param1) implements FunctionParameters {}
+  public static record TestParameters(String param1) implements FunctionParameters {
+    public TestParameters() {
+      this(null);
+    }
+  }
 
   private Catalog catalog;
   private ERModel erModel;

@@ -29,6 +29,10 @@ public record TableSampleFunctionParameters(
         String tableName)
     implements FunctionParameters {
 
+  public TableSampleFunctionParameters() {
+    this(null);
+  }
+
   public TableSampleFunctionParameters {
     if (tableName == null || tableName.isBlank()) {
       tableName = "";

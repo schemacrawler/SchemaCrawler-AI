@@ -39,6 +39,10 @@ public record DescribeRelationshipsFunctionParameters(
         RelationshipCardinality cardinality)
     implements FunctionParameters {
 
+  public DescribeRelationshipsFunctionParameters() {
+    this(null, null);
+  }
+
   public DescribeRelationshipsFunctionParameters {
     if (relationshipName == null || relationshipName.isBlank()) {
       relationshipName = "";

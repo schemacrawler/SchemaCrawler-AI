@@ -10,8 +10,8 @@ package schemacrawler.tools.ai.functions;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.base.ParameterUtility;
@@ -45,6 +45,10 @@ public record DescribeTablesFunctionParameters(
         Collection<TableDescriptionScope> descriptionScope)
     implements FunctionParameters {
 
+  public DescribeTablesFunctionParameters() {
+    this(null, null);
+  }
+
   public enum TableDescriptionScope {
     DEFAULT(null),
     PRIMARY_KEY(AdditionalTableDetails.PRIMARY_KEY),
@@ -71,7 +75,7 @@ public record DescribeTablesFunctionParameters(
       tableName = "";
     }
     if (descriptionScope == null) {
-      descriptionScope = new ArrayList<>();
+      descriptionScope = Collections.emptyList();
     }
   }
 

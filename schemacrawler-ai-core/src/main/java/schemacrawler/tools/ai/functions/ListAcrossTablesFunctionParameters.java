@@ -52,6 +52,10 @@ public record ListAcrossTablesFunctionParameters(
         String tableName)
     implements FunctionParameters {
 
+  public ListAcrossTablesFunctionParameters() {
+    this(null, null, null);
+  }
+
   public ListAcrossTablesFunctionParameters {
     if (dependantObjectType == null) {
       dependantObjectType = NONE;
@@ -67,7 +71,7 @@ public record ListAcrossTablesFunctionParameters(
 
     private final String nameAttribute;
 
-    DependantObjectType(String nameAttribute) {
+    DependantObjectType(final String nameAttribute) {
       this.nameAttribute = nameAttribute;
     }
 
