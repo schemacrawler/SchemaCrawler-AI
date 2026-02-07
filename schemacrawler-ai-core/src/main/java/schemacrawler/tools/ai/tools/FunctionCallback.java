@@ -83,7 +83,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
         throw runex;
       }
       throw new InternalRuntimeException(
-          "Exception executing <%s>" + getFunctionName().getName(), e);
+          "Exception executing <%s>".formatted(getFunctionName().getName()), e);
     }
   }
 
