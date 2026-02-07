@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
+import java.lang.reflect.Constructor;
 import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -148,14 +149,9 @@ public final class FunctionCallback<P extends FunctionParameters> {
 
   private P instantiateArguments(final String argumentsString) throws Exception {
     final Class<P> parametersClass = functionDefinition.getParametersClass();
-    final String functionArguments;
-    if (isBlank(argumentsString)) {
-      functionArguments = "{}";
-    } else {
-      functionArguments = argumentsString;
-    }
+    // Try with arguments string first, assuming arguments are valid
     try {
-      final P parameters = mapper.readValue(functionArguments, parametersClass);
+      final P parameters = mapper.readValue(argumentsString, parametersClass);
       LOGGER.log(Level.FINE, String.valueOf(parameters));
       return parameters;
     } catch (final Exception e) {
@@ -164,8 +160,13 @@ public final class FunctionCallback<P extends FunctionParameters> {
           e,
           new StringFormat(
               "Function parameters could not be instantiated: %s(%s)",
-              parametersClass.getName(), functionArguments));
-      return parametersClass.getDeclaredConstructor().newInstance();
+              parametersClass.getName(), argumentsString));
     }
+    // Since parameters maybe invalid, try again with all null parameters
+    final Constructor<P> ctor = (Constructor<P>) parametersClass.getDeclaredConstructors()[0];
+    final Object[] nullArgs = new Object[ctor.getParameterCount()];
+    final P parameters = ctor.newInstance(nullArgs);
+
+    return parameters;
   }
 }
