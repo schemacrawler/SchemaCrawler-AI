@@ -38,6 +38,7 @@ import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.HeartbeatLogger;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
+import schemacrawler.tools.ai.utility.EmptyFactory;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
@@ -50,7 +51,7 @@ public class HeartbeatLoggerTest {
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return mock(Catalog.class);
+      return EmptyFactory.createEmptyCatalog(new NullPointerException());
     }
 
     @Bean

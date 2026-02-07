@@ -19,6 +19,7 @@ import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.test.utility.crawl.LightRoutine;
 import schemacrawler.test.utility.crawl.LightTable;
+import schemacrawler.tools.ai.utility.EmptyFactory;
 
 public class ResourceProviderTest {
 
@@ -34,7 +35,7 @@ public class ResourceProviderTest {
   public void setUp() {
     resourceProvider = new ResourceProvider();
     catalog = mock(Catalog.class);
-    erModel = mock(ERModel.class);
+    erModel = EmptyFactory.createEmptyERModel();
     resourceProvider.catalog = catalog;
     resourceProvider.erModel = erModel;
   }

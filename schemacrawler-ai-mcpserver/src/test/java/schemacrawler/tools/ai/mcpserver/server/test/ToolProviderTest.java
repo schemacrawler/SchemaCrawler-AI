@@ -32,6 +32,7 @@ import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.server.ToolProvider;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.utility.EmptyFactory;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -42,7 +43,7 @@ public class ToolProviderTest {
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return mock(Catalog.class);
+      return EmptyFactory.createEmptyCatalog(new NullPointerException());
     }
 
     @Bean
@@ -52,7 +53,7 @@ public class ToolProviderTest {
 
     @Bean
     ERModel erModel() {
-      return mock(ERModel.class);
+      return EmptyFactory.createEmptyERModel();
     }
 
     @Bean

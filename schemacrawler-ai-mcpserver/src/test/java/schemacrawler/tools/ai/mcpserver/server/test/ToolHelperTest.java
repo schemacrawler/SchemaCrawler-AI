@@ -12,7 +12,6 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
-import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
@@ -134,7 +133,7 @@ public class ToolHelperTest {
 
     @Bean
     ERModel erModel() {
-      return mock(ERModel.class);
+      return EmptyFactory.createEmptyERModel();
     }
   }
 
