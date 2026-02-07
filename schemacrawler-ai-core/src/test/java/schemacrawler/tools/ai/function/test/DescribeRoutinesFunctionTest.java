@@ -86,6 +86,6 @@ public class DescribeRoutinesFunctionTest extends AbstractFunctionTest {
     final DescribeRoutinesFunctionDefinition functionDefinition =
         new DescribeRoutinesFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, null, hasResults);
+        testContext, functionDefinition, args, catalog, erModel, null, hasResults);
   }
 }

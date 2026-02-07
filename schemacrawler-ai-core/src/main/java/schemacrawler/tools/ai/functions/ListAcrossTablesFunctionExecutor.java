@@ -26,11 +26,8 @@ import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
-import schemacrawler.tools.ai.model.ColumnDocument;
+import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.model.Document;
-import schemacrawler.tools.ai.model.ForeignKeyDocument;
-import schemacrawler.tools.ai.model.IndexDocument;
-import schemacrawler.tools.ai.model.TriggerDocument;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
@@ -71,7 +68,7 @@ public final class ListAcrossTablesFunctionExecutor
     }
 
     final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
-    final ArrayNode list = createTypedObjectsArray(dependantObjects, dependantObjectType);
+    final ArrayNode list = createDependantObjectsArray(dependantObjects);
     return new JsonFunctionReturn(listName, list);
   }
 
@@ -92,34 +89,8 @@ public final class ListAcrossTablesFunctionExecutor
         .withGrepOptions(grepOptionsBuilder.toOptions());
   }
 
-  private ObjectNode createDependentObjectNode(
-      final DependantObjectType dependantObjectType, final DependantObject<Table> dependantObject) {
-
-    final Document document =
-        switch (dependantObjectType) {
-          case COLUMNS -> new ColumnDocument((Column) dependantObject, null);
-          case INDEXES -> new IndexDocument((Index) dependantObject);
-          case FOREIGN_KEYS -> new ForeignKeyDocument((ForeignKey) dependantObject);
-          case TRIGGERS -> new TriggerDocument((Trigger) dependantObject);
-          default -> null;
-        };
-    if (document == null) {
-      return mapper.createObjectNode();
-    }
-
-    final ObjectNode objectNode = document.toObjectNode();
-    // Add parent table
-    final String schemaName = dependantObject.getSchema().getFullName();
-    if (!isBlank(schemaName)) {
-      objectNode.put("schema", schemaName);
-    }
-    objectNode.put("table", dependantObject.getParent().getName());
-    return objectNode;
-  }
-
-  private ArrayNode createTypedObjectsArray(
-      final Collection<DependantObject<Table>> dependantObjects,
-      final DependantObjectType dependantObjectType) {
+  private ArrayNode createDependantObjectsArray(
+      final Collection<DependantObject<Table>> dependantObjects) {
 
     final InclusionRule dependantObjectinclusionRule =
         makeInclusionRule(commandOptions.dependantObjectName());
@@ -137,10 +108,35 @@ public final class ListAcrossTablesFunctionExecutor
         continue;
       }
 
-      final ObjectNode objectNode = createDependentObjectNode(dependantObjectType, dependantObject);
+      final ObjectNode objectNode = createDependentObjectNode(dependantObject);
       list.add(objectNode);
     }
 
     return list;
+  }
+
+  private ObjectNode createDependentObjectNode(final DependantObject<Table> dependantObject) {
+
+    final CompactCatalogBuilder catalogBuilder = CompactCatalogBuilder.builder(catalog, erModel);
+    final Document document =
+        switch (dependantObject) {
+          case final Column column -> catalogBuilder.buildColumnDocument(column);
+          case final Index index -> catalogBuilder.buildIndexDocument(index);
+          case final ForeignKey foreignKey -> catalogBuilder.buildForeignKeyDocument(foreignKey);
+          case final Trigger trigger -> catalogBuilder.buildTriggerDocument(trigger);
+          default -> null;
+        };
+    if (document == null) {
+      return mapper.createObjectNode();
+    }
+
+    final ObjectNode objectNode = document.toObjectNode();
+    // Add parent table
+    final String schemaName = dependantObject.getSchema().getFullName();
+    if (!isBlank(schemaName)) {
+      objectNode.put("schema", schemaName);
+    }
+    objectNode.put("table", dependantObject.getParent().getName());
+    return objectNode;
   }
 }

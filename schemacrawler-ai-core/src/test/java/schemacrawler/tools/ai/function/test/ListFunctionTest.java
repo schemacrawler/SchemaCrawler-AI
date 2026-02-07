@@ -96,6 +96,7 @@ public class ListFunctionTest extends AbstractFunctionTest {
       final FunctionExecutor<ListFunctionParameters> executor = functionDefinition.newExecutor();
       executor.configure(args);
       executor.setCatalog(catalog);
+      executor.setERModel(erModel);
       final FunctionReturn functionReturn = executor.call();
       out.write(functionReturn.get());
     }

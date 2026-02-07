@@ -15,6 +15,8 @@ import java.util.Collection;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
@@ -27,6 +29,7 @@ public class McpServerInitializer
 
   private final boolean isInErrorState;
   private final Catalog catalog;
+  private final ERModel erModel;
   private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
   private final ExcludeTools excludeTools;
@@ -57,6 +60,11 @@ public class McpServerInitializer
     this.isInErrorState = isInErrorState;
 
     this.catalog = requireNonNull(catalog, "No catalog provided");
+    if (!isInErrorState) {
+      erModel = EntityModelUtility.buildERModel(catalog);
+    } else {
+      erModel = EmptyFactory.createEmptyERModel();
+    }
 
     if (excludeTools == null) {
       this.excludeTools = new ExcludeTools();
@@ -85,6 +93,11 @@ public class McpServerInitializer
       isInErrorState = true;
     }
     this.catalog = catalog;
+    if (!isInErrorState) {
+      erModel = EntityModelUtility.buildERModel(catalog);
+    } else {
+      erModel = EmptyFactory.createEmptyERModel();
+    }
     this.isInErrorState = isInErrorState;
 
     // Once the catalog is loaded, use the operations database connection source
@@ -109,6 +122,7 @@ public class McpServerInitializer
         "databaseConnectionSource", DatabaseConnectionSource.class, () -> connectionSource);
     context.registerAlias("databaseConnectionSource", "connectionSource");
     context.registerBean("catalog", Catalog.class, () -> catalog);
+    context.registerBean("erModel", ERModel.class, () -> erModel);
     context.registerBean("isInErrorState", Boolean.class, () -> isInErrorState);
     // Register services
     context.registerBean(

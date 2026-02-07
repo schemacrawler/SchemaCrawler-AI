@@ -1,0 +1,1 @@
+[{"schema":"PUBLIC.BOOKS","name":"FK_PREVIOUSEDITION","cardinality":"(0..1)","between":["BOOKS","BOOKS"],"uses-bridge-table":false}]

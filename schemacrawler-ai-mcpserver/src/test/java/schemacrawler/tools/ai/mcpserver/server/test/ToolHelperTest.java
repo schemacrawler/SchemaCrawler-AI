@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
@@ -26,6 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
@@ -71,6 +73,7 @@ public class ToolHelperTest {
       return new FunctionExecutor<>() {
         private Connection connection;
         private Catalog catalog;
+        private ERModel erModel;
 
         @Override
         public FunctionReturn call() {
@@ -105,6 +108,11 @@ public class ToolHelperTest {
         }
 
         @Override
+        public void setERModel(final ERModel erModel) {
+          this.erModel = erModel;
+        }
+
+        @Override
         public boolean usesConnection() {
           return false;
         }
@@ -122,6 +130,11 @@ public class ToolHelperTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return EmptyFactory.createEmptyDatabaseConnectionSource();
+    }
+
+    @Bean
+    ERModel erModel() {
+      return mock(ERModel.class);
     }
   }
 

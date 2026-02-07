@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -37,8 +38,6 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 @SpringJUnitConfig(classes = {ToolProvider.class, ToolProviderTest.MockConfig.class})
 public class ToolProviderTest {
 
-  private static final int NUM_TOOLS = 7;
-
   @TestConfiguration
   static class MockConfig {
     @Bean
@@ -49,6 +48,11 @@ public class ToolProviderTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    ERModel erModel() {
+      return mock(ERModel.class);
     }
 
     @Bean
@@ -83,6 +87,8 @@ public class ToolProviderTest {
     }
   }
 
+  private static final int NUM_TOOLS = 9;
+
   @Autowired private ToolProvider toolProvider;
 
   @Test
@@ -96,12 +102,14 @@ public class ToolProviderTest {
     assertThat(
         actualToolNames,
         containsInAnyOrder(
-            "table-sample",
-            "lint",
-            "describe-tables",
+            "describe-entities",
+            "describe-relationships",
             "describe-routines",
-            "list-across-tables",
+            "describe-tables",
+            "diagram",
+            "lint",
             "list",
-            "diagram"));
+            "list-across-tables",
+            "table-sample"));
   }
 }

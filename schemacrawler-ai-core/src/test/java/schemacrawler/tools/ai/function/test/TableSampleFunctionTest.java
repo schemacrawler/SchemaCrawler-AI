@@ -55,6 +55,6 @@ public class TableSampleFunctionTest extends AbstractFunctionTest {
 
     final TableSampleFunctionDefinition functionDefinition = new TableSampleFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, connection, hasResults);
+        testContext, functionDefinition, args, catalog, erModel, connection, hasResults);
   }
 }

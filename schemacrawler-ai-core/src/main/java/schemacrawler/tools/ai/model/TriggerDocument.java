@@ -44,7 +44,7 @@ public final class TriggerDocument implements Document {
   private final String conditionTiming;
   private final List<String> eventManipulationType;
 
-  public TriggerDocument(final Trigger trigger) {
+  TriggerDocument(final Trigger trigger) {
     Objects.requireNonNull(trigger, "No table provided");
 
     triggerName = trigger.getName();

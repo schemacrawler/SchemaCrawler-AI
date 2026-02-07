@@ -33,7 +33,7 @@ public final class ColumnDocument implements Document {
   private final String remarks;
   private final ReferencedColumnDocument referencedColumn;
 
-  public ColumnDocument(final Column column, final Column pkColumn) {
+  ColumnDocument(final Column column, final Column pkColumn) {
     requireNonNull(column, "No column provided");
 
     columnName = column.getName();

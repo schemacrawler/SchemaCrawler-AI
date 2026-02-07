@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.function.BiFunction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -83,6 +84,7 @@ public class ToolHelper {
   }
 
   @Autowired private Catalog catalog;
+  @Autowired private ERModel erModel;
 
   public <P extends FunctionParameters>
       McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
@@ -90,7 +92,7 @@ public class ToolHelper {
 
     final McpSchema.Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
-        new FunctionCallback<>(functionDefinition, catalog);
+        new FunctionCallback<>(functionDefinition, catalog, erModel);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
     return new McpServerFeatures.SyncToolSpecification(

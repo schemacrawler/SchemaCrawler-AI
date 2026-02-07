@@ -122,6 +122,6 @@ public class DescribeTablesFunctionTest extends AbstractFunctionTest {
     final DescribeTablesFunctionDefinition functionDefinition =
         new DescribeTablesFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, null, hasResults);
+        testContext, functionDefinition, args, catalog, erModel, null, hasResults);
   }
 }
