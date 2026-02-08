@@ -24,7 +24,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.test.utility.AiTestObjectUtility;
+import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -50,8 +50,8 @@ public class FunctionCallbackTest {
   @BeforeEach
   public void setupCatalog() {
     connection = TestObjectUtility.mockConnection();
-    catalog = AiTestObjectUtility.makeTestCatalog();
-    erModel = AiTestObjectUtility.makeTestERModel();
+    catalog = LightCatalogUtility.lightCatalog();
+    erModel = TestObjectUtility.makeTestObject(ERModel.class);
   }
 
   @Test
