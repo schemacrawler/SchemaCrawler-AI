@@ -24,14 +24,14 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "type", "optional", "default-value", "enum-values"})
+@JsonPropertyOrder({"name", "type", "required", "default-value", "enum-values"})
 public final class EntityAttributeDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
   private final String entityAttributeName;
   private final EntityAttributeType type;
-  private final boolean isOptional;
+  private final boolean isRequired;
   private final String defaultValue;
   private final List<String> enumValues;
 
@@ -40,7 +40,7 @@ public final class EntityAttributeDocument implements Document {
 
     entityAttributeName = entityAttribute.getName();
     type = entityAttribute.getType();
-    isOptional = entityAttribute.isOptional();
+    isRequired = entityAttribute.isRequired();
     defaultValue = entityAttribute.getDefaultValue();
 
     final List<String> values = entityAttribute.getEnumValues();
@@ -69,9 +69,9 @@ public final class EntityAttributeDocument implements Document {
     return entityAttributeName;
   }
 
-  @JsonProperty("optional")
-  public boolean isOptional() {
-    return isOptional;
+  @JsonProperty("required")
+  public boolean isRequired() {
+    return isRequired;
   }
 
   @Override
