@@ -35,8 +35,8 @@ import schemacrawler.tools.ai.model.TableDocument;
 @Service
 public class ResourceProvider {
 
-  @Autowired public Catalog catalog;
-  @Autowired public ERModel erModel;
+  @Autowired private Catalog catalog;
+  @Autowired private ERModel erModel;
 
   @McpResource(
       uri = "catalog://routines/{routine-name}",
