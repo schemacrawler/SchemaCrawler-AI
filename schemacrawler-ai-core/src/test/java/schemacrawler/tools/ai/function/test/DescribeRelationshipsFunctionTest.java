@@ -44,6 +44,13 @@ public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
   }
 
   @Test
+  public void describeRelationshipType(final TestContext testContext) throws Exception {
+    final DescribeRelationshipsFunctionParameters args =
+        new DescribeRelationshipsFunctionParameters(null, RelationshipCardinality.many_many);
+    describeRelationship(testContext, args, true);
+  }
+
+  @Test
   public void describeUnknownRelationship(final TestContext testContext) throws Exception {
     final DescribeRelationshipsFunctionParameters args =
         new DescribeRelationshipsFunctionParameters("NOT_A_REL", null);
