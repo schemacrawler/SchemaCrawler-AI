@@ -41,6 +41,10 @@ public record DescribeRoutinesFunctionParameters(
         Collection<RoutineDescriptionScope> descriptionScope)
     implements FunctionParameters {
 
+  public DescribeRoutinesFunctionParameters() {
+    this(null, null);
+  }
+
   public enum RoutineDescriptionScope {
     DEFAULT(null),
     REFERENCED_OBJECTS(AdditionalRoutineDetails.REFERENCED_OBJECTS),

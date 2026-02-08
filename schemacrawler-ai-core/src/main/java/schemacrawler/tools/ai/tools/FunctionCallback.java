@@ -83,7 +83,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
         throw runex;
       }
       throw new InternalRuntimeException(
-          "Exception executing <%s>" + getFunctionName().getName(), e);
+          "Exception executing <%s>".formatted(getFunctionName().getName()), e);
     }
   }
 
@@ -148,24 +148,22 @@ public final class FunctionCallback<P extends FunctionParameters> {
 
   private P instantiateArguments(final String argumentsString) throws Exception {
     final Class<P> parametersClass = functionDefinition.getParametersClass();
-    final String functionArguments;
-    if (isBlank(argumentsString)) {
-      functionArguments = "{}";
-    } else {
-      functionArguments = argumentsString;
-    }
+    P parameters;
+    // Try with arguments string first, assuming arguments are valid
     try {
-      final P parameters = mapper.readValue(functionArguments, parametersClass);
-      LOGGER.log(Level.FINE, String.valueOf(parameters));
-      return parameters;
+      parameters = mapper.readValue(argumentsString, parametersClass);
     } catch (final Exception e) {
       LOGGER.log(
           Level.INFO,
           e,
           new StringFormat(
               "Function parameters could not be instantiated: %s(%s)",
-              parametersClass.getName(), functionArguments));
-      return parametersClass.getDeclaredConstructor().newInstance();
+              parametersClass.getName(), argumentsString));
     }
+    // Since parameters maybe invalid, try again with all null parameters
+    parameters = parametersClass.getDeclaredConstructor().newInstance();
+
+    LOGGER.log(Level.FINE, String.valueOf(parameters));
+    return parameters;
   }
 }

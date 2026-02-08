@@ -50,6 +50,10 @@ public record DiagramFunctionParameters(
         DiagramType diagramType)
     implements FunctionParameters {
 
+  public DiagramFunctionParameters() {
+    this(null, false, false, null);
+  }
+
   public enum DiagramType {
     PLANTUML("script", "text", "/scripts/plantuml.py", "https://editor.plantuml.com/"),
     MERMAID("script", "text", "/scripts/mermaid.py", "https://mermaid.live/"),

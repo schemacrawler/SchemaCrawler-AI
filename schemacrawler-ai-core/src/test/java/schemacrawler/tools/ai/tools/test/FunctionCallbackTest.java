@@ -20,9 +20,11 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
+import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -30,21 +32,31 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionCallbackTest {
 
-  public static class TestParameters implements FunctionParameters {
-    public String param1;
+  public static record TestParameters(String param1) implements FunctionParameters {
+    public TestParameters() {
+      this(null);
+    }
+  }
 
-    public TestParameters() {}
+  private Connection connection;
+  private Catalog catalog;
+  private ERModel erModel;
+
+  @BeforeEach
+  public void setupCatalog() {
+    connection = TestObjectUtility.mockConnection();
+    catalog = LightCatalogUtility.lightCatalog();
+    erModel = TestObjectUtility.makeTestObject(ERModel.class);
   }
 
   @Test
   public void testConstructor() {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
-    final Catalog catalog = mock(Catalog.class);
-    final ERModel erModel = mock(ERModel.class);
 
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel);
@@ -53,9 +65,6 @@ public class FunctionCallbackTest {
 
   @Test
   public void testConstructorWithNullDefinition() {
-    final Catalog catalog = mock(Catalog.class);
-    final ERModel erModel = mock(ERModel.class);
-
     assertThrows(NullPointerException.class, () -> new FunctionCallback<>(null, catalog, erModel));
   }
 
@@ -63,9 +72,7 @@ public class FunctionCallbackTest {
   public void testExecute() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Catalog catalog = mock(Catalog.class);
-    final ERModel erModel = mock(ERModel.class);
-    final Connection connection = mock(Connection.class);
+
     final FunctionReturn expectedReturn = new TextFunctionReturn("result");
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
@@ -90,7 +97,6 @@ public class FunctionCallbackTest {
   public void testExecuteCheckedException() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
@@ -113,7 +119,6 @@ public class FunctionCallbackTest {
   public void testExecuteNoConnection() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
     final FunctionReturn expectedReturn = new TextFunctionReturn("result");
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
@@ -136,7 +141,6 @@ public class FunctionCallbackTest {
   public void testExecuteWithException() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
@@ -175,7 +179,6 @@ public class FunctionCallbackTest {
   public void testInstantiateArgumentsFailure() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
@@ -202,8 +205,8 @@ public class FunctionCallbackTest {
 
     // Valid JSON
     final JsonNode node = callback.toCallObject("{\"param1\": \"value1\"}");
-    assertThat(node.get("name").asText(), is("test-function"));
-    assertThat(node.get("arguments").get("param1").asText(), is("value1"));
+    assertThat(node.get("name").asString(), is("test-function"));
+    assertThat(node.get("arguments").get("param1").asString(), is("value1"));
 
     // Blank arguments
     final JsonNode nodeBlank = callback.toCallObject("");
@@ -211,7 +214,7 @@ public class FunctionCallbackTest {
 
     // Invalid JSON
     final JsonNode nodeInvalid = callback.toCallObject("invalid-json");
-    assertThat(nodeInvalid.get("arguments").asText(), is("invalid-json"));
+    assertThat(nodeInvalid.get("arguments").asString(), is("invalid-json"));
   }
 
   @Test

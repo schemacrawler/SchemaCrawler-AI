@@ -41,6 +41,10 @@ public record ListFunctionParameters(
         String databaseObjectName)
     implements FunctionParameters {
 
+  public ListFunctionParameters() {
+    this(null, null);
+  }
+
   public ListFunctionParameters {
     if (databaseObjectType == null) {
       databaseObjectType = ALL;

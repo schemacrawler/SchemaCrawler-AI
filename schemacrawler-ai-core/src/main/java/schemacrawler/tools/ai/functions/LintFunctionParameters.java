@@ -29,6 +29,10 @@ public record LintFunctionParameters(
         String tableName)
     implements FunctionParameters {
 
+  public LintFunctionParameters() {
+    this(null);
+  }
+
   public LintFunctionParameters {
     if (tableName == null || tableName.isBlank()) {
       tableName = "";

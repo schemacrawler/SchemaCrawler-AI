@@ -38,6 +38,10 @@ public record DescribeEntitiesFunctionParameters(
         EntityType entityType)
     implements FunctionParameters {
 
+  public DescribeEntitiesFunctionParameters() {
+    this(null, null);
+  }
+
   public DescribeEntitiesFunctionParameters {
     if (entityName == null || entityName.isBlank()) {
       entityName = "";
