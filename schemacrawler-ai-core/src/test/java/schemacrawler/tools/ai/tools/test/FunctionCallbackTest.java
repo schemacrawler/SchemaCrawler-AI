@@ -24,14 +24,15 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
+import schemacrawler.tools.ai.test.utility.AiTestObjectUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
-import schemacrawler.tools.ai.utility.EmptyFactory;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionCallbackTest {
@@ -42,13 +43,15 @@ public class FunctionCallbackTest {
     }
   }
 
+  private Connection connection;
   private Catalog catalog;
   private ERModel erModel;
 
   @BeforeEach
   public void setupCatalog() {
-    catalog = EmptyFactory.createEmptyCatalog(new NullPointerException());
-    erModel = EmptyFactory.createEmptyERModel();
+    connection = TestObjectUtility.mockConnection();
+    catalog = AiTestObjectUtility.makeTestCatalog();
+    erModel = AiTestObjectUtility.makeTestERModel();
   }
 
   @Test
@@ -70,7 +73,6 @@ public class FunctionCallbackTest {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
 
-    final Connection connection = mock(Connection.class);
     final FunctionReturn expectedReturn = new TextFunctionReturn("result");
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
@@ -95,7 +97,6 @@ public class FunctionCallbackTest {
   public void testExecuteCheckedException() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
@@ -118,7 +119,6 @@ public class FunctionCallbackTest {
   public void testExecuteNoConnection() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
     final FunctionReturn expectedReturn = new TextFunctionReturn("result");
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
@@ -141,7 +141,6 @@ public class FunctionCallbackTest {
   public void testExecuteWithException() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
@@ -180,7 +179,6 @@ public class FunctionCallbackTest {
   public void testInstantiateArgumentsFailure() throws Exception {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionExecutor<TestParameters> executor = mock(FunctionExecutor.class);
-    final Connection connection = mock(Connection.class);
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);

@@ -19,7 +19,7 @@ import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.test.utility.crawl.LightRoutine;
 import schemacrawler.test.utility.crawl.LightTable;
-import schemacrawler.tools.ai.utility.EmptyFactory;
+import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 
 public class ResourceProviderTest {
 

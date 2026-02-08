@@ -6,9 +6,10 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.utility;
+package schemacrawler.tools.ai.mcpserver.utility;
 
 import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.DriverManager;
 import java.util.Collection;
@@ -22,16 +23,17 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 @UtilityMarker
 public class EmptyFactory {
 
+  private static final String baseErrorMessage =
+      """
+      The SchemaCrawler AI MCP server is in an error state.
+      Database schema metadata is not available,
+      since it could not make a connection to the database.
+      Correct the error, and restart the server.
+      """
+          .strip()
+          .trim();
+
   public static Catalog createEmptyCatalog(final Exception e) {
-    final String baseErrorMessage =
-        """
-        The SchemaCrawler AI MCP server is in an error state.
-        Database schema metadata is not available,
-        since it could not make a connection to the database.
-        Correct the error, and restart the server.
-        """
-            .strip()
-            .trim();
     final String errorMessage =
         e != null ? baseErrorMessage + "\n" + e.getMessage() : baseErrorMessage;
 
@@ -43,7 +45,6 @@ public class EmptyFactory {
             case "getName", "getFullName", "toString" -> "empty-catalog";
             case "equals" -> proxy == args[0];
             case "hashCode" -> System.identityHashCode(proxy);
-            case null -> throw new IllegalStateException(errorMessage);
             default -> throw new IllegalStateException(errorMessage);
           };
         };
@@ -56,17 +57,13 @@ public class EmptyFactory {
   public static DatabaseConnectionSource createEmptyDatabaseConnectionSource() {
 
     final InvocationHandler handler =
-        (proxy, method, args) -> {
-          return switch (method.getName()) {
-            case "get" -> DriverManager.getConnection("jdbc:hsqldb:mem:testdb");
-            case "releaseConnection" -> true;
-            case "close", "setFirstConnectionInitializer" -> null; // No-op
-            case "toString" -> "empty-data-source"; // For debugging
-            default ->
-                throw new UnsupportedOperationException(
-                    "Method not supported: " + method.getName());
-          };
-        };
+        (proxy, method, args) ->
+            (switch (method.getName()) {
+              case "get" -> DriverManager.getConnection("jdbc:hsqldb:mem:testdb");
+              case "releaseConnection" -> true;
+              case "toString" -> "empty-data-source"; // For debugging
+              default -> returnEmpty(method);
+            });
 
     return (DatabaseConnectionSource)
         Proxy.newProxyInstance(
@@ -79,31 +76,37 @@ public class EmptyFactory {
 
     final InvocationHandler handler =
         (proxy, method, args) -> {
-          final Class<?> returnType = method.getReturnType();
+          method.getReturnType();
 
-          switch (method.getName()) {
-            case "toString":
-              return "empty-ermodel";
-            case "equals":
-              return proxy == args[0];
-            case "hashCode":
-              return System.identityHashCode(proxy);
-            default:
-              if (returnType == Void.TYPE) {
-                return null;
-              }
-              if (Optional.class.isAssignableFrom(returnType)) {
-                return Optional.empty();
-              }
-              if (Collection.class.isAssignableFrom(returnType)) {
-                return Collections.emptyList();
-              }
-              throw new UnsupportedOperationException("Unsupported " + method);
-          }
+          return switch (method.getName()) {
+            case "toString" -> "empty-ermodel";
+            case "equals" -> proxy == args[0];
+            case "hashCode" -> System.identityHashCode(proxy);
+            default -> throw new IllegalStateException(baseErrorMessage);
+          };
         };
 
     return (ERModel)
         Proxy.newProxyInstance(
             ERModel.class.getClassLoader(), new Class<?>[] {ERModel.class}, handler);
+  }
+
+  private static Object returnEmpty(final Method method) {
+    if (method == null) {
+      return null;
+    }
+
+    final Class<?> returnType = method.getReturnType();
+
+    if (returnType == Void.TYPE) {
+      return null;
+    }
+    if (Optional.class.isAssignableFrom(returnType)) {
+      return Optional.empty();
+    }
+    if (Collection.class.isAssignableFrom(returnType)) {
+      return Collections.emptyList();
+    }
+    throw new UnsupportedOperationException(method.toString());
   }
 }

@@ -31,8 +31,8 @@ import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.server.ToolProvider;
+import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.utility.EmptyFactory;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @TestInstance(Lifecycle.PER_CLASS)
