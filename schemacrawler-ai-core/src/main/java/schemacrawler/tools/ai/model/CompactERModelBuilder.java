@@ -37,7 +37,7 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
 
   private CompactERModelBuilder(final ERModel erModel) {
     this.erModel = requireNonNull(erModel, "No erModel provided");
-    entityType = EntityType.unknown;
+    entityType = null;
     cardinality = null;
     entityInclusionRule = new IncludeAll();
     relationshipInclusionRule = new IncludeAll();
@@ -59,7 +59,7 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
 
     final Collection<EntityDocument> entityDocuments = new ArrayList<>();
     final Collection<Entity> entities;
-    if (entityType == EntityType.unknown) {
+    if (entityType == null | entityType == EntityType.unknown) {
       entities = erModel.getEntities();
     } else {
       entities = erModel.getEntitiesByType(entityType);
@@ -109,12 +109,14 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
     return this;
   }
 
+  /**
+   * Entity type may be null, signifying all entities.
+   *
+   * @param entityType Entity type
+   * @return Builder
+   */
   public CompactERModelBuilder withEntityTypes(final EntityType entityType) {
-    if (entityType == null) {
-      this.entityType = EntityType.unknown;
-    } else {
-      this.entityType = entityType;
-    }
+    this.entityType = entityType;
     return this;
   }
 

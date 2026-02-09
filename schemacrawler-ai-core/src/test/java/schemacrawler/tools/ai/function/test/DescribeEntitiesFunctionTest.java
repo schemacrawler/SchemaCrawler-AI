@@ -29,6 +29,13 @@ public class DescribeEntitiesFunctionTest extends AbstractFunctionTest {
   }
 
   @Test
+  public void describeAssociations(final TestContext testContext) throws Exception {
+    final DescribeEntitiesFunctionParameters args =
+        new DescribeEntitiesFunctionParameters("AUTHORS", EntityKind.ASSOCIATION);
+    describeEntity(testContext, args, true);
+  }
+
+  @Test
   public void describeEntity(final TestContext testContext) throws Exception {
     final DescribeEntitiesFunctionParameters args =
         new DescribeEntitiesFunctionParameters("AUTHORS", null);
