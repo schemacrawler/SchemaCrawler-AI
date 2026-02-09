@@ -159,11 +159,13 @@ public final class FunctionCallback<P extends FunctionParameters> {
           new StringFormat(
               "Function parameters could not be instantiated: %s(%s)",
               parametersClass.getName(), argumentsString));
+
+      // Since parameters maybe invalid, try again with all null parameters
+      parameters = parametersClass.getDeclaredConstructor().newInstance();
     }
-    // Since parameters maybe invalid, try again with all null parameters
-    parameters = parametersClass.getDeclaredConstructor().newInstance();
 
     LOGGER.log(Level.FINE, String.valueOf(parameters));
+    System.err.println(String.valueOf(parameters));
     return parameters;
   }
 }

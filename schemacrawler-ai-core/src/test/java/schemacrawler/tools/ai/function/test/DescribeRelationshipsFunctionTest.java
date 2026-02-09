@@ -10,9 +10,9 @@ package schemacrawler.tools.ai.function.test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters.RelationshipType;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
@@ -24,8 +24,7 @@ public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
   @Test
   public void describe1NRelationships(final TestContext testContext) throws Exception {
     final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters(
-            "FK_SALES_REGIONS", RelationshipCardinality.one_many);
+        new DescribeRelationshipsFunctionParameters("FK_SALES_REGIONS", RelationshipType.ONE_MANY);
     describeRelationship(testContext, args, true);
   }
 
@@ -46,7 +45,7 @@ public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
   @Test
   public void describeRelationshipType(final TestContext testContext) throws Exception {
     final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters(null, RelationshipCardinality.many_many);
+        new DescribeRelationshipsFunctionParameters(null, RelationshipType.MANY_MANY);
     describeRelationship(testContext, args, true);
   }
 

@@ -33,7 +33,7 @@ public final class DescribeRelationshipsFunctionExecutor
   public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
-    final RelationshipCardinality cardinality = commandOptions.cardinality();
+    final RelationshipCardinality cardinality = commandOptions.relationshipType().cardinality();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.relationshipName());
     final Collection<RelationshipDocument> entities =
         CompactERModelBuilder.builder(erModel)
