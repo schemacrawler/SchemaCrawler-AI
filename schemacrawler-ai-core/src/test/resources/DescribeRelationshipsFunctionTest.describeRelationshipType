@@ -1,1 +1,1 @@
-[{"schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","cardinality":"many_many","between":["AUTHORS","BOOKS"],"uses-bridge-table":true}]
+[{"schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","cardinality":"many_many","between":["AUTHORS","BOOKS"],"remarks":"Relationship between books and their authors, \nalong with the latest updated information","hint":"Relationship name is the same as the bridge table or associative entity"}]

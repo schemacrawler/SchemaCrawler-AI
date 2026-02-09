@@ -26,7 +26,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "cardinality", "between", "uses-bridge-table"})
+@JsonPropertyOrder({"schema", "name", "cardinality", "between", "remarks", "hint"})
 public final class RelationshipDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
@@ -35,12 +35,14 @@ public final class RelationshipDocument implements Document {
   private final String relationshipName;
   private final RelationshipCardinality cardinality;
   private final String[] between;
-  private final boolean usesBridgeTable;
+  private final String remarks;
+  private final String hint;
 
   public RelationshipDocument(final Relationship relationship) {
     requireNonNull(relationship, "No relationship provided");
 
     final String schema;
+    boolean usesBridgeTable;
     if (relationship instanceof final TableReferenceRelationship refRelationship) {
       usesBridgeTable = false;
       schema = refRelationship.getTableReference().getSchema().getFullName();
@@ -56,6 +58,11 @@ public final class RelationshipDocument implements Document {
     } else {
       schemaName = null;
     }
+    if (usesBridgeTable) {
+      hint = "Relationship name is the same as the bridge table or associative entity";
+    } else {
+      hint = "Relationship name is the same as the foreign key";
+    }
 
     between =
         new String[] {
@@ -64,6 +71,13 @@ public final class RelationshipDocument implements Document {
 
     relationshipName = relationship.getName();
     cardinality = relationship.getType();
+
+    final String remarks = relationship.getRemarks();
+    if (!isBlank(remarks)) {
+      this.remarks = remarks;
+    } else {
+      this.remarks = null;
+    }
   }
 
   @JsonProperty("between")
@@ -75,19 +89,22 @@ public final class RelationshipDocument implements Document {
     return cardinality;
   }
 
+  public String getHint() {
+    return hint;
+  }
+
   @Override
   public String getName() {
     return relationshipName;
   }
 
+  public String getRemarks() {
+    return remarks;
+  }
+
   @JsonProperty("schema")
   public String getSchemaName() {
     return schemaName;
-  }
-
-  @JsonProperty("uses-bridge-table")
-  public boolean isUsesBridgeTable() {
-    return usesBridgeTable;
   }
 
   @Override
