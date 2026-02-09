@@ -41,7 +41,7 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
     final String arguments =
         """
         {
-          "cardinality" : "MANY_MANY"
+          "cardinality" : "many_many"
         }
         """;
     final JsonFunctionReturn actualReturn =
@@ -55,5 +55,8 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
     final List<JsonNode> list = new ArrayList<>();
     jsonNode.iterator().forEachRemaining(list::add);
     assertThat(list, hasSize(1));
+
+    final JsonNode relationshipDocument = list.get(0);
+    assertThat(relationshipDocument.get("name"), is("BOOKAUTHORS"));
   }
 }
