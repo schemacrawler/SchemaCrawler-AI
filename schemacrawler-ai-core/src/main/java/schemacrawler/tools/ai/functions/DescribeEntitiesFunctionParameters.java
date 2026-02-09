@@ -8,6 +8,10 @@
 
 package schemacrawler.tools.ai.functions;
 
+import static schemacrawler.ermodel.model.EntityType.strong_entity;
+import static schemacrawler.ermodel.model.EntityType.subtype;
+import static schemacrawler.ermodel.model.EntityType.weak_entity;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.ermodel.model.EntityType;
@@ -32,11 +36,29 @@ public record DescribeEntitiesFunctionParameters(
     @JsonPropertyDescription(
             """
             Indicates the types of entities to return - for example, strong, weak
-            or subtype entities. Use "unknown" to return all types of entities.
+            or subtype entities. It can also return associations (or bridge or join tables).
             """)
         @JsonProperty(required = false)
-        EntityType entityType)
+        EntityKind entityKind)
     implements FunctionParameters {
+
+  public enum EntityKind {
+    ALL(null),
+    STRONG_ENTITY(strong_entity),
+    WEAK_ENTITY(weak_entity),
+    SUBTYPE(subtype),
+    ASSOCIATION(null);
+
+    private final EntityType type;
+
+    EntityKind(final EntityType type) {
+      this.type = type;
+    }
+
+    public EntityType entityType() {
+      return type;
+    }
+  }
 
   public DescribeEntitiesFunctionParameters() {
     this(null, null);
@@ -46,8 +68,8 @@ public record DescribeEntitiesFunctionParameters(
     if (entityName == null || entityName.isBlank()) {
       entityName = "";
     }
-    if (entityType == null) {
-      entityType = EntityType.unknown;
+    if (entityKind == null) {
+      entityKind = EntityKind.ALL;
     }
   }
 

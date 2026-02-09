@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.model;
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -28,7 +29,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "entity-type", "supertype", "attributes"})
+@JsonPropertyOrder({"schema", "name", "entity-type", "supertype", "attributes", "remarks"})
 public final class EntityDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
@@ -38,6 +39,7 @@ public final class EntityDocument implements Document {
   private final EntityType entityType;
   private final String supertype;
   private final Collection<EntityAttributeDocument> entityAttributes;
+  private final String remarks;
 
   EntityDocument(final Entity entity) {
     requireNonNull(entity, "No entity provided");
@@ -66,6 +68,13 @@ public final class EntityDocument implements Document {
     } else {
       this.entityAttributes = entityAttributes;
     }
+
+    if (entity.hasRemarks()) {
+      final String remarks = entity.getRemarks();
+      this.remarks = trimToEmpty(remarks);
+    } else {
+      remarks = null;
+    }
   }
 
   @JsonProperty("attributes")
@@ -81,6 +90,10 @@ public final class EntityDocument implements Document {
   @Override
   public String getName() {
     return entityName;
+  }
+
+  public String getRemarks() {
+    return remarks;
   }
 
   @JsonProperty("schema")

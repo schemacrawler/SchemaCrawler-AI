@@ -16,6 +16,7 @@ import static tools.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRI
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static tools.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
 import static tools.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
+import static tools.jackson.databind.cfg.EnumFeature.READ_ENUMS_USING_TO_STRING;
 
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.cfg.MapperBuilder;
@@ -33,6 +34,7 @@ public class JsonUtility {
     requireNonNull(mapperBuilder, "No mapper builder provided");
     mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
     mapperBuilder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
+    mapperBuilder.disable(READ_ENUMS_USING_TO_STRING);
     mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
     mapperBuilder.enable(IGNORE_UNKNOWN);
 

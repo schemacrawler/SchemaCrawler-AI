@@ -10,9 +10,9 @@ package schemacrawler.tools.ai.function.test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionParameters.EntityKind;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
@@ -29,6 +29,13 @@ public class DescribeEntitiesFunctionTest extends AbstractFunctionTest {
   }
 
   @Test
+  public void describeAssociations(final TestContext testContext) throws Exception {
+    final DescribeEntitiesFunctionParameters args =
+        new DescribeEntitiesFunctionParameters("AUTHORS", EntityKind.ASSOCIATION);
+    describeEntity(testContext, args, true);
+  }
+
+  @Test
   public void describeEntity(final TestContext testContext) throws Exception {
     final DescribeEntitiesFunctionParameters args =
         new DescribeEntitiesFunctionParameters("AUTHORS", null);
@@ -38,7 +45,7 @@ public class DescribeEntitiesFunctionTest extends AbstractFunctionTest {
   @Test
   public void describeStrongEntities(final TestContext testContext) throws Exception {
     final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters("BOOKS", EntityType.strong_entity);
+        new DescribeEntitiesFunctionParameters("BOOKS", EntityKind.STRONG_ENTITY);
     describeEntity(testContext, args, true);
   }
 

@@ -8,6 +8,12 @@
 
 package schemacrawler.tools.ai.functions;
 
+import static schemacrawler.ermodel.model.RelationshipCardinality.many_many;
+import static schemacrawler.ermodel.model.RelationshipCardinality.one_many;
+import static schemacrawler.ermodel.model.RelationshipCardinality.one_one;
+import static schemacrawler.ermodel.model.RelationshipCardinality.zero_many;
+import static schemacrawler.ermodel.model.RelationshipCardinality.zero_one;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.ermodel.model.RelationshipCardinality;
@@ -33,11 +39,29 @@ public record DescribeRelationshipsFunctionParameters(
             """
             Indicates the types of relationships to return - for example, 1..1, 1..M, M..N
             and optional relationships.
-            Use "unknown" to return all types of relationships.
             """)
         @JsonProperty(required = false)
-        RelationshipCardinality cardinality)
+        Cardinality cardinality)
     implements FunctionParameters {
+
+  public enum Cardinality {
+    ALL(null),
+    ZERO_ONE(zero_one),
+    ZERO_MANY(zero_many),
+    ONE_ONE(one_one),
+    ONE_MANY(one_many),
+    MANY_MANY(many_many);
+
+    private final RelationshipCardinality cardinality;
+
+    Cardinality(final RelationshipCardinality cardinality) {
+      this.cardinality = cardinality;
+    }
+
+    public RelationshipCardinality cardinality() {
+      return cardinality;
+    }
+  }
 
   public DescribeRelationshipsFunctionParameters() {
     this(null, null);
@@ -48,7 +72,7 @@ public record DescribeRelationshipsFunctionParameters(
       relationshipName = "";
     }
     if (cardinality == null) {
-      cardinality = RelationshipCardinality.unknown;
+      cardinality = Cardinality.ALL;
     }
   }
 
