@@ -38,7 +38,7 @@ public final class DescribeEntitiesFunctionExecutor
 
     final EntityKind entityKind = commandOptions.entityKind();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.entityName());
-    final Collection<? extends Document> documents = new ArrayList<>();
+    final Collection<Document> documents = new ArrayList<>();
     switch (entityKind) {
       case ALL:
         documents.addAll(
@@ -72,7 +72,7 @@ public final class DescribeEntitiesFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
   }
 
-  private ArrayNode createDocumentsArray(final Collection<? extends Document> documents) {
+  private ArrayNode createDocumentsArray(final Collection<Document> documents) {
     final ArrayNode list = mapper.createArrayNode();
     if (documents == null || documents.isEmpty()) {
       return list;

@@ -165,7 +165,6 @@ public final class FunctionCallback<P extends FunctionParameters> {
     }
 
     LOGGER.log(Level.FINE, String.valueOf(parameters));
-    System.err.println(String.valueOf(parameters));
     return parameters;
   }
 }
