@@ -41,7 +41,7 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
     final String arguments =
         """
         {
-          "relationship-type" : "MANY_MANY"
+          "cardinality" : "MANY_MANY"
         }
         """;
     final JsonFunctionReturn actualReturn =

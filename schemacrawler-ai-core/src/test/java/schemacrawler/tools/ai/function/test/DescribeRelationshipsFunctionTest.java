@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters.RelationshipType;
+import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters.Cardinality;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
@@ -24,7 +24,7 @@ public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
   @Test
   public void describe1NRelationships(final TestContext testContext) throws Exception {
     final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters("FK_SALES_REGIONS", RelationshipType.ONE_MANY);
+        new DescribeRelationshipsFunctionParameters("FK_SALES_REGIONS", Cardinality.ONE_MANY);
     describeRelationship(testContext, args, true);
   }
 
@@ -45,7 +45,7 @@ public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
   @Test
   public void describeRelationshipType(final TestContext testContext) throws Exception {
     final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters(null, RelationshipType.MANY_MANY);
+        new DescribeRelationshipsFunctionParameters(null, Cardinality.MANY_MANY);
     describeRelationship(testContext, args, true);
   }
 

@@ -41,10 +41,10 @@ public record DescribeRelationshipsFunctionParameters(
             and optional relationships.
             """)
         @JsonProperty(required = false)
-        RelationshipType relationshipType)
+        Cardinality cardinality)
     implements FunctionParameters {
 
-  public enum RelationshipType {
+  public enum Cardinality {
     ALL(null),
     ZERO_ONE(zero_one),
     ZERO_MANY(zero_many),
@@ -54,7 +54,7 @@ public record DescribeRelationshipsFunctionParameters(
 
     private final RelationshipCardinality cardinality;
 
-    RelationshipType(final RelationshipCardinality cardinality) {
+    Cardinality(final RelationshipCardinality cardinality) {
       this.cardinality = cardinality;
     }
 
@@ -71,8 +71,8 @@ public record DescribeRelationshipsFunctionParameters(
     if (relationshipName == null || relationshipName.isBlank()) {
       relationshipName = "";
     }
-    if (relationshipType == null) {
-      relationshipType = RelationshipType.ALL;
+    if (cardinality == null) {
+      cardinality = Cardinality.ALL;
     }
   }
 
