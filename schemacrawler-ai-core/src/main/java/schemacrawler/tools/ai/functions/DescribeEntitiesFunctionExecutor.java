@@ -33,7 +33,7 @@ public final class DescribeEntitiesFunctionExecutor
   public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
-    final EntityType entityType = commandOptions.entityType();
+    final EntityType entityType = commandOptions.entityKind().entityType();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.entityName());
     final Collection<EntityDocument> entities =
         CompactERModelBuilder.builder(erModel)
