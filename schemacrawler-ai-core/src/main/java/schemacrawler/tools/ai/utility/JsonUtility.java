@@ -32,10 +32,11 @@ public class JsonUtility {
       final MapperBuilder<? extends ObjectMapper, ?> mapperBuilder) {
 
     requireNonNull(mapperBuilder, "No mapper builder provided");
-    mapperBuilder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
-    mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
     mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
+    mapperBuilder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
+    //
     mapperBuilder.enable(IGNORE_UNKNOWN);
+    mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
     mapperBuilder.enable(ACCEPT_CASE_INSENSITIVE_ENUMS);
 
     final ObjectMapper objectMapper = mapperBuilder.build();
