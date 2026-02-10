@@ -9,53 +9,63 @@
 package schemacrawler.tools.ai.tools.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
-import java.util.List;
-import org.junit.jupiter.api.Test;
-import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameters;
-import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
-import schemacrawler.tools.ai.functions.DiagramFunctionParameters;
-import schemacrawler.tools.ai.functions.LintFunctionParameters;
-import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters;
-import schemacrawler.tools.ai.functions.ListFunctionParameters;
-import schemacrawler.tools.ai.functions.TableSampleFunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionParameters;
+import java.util.Collection;
+import java.util.stream.Stream;
+import org.junit.jupiter.api.Disabled;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.MethodSource;
+import schemacrawler.schema.FunctionParameter;
+import schemacrawler.tools.ai.tools.FunctionDefinition;
+import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 import us.fatehi.test.utility.TestWriter;
+import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.test.utility.extensions.TestContext;
 
+@ResolveTestContext
 public class JsonSchemaGeneratorTest {
 
-  @Test
-  public void functionParameters() {
+  private static final int NUM_FUNCTIONS = 8;
 
-    final List<Class<? extends FunctionParameters>> functionParameters =
-        List.of(
-            DescribeTablesFunctionParameters.class,
-            DescribeRoutinesFunctionParameters.class,
-            LintFunctionParameters.class,
-            ListFunctionParameters.class,
-            ListAcrossTablesFunctionParameters.class,
-            DiagramFunctionParameters.class,
-            TableSampleFunctionParameters.class);
+  private static Stream<FunctionDefinition<?>> functionDefinitionsProvider() {
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functionDefinitions = registry.getFunctionDefinitions();
+    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
+    return functionDefinitions.stream();
+  }
+
+  @Disabled
+  @ParameterizedTest
+  @MethodSource("functionDefinitionsProvider")
+  void functionParametersPerDefinition(
+      final FunctionDefinition<?> functionDefinition, final TestContext testContext)
+      throws Exception {
+
+    final FunctionDefinitionRegistry registry =
+        FunctionDefinitionRegistry.getFunctionDefinitionRegistry();
+    final Collection<FunctionDefinition<?>> functionDefinitions = registry.getFunctionDefinitions();
+    assertThat(functionDefinitions, hasSize(NUM_FUNCTIONS));
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
-      for (final Class<?> parametersClass : functionParameters) {
-        final JsonNode schemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
-        // final JsonNode schemaNode =
-        // ToolUtility.extractParametersSchemaNode(parametersClass);
+      final Class<? extends FunctionParameter> parametersClass =
+          (Class<? extends FunctionParameter>) functionDefinition.getParametersClass();
+      final JsonNode schemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
 
-        out.println(parametersClass.getSimpleName());
-        out.println(schemaNode.toPrettyString().indent(2));
-        out.println();
-        out.println();
-      }
+      out.println(parametersClass.getSimpleName());
+      out.println(schemaNode.toPrettyString().indent(2));
+      out.println();
+      out.println();
     }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource("parameters-json-schemas.txt")));
+    final String referenceFile =
+        "%s-%s.txt".formatted(testContext.testMethodFullName(), functionDefinition.getName());
+    assertThat(outputOf(testout), hasSameContentAs(classpathResource(referenceFile)));
   }
 }

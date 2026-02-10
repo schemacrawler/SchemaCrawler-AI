@@ -9,7 +9,7 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static tools.jackson.databind.util.NamingStrategyImpls.KEBAB_CASE;
+import static tools.jackson.databind.util.NamingStrategyImpls.SNAKE_CASE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -29,9 +29,9 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public final String getName() {
-    return KEBAB_CASE
-        .translate(this.getClass().getSimpleName())
-        .replace("-function-definition", "");
+    final String functionNameFromClass =
+        this.getClass().getSimpleName().replace("FunctionDefinition", "");
+    return SNAKE_CASE.translate(functionNameFromClass);
   }
 
   @Override

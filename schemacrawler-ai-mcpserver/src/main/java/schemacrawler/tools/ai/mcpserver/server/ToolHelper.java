@@ -25,6 +25,8 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.ermodel.model.ERModel;
@@ -36,6 +38,7 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
+import us.fatehi.utility.string.StringFormat;
 
 @Component
 public class ToolHelper {
@@ -83,6 +86,8 @@ public class ToolHelper {
     }
   }
 
+  private static final Logger LOGGER = Logger.getLogger(ToolHelper.class.getCanonicalName());
+
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
 
@@ -106,6 +111,7 @@ public class ToolHelper {
 
     final Class<P> parametersClass = functionDefinition.getParametersClass();
     final JsonNode parametersSchemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
+    LOGGER.log(Level.CONFIG, new StringFormat("<%s>%n%s", parametersClass, parametersSchemaNode));
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
