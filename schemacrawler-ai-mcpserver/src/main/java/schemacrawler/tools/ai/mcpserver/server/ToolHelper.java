@@ -25,6 +25,7 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -111,6 +112,10 @@ public class ToolHelper {
       throw new InternalRuntimeException("Bad JSON node for <%s>".formatted(functionDefinition));
     }
     final JsonNode inputSchemaNode = definitionNode.get("inputSchema");
+    if (LOGGER.isLoggable(Level.INFO)) {
+      LOGGER.log(
+          Level.INFO, "Preparing to register tool:%n%s".formatted(definitionNode.toPrettyString()));
+    }
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
