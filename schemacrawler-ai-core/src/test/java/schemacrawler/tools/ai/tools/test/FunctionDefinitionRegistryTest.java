@@ -56,14 +56,14 @@ public class FunctionDefinitionRegistryTest {
     assertThat(
         names,
         containsInAnyOrder(
-            "describe-tables",
-            "describe-routines",
+            "describe_tables",
+            "describe_routines",
             "lint",
             "list",
-            "list-across-tables",
+            "list_across_tables",
             "diagram",
-            "server-information",
-            "table-sample"));
+            "server_information",
+            "table_sample"));
   }
 
   @Test

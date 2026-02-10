@@ -57,6 +57,6 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
     assertThat(list, hasSize(1));
 
     final JsonNode relationshipDocument = list.get(0);
-    assertThat(relationshipDocument.get("name"), is("BOOKAUTHORS"));
+    assertThat(relationshipDocument.get("name").asString(), is("BOOKAUTHORS"));
   }
 }

@@ -16,6 +16,7 @@ import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
+import us.fatehi.mcp_json_schema.utility.McpJsonSchemaUtility;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
@@ -35,6 +36,14 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   }
 
   @Override
+  public JsonNode toJson() {
+    if (definition == null) {
+      definition = buildDefinition();
+    }
+    return definition;
+  }
+
+  @Override
   public String toString() {
     if (definition == null) {
       definition = buildDefinition();
@@ -48,6 +57,10 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     objectNode.put("name", getName());
     objectNode.put("title", getTitle());
     objectNode.put("description", getDescription());
+
+    final Class<P> parametersClass = getParametersClass();
+    final JsonNode parametersSchemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
+    objectNode.set("inputSchema", parametersSchemaNode);
 
     return objectNode;
   }

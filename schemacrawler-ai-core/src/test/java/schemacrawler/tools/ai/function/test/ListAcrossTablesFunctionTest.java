@@ -117,9 +117,9 @@ public class ListAcrossTablesFunctionTest extends AbstractFunctionTest {
     final Map<String, String> resultMap =
         mapper.readValue(args.toString(), new TypeReference<Map<String, String>>() {});
 
-    assertThat(resultMap, hasEntry("dependant-object-type", "NONE"));
-    assertThat(resultMap, hasEntry("dependant-object-name", null));
-    assertThat(resultMap, hasEntry("table-name", null));
+    assertThat(resultMap, hasEntry("dependant_object_type", "NONE"));
+    assertThat(resultMap, hasEntry("dependant_object_name", null));
+    assertThat(resultMap, hasEntry("table_name", null));
   }
 
   @Test

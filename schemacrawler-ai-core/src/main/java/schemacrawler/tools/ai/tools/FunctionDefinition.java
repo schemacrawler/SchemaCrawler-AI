@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
+import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.property.PropertyName;
 
 public interface FunctionDefinition<P extends FunctionParameters> {
@@ -25,4 +26,6 @@ public interface FunctionDefinition<P extends FunctionParameters> {
   String getTitle();
 
   FunctionExecutor<P> newExecutor();
+
+  JsonNode toJson();
 }

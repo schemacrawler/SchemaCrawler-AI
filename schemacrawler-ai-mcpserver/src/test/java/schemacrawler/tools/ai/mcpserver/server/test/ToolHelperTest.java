@@ -36,6 +36,9 @@ import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
+import schemacrawler.tools.ai.utility.JsonUtility;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 
@@ -116,6 +119,13 @@ public class ToolHelperTest {
           return false;
         }
       };
+    }
+
+    @Override
+    public JsonNode toJson() {
+      final ObjectNode definitionNode = JsonUtility.mapper.createObjectNode();
+      definitionNode.set("inputSchema", JsonUtility.mapper.createObjectNode());
+      return definitionNode;
     }
   }
 

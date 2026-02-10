@@ -11,6 +11,7 @@ module us.fatehi.schemacrawler.ai_core {
   requires us.fatehi.schemacrawler.scripting;
   requires us.fatehi.schemacrawler.offline;
   requires us.fatehi.schemacrawler.lint;
+  requires us.fatehi.mcp_json_schema;
 
   // Other dependencies
   requires tools.jackson.core;
