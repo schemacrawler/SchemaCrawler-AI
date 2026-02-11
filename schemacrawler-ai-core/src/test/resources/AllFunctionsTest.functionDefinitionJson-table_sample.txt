@@ -1,0 +1,16 @@
+{
+  "name" : "table_sample",
+  "title" : "Sample table data",
+  "description" : "Profiles and samples table data by retrieving random rows for quick content analysis without full scans. Helps infer data patterns, validate types, and assess quality. Results vary per run (they are random picks) and offer insight for ETL, query design, and pipeline planning. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "May be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nUse an empty string if all tables are requested.\nIf not specified, all tables will be processed, but the results\ncould be large, and execution time may be longer.\n"
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "name" : "describe_tables",
+  "title" : "Describe tables and views",
+  "description" : "Generates detailed documentation for database tables and views, including column definitions (names, data types, constraints, nullability), primary and foreign key relationships, index and trigger information, table attributes, and complete DDL definitions. Supports regex-based table name filtering and configurable detail levels to optimize tool performance. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of database table or view to describe.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nTry not to match all tables, but instead use a regular expression\nto match a subset or match a single table, since otherwise results may\nbe large.\n"
+      },
+      "description_scope" : {
+        "type" : "array",
+        "description" : "Indicates what details of the database table or view to return -\ncolumns, primary key, foreign keys, indexes, triggers, attributes,\nand table definition. Also returns which objects reference a given table\nas \"used by objects\".\nColumns, foreign key references to other tables, and remarks or comments\nare always returned by default. The other details can be requested.\nThe results could be large.\n",
+        "items" : {
+          "type" : "string",
+          "enum" : [ "DEFAULT", "PRIMARY_KEY", "REFERENCED_TABLES", "INDEXES", "TRIGGERS", "USED_BY_OBJECTS", "ATTRIBUTES", "DEFINIITION" ]
+        }
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

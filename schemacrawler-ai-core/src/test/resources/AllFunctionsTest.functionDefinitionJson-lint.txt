@@ -1,0 +1,16 @@
+{
+  "name" : "lint",
+  "title" : "Validate database schema",
+  "description" : "Analyzes and validates database schema structure and design. Detects missing or redundant indexes, foreign keys without supporting indexes, and unique indexes with nullable columns. Checks data type consistency across similarly named columns, validates key patterns, and enforces naming conventions. Assesses design quality by inspecting documentation completeness, reserved word usage, and structural anomalies like single-column or all-nullable tables. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "May be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nUse an empty string if all tables are requested.\nIf not specified, all tables will be processed, but the results\ncould be large, and execution time may be longer.\n"
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

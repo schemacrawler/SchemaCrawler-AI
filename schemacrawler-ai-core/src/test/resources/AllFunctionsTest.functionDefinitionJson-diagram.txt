@@ -1,0 +1,29 @@
+{
+  "name" : "diagram",
+  "title" : "Generate database diagram",
+  "description" : "Generates a database diagram in the specified format.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of database table or view to describe.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nTry not to match all tables, but instead use a regular expression\nto match a subset or match a single table, since otherwise results may\nbe large.\n"
+      },
+      "include_child_tables" : {
+        "type" : "boolean",
+        "description" : "If true, also include child (or dependent) tables for the selected tables.\n"
+      },
+      "include_referenced_tables" : {
+        "type" : "boolean",
+        "description" : "If true, also include tables that are referenced by the selected tables.\n(These are sometimes known as parent tables.)\n"
+      },
+      "diagram_type" : {
+        "type" : "string",
+        "description" : "Indicates database schema diagram format - Graphviz DOT format, PlantUML,\nMermaid or DBML from dbdiagram.io.\n",
+        "enum" : [ "PLANTUML", "MERMAID", "DBML", "GRAPHVIZ" ]
+      }
+    },
+    "required" : [ "diagram_type" ],
+    "additionalProperties" : false
+  }
+}
