@@ -9,13 +9,14 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static tools.jackson.databind.util.NamingStrategyImpls.KEBAB_CASE;
+import static tools.jackson.databind.util.NamingStrategyImpls.SNAKE_CASE;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
+import us.fatehi.mcp_json_schema.utility.McpJsonSchemaUtility;
 
 public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     implements FunctionDefinition<P> {
@@ -29,9 +30,17 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   @JsonIgnore
   @Override
   public final String getName() {
-    return KEBAB_CASE
-        .translate(this.getClass().getSimpleName())
-        .replace("-function-definition", "");
+    final String functionNameFromClass =
+        this.getClass().getSimpleName().replace("FunctionDefinition", "");
+    return SNAKE_CASE.translate(functionNameFromClass);
+  }
+
+  @Override
+  public JsonNode toJson() {
+    if (definition == null) {
+      definition = buildDefinition();
+    }
+    return definition;
   }
 
   @Override
@@ -48,6 +57,10 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     objectNode.put("name", getName());
     objectNode.put("title", getTitle());
     objectNode.put("description", getDescription());
+
+    final Class<P> parametersClass = getParametersClass();
+    final JsonNode parametersSchemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
+    objectNode.set("inputSchema", parametersSchemaNode);
 
     return objectNode;
   }

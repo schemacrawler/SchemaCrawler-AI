@@ -20,6 +20,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
+import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
@@ -150,17 +151,10 @@ public final class FunctionCallback<P extends FunctionParameters> {
     final Class<P> parametersClass = functionDefinition.getParametersClass();
     P parameters;
     // Try with arguments string first, assuming arguments are valid
-    try {
-      parameters = mapper.readValue(argumentsString, parametersClass);
-    } catch (final Exception e) {
-      LOGGER.log(
-          Level.INFO,
-          e,
-          new StringFormat(
-              "Function parameters could not be instantiated: %s(%s)",
-              parametersClass.getName(), argumentsString));
-
-      // Since parameters maybe invalid, try again with all null parameters
+    parameters = DeserializationUtility.instantiateArguments(argumentsString, parametersClass);
+    // Is that fails, since parameters maybe invalid, try again with all null
+    // parameters
+    if (parameters == null) {
       parameters = parametersClass.getDeclaredConstructor().newInstance();
     }
 

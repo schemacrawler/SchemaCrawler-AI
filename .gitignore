@@ -1,5 +1,6 @@
 lib/
 *.txt
+!**/src/test/resources/**/*.txt
 **/gpl*.*
 .idea/
 _ai-distrib/

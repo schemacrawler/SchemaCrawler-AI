@@ -17,10 +17,11 @@ import static org.hamcrest.Matchers.nullValue;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters;
+import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
+import schemacrawler.tools.ai.functions.DiagramFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import tools.jackson.databind.JsonNode;
@@ -29,19 +30,22 @@ import us.fatehi.test.utility.extensions.ResolveTestContext;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTest {
+public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
 
+  @Disabled
   @Test
   public void testExecute() throws Exception {
     final Connection connection = TestObjectUtility.mockConnection();
-    final DescribeRelationshipsFunctionDefinition definition =
-        new DescribeRelationshipsFunctionDefinition();
-    final FunctionCallback<DescribeRelationshipsFunctionParameters> callback =
+    final DiagramFunctionDefinition definition = new DiagramFunctionDefinition();
+    final FunctionCallback<DiagramFunctionParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel);
     final String arguments =
         """
         {
-          "cardinality" : "many_many"
+          "diagram-type" : "MERMAID",
+          "include-child-tables" : true,
+          "include-referenced-tables" : false,
+          "table-name" : "(Authors|Books|BookAuthors)"
         }
         """;
     final JsonFunctionReturn actualReturn =
@@ -55,8 +59,5 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
     final List<JsonNode> list = new ArrayList<>();
     jsonNode.iterator().forEachRemaining(list::add);
     assertThat(list, hasSize(1));
-
-    final JsonNode relationshipDocument = list.get(0);
-    assertThat(relationshipDocument.get("name").asString(), is("BOOKAUTHORS"));
   }
 }

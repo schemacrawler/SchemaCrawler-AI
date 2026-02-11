@@ -1,0 +1,25 @@
+{
+  "name" : "list_across_tables",
+  "title" : "List dependent database objects across tables",
+  "description" : "Makes an inventory of table-dependent objects across the database schema, including columns, indexes, foreign keys, triggers, and constraints. Enables impact analysis, dependency tracking, performance tuning, and refactoring without inspecting individual tables. The corresponding tables are identified, and their details can be obtained later by describing those tables. Supports regex-based table name filtering and configurable detail levels to optimize tool performance. Returns JSON data.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "dependant_object_type" : {
+        "type" : "string",
+        "description" : "Type of database table dependant objects, like columns, indexes,\nforeign keys or triggers.\n",
+        "enum" : [ "NONE", "COLUMNS", "INDEXES", "FOREIGN_KEYS", "TRIGGERS" ]
+      },
+      "dependant_object_name" : {
+        "type" : "string",
+        "description" : "Name of table dependant object.\nMay be a regular expression, matching the fully qualified\ndependant object name (including the schema and table). May match\nmore than one dependant object.\nUse an empty string if all dependant objects are requested.\nIf not specified, all table dependant objects will be returned,\nbut the results could be large.\n"
+      },
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of database table for which dependant objects are described.\nMay be a regular expression, matching the fully qualified\ntable name (including the schema), in which case, multiple tables\nmay be returned.\nUse an empty string if all tables are requested.\nIf not specified, all tables will be returned, but the results\ncould be large.\n"
+      }
+    },
+    "required" : [ "dependant_object_type" ],
+    "additionalProperties" : false
+  }
+}

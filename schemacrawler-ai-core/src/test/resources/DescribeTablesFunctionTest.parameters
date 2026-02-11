@@ -1,4 +1,4 @@
 {
-  "table-name" : "AUTHORS",
-  "description-scope" : [ ]
+  "table_name" : "AUTHORS",
+  "description_scope" : [ ]
 }

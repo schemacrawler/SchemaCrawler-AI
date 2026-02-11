@@ -25,17 +25,19 @@ import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
+import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import tools.jackson.databind.JsonNode;
-import us.fatehi.mcp_json_schema.McpJsonSchemaUtility;
 
 @Component
 public class ToolHelper {
@@ -83,6 +85,8 @@ public class ToolHelper {
     }
   }
 
+  private static final Logger LOGGER = Logger.getLogger(ToolHelper.class.getCanonicalName());
+
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
 
@@ -103,16 +107,22 @@ public class ToolHelper {
       final FunctionDefinition<P> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
     final String toolName = functionDefinition.getName();
-
-    final Class<P> parametersClass = functionDefinition.getParametersClass();
-    final JsonNode parametersSchemaNode = McpJsonSchemaUtility.generateJsonSchema(parametersClass);
+    final JsonNode definitionNode = functionDefinition.toJson();
+    if (definitionNode == null || !definitionNode.has("inputSchema")) {
+      throw new InternalRuntimeException("Bad JSON node for <%s>".formatted(functionDefinition));
+    }
+    final JsonNode inputSchemaNode = definitionNode.get("inputSchema");
+    if (LOGGER.isLoggable(Level.INFO)) {
+      LOGGER.log(
+          Level.INFO, "Preparing to register tool:%n%s".formatted(definitionNode.toPrettyString()));
+    }
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
             .name(toolName)
             .title(functionDefinition.getTitle())
             .description(functionDefinition.getDescription())
-            .inputSchema(McpJsonMapper.createDefault(), parametersSchemaNode.toString())
+            .inputSchema(McpJsonMapper.createDefault(), inputSchemaNode.toString())
             .build();
     return tool;
   }

@@ -1,0 +1,21 @@
+{
+  "name" : "list",
+  "title" : "List database objects",
+  "description" : "Makes an inventory of database schema objects such as tables, views, stored procedures, functions, sequences, synonyms, and more. This is an essential starting point for database exploration, database asset management, and schema analysis. The tool supports object type filtering and pattern-based searching. Returns JSON data.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "database_object_type" : {
+        "type" : "string",
+        "description" : "Type of database object to list, like tables (including views),\nroutines (that is, stored procedures and functions),\nschemas (that is, catalogs), sequences, or synonyms.\nIf the parameter is not provided, all database objects are listed.\n",
+        "enum" : [ "ALL", "TABLES", "ROUTINES", "SEQUENCES", "SYNONYMS" ]
+      },
+      "database_object_name" : {
+        "type" : "string",
+        "description" : "Name of database object to list.\nIs a regular expression, matching the fully qualified\ndatabase object name (including the schema). May match\nmore than one database object.\nUse an empty string if all database objects are requested.\n"
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

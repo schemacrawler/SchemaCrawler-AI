@@ -88,7 +88,7 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 9;
+  private static final int NUM_TOOLS = 10;
 
   @Autowired private ToolProvider toolProvider;
 
@@ -103,14 +103,15 @@ public class ToolProviderTest {
     assertThat(
         actualToolNames,
         containsInAnyOrder(
-            "describe-entities",
-            "describe-relationships",
-            "describe-routines",
-            "describe-tables",
+            "describe_entities",
+            "describe_relationships",
+            "describe_routines",
+            "describe_tables",
             "diagram",
             "lint",
             "list",
-            "list-across-tables",
-            "table-sample"));
+            "list_across_tables",
+            "server_information",
+            "table_sample"));
   }
 }

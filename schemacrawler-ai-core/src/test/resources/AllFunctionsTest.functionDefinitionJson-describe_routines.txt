@@ -1,0 +1,24 @@
+{
+  "name" : "describe_routines",
+  "title" : "Describe stored procedures and functions",
+  "description" : "Generates detailed documentation for database routines (stored procedures and functions), including parameter metadata (input/ output parameters, data types, default values), return types, dependencies (on tables, views, or other routines), and full DDL definitions. Supports regex-based routine name filtering and configurable detail levels to optimize tool performance. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "routine_name" : {
+        "type" : "string",
+        "description" : "Name of database routine (stored procedure or function) to describe.\nMay be specified as a regular expression matching the fully qualified\nstored procedure or function names (including the schema).\nTry not to match all routines, but instead use a regular expression\nto match a subset, since otherwise results may be large.\n"
+      },
+      "description_scope" : {
+        "type" : "array",
+        "description" : "Indicates what details of the database stored procedure or function\nto return - parameters (including return types), attributes,\nand routine definition.\nParameters, return types, and remarks or comments are always returned.\n",
+        "items" : {
+          "type" : "string",
+          "enum" : [ "DEFAULT", "REFERENCED_OBJECTS", "ATTRIBUTES", "DEFINIITION" ]
+        }
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

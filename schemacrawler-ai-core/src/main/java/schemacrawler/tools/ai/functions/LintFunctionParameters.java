@@ -15,7 +15,7 @@ import schemacrawler.tools.ai.tools.base.ParameterUtility;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public record LintFunctionParameters(
     @JsonPropertyDescription(
             """

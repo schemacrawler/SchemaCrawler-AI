@@ -1,1 +1,1 @@
-{"triggers":[{"name":"TRG_AUTHORS","action-statement":"UPDATE BOOKS.PUBLISHERS SET PUBLISHER='Jacob'WHERE PUBLISHER='John'","action-orientation":"row","condition-timing":"after","action-order":0,"event-manipulation-type":["delete"],"schema":"PUBLIC.BOOKS","table":"AUTHORS"}]}
+{"triggers":[{"name":"TRG_AUTHORS","action_order":0,"action_orientation":"row","action_statement":"UPDATE BOOKS.PUBLISHERS SET PUBLISHER='Jacob'WHERE PUBLISHER='John'","condition_timing":"after","event_manipulation_type":["delete"],"schema":"PUBLIC.BOOKS","table":"AUTHORS"}]}

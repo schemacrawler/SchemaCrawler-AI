@@ -1,0 +1,11 @@
+{
+  "name" : "server_information",
+  "title" : "Show database server information",
+  "description" : "Provides database environment and server configuration metadata, including engine type and version, collation, encoding, parameters, capabilities, and platform details. Adapts output to the specific database (such as Oracle, SQL Server, PostgreSQL and so on) to support platform-aware SQL generation and schema analysis.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : { },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

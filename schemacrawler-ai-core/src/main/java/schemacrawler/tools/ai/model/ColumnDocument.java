@@ -21,7 +21,7 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 import tools.jackson.databind.node.ObjectNode;
 
-@JsonNaming(PropertyNamingStrategies.KebabCaseStrategy.class)
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
 public final class ColumnDocument implements Document {
