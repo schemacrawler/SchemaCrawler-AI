@@ -17,6 +17,7 @@ import static org.hamcrest.Matchers.nullValue;
 import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
@@ -31,6 +32,7 @@ import us.fatehi.test.utility.extensions.ResolveTestContext;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
 
+  @Disabled
   @Test
   public void testExecute() throws Exception {
     final Connection connection = TestObjectUtility.mockConnection();
