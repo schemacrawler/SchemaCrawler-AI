@@ -115,6 +115,11 @@ public class ToolHelperTest {
         }
 
         @Override
+        public ERModel getERModel() {
+          return erModel;
+        }
+
+        @Override
         public boolean usesConnection() {
           return false;
         }

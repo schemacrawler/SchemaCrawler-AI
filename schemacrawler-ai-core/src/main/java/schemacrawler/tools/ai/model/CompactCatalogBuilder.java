@@ -74,7 +74,7 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
     // For bridge tables, infer it using the utility method
     final RelationshipCardinality cardinality =
         erModel
-            .lookupByTableReference(foreignKey)
+            .lookupRelationship(foreignKey)
             .map(Relationship::getType)
             .orElseGet(() -> EntityModelUtility.inferCardinality(foreignKey));
     final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey, cardinality);
