@@ -12,6 +12,8 @@ import static java.util.Objects.requireNonNull;
 
 import java.sql.Connection;
 import java.util.Collection;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
@@ -19,13 +21,15 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
-import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
+import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.database.DatabaseUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializer
     implements ApplicationContextInitializer<GenericApplicationContext> {
+
+  private static final Logger LOGGER = Logger.getLogger(McpServerInitializer.class.getName());
 
   private final boolean isInErrorState;
   private final Catalog catalog;
@@ -52,6 +56,7 @@ public class McpServerInitializer
       try (final Connection connection = connectionSource.get(); ) {
         DatabaseUtility.checkConnection(connection);
       } catch (final Exception e) {
+        LOGGER.log(Level.WARNING, "Could not establish a database connection", e);
         isInErrorState = true;
       }
     }
@@ -61,13 +66,13 @@ public class McpServerInitializer
     }
 
     if (isInErrorState) {
-      this.connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
-      this.catalog = EmptyFactory.createEmptyCatalog(new RuntimeException());
-      erModel = EntityModelUtility.buildERModel(catalog);
+      this.catalog = InErrorFactory.createErroredCatalog();
+      erModel = InErrorFactory.createErroredERModel();
+      this.connectionSource = InErrorFactory.createErroredConnectionSource();
     } else {
-      this.connectionSource = connectionSource;
       this.catalog = catalog;
       erModel = EntityModelUtility.buildERModel(catalog);
+      this.connectionSource = connectionSource;
     }
     this.isInErrorState = isInErrorState;
 
@@ -91,31 +96,38 @@ public class McpServerInitializer
     try {
       catalog = scContext.loadCatalog();
     } catch (final Exception e) {
+      LOGGER.log(Level.WARNING, "Could not load catalog", e);
       if (mcpTransport != McpServerTransportType.stdio) {
         throw e;
       }
-      catalog = EmptyFactory.createEmptyCatalog(e);
+      catalog = InErrorFactory.createErroredCatalog();
       isInErrorState = true;
     }
     this.catalog = catalog;
+
     if (!isInErrorState) {
       erModel = EntityModelUtility.buildERModel(catalog);
     } else {
-      erModel = EmptyFactory.createEmptyERModel();
+      erModel = InErrorFactory.createErroredERModel();
     }
-    this.isInErrorState = isInErrorState;
 
     // Once the catalog is loaded, use the operations database connection source
-    DatabaseConnectionSource connectionSource;
-    try {
-      connectionSource = scContext.buildOperationsDatabaseConnectionSource();
-    } catch (final Exception e) {
-      if (mcpTransport != McpServerTransportType.stdio) {
-        throw e;
+    if (!isInErrorState) {
+      DatabaseConnectionSource connectionSource;
+      try {
+        connectionSource = scContext.buildOperationsDatabaseConnectionSource();
+      } catch (final Exception e) {
+        if (mcpTransport != McpServerTransportType.stdio) {
+          throw e;
+        }
+        connectionSource = InErrorFactory.createErroredConnectionSource();
       }
-      connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
+      this.connectionSource = connectionSource;
+    } else {
+      connectionSource = InErrorFactory.createErroredConnectionSource();
     }
-    this.connectionSource = connectionSource;
+
+    this.isInErrorState = isInErrorState;
 
     excludeTools = new ExcludeTools(context.excludeTools());
   }

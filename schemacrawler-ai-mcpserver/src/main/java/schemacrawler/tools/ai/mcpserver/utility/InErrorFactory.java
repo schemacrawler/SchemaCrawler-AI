@@ -21,49 +21,47 @@ import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @UtilityMarker
-public class EmptyFactory {
+public class InErrorFactory {
 
-  private static final String baseErrorMessage =
+  private static final String errorMessage =
       """
       The SchemaCrawler AI MCP server is in an error state.
       Database schema metadata is not available,
       since it could not make a connection to the database.
-      Correct the error, and restart the server.
+      Check the server error logs, correct the error, and
+      restart the server.
       """
           .strip()
           .trim();
 
-  public static Catalog createEmptyCatalog(final Exception e) {
-    final String errorMessage =
-        e != null ? baseErrorMessage + "\n" + e.getMessage() : baseErrorMessage;
+  public static Catalog createErroredCatalog() {
 
     final InvocationHandler handler =
-        (proxy, method, args) -> {
-          final String methodName = method.getName();
-
-          return switch (methodName) {
-            case "getName", "getFullName", "toString" -> "empty-catalog";
-            case "equals" -> proxy == args[0];
-            case "hashCode" -> System.identityHashCode(proxy);
-            default -> throw new IllegalStateException(errorMessage);
-          };
-        };
+        (proxy, method, args) ->
+            switch (method.getName()) {
+              case "getName", "getFullName", "toString" -> "empty-catalog"; // For debugging
+              case "equals" -> proxy == args[0];
+              case "hashCode" -> System.identityHashCode(proxy);
+              default -> throw new IllegalStateException(errorMessage);
+            };
 
     return (Catalog)
         Proxy.newProxyInstance(
             Catalog.class.getClassLoader(), new Class<?>[] {Catalog.class}, handler);
   }
 
-  public static DatabaseConnectionSource createEmptyDatabaseConnectionSource() {
+  public static DatabaseConnectionSource createErroredConnectionSource() {
 
     final InvocationHandler handler =
         (proxy, method, args) ->
-            (switch (method.getName()) {
+            switch (method.getName()) {
               case "get" -> DriverManager.getConnection("jdbc:hsqldb:mem:testdb");
               case "releaseConnection" -> true;
               case "toString" -> "empty-data-source"; // For debugging
+              case "equals" -> proxy == args[0];
+              case "hashCode" -> System.identityHashCode(proxy);
               default -> returnEmpty(method);
-            });
+            };
 
     return (DatabaseConnectionSource)
         Proxy.newProxyInstance(
@@ -72,17 +70,17 @@ public class EmptyFactory {
             handler);
   }
 
-  public static ERModel createEmptyERModel() {
+  public static ERModel createErroredERModel() {
 
     final InvocationHandler handler =
         (proxy, method, args) -> {
           method.getReturnType();
 
           return switch (method.getName()) {
-            case "toString" -> "empty-ermodel";
+            case "toString" -> "empty-ermodel"; // For debugging
             case "equals" -> proxy == args[0];
             case "hashCode" -> System.identityHashCode(proxy);
-            default -> throw new IllegalStateException(baseErrorMessage);
+            default -> throw new IllegalStateException(errorMessage);
           };
         };
 
