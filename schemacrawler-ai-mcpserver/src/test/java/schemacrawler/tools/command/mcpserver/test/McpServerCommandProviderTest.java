@@ -50,15 +50,15 @@ public class McpServerCommandProviderTest {
     final McpServerCommandProvider commandProvider = new McpServerCommandProvider();
     assertThrows(
         IllegalArgumentException.class,
-        () -> commandProvider.newSchemaCrawlerCommand("bad-command", ConfigUtility.newConfig()));
+        () -> commandProvider.newCommand("bad-command", ConfigUtility.newConfig()));
 
     assertThrows(
         ExecutionRuntimeException.class,
-        () -> commandProvider.newSchemaCrawlerCommand("mcpserver", ConfigUtility.newConfig()));
+        () -> commandProvider.newCommand("mcpserver", ConfigUtility.newConfig()));
 
     final Config config = ConfigUtility.newConfig();
     config.put("transport", McpServerTransportType.stdio);
-    final McpServerCommand command = commandProvider.newSchemaCrawlerCommand("mcpserver", config);
+    final McpServerCommand command = commandProvider.newCommand("mcpserver", config);
     final McpServerCommandOptions commandOptions = command.getCommandOptions();
     assertThat(commandOptions.mcpTransport().name(), is("stdio"));
   }

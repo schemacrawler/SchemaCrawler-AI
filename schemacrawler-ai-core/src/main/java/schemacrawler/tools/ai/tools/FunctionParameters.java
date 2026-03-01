@@ -8,4 +8,6 @@
 
 package schemacrawler.tools.ai.tools;
 
-public interface FunctionParameters {}
+import schemacrawler.tools.executable.CommandOptions;
+
+public interface FunctionParameters extends CommandOptions {}

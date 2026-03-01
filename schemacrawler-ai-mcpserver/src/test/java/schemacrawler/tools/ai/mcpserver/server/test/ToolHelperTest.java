@@ -17,7 +17,6 @@ import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
-import java.sql.Connection;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -28,7 +27,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.mcpserver.server.ConnectionService;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseConnectionService;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -44,7 +43,7 @@ import us.fatehi.utility.property.PropertyName;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @SpringJUnitConfig(
-    classes = {ToolHelperTest.MockConfig.class, ToolHelper.class, ConnectionService.class})
+    classes = {ToolHelperTest.MockConfig.class, ToolHelper.class, DatabaseConnectionService.class})
 public class ToolHelperTest {
 
   /** Trivial function definition whose executor returns a fixed text. */
@@ -73,9 +72,8 @@ public class ToolHelperTest {
     @Override
     public FunctionExecutor<NoParameters> newExecutor() {
       return new FunctionExecutor<>() {
-        private Connection connection;
+        private DatabaseConnectionSource databaseConnectionSource;
         private Catalog catalog;
-        private ERModel erModel;
 
         @Override
         public FunctionReturn call() {
@@ -94,8 +92,14 @@ public class ToolHelperTest {
           return null;
         }
 
-        public Connection getConnection() {
-          return connection;
+        @Override
+        public NoParameters getCommandOptions() {
+          return new NoParameters();
+        }
+
+        @Override
+        public DatabaseConnectionSource getConnectionSource() {
+          return databaseConnectionSource;
         }
 
         @Override
@@ -105,19 +109,13 @@ public class ToolHelperTest {
           this.catalog = catalog;
         }
 
-        public void setConnection(final Connection connection) {
-          this.connection = connection;
+        @Override
+        public void setConnectionSource(final DatabaseConnectionSource dataSource) {
+          databaseConnectionSource = dataSource;
         }
 
         @Override
-        public void setERModel(final ERModel erModel) {
-          this.erModel = erModel;
-        }
-
-        @Override
-        public ERModel getERModel() {
-          return erModel;
-        }
+        public void setERModel(final ERModel erModel) {}
 
         @Override
         public boolean usesConnection() {

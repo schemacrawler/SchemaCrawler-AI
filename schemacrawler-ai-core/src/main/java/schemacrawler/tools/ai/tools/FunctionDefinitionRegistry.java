@@ -66,16 +66,12 @@ public final class FunctionDefinitionRegistry extends BasePluginRegistry {
   private final Map<String, FunctionDefinition<?>> functionDefinitionRegistry;
 
   private FunctionDefinitionRegistry() {
+    super("Function Definitions");
     functionDefinitionRegistry = loadFunctionDefinitionRegistry();
   }
 
   public Collection<FunctionDefinition<?>> getFunctionDefinitions() {
     return functionDefinitionRegistry.values().stream().collect(Collectors.toList());
-  }
-
-  @Override
-  public String getName() {
-    return "Function Definitions";
   }
 
   @Override

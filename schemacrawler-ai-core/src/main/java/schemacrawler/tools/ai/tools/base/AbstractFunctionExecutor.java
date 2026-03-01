@@ -19,12 +19,11 @@ import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.executable.BaseCommand;
+import schemacrawler.tools.executable.AbstractCommand;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
-    extends BaseCommand<P, FunctionReturn> implements FunctionExecutor<P> {
+    extends AbstractCommand<P> implements FunctionExecutor<P> {
 
   protected ERModel erModel;
 

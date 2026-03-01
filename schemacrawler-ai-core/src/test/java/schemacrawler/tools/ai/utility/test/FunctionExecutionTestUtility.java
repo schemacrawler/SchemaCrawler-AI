@@ -13,7 +13,6 @@ import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
-import java.sql.Connection;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -22,6 +21,7 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import us.fatehi.test.utility.TestWriter;
 import us.fatehi.test.utility.extensions.TestContext;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class FunctionExecutionTestUtility {
 
@@ -31,7 +31,7 @@ public class FunctionExecutionTestUtility {
       final P args,
       final Catalog catalog,
       final ERModel erModel,
-      final Connection connection,
+      final DatabaseConnectionSource connectionSource,
       final boolean hasResults)
       throws Exception {
     final TestWriter testout = new TestWriter();
@@ -40,8 +40,8 @@ public class FunctionExecutionTestUtility {
       executor.configure(args);
       executor.setCatalog(catalog);
       executor.setERModel(erModel);
-      if (connection != null && executor.usesConnection()) {
-        executor.setConnection(connection);
+      if (connectionSource != null && executor.usesConnection()) {
+        executor.setConnectionSource(connectionSource);
       }
       final FunctionReturn functionReturn = executor.call();
       final String results = functionReturn.get();

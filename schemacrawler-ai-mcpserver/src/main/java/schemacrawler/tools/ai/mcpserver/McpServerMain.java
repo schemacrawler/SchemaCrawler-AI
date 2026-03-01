@@ -8,12 +8,12 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import java.sql.Connection;
 import java.util.Collection;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 /**
  * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
@@ -48,11 +48,12 @@ public class McpServerMain {
 
   public static void startMcpServer(
       final Catalog catalog,
-      final Connection connection,
+      final DatabaseConnectionSource databaseConnectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
     new SpringApplicationBuilder(McpServer.class)
-        .initializers(new McpServerInitializer(catalog, connection, mcpTransport, excludeTools))
+        .initializers(
+            new McpServerInitializer(catalog, databaseConnectionSource, mcpTransport, excludeTools))
         .profiles(mcpTransport.name())
         .run();
 

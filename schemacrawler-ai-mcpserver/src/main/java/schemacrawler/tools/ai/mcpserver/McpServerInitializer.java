@@ -21,8 +21,8 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import us.fatehi.utility.database.DatabaseUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 public class McpServerInitializer
     implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -36,7 +36,7 @@ public class McpServerInitializer
 
   public McpServerInitializer(
       final Catalog catalog,
-      final Connection connection,
+      final DatabaseConnectionSource connectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
 
@@ -46,25 +46,30 @@ public class McpServerInitializer
     }
 
     boolean isInErrorState = false;
-    DatabaseConnectionSource connectionSource;
-    try {
-      connectionSource = DatabaseConnectionSources.fromConnection(connection);
-    } catch (final Exception e) {
-      if (mcpTransport != McpServerTransportType.stdio) {
-        throw e;
-      }
+    if (connectionSource == null) {
       isInErrorState = true;
-      connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
+    } else {
+      try (final Connection connection = connectionSource.get(); ) {
+        DatabaseUtility.checkConnection(connection);
+      } catch (final Exception e) {
+        isInErrorState = true;
+      }
     }
-    this.connectionSource = connectionSource;
-    this.isInErrorState = isInErrorState;
 
-    this.catalog = requireNonNull(catalog, "No catalog provided");
-    if (!isInErrorState) {
+    if (catalog == null) {
+      isInErrorState = true;
+    }
+
+    if (isInErrorState) {
+      this.connectionSource = EmptyFactory.createEmptyDatabaseConnectionSource();
+      this.catalog = EmptyFactory.createEmptyCatalog(new RuntimeException());
       erModel = EntityModelUtility.buildERModel(catalog);
     } else {
-      erModel = EmptyFactory.createEmptyERModel();
+      this.connectionSource = connectionSource;
+      this.catalog = catalog;
+      erModel = EntityModelUtility.buildERModel(catalog);
     }
+    this.isInErrorState = isInErrorState;
 
     if (excludeTools == null) {
       this.excludeTools = new ExcludeTools();

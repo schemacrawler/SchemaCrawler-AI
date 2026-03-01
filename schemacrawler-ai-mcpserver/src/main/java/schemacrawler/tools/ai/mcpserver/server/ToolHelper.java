@@ -22,7 +22,6 @@ import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.Content;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
-import java.sql.Connection;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
@@ -38,6 +37,7 @@ import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import tools.jackson.databind.JsonNode;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @Component
 public class ToolHelper {
@@ -58,8 +58,9 @@ public class ToolHelper {
       try {
         final String arguments = mapper.writeValueAsString(request.arguments());
         log(exchange, "Executing", functionCallback.toCallObject(arguments));
-        final Connection connection = ConnectionService.getConnection();
-        functionReturn = functionCallback.execute(arguments, connection);
+        final DatabaseConnectionSource connectionSource =
+            DatabaseConnectionService.getDatabaseConnectionSource();
+        functionReturn = functionCallback.execute(arguments, connectionSource);
       } catch (final Exception e) {
         logExceptionToClient(
             exchange,
