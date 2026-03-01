@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
-import java.sql.Connection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.ermodel.model.ERModel;
@@ -21,6 +20,7 @@ import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
@@ -60,9 +60,10 @@ public final class FunctionCallback<P extends FunctionParameters> {
    * @param argumentsString JSON string with arguments.
    * @return Result of execution.
    */
-  public FunctionReturn execute(final String argumentsString, final Connection connection) {
+  public FunctionReturn execute(
+      final String argumentsString, final DatabaseConnectionSource connectionSource) {
 
-    requireNonNull(connection, "No database connection provided");
+    requireNonNull(connectionSource, "No database connection provided");
 
     if (LOGGER.isLoggable(Level.FINER)) {
       LOGGER.log(
@@ -72,7 +73,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
     try {
       final P arguments = instantiateArguments(argumentsString);
 
-      final FunctionReturn returnValue = executeFunction(arguments, connection);
+      final FunctionReturn returnValue = executeFunction(arguments, connectionSource);
       return returnValue;
     } catch (final Exception e) {
       LOGGER.log(
@@ -130,8 +131,8 @@ public final class FunctionCallback<P extends FunctionParameters> {
     return toCallObject(null).toPrettyString();
   }
 
-  private FunctionReturn executeFunction(final P arguments, final Connection connection)
-      throws Exception {
+  private FunctionReturn executeFunction(
+      final P arguments, final DatabaseConnectionSource connectionSource) throws Exception {
     requireNonNull(arguments, "No function arguments provided");
 
     FunctionReturn functionReturn;
@@ -141,7 +142,7 @@ public final class FunctionCallback<P extends FunctionParameters> {
     functionExecutor.setCatalog(catalog);
     functionExecutor.setERModel(erModel);
     if (functionExecutor.usesConnection()) {
-      functionExecutor.setConnection(connection);
+      functionExecutor.setConnectionSource(connectionSource);
     }
     functionReturn = functionExecutor.call();
     return functionReturn;

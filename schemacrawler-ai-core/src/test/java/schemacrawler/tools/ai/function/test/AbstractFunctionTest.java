@@ -26,18 +26,22 @@ import us.fatehi.test.utility.extensions.UsingTestDatabase;
 import us.fatehi.test.utility.extensions.WithSystemProperty;
 import us.fatehi.utility.datasource.ConnectionDatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 @UsingTestDatabase
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public abstract class AbstractFunctionTest {
 
+  protected DatabaseConnectionSource connectionSource;
   protected Catalog catalog;
   protected ERModel erModel;
 
   @BeforeAll
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
   public final void loadCatalog(final Connection connection) throws Exception {
+
+    connectionSource = DatabaseConnectionSources.fromConnection(connection);
 
     final LimitOptionsBuilder limitOptionsBuilder =
         LimitOptionsBuilder.builder()

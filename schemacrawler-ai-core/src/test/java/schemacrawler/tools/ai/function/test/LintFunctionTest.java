@@ -8,7 +8,6 @@
 
 package schemacrawler.tools.ai.function.test;
 
-import java.sql.Connection;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
@@ -24,37 +23,31 @@ public class LintFunctionTest extends AbstractFunctionTest {
 
   @Test
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
-  public void lintAllTables(final TestContext testContext, final Connection connection)
-      throws Exception {
+  public void lintAllTables(final TestContext testContext) throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters(null);
-    lintTable(testContext, args, connection, true);
+    lintTable(testContext, args, true);
   }
 
   @Test
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
-  public void lintTable(final TestContext testContext, final Connection connection)
-      throws Exception {
+  public void lintTable(final TestContext testContext) throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters("AUTHORS");
-    lintTable(testContext, args, connection, true);
+    lintTable(testContext, args, true);
   }
 
   @Test
   @WithSystemProperty(key = "SC_WITHOUT_DATABASE_PLUGIN", value = "hsqldb")
-  public void lintUnknownTable(final TestContext testContext, final Connection connection)
-      throws Exception {
+  public void lintUnknownTable(final TestContext testContext) throws Exception {
     final LintFunctionParameters args = new LintFunctionParameters("NOT_A_TABLE");
-    lintTable(testContext, args, connection, true);
+    lintTable(testContext, args, true);
   }
 
   private void lintTable(
-      final TestContext testContext,
-      final LintFunctionParameters args,
-      final Connection connection,
-      final boolean hasResults)
+      final TestContext testContext, final LintFunctionParameters args, final boolean hasResults)
       throws Exception {
 
     final LintFunctionDefinition functionDefinition = new LintFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, erModel, connection, hasResults);
+        testContext, functionDefinition, args, catalog, erModel, connectionSource, hasResults);
   }
 }

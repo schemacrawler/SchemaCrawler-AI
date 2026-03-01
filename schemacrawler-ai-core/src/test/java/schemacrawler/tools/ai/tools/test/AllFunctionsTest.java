@@ -18,7 +18,6 @@ import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
-import java.sql.Connection;
 import java.util.Collection;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.BeforeEach;
@@ -37,6 +36,8 @@ import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.test.utility.TestWriter;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 @ResolveTestContext
 public class AllFunctionsTest {
@@ -51,13 +52,13 @@ public class AllFunctionsTest {
     return functionDefinitions.stream();
   }
 
-  private Connection connection;
+  private DatabaseConnectionSource connectionSource;
   private Catalog catalog;
   private ERModel erModel;
 
   @BeforeEach
   public void setupCatalog() {
-    connection = TestObjectUtility.mockConnection();
+    connectionSource = DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     catalog = LightCatalogUtility.lightCatalog();
     erModel = TestObjectUtility.makeTestObject(ERModel.class);
   }
@@ -72,7 +73,7 @@ public class AllFunctionsTest {
           case "diagram" -> new JsonFunctionReturn();
           default ->
               assertDoesNotThrow(
-                  () -> callback.execute(null, connection), functionDefinition.getName());
+                  () -> callback.execute(null, connectionSource), functionDefinition.getName());
         };
     assertThat(actualReturn, is(not(nullValue())));
   }
@@ -88,7 +89,7 @@ public class AllFunctionsTest {
         break;
       default:
         assertDoesNotThrow(
-            () -> callback.execute("invalid-json", connection), functionDefinition.getName());
+            () -> callback.execute("invalid-json", connectionSource), functionDefinition.getName());
     }
   }
 

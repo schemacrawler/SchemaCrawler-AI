@@ -19,7 +19,6 @@ import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-import java.sql.Connection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import schemacrawler.ermodel.model.ERModel;
@@ -33,6 +32,8 @@ import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.test.utility.TestObjectUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
 
 public class FunctionCallbackTest {
@@ -43,13 +44,13 @@ public class FunctionCallbackTest {
     }
   }
 
-  private Connection connection;
+  private DatabaseConnectionSource connectionSource;
   private Catalog catalog;
   private ERModel erModel;
 
   @BeforeEach
   public void setupCatalog() {
-    connection = TestObjectUtility.mockConnection();
+    connectionSource = DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     catalog = LightCatalogUtility.lightCatalog();
     erModel = TestObjectUtility.makeTestObject(ERModel.class);
   }
@@ -83,14 +84,15 @@ public class FunctionCallbackTest {
 
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel);
-    final FunctionReturn actualReturn = callback.execute("{\"param1\": \"value1\"}", connection);
+    final FunctionReturn actualReturn =
+        callback.execute("{\"param1\": \"value1\"}", connectionSource);
 
     assertThat(actualReturn, is(expectedReturn));
     verify(executor).configure(any(TestParameters.class));
     verify(executor).initialize();
     verify(executor).setCatalog(catalog);
     verify(executor).setERModel(erModel);
-    verify(executor).setConnection(connection);
+    verify(executor).setConnectionSource(connectionSource);
   }
 
   @Test
@@ -110,7 +112,7 @@ public class FunctionCallbackTest {
     final Exception exception =
         assertThrows(
             schemacrawler.schemacrawler.exceptions.InternalRuntimeException.class,
-            () -> callback.execute("{}", connection));
+            () -> callback.execute("{}", connectionSource));
     assertThat(exception.getMessage(), containsString("Exception executing"));
     assertThat(exception.getMessage(), containsString("test-function"));
   }
@@ -129,12 +131,12 @@ public class FunctionCallbackTest {
 
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, null, null);
-    final FunctionReturn actualReturn = callback.execute("{}", connection);
+    final FunctionReturn actualReturn = callback.execute("{}", connectionSource);
 
     assertThat(actualReturn, is(expectedReturn));
     verify(executor).configure(any(TestParameters.class));
     verify(executor).initialize();
-    verify(executor, org.mockito.Mockito.never()).setConnection(any());
+    verify(executor, org.mockito.Mockito.never()).setConnectionSource(any());
   }
 
   @Test
@@ -151,7 +153,7 @@ public class FunctionCallbackTest {
         new FunctionCallback<>(definition, null, null);
 
     final RuntimeException exception =
-        assertThrows(RuntimeException.class, () -> callback.execute("{}", connection));
+        assertThrows(RuntimeException.class, () -> callback.execute("{}", connectionSource));
     assertThat(exception.getMessage(), is("test error"));
   }
 
@@ -190,7 +192,7 @@ public class FunctionCallbackTest {
 
     // This should trigger the catch block in instantiateArguments and use default
     // constructor
-    final FunctionReturn result = callback.execute("invalid-json", connection);
+    final FunctionReturn result = callback.execute("invalid-json", connectionSource);
     assertThat(result, is(notNullValue()));
     verify(executor).configure(any(TestParameters.class));
   }

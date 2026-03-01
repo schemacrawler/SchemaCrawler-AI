@@ -36,7 +36,7 @@ public final class McpServerCommandProvider extends BaseCommandProvider {
   }
 
   @Override
-  public McpServerCommand newSchemaCrawlerCommand(final String command, final Config config) {
+  public McpServerCommand newCommand(final String command, final Config config) {
     if (!supportsCommand(command)) {
       throw new IllegalArgumentException("Cannot support command, " + command);
     }

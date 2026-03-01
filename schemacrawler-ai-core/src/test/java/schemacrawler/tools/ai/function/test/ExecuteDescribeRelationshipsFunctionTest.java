@@ -14,7 +14,6 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
@@ -26,6 +25,8 @@ import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
@@ -33,7 +34,8 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
 
   @Test
   public void testExecute() throws Exception {
-    final Connection connection = TestObjectUtility.mockConnection();
+    final DatabaseConnectionSource connectionSource =
+        DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     final DescribeRelationshipsFunctionDefinition definition =
         new DescribeRelationshipsFunctionDefinition();
     final FunctionCallback<DescribeRelationshipsFunctionParameters> callback =
@@ -45,7 +47,7 @@ public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTe
         }
         """;
     final JsonFunctionReturn actualReturn =
-        (JsonFunctionReturn) callback.execute(arguments, connection);
+        (JsonFunctionReturn) callback.execute(arguments, connectionSource);
 
     assertThat(actualReturn, is(not(nullValue())));
 

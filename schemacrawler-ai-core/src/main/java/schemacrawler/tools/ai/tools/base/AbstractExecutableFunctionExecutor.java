@@ -40,7 +40,6 @@ import schemacrawler.utility.MetaDataUtility;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
 
@@ -87,10 +86,9 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     final SchemaCrawlerExecutable executable = new SchemaCrawlerExecutable(command);
     executable.setSchemaCrawlerOptions(options);
     executable.setCatalog(catalog);
-    if (connection != null) {
-      final DatabaseConnectionSource databaseConnectionSource =
-          DatabaseConnectionSources.fromConnection(connection);
-      executable.setDataSource(databaseConnectionSource);
+    if (usesConnection()) {
+      final DatabaseConnectionSource connectionSource = getConnectionSource();
+      executable.setConnectionSource(connectionSource);
     }
     executable.setOutputOptions(outputOptions);
     executable.setAdditionalConfiguration(config);
@@ -135,7 +133,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     try {
       final String results = Files.readString(outputFilePath);
       return new TextFunctionReturn(results);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       return new ExceptionFunctionReturn(e);
     } finally {
       deleteTempFile(outputFilePath);
@@ -174,7 +172,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       writer =
           Files.newBufferedWriter(
               filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       throw new IORuntimeException("Could not create writer for temporary file", e);
     }
     final OutputOptions outputOptions =
@@ -191,7 +189,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
     try {
       Files.deleteIfExists(outputFilePath);
-    } catch (IOException e) {
+    } catch (final IOException e) {
       LOGGER.log(
           Level.WARNING, "Could not delete temporary file <%s>".formatted(outputFilePath), e);
     }
@@ -209,7 +207,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       if (!hasResults() || Files.size(outputFilePath) == 0) {
         return false;
       }
-    } catch (IOException e) {
+    } catch (final IOException e) {
       LOGGER.log(Level.FINE, "Could not detemine results file length", e);
       return false;
     }
