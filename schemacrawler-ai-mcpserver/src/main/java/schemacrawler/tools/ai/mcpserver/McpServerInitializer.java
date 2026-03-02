@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static java.util.Objects.requireNonNull;
 
-import java.sql.Connection;
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,9 +20,9 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import us.fatehi.utility.database.DatabaseUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializer
@@ -49,17 +48,7 @@ public class McpServerInitializer
       throw new ExecutionRuntimeException("Unknown MCP Server transport type");
     }
 
-    boolean isInErrorState = false;
-    if (connectionSource == null) {
-      isInErrorState = true;
-    } else {
-      try (final Connection connection = connectionSource.get(); ) {
-        DatabaseUtility.checkConnection(connection);
-      } catch (final Exception e) {
-        LOGGER.log(Level.WARNING, "Could not establish a database connection", e);
-        isInErrorState = true;
-      }
-    }
+    boolean isInErrorState = !DatabaseConnectionSourceUtility.canConnect(connectionSource);
 
     if (catalog == null) {
       isInErrorState = true;
@@ -141,6 +130,10 @@ public class McpServerInitializer
     context.registerBean("catalog", Catalog.class, () -> catalog);
     context.registerBean("erModel", ERModel.class, () -> erModel);
     context.registerBean("isInErrorState", Boolean.class, () -> isInErrorState);
+    context.registerBean(
+        "isOffline",
+        Boolean.class,
+        () -> DatabaseConnectionSourceUtility.isOffline(connectionSource));
     // Register services
     context.registerBean(
         "functionDefinitionRegistry",
