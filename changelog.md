@@ -2,6 +2,10 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.7.0-1"></a>
+- Do not include tools that need a connection, if no connection is available
+
+
 <a name="v17.4.0-1"></a>
 ## Release 17.4.0-1 - 2026-01-16
 
