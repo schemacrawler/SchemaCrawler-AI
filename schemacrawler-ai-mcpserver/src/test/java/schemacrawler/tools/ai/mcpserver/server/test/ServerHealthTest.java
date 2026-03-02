@@ -23,13 +23,17 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.TestConfiguration;
+import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import schemacrawler.tools.ai.mcpserver.ExcludeTools;
+import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 
 @TestInstance(Lifecycle.PER_CLASS)
-@SpringJUnitConfig(classes = {ServerHealth.class, TestConfig.class})
+@SpringJUnitConfig(classes = {ServerHealth.class, ServerHealthTest.MockConfig.class})
 @TestPropertySource(
     properties = {
       "server.name=SchemaCrawler AI MCP Server",
@@ -37,6 +41,29 @@ import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
       "server.heartbeat=false"
     })
 public class ServerHealthTest {
+
+  @TestConfiguration
+  static class MockConfig {
+    @Bean
+    ExcludeTools excludeTools() {
+      return new ExcludeTools();
+    }
+
+    @Bean
+    boolean isInErrorState() {
+      return false;
+    }
+
+    @Bean
+    boolean isOffline() {
+      return false;
+    }
+
+    @Bean
+    McpServerTransportType mcpTransport() {
+      return McpServerTransportType.http;
+    }
+  }
 
   @Autowired private ServerHealth serverHealth;
 
