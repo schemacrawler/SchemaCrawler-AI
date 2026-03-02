@@ -36,7 +36,7 @@ import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.test.SchemaCrawlerMCPServerTest.MockConfig;
-import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
+import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
@@ -50,7 +50,7 @@ public class SchemaCrawlerMCPServerTest {
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return EmptyFactory.createEmptyCatalog(new NullPointerException());
+      return InErrorFactory.createErroredCatalog();
     }
 
     @Bean
@@ -60,7 +60,7 @@ public class SchemaCrawlerMCPServerTest {
 
     @Bean
     ERModel erModel() {
-      return EmptyFactory.createEmptyERModel();
+      return InErrorFactory.createErroredERModel();
     }
 
     @Bean
@@ -75,6 +75,11 @@ public class SchemaCrawlerMCPServerTest {
 
     @Bean
     boolean isInErrorState() {
+      return false;
+    }
+
+    @Bean
+    boolean isOffline() {
       return false;
     }
 

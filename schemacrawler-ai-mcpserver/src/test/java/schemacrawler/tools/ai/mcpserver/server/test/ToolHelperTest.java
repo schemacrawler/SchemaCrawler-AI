@@ -29,7 +29,7 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseConnectionService;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
-import schemacrawler.tools.ai.mcpserver.utility.EmptyFactory;
+import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -130,23 +130,28 @@ public class ToolHelperTest {
       definitionNode.set("inputSchema", JsonUtility.mapper.createObjectNode());
       return definitionNode;
     }
+
+    @Override
+    public boolean usesConnection() {
+      return false;
+    }
   }
 
   @TestConfiguration
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return EmptyFactory.createEmptyCatalog(null);
+      return InErrorFactory.createErroredCatalog();
     }
 
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
-      return EmptyFactory.createEmptyDatabaseConnectionSource();
+      return InErrorFactory.createErroredConnectionSource();
     }
 
     @Bean
     ERModel erModel() {
-      return EmptyFactory.createEmptyERModel();
+      return InErrorFactory.createErroredERModel();
     }
   }
 

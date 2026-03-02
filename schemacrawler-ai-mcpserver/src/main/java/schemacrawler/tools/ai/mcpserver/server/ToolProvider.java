@@ -45,6 +45,7 @@ public class ToolProvider {
   @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
   @Autowired private ToolHelper toolHelper;
   @Autowired private ExcludeTools excludeTools;
+  @Autowired private boolean isOffline;
 
   @McpTool(
       name = "mcp-server-health",
@@ -87,7 +88,15 @@ public class ToolProvider {
         functionDefinitionRegistry.getFunctionDefinitions()) {
       final String functionName = functionDefinition.getFunctionName().getName();
       if (excludeTools == null || excludeTools.excludeTools().contains(functionName)) {
-        LOGGER.log(Level.WARNING, new StringFormat("Excluding tool <%s>", functionName));
+        LOGGER.log(
+            Level.WARNING,
+            new StringFormat("Excluding tool <%s> since it was on the exclude list", functionName));
+        continue;
+      }
+      if (isOffline && functionDefinition.usesConnection()) {
+        LOGGER.log(
+            Level.WARNING,
+            new StringFormat("Excluding tool <%s> since it uses a live connection", functionName));
         continue;
       }
       LOGGER.log(Level.INFO, new StringFormat("Adding tool specification <%s>", functionName));
