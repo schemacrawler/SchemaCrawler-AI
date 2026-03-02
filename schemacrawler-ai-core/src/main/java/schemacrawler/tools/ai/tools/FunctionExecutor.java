@@ -9,16 +9,10 @@
 package schemacrawler.tools.ai.tools;
 
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.tools.executable.BaseCommand;
+import schemacrawler.tools.executable.CallableCommand;
 
-public interface FunctionExecutor<P extends FunctionParameters> extends BaseCommand<P> {
-
-  /**
-   * Executes command, after configuration and pre-checks. May throw runtime exceptions on errors.
-   *
-   * <p>R Return value
-   */
-  <R extends FunctionReturn> R call() throws Exception;
+public interface FunctionExecutor<P extends FunctionParameters>
+    extends CallableCommand<P, FunctionReturn> {
 
   void setERModel(ERModel erModel);
 }
