@@ -48,7 +48,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 public class HealthControllerTest {
 
   @TestConfiguration
-  static class MockConfig {
+  public static class MockConfig {
     @Bean
     Catalog catalog() {
       return InErrorFactory.createErroredCatalog();
