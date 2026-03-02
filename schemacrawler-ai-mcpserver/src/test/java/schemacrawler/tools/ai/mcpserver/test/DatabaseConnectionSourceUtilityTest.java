@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.mcpserver.utility;
+package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -15,7 +15,10 @@ import static org.mockito.Mockito.when;
 
 import java.sql.Connection;
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.offline.jdbc.OfflineConnection;
+import us.fatehi.test.utility.TestObjectUtility;
+import us.fatehi.utility.datasource.ConnectionDatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class DatabaseConnectionSourceUtilityTest {
@@ -35,10 +38,9 @@ public class DatabaseConnectionSourceUtilityTest {
 
   @Test
   public void testCanConnectValid() throws Exception {
-    final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
-    final Connection connection = mock(Connection.class);
-    when(connectionSource.get()).thenReturn(connection);
-    when(connection.isClosed()).thenReturn(false);
+    final Connection connection = TestObjectUtility.mockConnection();
+    final DatabaseConnectionSource connectionSource =
+        new ConnectionDatabaseConnectionSource(connection);
 
     assertThat(DatabaseConnectionSourceUtility.canConnect(connectionSource), is(true));
   }
@@ -53,22 +55,18 @@ public class DatabaseConnectionSourceUtilityTest {
 
   @Test
   public void testIsOfflineException() throws Exception {
+    final Connection connection = TestObjectUtility.mockConnection();
     final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
-    final Connection connection = mock(Connection.class);
-    // First call to canConnect succeeds
-    // Second call to isOffline fails
     when(connectionSource.get()).thenReturn(connection).thenThrow(new RuntimeException("Error"));
-    when(connection.isClosed()).thenReturn(false);
 
     assertThat(DatabaseConnectionSourceUtility.isOffline(connectionSource), is(false));
   }
 
   @Test
   public void testIsOfflineFalse() throws Exception {
-    final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
-    final Connection connection = mock(Connection.class);
-    when(connectionSource.get()).thenReturn(connection);
-    when(connection.isClosed()).thenReturn(false);
+    final Connection connection = TestObjectUtility.mockConnection();
+    final DatabaseConnectionSource connectionSource =
+        new ConnectionDatabaseConnectionSource(connection);
     when(connection.unwrap(Connection.class)).thenReturn(connection);
 
     assertThat(DatabaseConnectionSourceUtility.isOffline(connectionSource), is(false));
@@ -81,10 +79,9 @@ public class DatabaseConnectionSourceUtilityTest {
 
   @Test
   public void testIsOfflineTrue() throws Exception {
-    final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
-    final OfflineConnection connection = mock(OfflineConnection.class);
-    when(connectionSource.get()).thenReturn(connection);
-    when(connection.isClosed()).thenReturn(false);
+    final Connection connection = mock(OfflineConnection.class);
+    final DatabaseConnectionSource connectionSource =
+        new ConnectionDatabaseConnectionSource(connection);
     when(connection.unwrap(Connection.class)).thenReturn(connection);
 
     assertThat(DatabaseConnectionSourceUtility.isOffline(connectionSource), is(true));

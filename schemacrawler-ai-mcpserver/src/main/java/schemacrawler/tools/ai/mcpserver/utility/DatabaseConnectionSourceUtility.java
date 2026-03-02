@@ -42,7 +42,11 @@ public final class DatabaseConnectionSourceUtility {
     }
 
     try (final Connection connection = connectionSource.get(); ) {
-      return connection.unwrap(Connection.class) instanceof OfflineConnection;
+      final boolean isOfflineConnection =
+          connection != null
+              && (connection instanceof OfflineConnection
+                  || connection.isWrapperFor(OfflineConnection.class));
+      return isOfflineConnection;
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, "Could not check for offline connection", e);
       return false;
