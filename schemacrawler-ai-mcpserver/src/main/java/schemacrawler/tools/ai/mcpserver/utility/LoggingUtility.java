@@ -25,7 +25,7 @@ import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.UtilityMarker;
 
 @UtilityMarker
-public class LoggingUtility {
+public final class LoggingUtility {
 
   private static final Logger LOGGER = Logger.getLogger(LoggingUtility.class.getCanonicalName());
 
@@ -117,5 +117,9 @@ public class LoggingUtility {
     } catch (final Exception e) {
       return "";
     }
+  }
+
+  private LoggingUtility() {
+    // Prevent instantiation
   }
 }

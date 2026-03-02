@@ -21,7 +21,7 @@ import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @UtilityMarker
-public class InErrorFactory {
+public final class InErrorFactory {
 
   private static final String errorMessage =
       """
@@ -106,5 +106,9 @@ public class InErrorFactory {
       return Collections.emptyList();
     }
     throw new UnsupportedOperationException(method.toString());
+  }
+
+  private InErrorFactory() {
+    // Prevent instantiation
   }
 }
