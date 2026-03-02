@@ -79,6 +79,11 @@ public class SchemaCrawlerMCPServerTest {
     }
 
     @Bean
+    boolean isOffline() {
+      return false;
+    }
+
+    @Bean
     McpServerTransportType mcpTransport() {
       return McpServerTransportType.http;
     }

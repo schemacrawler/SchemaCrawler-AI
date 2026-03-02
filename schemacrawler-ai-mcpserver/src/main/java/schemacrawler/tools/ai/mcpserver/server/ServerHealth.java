@@ -27,6 +27,7 @@ public class ServerHealth {
   private static final ProductVersion serverName = new SchemaCrawlerAiVersion();
 
   @Autowired private boolean isInErrorState;
+  @Autowired private boolean isOffline;
   @Autowired private McpServerTransportType mcpTransport;
   @Autowired private ExcludeTools excludeTools;
 
@@ -35,6 +36,7 @@ public class ServerHealth {
     currentState.put("_server", getServerName());
     currentState.put("current-timestamp", String.valueOf(ZonedDateTime.now(ZoneOffset.UTC)));
     currentState.put("in-error-state", isInErrorState);
+    currentState.put("in-offline", isOffline);
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
     currentState.put("exclude-tools", excludeTools.excludeTools());
