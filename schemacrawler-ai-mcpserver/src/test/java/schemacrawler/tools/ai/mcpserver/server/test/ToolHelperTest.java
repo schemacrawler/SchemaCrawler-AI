@@ -130,6 +130,11 @@ public class ToolHelperTest {
       definitionNode.set("inputSchema", JsonUtility.mapper.createObjectNode());
       return definitionNode;
     }
+
+    @Override
+    public boolean usesConnection() {
+      return false;
+    }
   }
 
   @TestConfiguration

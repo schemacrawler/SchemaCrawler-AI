@@ -28,4 +28,6 @@ public interface FunctionDefinition<P extends FunctionParameters> {
   FunctionExecutor<P> newExecutor();
 
   JsonNode toJson();
+
+  boolean usesConnection();
 }

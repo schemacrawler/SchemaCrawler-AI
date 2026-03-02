@@ -51,6 +51,11 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
     return definition.toPrettyString();
   }
 
+  @Override
+  public final boolean usesConnection() {
+    return newExecutor().usesConnection();
+  }
+
   private JsonNode buildDefinition() {
     final ObjectNode objectNode = mapper.createObjectNode();
 
