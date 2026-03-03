@@ -9,7 +9,6 @@
 package schemacrawler.tools.command.mcpserver;
 
 import java.util.Collection;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.mcpserver.McpServerMain;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -26,11 +25,6 @@ public final class McpServerCommand extends AbstractSchemaCrawlerCommand<McpServ
 
   protected McpServerCommand() {
     super(COMMAND);
-  }
-
-  @Override
-  public void checkAvailability() throws RuntimeException {
-    LOGGER.log(Level.FINE, "No checks required for MCP server");
   }
 
   @Override
