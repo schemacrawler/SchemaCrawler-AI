@@ -22,6 +22,6 @@ public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
 
   protected final void refilterCatalog() {
     final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
-    MetaDataUtility.reduceCatalog(catalog, options);
+    MetaDataUtility.reduceCatalog(getCatalog(), options);
   }
 }

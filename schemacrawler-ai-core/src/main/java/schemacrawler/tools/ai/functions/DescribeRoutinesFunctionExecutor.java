@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.functions.DescribeRoutinesFunctionParameter
 
 import java.util.ArrayList;
 import java.util.Collection;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -39,8 +40,9 @@ public final class DescribeRoutinesFunctionExecutor
     refilterCatalog();
 
     final Collection<AdditionalRoutineDetails> routineDetails = getRoutineDetails();
+    final ERModel erModel = getERModel();
     final CatalogDocument catalogDocument =
-        CompactCatalogBuilder.builder(catalog, erModel)
+        CompactCatalogBuilder.builder(getCatalog(), erModel)
             .withAdditionalRoutineDetails(routineDetails)
             .build();
     return new JsonFunctionReturn(catalogDocument);

@@ -17,6 +17,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -39,6 +40,7 @@ public final class ListFunctionExecutor
   public JsonFunctionReturn call() throws Exception {
     refilterCatalog();
 
+    final Catalog catalog = getCatalog();
     final Collection<DatabaseObject> databaseObjects = new ArrayList<>();
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {

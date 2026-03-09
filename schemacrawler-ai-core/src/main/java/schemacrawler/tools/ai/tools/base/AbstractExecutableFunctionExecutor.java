@@ -21,6 +21,7 @@ import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.inclusionrule.ExcludeAll;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -64,6 +65,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
 
     // Crate SchemaCrawler options
     final SchemaCrawlerOptions options = adjustSchemaCrawlerOptions();
+    final Catalog catalog = getCatalog();
 
     // Re-filter catalog
     MetaDataUtility.reduceCatalog(catalog, options);
@@ -98,7 +100,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   }
 
   protected boolean hasResults() {
-    return !catalog.getTables().isEmpty();
+    return !getCatalog().getTables().isEmpty();
   }
 
   protected final FunctionReturn returnJson(final Path outputFilePath) {

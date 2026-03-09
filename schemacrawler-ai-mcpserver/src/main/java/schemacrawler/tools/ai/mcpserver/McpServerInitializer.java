@@ -17,23 +17,21 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.state.AbstractExecutionState;
+import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-public class McpServerInitializer
+public class McpServerInitializer extends AbstractExecutionState
     implements ApplicationContextInitializer<GenericApplicationContext> {
 
   private static final Logger LOGGER = Logger.getLogger(McpServerInitializer.class.getName());
 
   private final boolean isInErrorState;
-  private final Catalog catalog;
-  private final ERModel erModel;
-  private final DatabaseConnectionSource connectionSource;
   private final McpServerTransportType mcpTransport;
   private final ExcludeTools excludeTools;
 
@@ -55,13 +53,13 @@ public class McpServerInitializer
     }
 
     if (isInErrorState) {
-      this.catalog = InErrorFactory.createErroredCatalog();
-      erModel = InErrorFactory.createErroredERModel();
-      this.connectionSource = InErrorFactory.createErroredConnectionSource();
+      setCatalog(InErrorFactory.createErroredCatalog());
+      setERModel(InErrorFactory.createErroredERModel());
+      setConnectionSource(InErrorFactory.createErroredConnectionSource());
     } else {
-      this.catalog = catalog;
-      erModel = EntityModelUtility.buildERModel(catalog);
-      this.connectionSource = connectionSource;
+      setCatalog(catalog);
+      setERModel(SchemaCrawlerUtility.buildERModel(catalog));
+      setConnectionSource(connectionSource);
     }
     this.isInErrorState = isInErrorState;
 
@@ -92,12 +90,12 @@ public class McpServerInitializer
       catalog = InErrorFactory.createErroredCatalog();
       isInErrorState = true;
     }
-    this.catalog = catalog;
+    setCatalog(catalog);
 
     if (!isInErrorState) {
-      erModel = EntityModelUtility.buildERModel(catalog);
+      setERModel(SchemaCrawlerUtility.buildERModel(catalog));
     } else {
-      erModel = InErrorFactory.createErroredERModel();
+      setERModel(InErrorFactory.createErroredERModel());
     }
 
     // Once the catalog is loaded, use the operations database connection source
@@ -105,15 +103,16 @@ public class McpServerInitializer
       DatabaseConnectionSource connectionSource;
       try {
         connectionSource = scContext.buildOperationsDatabaseConnectionSource();
+        requireNonNull(connectionSource, "Coonection source is not built");
       } catch (final Exception e) {
         if (mcpTransport != McpServerTransportType.stdio) {
           throw e;
         }
         connectionSource = InErrorFactory.createErroredConnectionSource();
       }
-      this.connectionSource = connectionSource;
+      setConnectionSource(connectionSource);
     } else {
-      connectionSource = InErrorFactory.createErroredConnectionSource();
+      setConnectionSource(InErrorFactory.createErroredConnectionSource());
     }
 
     this.isInErrorState = isInErrorState;
@@ -123,6 +122,11 @@ public class McpServerInitializer
 
   @Override
   public void initialize(@NonNull final GenericApplicationContext context) {
+
+    final Catalog catalog = getCatalog();
+    final ERModel erModel = getERModel();
+    final DatabaseConnectionSource connectionSource = getConnectionSource();
+
     context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
     context.registerBean(
         "databaseConnectionSource", DatabaseConnectionSource.class, () -> connectionSource);

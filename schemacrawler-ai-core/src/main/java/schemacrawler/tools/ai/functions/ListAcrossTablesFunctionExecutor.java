@@ -13,6 +13,7 @@ import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Column;
@@ -48,7 +49,7 @@ public final class ListAcrossTablesFunctionExecutor
     final Collection<DependantObject<Table>> dependantObjects = new ArrayList<>();
     final DependantObjectType dependantObjectType = commandOptions.dependantObjectType();
 
-    for (final Table table : catalog.getTables()) {
+    for (final Table table : getCatalog().getTables()) {
       switch (dependantObjectType) {
         case COLUMNS:
           dependantObjects.addAll(table.getColumns());
@@ -117,7 +118,9 @@ public final class ListAcrossTablesFunctionExecutor
 
   private ObjectNode createDependentObjectNode(final DependantObject<Table> dependantObject) {
 
-    final CompactCatalogBuilder catalogBuilder = CompactCatalogBuilder.builder(catalog, erModel);
+    final ERModel erModel = getERModel();
+    final CompactCatalogBuilder catalogBuilder =
+        CompactCatalogBuilder.builder(getCatalog(), erModel);
     final Document document =
         switch (dependantObject) {
           case final Column column -> catalogBuilder.buildColumnDocument(column);

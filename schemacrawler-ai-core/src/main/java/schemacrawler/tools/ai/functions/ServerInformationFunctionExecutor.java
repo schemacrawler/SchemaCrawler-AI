@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.functions;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.Collection;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
@@ -46,6 +47,7 @@ public final class ServerInformationFunctionExecutor
   private JsonNode createServerInfoArray() {
 
     final ObjectNode databaseInfo = mapper.createObjectNode();
+    final Catalog catalog = getCatalog();
 
     final ObjectNode databaseProductPropertyNode = databaseInfo.putObject("database-server");
     databaseProductPropertyNode.put(

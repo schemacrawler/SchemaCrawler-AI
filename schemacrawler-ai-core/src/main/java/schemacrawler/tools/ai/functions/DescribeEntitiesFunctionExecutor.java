@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -39,6 +40,7 @@ public final class DescribeEntitiesFunctionExecutor
     final EntityKind entityKind = commandOptions.entityKind();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.entityName());
     final Collection<Document> documents = new ArrayList<>();
+    final ERModel erModel = getERModel();
     switch (entityKind) {
       case ALL:
         documents.addAll(
