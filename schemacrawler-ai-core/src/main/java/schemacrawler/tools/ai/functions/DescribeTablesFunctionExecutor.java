@@ -12,6 +12,7 @@ import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.
 
 import java.util.ArrayList;
 import java.util.Collection;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -39,8 +40,9 @@ public final class DescribeTablesFunctionExecutor
     refilterCatalog();
 
     final Collection<AdditionalTableDetails> tableDetails = getTableDetails();
+    final ERModel erModel = getERModel();
     final CatalogDocument catalogDocument =
-        CompactCatalogBuilder.builder(catalog, erModel)
+        CompactCatalogBuilder.builder(getCatalog(), erModel)
             .withAdditionalTableDetails(tableDetails)
             .build();
     return new JsonFunctionReturn(catalogDocument);

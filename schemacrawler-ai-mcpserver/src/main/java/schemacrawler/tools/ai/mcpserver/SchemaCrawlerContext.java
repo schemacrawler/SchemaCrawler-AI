@@ -28,7 +28,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
-import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
+import schemacrawler.tools.offline.connectionsource.OfflineConnectionSourceUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
@@ -105,7 +105,7 @@ public final class SchemaCrawlerContext {
 
     final Path offlineDatabasePath = Path.of(offlineDatabasePathString);
     final DatabaseConnectionSource dbConnectionSource =
-        OfflineConnectionUtility.newOfflineDatabaseConnectionSource(offlineDatabasePath);
+        OfflineConnectionSourceUtility.newOfflineDatabaseConnectionSource(offlineDatabasePath);
     return dbConnectionSource;
   }
 

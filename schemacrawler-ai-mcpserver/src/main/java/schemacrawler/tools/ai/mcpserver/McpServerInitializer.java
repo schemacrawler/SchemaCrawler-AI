@@ -17,12 +17,12 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializer
@@ -60,7 +60,7 @@ public class McpServerInitializer
       this.connectionSource = InErrorFactory.createErroredConnectionSource();
     } else {
       this.catalog = catalog;
-      erModel = EntityModelUtility.buildERModel(catalog);
+      erModel = SchemaCrawlerUtility.buildERModel(catalog);
       this.connectionSource = connectionSource;
     }
     this.isInErrorState = isInErrorState;
@@ -95,7 +95,7 @@ public class McpServerInitializer
     this.catalog = catalog;
 
     if (!isInErrorState) {
-      erModel = EntityModelUtility.buildERModel(catalog);
+      erModel = SchemaCrawlerUtility.buildERModel(catalog);
     } else {
       erModel = InErrorFactory.createErroredERModel();
     }

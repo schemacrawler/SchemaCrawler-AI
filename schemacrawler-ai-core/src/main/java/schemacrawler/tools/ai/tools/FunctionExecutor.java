@@ -8,11 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
-import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.tools.executable.CallableCommand;
 
 public interface FunctionExecutor<P extends FunctionParameters>
-    extends CallableCommand<P, FunctionReturn> {
-
-  void setERModel(ERModel erModel);
-}
+    extends CallableCommand<P, FunctionReturn> {}

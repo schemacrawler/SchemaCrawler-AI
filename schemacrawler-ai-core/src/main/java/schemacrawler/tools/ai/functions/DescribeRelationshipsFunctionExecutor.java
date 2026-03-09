@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.functions;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.Collection;
+import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -35,6 +36,7 @@ public final class DescribeRelationshipsFunctionExecutor
 
     final RelationshipCardinality cardinality = commandOptions.cardinality().cardinality();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.relationshipName());
+    final ERModel erModel = getERModel();
     final Collection<RelationshipDocument> entities =
         CompactERModelBuilder.builder(erModel)
             .withRelationshipCardinalities(cardinality)

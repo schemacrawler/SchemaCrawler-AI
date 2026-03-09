@@ -12,7 +12,6 @@ import java.sql.Connection;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.ermodel.utility.EntityModelUtility;
 import schemacrawler.inclusionrule.RegularExpressionExclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
@@ -58,6 +57,6 @@ public abstract class AbstractFunctionTest {
 
     final DatabaseConnectionSource dataSource = new ConnectionDatabaseConnectionSource(connection);
     catalog = SchemaCrawlerUtility.getCatalog(dataSource, schemaCrawlerOptions);
-    erModel = EntityModelUtility.buildERModel(catalog);
+    erModel = SchemaCrawlerUtility.buildERModel(catalog);
   }
 }

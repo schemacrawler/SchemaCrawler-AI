@@ -36,6 +36,7 @@ import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import schemacrawler.tools.ai.utility.JsonUtility;
+import schemacrawler.tools.state.AbstractExecutionState;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -48,6 +49,36 @@ public class ToolHelperTest {
 
   /** Trivial function definition whose executor returns a fixed text. */
   public static class TrivialFunctionDefinition implements FunctionDefinition<NoParameters> {
+
+    private static final class TrivialFunctionExecutor extends AbstractExecutionState
+        implements FunctionExecutor<NoParameters> {
+
+      @Override
+      public FunctionReturn call() {
+        return new TextFunctionReturn("ok");
+      }
+
+      @Override
+      public void configure(final NoParameters parameters) {}
+
+      @Override
+      public PropertyName getCommandName() {
+        return null;
+      }
+
+      @Override
+      public NoParameters getCommandOptions() {
+        return new NoParameters();
+      }
+
+      @Override
+      public void initialize() {}
+
+      @Override
+      public boolean usesConnection() {
+        return false;
+      }
+    }
 
     @Override
     public String getDescription() {
@@ -71,57 +102,7 @@ public class ToolHelperTest {
 
     @Override
     public FunctionExecutor<NoParameters> newExecutor() {
-      return new FunctionExecutor<>() {
-        private DatabaseConnectionSource databaseConnectionSource;
-        private Catalog catalog;
-
-        @Override
-        public FunctionReturn call() {
-          return new TextFunctionReturn("ok");
-        }
-
-        @Override
-        public void configure(final NoParameters parameters) {}
-
-        public Catalog getCatalog() {
-          return catalog;
-        }
-
-        @Override
-        public PropertyName getCommandName() {
-          return null;
-        }
-
-        @Override
-        public NoParameters getCommandOptions() {
-          return new NoParameters();
-        }
-
-        @Override
-        public DatabaseConnectionSource getConnectionSource() {
-          return databaseConnectionSource;
-        }
-
-        @Override
-        public void initialize() {}
-
-        public void setCatalog(final Catalog catalog) {
-          this.catalog = catalog;
-        }
-
-        @Override
-        public void setConnectionSource(final DatabaseConnectionSource dataSource) {
-          databaseConnectionSource = dataSource;
-        }
-
-        @Override
-        public void setERModel(final ERModel erModel) {}
-
-        @Override
-        public boolean usesConnection() {
-          return false;
-        }
-      };
+      return new TrivialFunctionExecutor();
     }
 
     @Override

@@ -10,6 +10,7 @@ package schemacrawler.tools.command.mcpserver;
 
 import java.util.Collection;
 import java.util.logging.Logger;
+import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.McpServerMain;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.executable.AbstractSchemaCrawlerCommand;
@@ -31,6 +32,7 @@ public final class McpServerCommand extends AbstractSchemaCrawlerCommand<McpServ
   public void execute() {
     final McpServerTransportType mcpTransport = commandOptions.mcpTransport();
     final Collection<String> excludeTools = commandOptions.excludeTools();
+    final Catalog catalog = getCatalog();
     McpServerMain.startMcpServer(catalog, getConnectionSource(), mcpTransport, excludeTools);
   }
 
