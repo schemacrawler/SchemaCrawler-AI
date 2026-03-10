@@ -13,7 +13,7 @@ import static org.hamcrest.Matchers.is;
 
 import java.util.Collection;
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.executable.CommandRegistry;
+import schemacrawler.tools.command.CommandRegistry;
 import us.fatehi.utility.property.PropertyName;
 
 public class CommandPluginTest {

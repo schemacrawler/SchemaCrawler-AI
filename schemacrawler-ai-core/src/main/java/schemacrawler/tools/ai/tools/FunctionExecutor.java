@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
-import schemacrawler.tools.executable.CallableCommand;
+import schemacrawler.tools.command.CallableCommand;
 
 public interface FunctionExecutor<P extends FunctionParameters>
     extends CallableCommand<P, FunctionReturn> {}

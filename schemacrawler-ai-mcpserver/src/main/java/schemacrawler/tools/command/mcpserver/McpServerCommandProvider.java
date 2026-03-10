@@ -13,13 +13,13 @@ import static schemacrawler.tools.executable.commandline.PluginCommand.newPlugin
 
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
-import schemacrawler.tools.executable.BaseCommandProvider;
+import schemacrawler.tools.command.AbstractSchemaCrawlerCommandProvider;
 import schemacrawler.tools.executable.commandline.PluginCommand;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
 
 /** SchemaCrawler command plug-in for AI chat. */
-public final class McpServerCommandProvider extends BaseCommandProvider {
+public final class McpServerCommandProvider extends AbstractSchemaCrawlerCommandProvider {
 
   public McpServerCommandProvider() {
     super(COMMAND);
