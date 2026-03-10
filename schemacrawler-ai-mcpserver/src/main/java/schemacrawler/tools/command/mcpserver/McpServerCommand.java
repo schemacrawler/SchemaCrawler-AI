@@ -13,7 +13,7 @@ import java.util.logging.Logger;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.McpServerMain;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
-import schemacrawler.tools.executable.AbstractSchemaCrawlerCommand;
+import schemacrawler.tools.command.AbstractSchemaCrawlerCommand;
 import us.fatehi.utility.property.PropertyName;
 
 /** SchemaCrawler command plug-in. */

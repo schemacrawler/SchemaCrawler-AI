@@ -18,7 +18,7 @@ import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.tools.executable.AbstractCommand;
+import schemacrawler.tools.command.AbstractCommand;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
