@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -18,8 +19,8 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.offline.jdbc.OfflineConnection;
 import us.fatehi.test.utility.TestObjectUtility;
-import us.fatehi.utility.datasource.ConnectionDatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 public class DatabaseConnectionSourceUtilityTest {
 
@@ -40,7 +41,7 @@ public class DatabaseConnectionSourceUtilityTest {
   public void testCanConnectValid() throws Exception {
     final Connection connection = TestObjectUtility.mockConnection();
     final DatabaseConnectionSource connectionSource =
-        new ConnectionDatabaseConnectionSource(connection);
+        DatabaseConnectionSources.fromConnection(connection);
 
     assertThat(DatabaseConnectionSourceUtility.canConnect(connectionSource), is(true));
   }
@@ -66,7 +67,7 @@ public class DatabaseConnectionSourceUtilityTest {
   public void testIsOfflineFalse() throws Exception {
     final Connection connection = TestObjectUtility.mockConnection();
     final DatabaseConnectionSource connectionSource =
-        new ConnectionDatabaseConnectionSource(connection);
+        DatabaseConnectionSources.fromConnection(connection);
     when(connection.unwrap(Connection.class)).thenReturn(connection);
 
     assertThat(DatabaseConnectionSourceUtility.isOffline(connectionSource), is(false));
@@ -80,8 +81,10 @@ public class DatabaseConnectionSourceUtilityTest {
   @Test
   public void testIsOfflineTrue() throws Exception {
     final Connection connection = mock(OfflineConnection.class);
+    when(connection.isValid(anyInt())).thenReturn(true);
+
     final DatabaseConnectionSource connectionSource =
-        new ConnectionDatabaseConnectionSource(connection);
+        DatabaseConnectionSources.fromConnection(connection);
     when(connection.unwrap(Connection.class)).thenReturn(connection);
 
     assertThat(DatabaseConnectionSourceUtility.isOffline(connectionSource), is(true));
