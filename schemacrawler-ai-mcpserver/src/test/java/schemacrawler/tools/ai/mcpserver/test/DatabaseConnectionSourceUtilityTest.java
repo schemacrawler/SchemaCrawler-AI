@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -80,6 +81,8 @@ public class DatabaseConnectionSourceUtilityTest {
   @Test
   public void testIsOfflineTrue() throws Exception {
     final Connection connection = mock(OfflineConnection.class);
+    when(connection.isValid(anyInt())).thenReturn(true);
+
     final DatabaseConnectionSource connectionSource =
         DatabaseConnectionSources.fromConnection(connection);
     when(connection.unwrap(Connection.class)).thenReturn(connection);
