@@ -31,6 +31,7 @@ import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSour
 import schemacrawler.tools.offline.connectionsource.OfflineConnectionSourceUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
+import schemacrawler.tools.utility.DatabaseConnectorUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.LoggingConfig;
@@ -84,7 +85,7 @@ public final class SchemaCrawlerContext {
   public Catalog loadCatalog() {
     final DatabaseConnectionSource connectionSource = buildCatalogDatabaseConnectionSource();
     final SchemaRetrievalOptions schemaRetrievalOptions =
-        SchemaCrawlerUtility.matchSchemaRetrievalOptions(connectionSource);
+        DatabaseConnectorUtility.matchSchemaRetrievalOptions(connectionSource);
     final Config additionalConfig = readAdditionalConfig();
     final Catalog catalog =
         SchemaCrawlerUtility.getCatalog(
