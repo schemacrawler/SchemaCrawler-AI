@@ -30,6 +30,7 @@ import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = {ResourceProviderTest.MockConfig.class, ResourceProvider.class})
@@ -44,7 +45,7 @@ public class ResourceProviderTest {
 
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
-      return LightCatalogUtility.lightDatabaseConnectionSource();
+      return DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     }
 
     @Bean
