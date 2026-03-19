@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springaicommunity.mcp.annotation.McpArg;
-import org.springaicommunity.mcp.annotation.McpTool;
-import org.springaicommunity.mcp.annotation.McpTool.McpAnnotations;
+import org.springframework.ai.mcp.annotation.McpArg;
+import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
@@ -50,8 +49,7 @@ public class ToolProvider {
   @McpTool(
       name = "mcp-server-health",
       title = "Show SchemaCrawler AI MCP Server health",
-      description = "Gets the SchemaCrawler AI MCP Server version and uptime status.",
-      annotations = @McpAnnotations(readOnlyHint = true, destructiveHint = false))
+      description = "Gets the SchemaCrawler AI MCP Server version and uptime status.")
   public JsonNode getSchemaCrawlerVersion(
       final McpSyncServerExchange exchange,
       @McpArg(description = "MCP Client identification, if available.", required = false)
