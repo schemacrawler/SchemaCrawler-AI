@@ -36,7 +36,7 @@ public class ServerHealth {
     currentState.put("_server", getServerName());
     currentState.put("current-timestamp", String.valueOf(ZonedDateTime.now(ZoneOffset.UTC)));
     currentState.put("in-error-state", isInErrorState);
-    currentState.put("in-offline", isOffline);
+    currentState.put("is-offline", isOffline);
     currentState.put("server-uptime", String.valueOf(getServerUptime()));
     currentState.put("transport", mcpTransport.name());
     currentState.put("exclude-tools", excludeTools.excludeTools());

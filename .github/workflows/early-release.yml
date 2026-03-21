@@ -69,22 +69,6 @@ jobs:
         echo "NO NEED TO MOVE DISTRIBUTION"
         echo "The Early Access Release Docker Image build will pick it up from the target directory"
 
-
-# CREATE GITHUB RELEASE
-    - id: create-release
-      name: Create GitHub early access release
-      uses: softprops/action-gh-release@v2
-      with:
-        target_commitish: ${{ github.sha }}
-        tag_name: ${{ env.DOCKER_IMAGE_TAG }}
-        token: ${{ secrets.GITHUB_TOKEN }}
-        name: ${{ env.DOCKER_IMAGE_TAG }}
-        draft: false
-        prerelease: true
-        body: |
-          SchemaCrawler AI early access release at last commit ${{ github.sha }}
-        generate_release_notes: true
-
 # MOVE GITHUB TAG
     - id: install-gitsign
       name: Install gitsign for commit signing

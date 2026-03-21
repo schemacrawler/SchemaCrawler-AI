@@ -13,7 +13,7 @@ import io.modelcontextprotocol.spec.McpSchema.PromptMessage;
 import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import java.util.List;
-import org.springaicommunity.mcp.annotation.McpPrompt;
+import org.springframework.ai.mcp.annotation.McpPrompt;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -13,7 +13,7 @@ import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import io.modelcontextprotocol.json.McpJsonMapper;
+import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema;
@@ -100,8 +100,7 @@ public class ToolHelper {
         new FunctionCallback<>(functionDefinition, catalog, erModel);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
 
-    return new McpServerFeatures.SyncToolSpecification(
-        tool, /* deprecated handler */ null, toolCallHandler);
+    return new McpServerFeatures.SyncToolSpecification(tool, toolCallHandler);
   }
 
   private <P extends FunctionParameters> Tool toTool(
@@ -123,7 +122,7 @@ public class ToolHelper {
             .name(toolName)
             .title(functionDefinition.getTitle())
             .description(functionDefinition.getDescription())
-            .inputSchema(McpJsonMapper.createDefault(), inputSchemaNode.toString())
+            .inputSchema(new JacksonMcpJsonMapperSupplier().get(), inputSchemaNode.toString())
             .build();
     return tool;
   }

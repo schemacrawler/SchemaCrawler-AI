@@ -92,6 +92,11 @@ public class SchemaCrawlerMCPServerTest {
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);
     }
+
+    @Bean
+    public RestClient.Builder restClientBuilder() {
+      return RestClient.builder();
+    }
   }
 
   @LocalServerPort private int port;
