@@ -17,7 +17,7 @@ import schemacrawler.ermodel.model.Entity;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.ermodel.model.RelationshipCardinality;
-import schemacrawler.ermodel.utility.EntityModelUtility;
+import schemacrawler.ermodel.utility.ERModelUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ForeignKey;
@@ -76,7 +76,7 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
         erModel
             .lookupRelationship(foreignKey)
             .map(Relationship::getType)
-            .orElseGet(() -> EntityModelUtility.inferCardinality(foreignKey));
+            .orElseGet(() -> ERModelUtility.inferCardinality(foreignKey));
     final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey, cardinality);
     return fkDocument;
   }
