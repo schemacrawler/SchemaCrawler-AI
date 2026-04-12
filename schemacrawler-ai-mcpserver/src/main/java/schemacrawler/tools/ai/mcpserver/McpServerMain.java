@@ -16,7 +16,7 @@ import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 /**
- * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler MCP Server.
+ * Construct SchemaCrawler arguments from environment variables and run SchemaCrawler AI MCP Server.
  */
 public class McpServerMain {
 
