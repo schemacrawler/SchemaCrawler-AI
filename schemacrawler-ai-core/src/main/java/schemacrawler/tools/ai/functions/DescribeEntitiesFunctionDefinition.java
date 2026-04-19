@@ -37,6 +37,11 @@ public final class DescribeEntitiesFunctionDefinition
   }
 
   @Override
+  public DescribeEntitiesFunctionParameters newParameters() {
+    return new DescribeEntitiesFunctionParameters();
+  }
+
+  @Override
   public DescribeEntitiesFunctionExecutor newExecutor() {
     return new DescribeEntitiesFunctionExecutor(getFunctionName());
   }

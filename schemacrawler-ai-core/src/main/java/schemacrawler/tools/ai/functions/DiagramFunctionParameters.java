@@ -55,9 +55,11 @@ public record DiagramFunctionParameters(
   }
 
   public enum DiagramType {
-    PLANTUML("script", "text", "/scripts/plantuml.py", "https://editor.plantuml.com/"),
-    MERMAID("script", "text", "/scripts/mermaid.py", "https://mermaid.live/"),
-    DBML("script", "text", "/scripts/dbml.py", "https://dbdiagram.io/d"),
+    PLANTUML("template", "text", "/templates/plantuml.vm", "https://editor.plantuml.com/"),
+    MERMAID("template", "text", "/templates/mermaid.vm", "https://mermaid.live/"),
+    DBML("template", "text", "/templates/dbml.vm", "https://dbdiagram.io/d"),
+    QUICKDBD(
+        "template", "text", "/templates/quickdbd.vm", "https://app.quickdatabasediagrams.com/#/"),
     GRAPHVIZ("schema", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/"),
     ;
 

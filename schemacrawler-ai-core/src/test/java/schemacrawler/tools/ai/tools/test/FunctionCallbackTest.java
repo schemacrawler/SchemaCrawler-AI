@@ -78,6 +78,7 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
+    when(definition.newParameters()).thenReturn(new TestParameters());
     when(definition.newExecutor()).thenReturn(executor);
     when(executor.usesConnection()).thenReturn(true);
     when(executor.call()).thenReturn(expectedReturn);
@@ -102,6 +103,7 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
+    when(definition.newParameters()).thenReturn(new TestParameters());
     when(definition.newExecutor()).thenReturn(executor);
     // Throw a checked exception from call()
     when(executor.call()).thenThrow(new Exception("checked exception"));
@@ -125,6 +127,7 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
+    when(definition.newParameters()).thenReturn(new TestParameters());
     when(definition.newExecutor()).thenReturn(executor);
     when(executor.usesConnection()).thenReturn(false);
     when(executor.call()).thenReturn(expectedReturn);
@@ -146,6 +149,7 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
+    when(definition.newParameters()).thenReturn(new TestParameters());
     when(definition.newExecutor()).thenReturn(executor);
     doThrow(new RuntimeException("test error")).when(executor).initialize();
 
@@ -184,6 +188,7 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
+    when(definition.newParameters()).thenReturn(new TestParameters());
     when(definition.newExecutor()).thenReturn(executor);
     when(executor.call()).thenReturn(new TextFunctionReturn("ok"));
 

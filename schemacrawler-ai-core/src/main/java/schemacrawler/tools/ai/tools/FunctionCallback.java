@@ -153,10 +153,9 @@ public final class FunctionCallback<P extends FunctionParameters> {
     P parameters;
     // Try with arguments string first, assuming arguments are valid
     parameters = DeserializationUtility.instantiateArguments(argumentsString, parametersClass);
-    // Is that fails, since parameters maybe invalid, try again with all null
-    // parameters
+    // If that fails, since parameters may be invalid, fall back to defaults
     if (parameters == null) {
-      parameters = parametersClass.getDeclaredConstructor().newInstance();
+      parameters = functionDefinition.newParameters();
     }
 
     LOGGER.log(Level.FINE, String.valueOf(parameters));

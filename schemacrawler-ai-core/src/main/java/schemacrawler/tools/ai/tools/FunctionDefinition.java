@@ -25,6 +25,8 @@ public interface FunctionDefinition<P extends FunctionParameters> {
 
   String getTitle();
 
+  P newParameters();
+
   FunctionExecutor<P> newExecutor();
 
   JsonNode toJson();

@@ -39,6 +39,11 @@ public final class ServerInformationFunctionDefinition
   }
 
   @Override
+  public NoParameters newParameters() {
+    return new NoParameters();
+  }
+
+  @Override
   public ServerInformationFunctionExecutor newExecutor() {
     return new ServerInformationFunctionExecutor(getFunctionName());
   }

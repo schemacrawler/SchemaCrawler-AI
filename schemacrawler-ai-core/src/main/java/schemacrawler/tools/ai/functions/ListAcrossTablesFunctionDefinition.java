@@ -41,6 +41,11 @@ public final class ListAcrossTablesFunctionDefinition
   }
 
   @Override
+  public ListAcrossTablesFunctionParameters newParameters() {
+    return new ListAcrossTablesFunctionParameters();
+  }
+
+  @Override
   public ListAcrossTablesFunctionExecutor newExecutor() {
     return new ListAcrossTablesFunctionExecutor(getFunctionName());
   }

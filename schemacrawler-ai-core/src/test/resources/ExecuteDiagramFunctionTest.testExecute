@@ -1,0 +1,67 @@
+erDiagram
+
+  "PUBLIC.BOOKS.AUTHORS [strong entity]" {
+    string FIRSTNAME
+    string LASTNAME
+    string ADDRESS1
+    string ADDRESS2
+    string CITY
+    string STATE
+    string POSTALCODE
+    string COUNTRY
+  }
+
+  "PUBLIC.BOOKS.BOOKS [strong entity]" {
+    string TITLE "Book title"
+    string DESCRIPTION "Book description (Usually the blurb from the book jacket or promotional materials)"
+    integer PUBLISHERID "Foreign key to the book publisher"
+    date PUBLICATIONDATE "Book publication date"
+    decimal PRICE "Current price for the book"
+  }
+
+  "PUBLIC.BOOKS.COUPONS [strong entity]" {
+    string DATA
+    other COUPONS
+    other BOOKS
+  }
+
+  "PUBLIC.BOOKS.CUSTOMERDATA [weak entity]" {
+    string DATA
+  }
+
+  "PUBLIC.BOOKS.CUSTOMERS [strong entity]" {
+    other FIRSTNAME
+    other LASTNAME
+    other AGE
+  }
+
+  "PUBLIC.BOOKS.Celebrities [strong entity]" {
+    string NAME
+  }
+
+  "PUBLIC.BOOKS.Celebrity Updates [sub-type]" {
+    string UPDATE
+  }
+
+  "PUBLIC.BOOKS.PUBLISHERS [strong entity]" {
+    string PUBLISHER "Name of book publisher"
+  }
+
+  "PUBLIC.BOOKS.ΒΙΒΛΊΑ [strong entity]" {
+    string ΤΊΤΛΟΣ
+    string ΠΕΡΙΓΡΑΦΉ
+  }
+
+  "PUBLIC.PUBLISHER SALES.REGIONS [strong entity]" {
+    string CITY
+    string STATE
+  }
+
+  "PUBLIC.BOOKS.AUTHORS [strong entity]" }o--o{ "PUBLIC.BOOKS.BOOKS [strong entity]" : "via bridge table BOOKAUTHORS"
+  "PUBLIC.BOOKS.BOOKS [strong entity]" ||--o| "PUBLIC.BOOKS.BOOKS [strong entity]" : "self-reference"
+  "PUBLIC.BOOKS.CUSTOMERDATA [weak entity]" ||--|{ "PUBLIC.BOOKS.CUSTOMERS [strong entity]" : "foreign key"
+  "PUBLIC.BOOKS.Celebrity Updates [sub-type]" ||--|| "PUBLIC.BOOKS.Celebrities [strong entity]" : "foreign key"
+  "PUBLIC.BOOKS.ΒΙΒΛΊΑ [strong entity]" ||--|{ "PUBLIC.BOOKS.PUBLISHERS [strong entity]" : "foreign key"
+  "PUBLIC.PUBLISHER SALES.SALES [not an entity]" ||--o{ "PUBLIC.BOOKS.BOOKS [strong entity]" : "foreign key"
+  "PUBLIC.PUBLISHER SALES.SALES [not an entity]" ||--|{ "PUBLIC.PUBLISHER SALES.REGIONS [strong entity]" : "foreign key"
+  "PUBLIC.PUBLISHER SALES.SALES [not an entity]" ||--o{ "PUBLIC.PUBLISHER SALES.SALESDATA [not an entity]" : "foreign key"

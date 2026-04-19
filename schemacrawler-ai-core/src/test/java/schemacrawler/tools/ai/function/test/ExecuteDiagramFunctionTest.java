@@ -10,22 +10,18 @@ package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import java.util.ArrayList;
-import java.util.List;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionParameters;
-import schemacrawler.tools.ai.tools.FunctionCallback;
-import schemacrawler.tools.ai.tools.JsonFunctionReturn;
-import tools.jackson.databind.JsonNode;
+import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
+import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
 import us.fatehi.test.utility.TestObjectUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
+import us.fatehi.test.utility.extensions.TestContext;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
@@ -33,33 +29,26 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
 
-  @Disabled
   @Test
-  public void testExecute() throws Exception {
-    final DatabaseConnectionSource connectionSource =
+  public void testExecute(final TestContext testContext) throws Exception {
+    DatabaseConnectionSource connectionSource =
         DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
-    final DiagramFunctionDefinition definition = new DiagramFunctionDefinition();
-    final FunctionCallback<DiagramFunctionParameters> callback =
-        new FunctionCallback<>(definition, catalog, erModel);
-    final String arguments =
+    final DiagramFunctionDefinition functionDefinition = new DiagramFunctionDefinition();
+    final String argumentsString =
         """
         {
-          "diagram-type" : "MERMAID",
-          "include-child-tables" : true,
-          "include-referenced-tables" : false,
-          "table-name" : "(Authors|Books|BookAuthors)"
+          "table_name" : "(Authors|Books|BookAuthors)",
+          "include_child_tables" : true,
+          "include_referenced_tables" : false,
+          "diagram_type" : "MERMAID"
         }
         """;
-    final JsonFunctionReturn actualReturn =
-        (JsonFunctionReturn) callback.execute(arguments, connectionSource);
+    final DiagramFunctionParameters args =
+        DeserializationUtility.instantiateArguments(
+            argumentsString, DiagramFunctionParameters.class);
+    assertThat("Could not instantiate arguments", args, is(not(nullValue())));
 
-    assertThat(actualReturn, is(not(nullValue())));
-
-    final JsonNode jsonNode = actualReturn.getResult();
-    assertThat(jsonNode.isArray(), is(true));
-
-    final List<JsonNode> list = new ArrayList<>();
-    jsonNode.iterator().forEachRemaining(list::add);
-    assertThat(list, hasSize(1));
+    FunctionExecutionTestUtility.assertFunctionExecution(
+        testContext, functionDefinition, args, catalog, erModel, connectionSource, true);
   }
 }

@@ -20,7 +20,7 @@
       "diagram_type" : {
         "type" : "string",
         "description" : "Indicates database schema diagram format - Graphviz DOT format, PlantUML,\nMermaid or DBML from dbdiagram.io.\n",
-        "enum" : [ "PLANTUML", "MERMAID", "DBML", "GRAPHVIZ" ]
+        "enum" : [ "PLANTUML", "MERMAID", "DBML", "QUICKDBD", "GRAPHVIZ" ]
       }
     },
     "required" : [ "diagram_type" ],
