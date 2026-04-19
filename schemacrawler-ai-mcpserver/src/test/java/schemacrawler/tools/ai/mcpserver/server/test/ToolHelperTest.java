@@ -106,6 +106,11 @@ public class ToolHelperTest {
     }
 
     @Override
+    public NoParameters newParameters() {
+      return new NoParameters();
+    }
+
+    @Override
     public JsonNode toJson() {
       final ObjectNode definitionNode = JsonUtility.mapper.createObjectNode();
       definitionNode.set("inputSchema", JsonUtility.mapper.createObjectNode());

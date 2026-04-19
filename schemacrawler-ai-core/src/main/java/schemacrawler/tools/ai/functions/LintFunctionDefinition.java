@@ -40,6 +40,11 @@ public final class LintFunctionDefinition
   }
 
   @Override
+  public LintFunctionParameters newParameters() {
+    return new LintFunctionParameters();
+  }
+
+  @Override
   public LintFunctionExecutor newExecutor() {
     return new LintFunctionExecutor(getFunctionName());
   }

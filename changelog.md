@@ -2,6 +2,46 @@
 
 SchemaCrawler AI release notes.
 
+
+<a name="v17.10.2-1"></a>
+## Release 17.10.2-1 - 2026-04-20
+
+- Allow additional diagrams to be run from the command-line using Velocity templates
+- Add support for [QuickDBD](https://www.quickdatabasediagrams.com/) diagrams
+- Change Mermaid diagram to be a true ER diagram rather than a schema diagram
+- Seal interfaces, and reduce reliance on reflection
+
+
+<a name="v17.10.1-1"></a>
+## Release 17.10.1-1 - 2026-04-12
+
+- Follow SchemaCrawler release
+
+
+<a name="v17.10.0-1"></a>
+## Release 17.10.0-1 - 2026-04-03
+
+- Follow SchemaCrawler release
+
+
+<a name="v17.9.0-1"></a>
+## Release 17.9.0-1 - 2026-03-28
+
+- Follow SchemaCrawler release
+
+
+<a name="v17.8.1-1"></a>
+## Release 17.8.1-1 - 2026-03-19
+
+- Follow SchemaCrawler release
+
+
+<a name="v17.8.0-1"></a>
+## Release 17.8.0-1 - 2026-03-14
+
+- Follow SchemaCrawler release
+
+
 <a name="v17.7.0-1"></a>
 - Do not include tools that need a connection, if no connection is available
 

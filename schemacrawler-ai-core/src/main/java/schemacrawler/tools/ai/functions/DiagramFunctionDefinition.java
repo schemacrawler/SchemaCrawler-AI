@@ -34,6 +34,11 @@ public final class DiagramFunctionDefinition
   }
 
   @Override
+  public DiagramFunctionParameters newParameters() {
+    return new DiagramFunctionParameters();
+  }
+
+  @Override
   public DiagramFunctionExecutor newExecutor() {
     return new DiagramFunctionExecutor(getFunctionName());
   }

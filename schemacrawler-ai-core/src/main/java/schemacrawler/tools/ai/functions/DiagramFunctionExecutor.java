@@ -67,8 +67,8 @@ public final class DiagramFunctionExecutor
       return additionalConfig;
     }
 
-    additionalConfig.put("script-language", "python");
-    additionalConfig.put("script", diagramType.script());
+    additionalConfig.put("templating-language", "velocity");
+    additionalConfig.put("template", diagramType.script());
 
     return additionalConfig;
   }

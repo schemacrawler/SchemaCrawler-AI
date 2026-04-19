@@ -38,6 +38,11 @@ public final class ListFunctionDefinition
   }
 
   @Override
+  public ListFunctionParameters newParameters() {
+    return new ListFunctionParameters();
+  }
+
+  @Override
   public ListFunctionExecutor newExecutor() {
     return new ListFunctionExecutor(getFunctionName());
   }
