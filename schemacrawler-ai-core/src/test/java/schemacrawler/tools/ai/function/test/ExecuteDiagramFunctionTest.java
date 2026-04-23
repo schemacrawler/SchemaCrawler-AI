@@ -15,6 +15,7 @@ import static org.hamcrest.Matchers.nullValue;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
+
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionParameters;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
@@ -37,7 +38,7 @@ public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
     final String argumentsString =
         """
         {
-          "table_name" : "(Authors|Books|BookAuthors)",
+          "table_name" : "Authors",
           "include_child_tables" : true,
           "include_referenced_tables" : false,
           "diagram_type" : "MERMAID"
