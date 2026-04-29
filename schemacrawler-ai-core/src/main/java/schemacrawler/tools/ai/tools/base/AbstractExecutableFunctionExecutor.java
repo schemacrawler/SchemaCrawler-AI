@@ -37,7 +37,6 @@ import schemacrawler.tools.executable.SchemaCrawlerExecutable;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
-import schemacrawler.utility.MetaDataUtility;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -67,8 +66,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     final SchemaCrawlerOptions options = adjustSchemaCrawlerOptions();
     final Catalog catalog = getCatalog();
 
-    // Re-filter catalog
-    MetaDataUtility.reduceCatalog(catalog, options);
+    refilterCatalog(options);
 
     // Create output file path
     final String outputFormatValue = executionParameters.outputFormat();
