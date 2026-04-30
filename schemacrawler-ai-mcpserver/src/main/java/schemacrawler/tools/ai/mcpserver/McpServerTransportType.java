@@ -9,7 +9,17 @@
 package schemacrawler.tools.ai.mcpserver;
 
 public enum McpServerTransportType {
-  unknown,
-  stdio,
-  http;
+  unknown("unknown"),
+  stdio("\"stdio\""),
+  http("Streamable HTTP");
+
+  private final String description;
+
+  McpServerTransportType(final String description) {
+    this.description = description;
+  }
+
+  public String getDescription() {
+    return description;
+  }
 }

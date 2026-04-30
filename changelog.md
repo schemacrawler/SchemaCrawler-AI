@@ -2,6 +2,12 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.10.3-1"></a>
+## Release 17.10.3-1 - 2026-04-30
+
+- Follow SchemaCrawler release
+- Upgrade to Spring AI 2.0.0-M5
+
 
 <a name="v17.10.2-1"></a>
 ## Release 17.10.2-1 - 2026-04-20

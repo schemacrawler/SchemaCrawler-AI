@@ -83,7 +83,8 @@ public final class LoggingUtility {
 
       writer.println();
       writer.println(
-          "SchemaCrawler AI MCP Server is running with <%s> transport".formatted(mcpTransport));
+          "SchemaCrawler AI MCP Server is running with %s transport"
+              .formatted(mcpTransport.getDescription()));
 
       writer.println("-".repeat(80));
       writer.println();
