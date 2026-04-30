@@ -12,9 +12,12 @@ import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.regex.Pattern;
+import schemacrawler.filter.ReducerFactory;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
+import schemacrawler.schema.Catalog;
+import schemacrawler.schema.CatalogReducer;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
@@ -44,6 +47,14 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
       inclusionRule = new RegularExpressionInclusionRule(dependantObjectPattern);
     }
     return inclusionRule;
+  }
+
+  protected void refilterCatalog(final SchemaCrawlerOptions options) {
+    final Catalog catalog = getCatalog();
+
+    final CatalogReducer reducer = ReducerFactory.getCatalogReducer(options);
+    reducer.undo(catalog);
+    reducer.reduce(catalog);
   }
 
   private Pattern makeNameInclusionPattern(final String name) {

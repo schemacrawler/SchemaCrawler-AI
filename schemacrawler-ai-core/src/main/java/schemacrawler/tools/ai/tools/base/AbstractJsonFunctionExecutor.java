@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.tools.base;
 
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionParameters;
-import schemacrawler.utility.MetaDataUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
@@ -22,6 +21,6 @@ public abstract class AbstractJsonFunctionExecutor<P extends FunctionParameters>
 
   protected final void refilterCatalog() {
     final SchemaCrawlerOptions options = createSchemaCrawlerOptions();
-    MetaDataUtility.reduceCatalog(getCatalog(), options);
+    refilterCatalog(options);
   }
 }
