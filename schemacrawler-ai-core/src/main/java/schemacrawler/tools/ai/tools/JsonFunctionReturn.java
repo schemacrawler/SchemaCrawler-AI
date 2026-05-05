@@ -48,6 +48,11 @@ public final class JsonFunctionReturn implements FunctionReturn {
     return jsonNode.toString();
   }
 
+  @Override
+  public FunctionReturnMetadata getMetadata() {
+    return FunctionReturnMetadata.JSON;
+  }
+
   public JsonNode getResult() {
     return jsonNode;
   }

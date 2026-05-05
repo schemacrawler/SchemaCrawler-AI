@@ -37,12 +37,12 @@ public final class DescribeRelationshipsFunctionDefinition
   }
 
   @Override
-  public DescribeRelationshipsFunctionParameters newParameters() {
-    return new DescribeRelationshipsFunctionParameters();
+  public DescribeRelationshipsFunctionExecutor newExecutor() {
+    return new DescribeRelationshipsFunctionExecutor(getFunctionName());
   }
 
   @Override
-  public DescribeRelationshipsFunctionExecutor newExecutor() {
-    return new DescribeRelationshipsFunctionExecutor(getFunctionName());
+  public DescribeRelationshipsFunctionParameters newParameters() {
+    return new DescribeRelationshipsFunctionParameters();
   }
 }

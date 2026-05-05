@@ -10,21 +10,25 @@ package schemacrawler.tools.ai.tools;
 
 import static us.fatehi.utility.Utility.trimToEmpty;
 
-public record TextFunctionReturn(String text, String format, String mediaType)
+public record TextFunctionReturn(String text, FunctionReturnMetadata metadata)
     implements FunctionReturn {
 
   public TextFunctionReturn(final String text) {
-    this(text, "text", "text/plain");
+    this(text, FunctionReturnMetadata.TEXT);
   }
 
   public TextFunctionReturn {
     text = trimToEmpty(text);
-    format = trimToEmpty(format);
-    mediaType = trimToEmpty(mediaType);
+    metadata = metadata != null ? metadata : FunctionReturnMetadata.TEXT;
   }
 
   @Override
   public String get() {
     return text;
+  }
+
+  @Override
+  public FunctionReturnMetadata getMetadata() {
+    return metadata;
   }
 }

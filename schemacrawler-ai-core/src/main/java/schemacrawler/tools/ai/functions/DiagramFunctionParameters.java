@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.functions;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.tools.ai.tools.FunctionParameters;
+import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
 import schemacrawler.tools.ai.tools.base.ParameterUtility;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -118,6 +119,13 @@ public record DiagramFunctionParameters(
 
     public String getMediaType() {
       return mediaType;
+    }
+
+    public FunctionReturnMetadata getMetadata() {
+      final String renderHint =
+          "Use an online service such as Kroki to render diagram images, "
+              + "or ask the user to use a service such as %s".formatted(onlineEditorUrl);
+      return new FunctionReturnMetadata(format, mediaType, renderHint);
     }
 
     public String getOnlineEditorUrl() {

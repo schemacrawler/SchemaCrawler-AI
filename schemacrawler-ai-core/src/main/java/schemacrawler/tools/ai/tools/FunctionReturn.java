@@ -14,4 +14,7 @@ public sealed interface FunctionReturn extends Supplier<String>
     permits NoResultsFunctionReturn,
         TextFunctionReturn,
         JsonFunctionReturn,
-        ExceptionFunctionReturn {}
+        ExceptionFunctionReturn {
+
+  FunctionReturnMetadata getMetadata();
+}

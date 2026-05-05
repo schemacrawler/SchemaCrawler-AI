@@ -23,7 +23,6 @@ import io.modelcontextprotocol.spec.McpSchema.Content;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
 import java.util.List;
-import java.util.Map;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -37,7 +36,7 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.JsonFunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -79,38 +78,18 @@ public class ToolHelper {
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
-      final FunctionReturn functionReturnValue;
-      if (functionReturn == null) {
-        functionReturnValue = new TextFunctionReturn("");
-      } else {
-        functionReturnValue = functionReturn;
-      }
+      final FunctionReturn functionReturnValue =
+          functionReturn != null ? functionReturn : new TextFunctionReturn("");
 
-      final String format;
-      final String mimeType;
-      if (functionReturnValue instanceof final TextFunctionReturn textReturn) {
-        format = textReturn.format();
-        mimeType = textReturn.mediaType();
-      } else if (functionReturnValue instanceof JsonFunctionReturn
-          || functionReturnValue instanceof ExceptionFunctionReturn) {
-        format = "json";
-        mimeType = "application/json";
-      } else {
-        format = "text";
-        mimeType = "text/plain";
-      }
+      final FunctionReturnMetadata functionReturnMetadata = functionReturnValue.getMetadata();
 
-      final Map<String, Object> functionReturnMetadata =
-          Map.of("format", format, "mime-type", mimeType);
       final Content content =
           new TextContent(
               null,
               functionReturnValue.get(),
-              Map.of("schemacrawler-ai/content-type", functionReturnMetadata));
+              functionReturnMetadata.toMetadataMap("schemacrawler-ai/"));
       final Content metadata =
-          new TextContent(
-              mapper.writeValueAsString(
-                  Map.of("schemacrawler-ai/content-type", functionReturnMetadata)));
+          new TextContent(mapper.writeValueAsString(functionReturnMetadata.toMetadataMap()));
 
       return List.of(content, metadata);
     }

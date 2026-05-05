@@ -158,8 +158,8 @@ public class ToolHelperTest {
     final TextContent textContent = (TextContent) callToolResult.content().getFirst();
     assertThat(textContent.text(), is("ok"));
     assertThat(textContent.meta(), is(not(nullValue())));
-    assertThat(textContent.meta().containsKey("schemacrawler-ai/content-type"), is(true));
+    assertThat(textContent.meta().containsKey("schemacrawler-ai/mime-type"), is(true));
     final TextContent metadataContent = (TextContent) callToolResult.content().getLast();
-    assertThat(metadataContent.text(), containsString("schemacrawler-ai/content-type"));
+    assertThat(metadataContent.text(), containsString("mime-type"));
   }
 }

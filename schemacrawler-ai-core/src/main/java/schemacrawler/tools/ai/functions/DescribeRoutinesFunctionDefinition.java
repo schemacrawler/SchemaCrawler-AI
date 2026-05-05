@@ -39,12 +39,12 @@ public final class DescribeRoutinesFunctionDefinition
   }
 
   @Override
-  public DescribeRoutinesFunctionParameters newParameters() {
-    return new DescribeRoutinesFunctionParameters();
+  public DescribeRoutinesFunctionExecutor newExecutor() {
+    return new DescribeRoutinesFunctionExecutor(getFunctionName());
   }
 
   @Override
-  public DescribeRoutinesFunctionExecutor newExecutor() {
-    return new DescribeRoutinesFunctionExecutor(getFunctionName());
+  public DescribeRoutinesFunctionParameters newParameters() {
+    return new DescribeRoutinesFunctionParameters();
   }
 }
