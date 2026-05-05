@@ -55,32 +55,69 @@ public record DiagramFunctionParameters(
   }
 
   public enum DiagramType {
-    PLANTUML("template", "text", "/templates/plantuml.vm", "https://editor.plantuml.com/"),
-    MERMAID("template", "text", "/templates/mermaid.vm", "https://mermaid.live/"),
-    DBML("template", "text", "/templates/dbml.vm", "https://dbdiagram.io/d"),
+    PLANTUML(
+        "template",
+        "text",
+        "/templates/plantuml.vm",
+        "https://editor.plantuml.com/",
+        "plantuml",
+        "text/x-plantuml"),
+    MERMAID(
+        "template",
+        "text",
+        "/templates/mermaid.vm",
+        "https://mermaid.live/",
+        "mermaid",
+        "text/x-mermaid"),
+    DBML("template", "text", "/templates/dbml.vm", "https://dbdiagram.io/d", "dbml", "text/x-dbml"),
     QUICKDBD(
-        "template", "text", "/templates/quickdbd.vm", "https://app.quickdatabasediagrams.com/#/"),
-    GRAPHVIZ("schema", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/"),
+        "template",
+        "text",
+        "/templates/quickdbd.vm",
+        "https://app.quickdatabasediagrams.com/#/",
+        "quickdbd",
+        "text/x-quickdbd"),
+    GRAPHVIZ(
+        "schema",
+        "scdot",
+        "",
+        "https://dreampuf.github.io/GraphvizOnline/",
+        "dot",
+        "text/vnd.graphviz"),
     ;
 
     private final String command;
     private final String outputFormatValue;
     private final String script;
     private final String onlineEditorUrl;
+    private final String format;
+    private final String mediaType;
 
     DiagramType(
         final String command,
         final String outputFormatValue,
         final String script,
-        final String url) {
+        final String url,
+        final String format,
+        final String mediaType) {
       this.command = command;
       this.outputFormatValue = outputFormatValue;
       this.script = script;
       onlineEditorUrl = url;
+      this.format = format;
+      this.mediaType = mediaType;
     }
 
     public String getCommand() {
       return command;
+    }
+
+    public String getFormat() {
+      return format;
+    }
+
+    public String getMediaType() {
+      return mediaType;
     }
 
     public String getOnlineEditorUrl() {

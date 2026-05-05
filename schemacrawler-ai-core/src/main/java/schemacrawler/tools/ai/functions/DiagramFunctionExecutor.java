@@ -37,7 +37,7 @@ public final class DiagramFunctionExecutor
         new ExecutionParameters(
             diagramType.getCommand(), additionalConfig, diagramType.getOutputFormatValue());
     final Path outputFilePath = execute(executionParameters);
-    return returnText(outputFilePath);
+    return returnText(outputFilePath, diagramType.getFormat(), diagramType.getMediaType());
   }
 
   @Override

@@ -140,6 +140,22 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
+  protected final FunctionReturn returnText(
+      final Path outputFilePath, final String format, final String mediaType) {
+    if (!outputFileHasResults(outputFilePath)) {
+      return new NoResultsFunctionReturn();
+    }
+
+    try {
+      final String results = Files.readString(outputFilePath);
+      return new TextFunctionReturn(results, format, mediaType);
+    } catch (final IOException e) {
+      return new ExceptionFunctionReturn(e);
+    } finally {
+      deleteTempFile(outputFilePath);
+    }
+  }
+
   private final SchemaCrawlerOptions adjustSchemaCrawlerOptions() {
 
     final SchemaCrawlerOptions baseOptions = createSchemaCrawlerOptions();
