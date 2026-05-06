@@ -126,21 +126,6 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  protected final FunctionReturn returnText(final Path outputFilePath) {
-    if (!outputFileHasResults(outputFilePath)) {
-      return new NoResultsFunctionReturn();
-    }
-
-    try {
-      final String results = Files.readString(outputFilePath);
-      return new TextFunctionReturn(results);
-    } catch (final IOException e) {
-      return new ExceptionFunctionReturn(e);
-    } finally {
-      deleteTempFile(outputFilePath);
-    }
-  }
-
   protected final FunctionReturn returnText(
       final Path outputFilePath, final FunctionReturnMetadata metadata) {
     if (!outputFileHasResults(outputFilePath)) {

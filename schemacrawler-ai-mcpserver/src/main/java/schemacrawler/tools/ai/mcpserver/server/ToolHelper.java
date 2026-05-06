@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
 import io.modelcontextprotocol.server.McpServerFeatures;
@@ -39,6 +40,7 @@ import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @Component
@@ -78,6 +80,9 @@ public class ToolHelper {
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
+
+      final ObjectMapper noIndentMapper = mapper.rebuild().disable(INDENT_OUTPUT).build();
+
       final FunctionReturn functionReturnValue =
           functionReturn != null ? functionReturn : new TextFunctionReturn("");
 
@@ -89,7 +94,8 @@ public class ToolHelper {
               functionReturnValue.get(),
               functionReturnMetadata.toMetadataMap("schemacrawler-ai/"));
       final Content metadata =
-          new TextContent(mapper.writeValueAsString(functionReturnMetadata.toMetadataMap()));
+          new TextContent(
+              noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()));
 
       return List.of(content, metadata);
     }
