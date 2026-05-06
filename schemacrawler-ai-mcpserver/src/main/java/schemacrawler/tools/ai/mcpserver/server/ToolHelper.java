@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
 import io.modelcontextprotocol.server.McpServerFeatures;
@@ -36,7 +37,10 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
+import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @Component
@@ -76,13 +80,24 @@ public class ToolHelper {
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
-      final Content content;
-      if (functionReturn == null) {
-        content = new TextContent("");
-      } else {
-        content = new TextContent(functionReturn.get());
-      }
-      return List.of(content);
+
+      final ObjectMapper noIndentMapper = mapper.rebuild().disable(INDENT_OUTPUT).build();
+
+      final FunctionReturn functionReturnValue =
+          functionReturn != null ? functionReturn : new TextFunctionReturn("");
+
+      final FunctionReturnMetadata functionReturnMetadata = functionReturnValue.getMetadata();
+
+      final Content content =
+          new TextContent(
+              null,
+              functionReturnValue.get(),
+              functionReturnMetadata.toMetadataMap("schemacrawler-ai/"));
+      final Content metadata =
+          new TextContent(
+              noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()));
+
+      return List.of(content, metadata);
     }
   }
 

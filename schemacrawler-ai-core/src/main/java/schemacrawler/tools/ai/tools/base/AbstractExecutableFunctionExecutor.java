@@ -29,6 +29,7 @@ import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.NoResultsFunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
@@ -125,14 +126,15 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  protected final FunctionReturn returnText(final Path outputFilePath) {
+  protected final FunctionReturn returnText(
+      final Path outputFilePath, final FunctionReturnMetadata metadata) {
     if (!outputFileHasResults(outputFilePath)) {
       return new NoResultsFunctionReturn();
     }
 
     try {
       final String results = Files.readString(outputFilePath);
-      return new TextFunctionReturn(results);
+      return new TextFunctionReturn(results, metadata);
     } catch (final IOException e) {
       return new ExceptionFunctionReturn(e);
     } finally {

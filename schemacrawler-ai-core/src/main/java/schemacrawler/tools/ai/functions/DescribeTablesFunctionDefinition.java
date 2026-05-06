@@ -39,12 +39,12 @@ public final class DescribeTablesFunctionDefinition
   }
 
   @Override
-  public DescribeTablesFunctionParameters newParameters() {
-    return new DescribeTablesFunctionParameters();
+  public DescribeTablesFunctionExecutor newExecutor() {
+    return new DescribeTablesFunctionExecutor(getFunctionName());
   }
 
   @Override
-  public DescribeTablesFunctionExecutor newExecutor() {
-    return new DescribeTablesFunctionExecutor(getFunctionName());
+  public DescribeTablesFunctionParameters newParameters() {
+    return new DescribeTablesFunctionParameters();
   }
 }

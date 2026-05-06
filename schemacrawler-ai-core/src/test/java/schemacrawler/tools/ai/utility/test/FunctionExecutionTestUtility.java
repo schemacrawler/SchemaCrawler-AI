@@ -34,6 +34,25 @@ public class FunctionExecutionTestUtility {
       final DatabaseConnectionSource connectionSource,
       final boolean hasResults)
       throws Exception {
+    assertFunctionExecution(
+        testContext.testMethodFullName(),
+        functionDefinition,
+        args,
+        catalog,
+        erModel,
+        connectionSource,
+        hasResults);
+  }
+
+  public static <P extends FunctionParameters> void assertFunctionExecution(
+      final String resourceName,
+      final FunctionDefinition<P> functionDefinition,
+      final P args,
+      final Catalog catalog,
+      final ERModel erModel,
+      final DatabaseConnectionSource connectionSource,
+      final boolean hasResults)
+      throws Exception {
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {
       final FunctionExecutor<P> executor = functionDefinition.newExecutor();
@@ -50,8 +69,7 @@ public class FunctionExecutionTestUtility {
       }
       out.write(results);
     }
-    assertThat(
-        outputOf(testout), hasSameContentAs(classpathResource(testContext.testMethodFullName())));
+    assertThat(outputOf(testout), hasSameContentAs(classpathResource(resourceName)));
   }
 
   private FunctionExecutionTestUtility() {

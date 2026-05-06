@@ -21,6 +21,11 @@ public record ExceptionFunctionReturn(Exception exception) implements FunctionRe
   }
 
   @Override
+  public FunctionReturnMetadata getMetadata() {
+    return FunctionReturnMetadata.JSON;
+  }
+
+  @Override
   public String get() {
     final ObjectNode objectNode = mapper.createObjectNode();
     objectNode.putPOJO("exception", new ExceptionInfo(exception));

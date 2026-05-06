@@ -38,12 +38,12 @@ public final class TableSampleFunctionDefinition
   }
 
   @Override
-  public TableSampleFunctionParameters newParameters() {
-    return new TableSampleFunctionParameters();
+  public TableSampleFunctionExecutor newExecutor() {
+    return new TableSampleFunctionExecutor(getFunctionName());
   }
 
   @Override
-  public TableSampleFunctionExecutor newExecutor() {
-    return new TableSampleFunctionExecutor(getFunctionName());
+  public TableSampleFunctionParameters newParameters() {
+    return new TableSampleFunctionParameters();
   }
 }

@@ -8,8 +8,10 @@
 
 package schemacrawler.tools.ai.mcpserver.server.test;
 
+import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
@@ -152,7 +154,12 @@ public class ToolHelperTest {
     final CallToolResult callToolResult =
         syncToolSpecification.callHandler().apply(null, callToolRequest);
     assertThat(callToolResult, is(not(nullValue())));
+    assertThat(callToolResult.content(), hasSize(2));
     final TextContent textContent = (TextContent) callToolResult.content().getFirst();
     assertThat(textContent.text(), is("ok"));
+    assertThat(textContent.meta(), is(not(nullValue())));
+    assertThat(textContent.meta().containsKey("schemacrawler-ai/mime-type"), is(true));
+    final TextContent metadataContent = (TextContent) callToolResult.content().getLast();
+    assertThat(metadataContent.text(), containsString("mime-type"));
   }
 }

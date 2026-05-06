@@ -13,11 +13,12 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.EnumSource;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionParameters;
+import schemacrawler.tools.ai.functions.DiagramFunctionParameters.DiagramType;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
 import us.fatehi.test.utility.TestObjectUtility;
@@ -30,9 +31,12 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
 
-  @Test
-  public void testExecute(final TestContext testContext) throws Exception {
-    DatabaseConnectionSource connectionSource =
+  @ParameterizedTest
+  @EnumSource(DiagramType.class)
+  public void testExecute(final DiagramType diagramType, final TestContext testContext)
+      throws Exception {
+    final String resourceName = testContext.testMethodFullName() + "." + diagramType.name();
+    final DatabaseConnectionSource connectionSource =
         DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     final DiagramFunctionDefinition functionDefinition = new DiagramFunctionDefinition();
     final String argumentsString =
@@ -41,15 +45,16 @@ public class ExecuteDiagramFunctionTest extends AbstractFunctionTest {
           "table_name" : "Authors",
           "include_child_tables" : true,
           "include_referenced_tables" : false,
-          "diagram_type" : "MERMAID"
+          "diagram_type" : "%s"
         }
-        """;
+        """
+            .formatted(diagramType.name());
     final DiagramFunctionParameters args =
         DeserializationUtility.instantiateArguments(
             argumentsString, DiagramFunctionParameters.class);
     assertThat("Could not instantiate arguments", args, is(not(nullValue())));
 
     FunctionExecutionTestUtility.assertFunctionExecution(
-        testContext, functionDefinition, args, catalog, erModel, connectionSource, true);
+        resourceName, functionDefinition, args, catalog, erModel, connectionSource, true);
   }
 }

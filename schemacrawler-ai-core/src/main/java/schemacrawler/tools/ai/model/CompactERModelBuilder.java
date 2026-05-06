@@ -59,7 +59,7 @@ public final class CompactERModelBuilder implements Builder<Collection<EntityDoc
 
     final Collection<EntityDocument> entityDocuments = new ArrayList<>();
     final Collection<Entity> entities;
-    if (entityType == null | entityType == EntityType.unknown) {
+    if (entityType == null || entityType == EntityType.unknown) {
       entities = erModel.getEntities();
     } else {
       entities = erModel.getEntitiesByType(entityType);

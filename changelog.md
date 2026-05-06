@@ -2,8 +2,15 @@
 
 SchemaCrawler AI release notes.
 
-<a name="v17.10.3-1"></a>
-## Release 17.10.3-1 - 2026-04-30
+
+<a name="v17.11.0-2"></a>
+## Release 17.11.0-2 - 2026-05-05
+
+- Add metadata in response with MIME type and rendering hints
+
+
+<a name="v17.11.0-1"></a>
+## Release 17.11.0-1 - 2026-04-30
 
 - Follow SchemaCrawler release
 - Upgrade to Spring AI 2.0.0-M5
