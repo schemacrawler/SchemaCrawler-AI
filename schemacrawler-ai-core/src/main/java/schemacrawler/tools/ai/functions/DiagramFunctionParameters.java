@@ -61,37 +61,23 @@ public record DiagramFunctionParameters(
         "text",
         "/templates/plantuml.vm",
         "https://editor.plantuml.com/",
-        "plantuml",
         "text/x-plantuml"),
-    MERMAID(
-        "template",
-        "text",
-        "/templates/mermaid.vm",
-        "https://mermaid.live/",
-        "mermaid",
-        "text/x-mermaid"),
-    DBML("template", "text", "/templates/dbml.vm", "https://dbdiagram.io/d", "dbml", "text/x-dbml"),
+    MERMAID("template", "text", "/templates/mermaid.vm", "https://mermaid.live/", "text/x-mermaid"),
+    DBML("template", "text", "/templates/dbml.vm", "https://dbdiagram.io/d", "text/x-dbml"),
     QUICKDBD(
         "template",
         "text",
         "/templates/quickdbd.vm",
         "https://app.quickdatabasediagrams.com/#/",
-        "quickdbd",
         "text/x-quickdbd"),
     GRAPHVIZ(
-        "schema",
-        "scdot",
-        "",
-        "https://dreampuf.github.io/GraphvizOnline/",
-        "dot",
-        "text/vnd.graphviz"),
+        "schema", "scdot", "", "https://dreampuf.github.io/GraphvizOnline/", "text/vnd.graphviz"),
     ;
 
     private final String command;
     private final String outputFormatValue;
     private final String script;
     private final String onlineEditorUrl;
-    private final String format;
     private final String mediaType;
 
     DiagramType(
@@ -99,13 +85,11 @@ public record DiagramFunctionParameters(
         final String outputFormatValue,
         final String script,
         final String url,
-        final String format,
         final String mediaType) {
       this.command = command;
       this.outputFormatValue = outputFormatValue;
       this.script = script;
       onlineEditorUrl = url;
-      this.format = format;
       this.mediaType = mediaType;
     }
 
@@ -113,23 +97,11 @@ public record DiagramFunctionParameters(
       return command;
     }
 
-    public String getFormat() {
-      return format;
-    }
-
-    public String getMediaType() {
-      return mediaType;
-    }
-
     public FunctionReturnMetadata getMetadata() {
       final String renderHint =
           "Use an online service such as Kroki to render diagram images, "
               + "or ask the user to use a service such as %s".formatted(onlineEditorUrl);
-      return new FunctionReturnMetadata(format, mediaType, renderHint);
-    }
-
-    public String getOnlineEditorUrl() {
-      return onlineEditorUrl;
+      return new FunctionReturnMetadata(name().toLowerCase(), mediaType, renderHint);
     }
 
     public String getOutputFormatValue() {
