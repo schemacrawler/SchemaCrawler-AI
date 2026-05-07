@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.1-1"></a>
+## Release 17.11.1-1 - 2026-05-08
+
+- Handle bridge tables and views better in catalogs and ER models
+
+
 <a name="v17.11.0-2"></a>
 ## Release 17.11.0-2 - 2026-05-05
 
