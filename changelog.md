@@ -7,6 +7,7 @@ SchemaCrawler AI release notes.
 ## Release 17.11.1-1 - 2026-05-08
 
 - Handle bridge tables and views better in catalogs and ER models
+- Upgrade to Spring AI 2.0.0-M6
 - Follow SchemaCrawler release
 
 
