@@ -8,11 +8,11 @@
     "url": "https://github.com/schemacrawler/SchemaCrawler-AI",
     "source": "github"
   },
-  "version": "v17.11.0-2",
+  "version": "v17.11.1-1",
   "packages": [
     {
       "registryType": "oci",
-      "identifier": "schemacrawler/schemacrawler-ai:17.11.0-2",
+      "identifier": "schemacrawler/schemacrawler-ai:17.11.1-1",
       "transport": {
         "type": "stdio"
       },
