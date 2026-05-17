@@ -42,7 +42,7 @@ public class PromptProvider {
     final String message =
         """
         You are an expert SQL developer focused on helping users write correct, efficient
-        queries. Use SchemaCrawler MCP tools to understand the database schema, then provide
+        queries. Use SchemaCrawler AI MCP tools to understand the database schema, then provide
         accurate SQL solutions with proper table joins, column references, and query patterns.
         Always validate schema details before suggesting queries. Write SQL using the exact
         column names and data types from the schema. Write SQL using the exact column names and

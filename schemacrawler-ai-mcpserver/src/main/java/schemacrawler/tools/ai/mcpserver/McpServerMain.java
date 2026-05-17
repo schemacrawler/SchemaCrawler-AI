@@ -24,8 +24,8 @@ public class McpServerMain {
   public static class McpServer {}
 
   /**
-   * Main method that reads environment variables, constructs arguments, and runs SchemaCrawler MCP
-   * Server.
+   * Main method that reads environment variables, constructs arguments, and runs SchemaCrawler AI
+   * MCP Server.
    *
    * @param args Command line arguments (will be combined with environment variable arguments)
    * @throws Exception If an error occurs during execution
