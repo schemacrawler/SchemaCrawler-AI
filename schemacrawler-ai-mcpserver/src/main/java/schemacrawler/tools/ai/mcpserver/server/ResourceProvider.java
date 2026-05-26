@@ -25,7 +25,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
-import schemacrawler.schemacrawler.exceptions.IORuntimeException;
+import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.model.AdditionalRoutineDetails;
 import schemacrawler.tools.ai.model.AdditionalTableDetails;
 import schemacrawler.tools.ai.model.CompactCatalogBuilder;
@@ -88,10 +88,10 @@ public class ResourceProvider {
                         || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
             .collect(Collectors.toList());
     if (databaseObjects.isEmpty()) {
-      throw new IORuntimeException("<%s> not found".formatted(databaseObjectName));
+      throw new ExecutionRuntimeException("<%s> not found".formatted(databaseObjectName));
     }
     if (databaseObjects.size() > 1) {
-      throw new IORuntimeException(
+      throw new ExecutionRuntimeException(
           "<%s> has too many matches - provide a fully-qualified name"
               .formatted(databaseObjectName));
     }

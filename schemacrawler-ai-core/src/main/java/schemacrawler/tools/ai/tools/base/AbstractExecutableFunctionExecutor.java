@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.io.IOException;
+import java.io.UncheckedIOException;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -25,7 +26,6 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.schemacrawler.exceptions.IORuntimeException;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -175,7 +175,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
           Files.newBufferedWriter(
               filePath, StandardOpenOption.CREATE, StandardOpenOption.TRUNCATE_EXISTING);
     } catch (final IOException e) {
-      throw new IORuntimeException("Could not create writer for temporary file", e);
+      throw new UncheckedIOException("Could not create writer for temporary file", e);
     }
     final OutputOptions outputOptions =
         OutputOptionsBuilder.builder()

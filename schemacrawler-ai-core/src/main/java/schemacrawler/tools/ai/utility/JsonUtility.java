@@ -14,6 +14,7 @@ import static tools.jackson.core.StreamReadFeature.INCLUDE_SOURCE_IN_LOCATION;
 import static tools.jackson.core.StreamWriteFeature.IGNORE_UNKNOWN;
 import static tools.jackson.databind.DeserializationFeature.FAIL_ON_NULL_FOR_PRIMITIVES;
 import static tools.jackson.databind.MapperFeature.ACCEPT_CASE_INSENSITIVE_ENUMS;
+import static tools.jackson.databind.MapperFeature.SORT_PROPERTIES_ALPHABETICALLY;
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 import static tools.jackson.databind.SerializationFeature.ORDER_MAP_ENTRIES_BY_KEYS;
 import static tools.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJECT_ID;
@@ -32,12 +33,13 @@ public class JsonUtility {
       final MapperBuilder<? extends ObjectMapper, ?> mapperBuilder) {
 
     requireNonNull(mapperBuilder, "No mapper builder provided");
+    // De-serialization
     mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
     mapperBuilder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
-    //
+    // Serialization
     mapperBuilder.enable(IGNORE_UNKNOWN);
     mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
-    mapperBuilder.enable(ACCEPT_CASE_INSENSITIVE_ENUMS);
+    mapperBuilder.enable(SORT_PROPERTIES_ALPHABETICALLY, ACCEPT_CASE_INSENSITIVE_ENUMS);
 
     final ObjectMapper objectMapper = mapperBuilder.build();
     return objectMapper;
