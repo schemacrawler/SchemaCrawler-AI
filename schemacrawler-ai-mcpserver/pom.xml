@@ -44,7 +44,7 @@
       <dependency>
         <groupId>org.springframework.ai</groupId>
         <artifactId>spring-ai-bom</artifactId>
-        <version>2.0.0-M6</version>
+        <version>2.0.0-M7</version>
         <type>pom</type>
         <scope>import</scope>
       </dependency>
@@ -65,6 +65,14 @@
       <groupId>us.fatehi</groupId>
       <artifactId>schemacrawler-ai-core</artifactId>
       <version>${project.version}</version>
+    </dependency>
+
+    <!-- Workaround for Spring AI M7 bug (PR #6088): spring-ai-autoconfigure-mcp-server-common
+         is marked optional in spring-ai-autoconfigure-mcp-server-webmvc but its classes are
+         referenced at runtime. Remove when upgrading to M8+. -->
+    <dependency>
+      <groupId>org.springframework.ai</groupId>
+      <artifactId>spring-ai-autoconfigure-mcp-server-common</artifactId>
     </dependency>
 
     <dependency>
