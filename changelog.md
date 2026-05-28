@@ -3,6 +3,13 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.2"></a>
+## Release 17.11.2 - 2026-05-31
+
+- Refactor object to string, and produce valid JSON logs
+- Upgrade to Spring AI 2.0.0 M8
+
+
 <a name="v17.11.1-1"></a>
 ## Release 17.11.1-1 - 2026-05-08
 
