@@ -180,7 +180,7 @@ public final class SchemaCrawlerContext {
       return defaultValue;
     }
     try {
-      return Level.parse(value);
+      return Level.parse(value.toUpperCase());
     } catch (final Exception e) {
       return defaultValue;
     }
