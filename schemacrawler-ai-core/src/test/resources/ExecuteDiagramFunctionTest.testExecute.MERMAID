@@ -5,7 +5,13 @@ config:
 ---
 erDiagram
 
-  "PUBLIC.BOOKS.AUTHORS [strong entity]" {
+  classDef strong_entity stroke:#283593;
+  classDef subtype stroke:#1976D2;
+  classDef weak_entity stroke:#1976D2;
+  classDef unknown stroke:#AAAAAA;
+  classDef non_entity stroke:#AAAAAA;
+
+  "PUBLIC.BOOKS.AUTHORS":::strong_entity {
     string FIRSTNAME
     string LASTNAME
     string ADDRESS1
@@ -16,7 +22,7 @@ erDiagram
     string COUNTRY
   }
 
-  "PUBLIC.BOOKS.BOOKS [strong entity]" {
+  "PUBLIC.BOOKS.BOOKS":::strong_entity {
     string TITLE "Book title"
     string DESCRIPTION "Book description (Usually the blurb from the book jacket or promotional materials)"
     integer PUBLISHERID "Foreign key to the book publisher"
@@ -24,4 +30,4 @@ erDiagram
     decimal PRICE "Current price for the book"
   }
 
-  "PUBLIC.BOOKS.AUTHORS [strong entity]" }o--o{ "PUBLIC.BOOKS.BOOKS [strong entity]" : "via bridge table BOOKAUTHORS"
+  "PUBLIC.BOOKS.AUTHORS" }o--o{ "PUBLIC.BOOKS.BOOKS" : "via bridge table BOOKAUTHORS"
