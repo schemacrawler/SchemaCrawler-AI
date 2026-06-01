@@ -14,6 +14,7 @@ import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExcepti
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
+import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -131,6 +132,9 @@ public class ToolHelper {
       LOGGER.log(
           Level.INFO, "Preparing to register tool:%n%s".formatted(definitionNode.toPrettyString()));
     }
+    final String inputSchema = inputSchemaNode.toString();
+
+    final McpJsonMapper jsonMapper = new JacksonMcpJsonMapperSupplier().get();
 
     final McpSchema.ToolAnnotations toolAnnotations =
         new McpSchema.ToolAnnotations(
@@ -142,11 +146,9 @@ public class ToolHelper {
             /* returnDirect= */ false);
 
     final McpSchema.Tool tool =
-        McpSchema.Tool.builder()
-            .name(toolName)
+        McpSchema.Tool.builder(toolName, jsonMapper, inputSchema)
             .title(functionDefinition.getTitle())
             .description(functionDefinition.getDescription())
-            .inputSchema(new JacksonMcpJsonMapperSupplier().get(), inputSchemaNode.toString())
             .annotations(toolAnnotations)
             .build();
     return tool;
