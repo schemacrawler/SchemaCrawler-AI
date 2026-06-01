@@ -125,6 +125,7 @@ public class ToolHelper {
 
     final String toolName = functionDefinition.getName();
     final String title = functionDefinition.getTitle();
+    final boolean isIdempotent = functionDefinition.isIdempotent();
 
     final JsonNode definitionNode = functionDefinition.toJson();
     if (definitionNode == null || !definitionNode.has("inputSchema")) {
@@ -144,7 +145,7 @@ public class ToolHelper {
             title,
             /* readOnlyHint= */ true,
             /* destructiveHint= */ false,
-            /* idempotentHint= */ true,
+            /* idempotentHint= */ isIdempotent,
             /* openWorldHint= */ false,
             /* returnDirect= */ false);
 

@@ -25,6 +25,8 @@ public interface FunctionDefinition<P extends FunctionParameters> {
 
   String getTitle();
 
+  boolean isIdempotent();
+
   FunctionExecutor<P> newExecutor();
 
   P newParameters();

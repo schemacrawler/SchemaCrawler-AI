@@ -120,6 +120,11 @@ public class ToolHelperTest {
     }
 
     @Override
+    public boolean isIdempotent() {
+      return true;
+    }
+
+    @Override
     public boolean usesConnection() {
       return false;
     }
