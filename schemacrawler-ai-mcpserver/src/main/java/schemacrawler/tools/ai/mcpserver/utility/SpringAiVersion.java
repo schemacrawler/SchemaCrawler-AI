@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.mcpserver.utility;
 
+import static java.util.Objects.requireNonNullElse;
+
 import java.io.Serial;
 import us.fatehi.utility.property.BaseProductVersion;
 
@@ -22,7 +24,7 @@ public class SpringAiVersion extends BaseProductVersion {
       final Package springAiPackage =
           org.springframework.ai.chat.model.ChatModel.class.getPackage();
       final String version = springAiPackage.getImplementationVersion();
-      return version != null ? version : unknownVersion;
+      return requireNonNullElse(version, unknownVersion);
     } catch (final Exception e) {
       return unknownVersion;
     }

@@ -32,7 +32,7 @@ public record FunctionReturnMetadata(String format, String mimeType, String rend
 
   /** Returns a flat map with the given prefix prepended to each key. */
   public Map<String, Object> toMetadataMap(final String prefix) {
-    final String p = prefix != null ? prefix : "";
+    final String p = trimToEmpty(prefix);
     return Map.of(p + "format", format, p + "mime-type", mimeType, p + "render-hint", renderHint);
   }
 }

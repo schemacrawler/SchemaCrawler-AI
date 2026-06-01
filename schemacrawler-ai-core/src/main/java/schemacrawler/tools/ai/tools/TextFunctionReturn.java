@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.tools;
 
+import static java.util.Objects.requireNonNullElse;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 public record TextFunctionReturn(String text, FunctionReturnMetadata metadata)
@@ -19,7 +20,7 @@ public record TextFunctionReturn(String text, FunctionReturnMetadata metadata)
 
   public TextFunctionReturn {
     text = trimToEmpty(text);
-    metadata = metadata != null ? metadata : FunctionReturnMetadata.TEXT;
+    metadata = requireNonNullElse(metadata, FunctionReturnMetadata.TEXT);
   }
 
   @Override
