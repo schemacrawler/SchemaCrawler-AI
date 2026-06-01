@@ -120,6 +120,11 @@ public class ToolHelperTest {
     }
 
     @Override
+    public boolean isIdempotent() {
+      return true;
+    }
+
+    @Override
     public boolean usesConnection() {
       return false;
     }
@@ -150,7 +155,8 @@ public class ToolHelperTest {
     final TrivialFunctionDefinition functionDefinition = new TrivialFunctionDefinition();
     final SyncToolSpecification syncToolSpecification =
         toolHelper.toSyncToolSpecification(functionDefinition);
-    final CallToolRequest callToolRequest = new CallToolRequest("", Collections.emptyMap());
+    final CallToolRequest callToolRequest =
+        CallToolRequest.builder("test-tool-call").arguments(Collections.emptyMap()).build();
     final CallToolResult callToolResult =
         syncToolSpecification.callHandler().apply(null, callToolRequest);
     assertThat(callToolResult, is(not(nullValue())));

@@ -36,6 +36,11 @@ public abstract class AbstractFunctionDefinition<P extends FunctionParameters>
   }
 
   @Override
+  public boolean isIdempotent() {
+    return true;
+  }
+
+  @Override
   public JsonNode toJson() {
     if (definition == null) {
       definition = buildDefinition();

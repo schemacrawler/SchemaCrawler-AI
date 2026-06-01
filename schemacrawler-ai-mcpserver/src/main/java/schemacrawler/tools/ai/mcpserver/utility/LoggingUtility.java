@@ -37,10 +37,8 @@ public final class LoggingUtility {
     // Log to client
     final String clientLogMessage = message + "\n" + logData.toPrettyString().indent(2);
     exchange.loggingNotification(
-        LoggingMessageNotification.builder()
+        LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
             .logger(LOGGER.getName())
-            .level(LoggingLevel.INFO)
-            .data(clientLogMessage)
             .build());
     // Log to server
     final String serverLogMessage = "\n" + toServerLog(exchange, message, logData);
@@ -57,10 +55,8 @@ public final class LoggingUtility {
     e.printStackTrace(new PrintWriter(stWriter));
     final String clientLogMessage = message + "\n" + stWriter.toString().indent(2);
     exchange.loggingNotification(
-        LoggingMessageNotification.builder()
+        LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
             .logger(LOGGER.getName())
-            .level(LoggingLevel.ERROR)
-            .data(clientLogMessage)
             .build());
   }
 

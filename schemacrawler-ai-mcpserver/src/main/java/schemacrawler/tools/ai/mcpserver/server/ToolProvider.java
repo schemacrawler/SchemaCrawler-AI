@@ -49,7 +49,14 @@ public class ToolProvider {
   @McpTool(
       name = "mcp-server-health",
       title = "Show SchemaCrawler AI MCP Server health",
-      description = "Gets the SchemaCrawler AI MCP Server version and uptime status.")
+      description = "Gets the SchemaCrawler AI MCP Server version and uptime status.",
+      annotations =
+          @McpTool.McpAnnotations(
+              title = "MCP Server Health",
+              readOnlyHint = true,
+              destructiveHint = false,
+              idempotentHint = false, // Health can change based on server uptime
+              openWorldHint = false))
   public JsonNode getSchemaCrawlerVersion(
       final McpSyncServerExchange exchange,
       @McpArg(description = "MCP Client identification, if available.", required = false)

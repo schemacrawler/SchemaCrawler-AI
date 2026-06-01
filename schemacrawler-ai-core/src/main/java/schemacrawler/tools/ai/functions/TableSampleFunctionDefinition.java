@@ -37,6 +37,12 @@ public final class TableSampleFunctionDefinition
     return "Sample table data";
   }
 
+  /** Retrieves random rows, so is not idempotent. */
+  @Override
+  public boolean isIdempotent() {
+    return false;
+  }
+
   @Override
   public TableSampleFunctionExecutor newExecutor() {
     return new TableSampleFunctionExecutor(getFunctionName());

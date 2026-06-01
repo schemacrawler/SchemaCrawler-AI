@@ -30,11 +30,13 @@ public class PromptProvider {
         from the tools or stated by the user.
         """
                 .stripIndent()
-                .replace("\n", " ")
+                .replace("\\R", " ")
                 .trim()
             + "\n\n";
-    return new GetPromptResult(
-        "Database expert prompt", List.of(new PromptMessage(Role.USER, new TextContent(message))));
+    final TextContent content = TextContent.builder(message).build();
+    return GetPromptResult.builder(List.of(new PromptMessage(Role.USER, content)))
+        .description("Database expert prompt")
+        .build();
   }
 
   @McpPrompt(name = "sql-query-assistant", description = "Provide help writing SQL queries")
@@ -51,11 +53,12 @@ public class PromptProvider {
         Use schema-qualified names (schema.table) when multiple schemas exist.
         """
                 .stripIndent()
-                .replace("\n", " ")
+                .replace("\\R", " ")
                 .trim()
             + "\n\n";
-    return new GetPromptResult(
-        "SQL query assistant prompt",
-        List.of(new PromptMessage(Role.USER, new TextContent(message))));
+    final TextContent content = TextContent.builder(message).build();
+    return GetPromptResult.builder(List.of(new PromptMessage(Role.USER, content)))
+        .description("SQL query assistant prompt")
+        .build();
   }
 }
