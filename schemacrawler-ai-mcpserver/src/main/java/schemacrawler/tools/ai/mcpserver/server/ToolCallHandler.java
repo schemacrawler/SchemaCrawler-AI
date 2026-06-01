@@ -13,6 +13,7 @@ import static java.util.Objects.requireNonNullElse;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Annotations;
@@ -27,12 +28,15 @@ import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
-import schemacrawler.tools.ai.tools.FunctionReturnMetadata;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
+import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 class ToolCallHandler
     implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
+
+  private static final ObjectMapper NO_INDENT_MAPPER =
+      mapper.rebuild().disable(INDENT_OUTPUT).build();
 
   private final FunctionCallback<? extends FunctionParameters> functionCallback;
 
@@ -60,27 +64,26 @@ class ToolCallHandler
   }
 
   private List<Content> createContent(final FunctionReturn functionReturn) {
-
     final FunctionReturn result = requireNonNullElse(functionReturn, new TextFunctionReturn(""));
-    final FunctionReturnMetadata resultMetadata = result.getMetadata();
-
-    final Content toolOutput =
-        TextContent.builder(result.get())
-            .meta(resultMetadata.toMetadataMap("schemacrawler-ai/"))
-            .build();
-    // Repeat the metadata as a content item for clients that do not read the meta
-    // field
-    final Content metadataContent = toolResultMetadataContent(resultMetadata);
-
-    return List.of(toolOutput, metadataContent);
+    return List.of(toolOutputContent(result), toolOutputMetadataContent(result));
   }
 
-  private Content toolResultMetadataContent(final FunctionReturnMetadata resultMetadata) {
+  /** Create content from the tool result. */
+  private Content toolOutputContent(final FunctionReturn result) {
+    final Content toolOutput =
+        TextContent.builder(result.get())
+            .meta(result.getMetadata().toMetadataMap("schemacrawler-ai/"))
+            .build();
+    return toolOutput;
+  }
+
+  /** Repeat the metadata as a content item for clients that do not read the meta field. */
+  private Content toolOutputMetadataContent(final FunctionReturn result) {
     final Annotations annotations =
         Annotations.builder().audience(List.of(Role.ASSISTANT)).priority(0.7).build();
     final Content metadataContent =
         TextContent.builder(
-                ToolHelper.NO_INDENT_MAPPER.writeValueAsString(resultMetadata.toMetadataMap()))
+                NO_INDENT_MAPPER.writeValueAsString(result.getMetadata().toMetadataMap()))
             .annotations(annotations)
             .build();
     return metadataContent;

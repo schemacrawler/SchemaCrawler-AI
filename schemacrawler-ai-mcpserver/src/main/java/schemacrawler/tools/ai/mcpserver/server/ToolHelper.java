@@ -9,8 +9,6 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
-import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
 import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
@@ -28,14 +26,11 @@ import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import tools.jackson.databind.JsonNode;
-import tools.jackson.databind.ObjectMapper;
 
 @Component
 public class ToolHelper {
 
   private static final Logger LOGGER = Logger.getLogger(ToolHelper.class.getCanonicalName());
-
-  static final ObjectMapper NO_INDENT_MAPPER = mapper.rebuild().disable(INDENT_OUTPUT).build();
 
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
