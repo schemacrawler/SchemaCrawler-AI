@@ -18,12 +18,14 @@ import io.modelcontextprotocol.json.McpJsonMapper;
 import io.modelcontextprotocol.json.jackson3.JacksonMcpJsonMapperSupplier;
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema;
+import io.modelcontextprotocol.spec.McpSchema.Annotations;
 import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.Content;
+import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import io.modelcontextprotocol.spec.McpSchema.Tool;
+import io.modelcontextprotocol.spec.McpSchema.ToolAnnotations;
 import java.util.List;
 import java.util.function.BiFunction;
 import java.util.logging.Level;
@@ -94,14 +96,12 @@ public class ToolHelper {
               .meta(functionReturnMetadata.toMetadataMap("schemacrawler-ai/"))
               .build();
       // Repeat the metadata as content for the assistant, for clients that do not use metadata
+      final Annotations annotations =
+          Annotations.builder().audience(List.of(Role.ASSISTANT)).priority(0.7).build();
       final Content metadata =
           TextContent.builder(
                   noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()))
-              .annotations(
-                  McpSchema.Annotations.builder()
-                      .audience(List.of(McpSchema.Role.ASSISTANT))
-                      .priority(0.7)
-                      .build())
+              .annotations(annotations)
               .build();
 
       return List.of(content, metadata);
@@ -117,7 +117,7 @@ public class ToolHelper {
       McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
           final FunctionDefinition<P> functionDefinition) {
 
-    final McpSchema.Tool tool = toTool(functionDefinition);
+    final Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
         new FunctionCallback<>(functionDefinition, catalog, erModel);
     final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
@@ -146,17 +146,18 @@ public class ToolHelper {
 
     final McpJsonMapper jsonMapper = new JacksonMcpJsonMapperSupplier().get();
 
-    final McpSchema.ToolAnnotations toolAnnotations =
-        new McpSchema.ToolAnnotations(
-            title,
-            /* readOnlyHint= */ true,
-            /* destructiveHint= */ false,
-            /* idempotentHint= */ isIdempotent,
-            /* openWorldHint= */ false,
-            /* returnDirect= */ false);
+    final ToolAnnotations toolAnnotations =
+        ToolAnnotations.builder()
+            .title(title)
+            .readOnlyHint(true)
+            .destructiveHint(false)
+            .idempotentHint(isIdempotent)
+            .openWorldHint(false)
+            .returnDirect(false)
+            .build();
 
-    final McpSchema.Tool tool =
-        McpSchema.Tool.builder(toolName, jsonMapper, inputSchema)
+    final Tool tool =
+        Tool.builder(toolName, jsonMapper, inputSchema)
             .title(title)
             .description(functionDefinition.getDescription())
             .annotations(toolAnnotations)
