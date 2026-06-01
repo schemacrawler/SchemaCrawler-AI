@@ -90,13 +90,19 @@ public class ToolHelper {
       final FunctionReturnMetadata functionReturnMetadata = functionReturnValue.getMetadata();
 
       final Content content =
-          new TextContent(
-              null,
-              functionReturnValue.get(),
-              functionReturnMetadata.toMetadataMap("schemacrawler-ai/"));
+          TextContent.builder(functionReturnValue.get())
+              .meta(functionReturnMetadata.toMetadataMap("schemacrawler-ai/"))
+              .build();
+      // Repeat the metadata as content for the assistant, for clients that do not use metadata
       final Content metadata =
-          new TextContent(
-              noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()));
+          TextContent.builder(
+                  noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()))
+              .annotations(
+                  McpSchema.Annotations.builder()
+                      .audience(List.of(McpSchema.Role.ASSISTANT))
+                      .priority(0.7)
+                      .build())
+              .build();
 
       return List.of(content, metadata);
     }
