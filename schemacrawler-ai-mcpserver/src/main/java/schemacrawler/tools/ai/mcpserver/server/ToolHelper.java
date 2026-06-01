@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
 import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
@@ -77,38 +78,40 @@ public class ToolHelper {
       }
       final List<Content> content = createContent(functionReturn);
       final boolean inError = functionReturn instanceof ExceptionFunctionReturn;
-      final CallToolResult callToolResult =
-          CallToolResult.builder().content(content).isError(inError).build();
-      return callToolResult;
+      return CallToolResult.builder().content(content).isError(inError).build();
     }
 
     private List<Content> createContent(final FunctionReturn functionReturn) {
 
-      final ObjectMapper noIndentMapper = mapper.rebuild().disable(INDENT_OUTPUT).build();
+      final FunctionReturn result = requireNonNullElse(functionReturn, new TextFunctionReturn(""));
+      final FunctionReturnMetadata resultMetadata = result.getMetadata();
 
-      final FunctionReturn functionReturnValue =
-          functionReturn != null ? functionReturn : new TextFunctionReturn("");
-
-      final FunctionReturnMetadata functionReturnMetadata = functionReturnValue.getMetadata();
-
-      final Content content =
-          TextContent.builder(functionReturnValue.get())
-              .meta(functionReturnMetadata.toMetadataMap("schemacrawler-ai/"))
+      final Content toolOutput =
+          TextContent.builder(result.get())
+              .meta(resultMetadata.toMetadataMap("schemacrawler-ai/"))
               .build();
-      // Repeat the metadata as content for the assistant, for clients that do not use metadata
+      // Repeat the metadata as a content item for clients that do not read the meta
+      // field
+      final Content metadataContent = toolResultMetadataContent(resultMetadata);
+
+      return List.of(toolOutput, metadataContent);
+    }
+
+    private Content toolResultMetadataContent(final FunctionReturnMetadata resultMetadata) {
       final Annotations annotations =
           Annotations.builder().audience(List.of(Role.ASSISTANT)).priority(0.7).build();
-      final Content metadata =
-          TextContent.builder(
-                  noIndentMapper.writeValueAsString(functionReturnMetadata.toMetadataMap()))
+      final Content metadataContent =
+          TextContent.builder(NO_INDENT_MAPPER.writeValueAsString(resultMetadata.toMetadataMap()))
               .annotations(annotations)
               .build();
-
-      return List.of(content, metadata);
+      return metadataContent;
     }
   }
 
   private static final Logger LOGGER = Logger.getLogger(ToolHelper.class.getCanonicalName());
+
+  private static final ObjectMapper NO_INDENT_MAPPER =
+      mapper.rebuild().disable(INDENT_OUTPUT).build();
 
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
