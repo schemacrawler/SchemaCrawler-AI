@@ -122,7 +122,9 @@ public class ToolHelper {
   private <P extends FunctionParameters> Tool toTool(
       final FunctionDefinition<P> functionDefinition) {
     requireNonNull(functionDefinition, "No function definition provided");
+
     final String toolName = functionDefinition.getName();
+
     final JsonNode definitionNode = functionDefinition.toJson();
     if (definitionNode == null || !definitionNode.has("inputSchema")) {
       throw new InternalRuntimeException("Bad JSON node for <%s>".formatted(functionDefinition));
