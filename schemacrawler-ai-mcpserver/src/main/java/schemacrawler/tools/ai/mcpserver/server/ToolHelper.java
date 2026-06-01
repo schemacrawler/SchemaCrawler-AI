@@ -150,7 +150,7 @@ public class ToolHelper {
 
     final McpSchema.Tool tool =
         McpSchema.Tool.builder(toolName, jsonMapper, inputSchema)
-            .title(functionDefinition.getTitle())
+            .title(title)
             .description(functionDefinition.getDescription())
             .annotations(toolAnnotations)
             .build();
