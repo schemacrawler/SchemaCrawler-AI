@@ -132,12 +132,22 @@ public class ToolHelper {
           Level.INFO, "Preparing to register tool:%n%s".formatted(definitionNode.toPrettyString()));
     }
 
+    final McpSchema.ToolAnnotations toolAnnotations =
+        new McpSchema.ToolAnnotations(
+            null,
+            /* readOnlyHint= */ true,
+            /* destructiveHint= */ false,
+            /* idempotentHint= */ true,
+            /* openWorldHint= */ false,
+            /* returnDirect= */ false);
+
     final McpSchema.Tool tool =
         McpSchema.Tool.builder()
             .name(toolName)
             .title(functionDefinition.getTitle())
             .description(functionDefinition.getDescription())
             .inputSchema(new JacksonMcpJsonMapperSupplier().get(), inputSchemaNode.toString())
+            .annotations(toolAnnotations)
             .build();
     return tool;
   }
