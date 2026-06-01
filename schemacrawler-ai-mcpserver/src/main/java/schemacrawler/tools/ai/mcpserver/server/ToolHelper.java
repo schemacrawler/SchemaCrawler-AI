@@ -124,6 +124,7 @@ public class ToolHelper {
     requireNonNull(functionDefinition, "No function definition provided");
 
     final String toolName = functionDefinition.getName();
+    final String title = functionDefinition.getTitle();
 
     final JsonNode definitionNode = functionDefinition.toJson();
     if (definitionNode == null || !definitionNode.has("inputSchema")) {
@@ -140,7 +141,7 @@ public class ToolHelper {
 
     final McpSchema.ToolAnnotations toolAnnotations =
         new McpSchema.ToolAnnotations(
-            null,
+            title,
             /* readOnlyHint= */ true,
             /* destructiveHint= */ false,
             /* idempotentHint= */ true,
