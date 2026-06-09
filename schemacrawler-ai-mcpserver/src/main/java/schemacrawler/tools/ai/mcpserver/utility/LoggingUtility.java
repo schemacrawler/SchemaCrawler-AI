@@ -16,6 +16,11 @@ import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.springframework.beans.factory.BeanFactory;
+import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.loader.catalog.summary.CatalogSummaryUtility;
+import schemacrawler.loader.ermodel.summary.ERModelSummaryUtility;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -60,8 +65,37 @@ public final class LoggingUtility {
             .build());
   }
 
+  public static void logStartup(final BeanFactory beanFactory) {
+    if (beanFactory == null || !LOGGER.isLoggable(Level.INFO)) {
+      return;
+    }
+
+    final Catalog catalog = beanFactory.getBean("catalog", Catalog.class);
+    final ERModel erModel = beanFactory.getBean("erModel", ERModel.class);
+
+    try (final StringWriter stringWriter = new StringWriter();
+        final PrintWriter writer = new PrintWriter(stringWriter)) {
+
+      if (catalog != null) {
+        writer.println("Catalog summary:%n%s".formatted(CatalogSummaryUtility.summarize(catalog)));
+        writer.println();
+      }
+
+      if (erModel != null) {
+        writer.println("ER Model summary:%n%s".formatted(ERModelSummaryUtility.summarize(erModel)));
+        writer.println();
+      }
+
+      writer.close();
+
+      LOGGER.log(Level.INFO, stringWriter.toString());
+    } catch (final Exception e) {
+      // Ignore exception
+    }
+  }
+
   public static void logStartup(final McpServerTransportType mcpTransport) {
-    if (!LOGGER.isLoggable(Level.INFO)) {
+    if (mcpTransport == null || !LOGGER.isLoggable(Level.INFO)) {
       return;
     }
 

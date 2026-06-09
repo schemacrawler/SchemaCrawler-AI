@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.mcpserver;
 import java.util.Collection;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.context.ConfigurableApplicationContext;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.utility.LoggingUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -38,11 +39,13 @@ public class McpServerMain {
     final SchemaCrawlerContext scContext = new SchemaCrawlerContext();
     final McpServerContext context = new McpServerContext();
     final McpServerTransportType mcpTransport = context.mcpTransport();
-    new SpringApplicationBuilder(McpServer.class)
-        .initializers(new McpServerInitializer(scContext, context))
-        .profiles(mcpTransport.name())
-        .run();
+    final ConfigurableApplicationContext app =
+        new SpringApplicationBuilder(McpServer.class)
+            .initializers(new McpServerInitializer(scContext, context))
+            .profiles(mcpTransport.name())
+            .run();
 
+    LoggingUtility.logStartup(app);
     LoggingUtility.logStartup(mcpTransport);
   }
 
@@ -51,12 +54,15 @@ public class McpServerMain {
       final DatabaseConnectionSource databaseConnectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
-    new SpringApplicationBuilder(McpServer.class)
-        .initializers(
-            new McpServerInitializer(catalog, databaseConnectionSource, mcpTransport, excludeTools))
-        .profiles(mcpTransport.name())
-        .run();
+    final ConfigurableApplicationContext app =
+        new SpringApplicationBuilder(McpServer.class)
+            .initializers(
+                new McpServerInitializer(
+                    catalog, databaseConnectionSource, mcpTransport, excludeTools))
+            .profiles(mcpTransport.name())
+            .run();
 
+    LoggingUtility.logStartup(app);
     LoggingUtility.logStartup(mcpTransport);
   }
 }
