@@ -2,6 +2,13 @@
 
 SchemaCrawler AI release notes.
 
+
+<a name="v17.11.3-1"></a>
+## Release 17.11.3-1 - 2026-06-12
+
+- Correct cardinality display in Mermaid diagrams
+
+
 <a name="v17.11.2-2"></a>
 ## Release 17.11.2-2 - 2026-05-31
 
