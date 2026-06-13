@@ -6,6 +6,7 @@ SchemaCrawler AI release notes.
 <a name="v17.11.3-1"></a>
 ## Release 17.11.3-1 - 2026-06-12
 
+- Update to Spring AI 2.0.0 GA
 - Correct cardinality display in Mermaid diagrams
 
 
