@@ -11,7 +11,7 @@ package schemacrawler.tools.ai.model;
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static schemacrawler.utility.MetaDataUtility.getTypeName;
-import static us.fatehi.utility.Utility.isBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -25,7 +25,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"schema", "name", "type"})
-public final class DatabaseObjectDocument implements Document {
+public class DatabaseObjectDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
@@ -36,14 +36,10 @@ public final class DatabaseObjectDocument implements Document {
   public DatabaseObjectDocument(final DatabaseObject databaseObject) {
     requireNonNull(databaseObject, "No database object provided");
 
-    final String schema = databaseObject.getSchema().getFullName();
-    if (!isBlank(schema)) {
-      schemaName = schema;
-    } else {
-      schemaName = null;
-    }
+    final String schemaName = databaseObject.getSchema().getFullName();
+    this.schemaName = trimToEmpty(schemaName);
     databaseObjectName = databaseObject.getName();
-    type = getTypeName(databaseObject);
+    type = getTypeName(databaseObject).toLowerCase();
   }
 
   @Override

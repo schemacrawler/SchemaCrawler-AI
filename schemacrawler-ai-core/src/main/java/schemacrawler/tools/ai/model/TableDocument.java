@@ -17,12 +17,10 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TAB
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -32,7 +30,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
@@ -62,13 +59,10 @@ import tools.jackson.databind.node.ObjectNode;
   "attributes",
   "definition"
 })
-public final class TableDocument implements Document {
+public final class TableDocument extends DatabaseObjectDocument {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
-  private final String schemaName;
-  private final String tableName;
-  private final String type;
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
@@ -85,14 +79,8 @@ public final class TableDocument implements Document {
       final Table table,
       final EntityType entityType,
       final Map<AdditionalTableDetails, Boolean> tableDetails) {
-    Objects.requireNonNull(table, "No table provided");
+    super(table);
     final Map<AdditionalTableDetails, Boolean> details = defaults(tableDetails);
-
-    final String schemaName = table.getSchema().getFullName();
-    this.schemaName = trimToEmpty(schemaName);
-
-    tableName = table.getName();
-    type = getTypeName(table).toLowerCase();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();
@@ -201,11 +189,6 @@ public final class TableDocument implements Document {
     return indexes;
   }
 
-  @Override
-  public String getName() {
-    return tableName;
-  }
-
   public IndexDocument getPrimaryKey() {
     return primaryKey;
   }
@@ -223,17 +206,8 @@ public final class TableDocument implements Document {
     return remarks;
   }
 
-  @JsonProperty("schema")
-  public String getSchemaName() {
-    return schemaName;
-  }
-
   public Collection<TriggerDocument> getTriggers() {
     return triggers;
-  }
-
-  public String getType() {
-    return type;
   }
 
   public Collection<DatabaseObjectDocument> getUsedByObjects() {
