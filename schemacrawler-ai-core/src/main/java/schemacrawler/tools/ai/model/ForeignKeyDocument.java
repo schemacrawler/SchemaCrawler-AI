@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import schemacrawler.ermodel.model.RelationshipCardinality;
@@ -25,13 +24,13 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "referenced-table", "cardinality"})
+@JsonPropertyOrder({"name", "referenced_table", "cardinality"})
 public final class ForeignKeyDocument implements Document {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String foreignKeyName;
-  private final String referencedTableName;
+  private final String referencedTable;
   private final RelationshipCardinality cardinality;
 
   ForeignKeyDocument(final ForeignKey foreignKey, final RelationshipCardinality cardinality) {
@@ -44,7 +43,7 @@ public final class ForeignKeyDocument implements Document {
       parentTable = columnReference.getPrimaryKeyColumn().getParent();
       break;
     }
-    referencedTableName = parentTable.getName();
+    referencedTable = parentTable.getFullName();
 
     this.cardinality = cardinality;
   }
@@ -58,9 +57,8 @@ public final class ForeignKeyDocument implements Document {
     return foreignKeyName;
   }
 
-  @JsonProperty("referenced-table")
-  public String getReferencedTableName() {
-    return referencedTableName;
+  public String getReferencedTable() {
+    return referencedTable;
   }
 
   @Override

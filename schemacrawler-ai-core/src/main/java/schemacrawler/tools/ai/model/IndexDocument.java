@@ -39,7 +39,8 @@ public final class IndexDocument implements Document {
     requireNonNull(index, "No index provided");
 
     indexName = index.getName();
-    columns = index.getColumns().stream().map(IndexColumn::getName).collect(Collectors.toList());
+    columns =
+        index.getColumns().stream().map(IndexColumn::getFullName).collect(Collectors.toList());
     isUnique = index.isUnique();
   }
 
@@ -49,7 +50,7 @@ public final class IndexDocument implements Document {
     indexName = primaryKey.getName();
     columns =
         primaryKey.getConstrainedColumns().stream()
-            .map(TableConstraintColumn::getName)
+            .map(TableConstraintColumn::getFullName)
             .collect(Collectors.toList());
     isUnique = true;
   }
