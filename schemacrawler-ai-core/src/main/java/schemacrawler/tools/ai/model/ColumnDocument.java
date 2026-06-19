@@ -23,19 +23,21 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "remarks", "data-type", "referenced-column"})
+@JsonPropertyOrder({"full_name", "name", "remarks", "data_type", "foreign_key_to"})
 public final class ColumnDocument implements Document {
 
   @Serial private static final long serialVersionUID = 5110252842937512910L;
 
+  private final String fullName;
   private final String columnName;
   private final String dataType;
   private final String remarks;
-  private final ReferencedColumnDocument referencedColumn;
+  private final String referencedColumn;
 
   ColumnDocument(final Column column, final Column pkColumn) {
     requireNonNull(column, "No column provided");
 
+    fullName = column.getFullName();
     columnName = column.getName();
 
     dataType = column.getColumnDataType().getName();
@@ -50,13 +52,16 @@ public final class ColumnDocument implements Document {
     if (pkColumn == null) {
       referencedColumn = null;
     } else {
-      referencedColumn = new ReferencedColumnDocument(pkColumn);
+      referencedColumn = pkColumn.getFullName();
     }
   }
 
-  @JsonProperty("data-type")
   public String getDataType() {
     return dataType;
+  }
+
+  public String getFullName() {
+    return fullName;
   }
 
   @Override
@@ -64,8 +69,8 @@ public final class ColumnDocument implements Document {
     return columnName;
   }
 
-  @JsonProperty("referenced-column")
-  public ReferencedColumnDocument getReferencedColumn() {
+  @JsonProperty("foreign_key_to")
+  public String getReferencedColumn() {
     return referencedColumn;
   }
 

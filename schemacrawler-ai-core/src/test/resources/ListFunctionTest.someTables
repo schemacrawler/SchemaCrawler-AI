@@ -1,1 +1,1 @@
-{"list":[{"schema":"PUBLIC.BOOKS","name":"AUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","type":"table"},{"schema":"PUBLIC.BOOKS","name":"AUTHORSLIST","type":"view"}]}
+{"list":[{"full_name":"PUBLIC.BOOKS.AUTHORS","schema":"PUBLIC.BOOKS","name":"AUTHORS","type":"table"},{"full_name":"PUBLIC.BOOKS.BOOKAUTHORS","schema":"PUBLIC.BOOKS","name":"BOOKAUTHORS","type":"table"},{"full_name":"PUBLIC.BOOKS.AUTHORSLIST","schema":"PUBLIC.BOOKS","name":"AUTHORSLIST","type":"view"}]}

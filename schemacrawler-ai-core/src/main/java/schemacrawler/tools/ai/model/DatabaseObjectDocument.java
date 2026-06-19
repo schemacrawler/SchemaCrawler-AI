@@ -24,11 +24,12 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "type"})
+@JsonPropertyOrder({"full_name", "schema", "name", "type"})
 public class DatabaseObjectDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
+  private final String fullName;
   private final String schemaName;
   private final String databaseObjectName;
   private final String type;
@@ -36,10 +37,15 @@ public class DatabaseObjectDocument implements Document {
   public DatabaseObjectDocument(final DatabaseObject databaseObject) {
     requireNonNull(databaseObject, "No database object provided");
 
+    fullName = databaseObject.getFullName();
     final String schemaName = databaseObject.getSchema().getFullName();
     this.schemaName = trimToEmpty(schemaName);
     databaseObjectName = databaseObject.getName();
     type = getTypeName(databaseObject).toLowerCase();
+  }
+
+  public String getFullName() {
+    return fullName;
   }
 
   @Override

@@ -1,1 +1,1 @@
-{"list":[{"schema":"PUBLIC.BOOKS","name":"PUBLICATIONS","type":"synonym"}]}
+{"list":[{"full_name":"PUBLIC.BOOKS.PUBLICATIONS","schema":"PUBLIC.BOOKS","name":"PUBLICATIONS","type":"synonym"}]}
