@@ -17,12 +17,12 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TAB
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -138,8 +138,8 @@ public final class TableDocument extends DatabaseObjectDocument {
     }
 
     if (details.get(USED_BY_OBJECTS)) {
-      final Collection<DatabaseObject> usedByDatabaseObjects = table.getUsedByObjects();
-      Collections.sort(new ArrayList<>(usedByDatabaseObjects));
+      final List<DatabaseObject> usedByDatabaseObjects = new ArrayList<>(table.getUsedByObjects());
+      Collections.sort(usedByDatabaseObjects);
       usedByObjects = new ArrayList<>();
       for (final DatabaseObject usingDatabaseObject : usedByDatabaseObjects) {
         usedByObjects.add(new DatabaseObjectDocument(usingDatabaseObject));
@@ -157,8 +157,13 @@ public final class TableDocument extends DatabaseObjectDocument {
     if (details.get(ATTRIBUTES)) {
       attributes = new HashMap<>();
       table.getAttributes().entrySet().stream()
-          .filter(entry -> entry.getValue() != null && !isBlank(entry.getValue().toString()))
-          .forEach(entry -> attributes.put(entry.getKey(), String.valueOf(entry.getValue())));
+          .filter(entry -> entry.getValue() != null)
+          .map(
+              entry ->
+                  new AbstractMap.SimpleImmutableEntry<String, String>(
+                      entry.getKey(), String.valueOf(entry.getValue())))
+          .filter(entry -> !"REMARKS".equals(entry.getKey()))
+          .forEach(entry -> attributes.put(entry.getKey(), entry.getValue()));
     } else {
       attributes = null;
     }
