@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import java.util.List;
@@ -24,7 +23,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "type", "required", "default-value", "enum-values"})
+@JsonPropertyOrder({"name", "type", "required", "default_value", "enum_values"})
 public final class EntityAttributeDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
@@ -55,11 +54,6 @@ public final class EntityAttributeDocument implements Document {
     return defaultValue;
   }
 
-  @JsonProperty("type")
-  public EntityAttributeType getEntityAttributeType() {
-    return type;
-  }
-
   public List<String> getEnumValues() {
     return enumValues;
   }
@@ -69,7 +63,10 @@ public final class EntityAttributeDocument implements Document {
     return entityAttributeName;
   }
 
-  @JsonProperty("required")
+  public EntityAttributeType getType() {
+    return type;
+  }
+
   public boolean isRequired() {
     return isRequired;
   }

@@ -8,9 +8,6 @@
 
 package schemacrawler.tools.ai.model;
 
-import static java.util.Objects.requireNonNull;
-import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -22,36 +19,22 @@ import java.util.Collection;
 import schemacrawler.ermodel.model.Entity;
 import schemacrawler.ermodel.model.EntityAttribute;
 import schemacrawler.ermodel.model.EntitySubtype;
-import schemacrawler.ermodel.model.EntityType;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
-import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"schema", "name", "entity-type", "supertype", "attributes", "remarks"})
-public final class EntityDocument implements Document {
+@JsonPropertyOrder({"full_name", "name", "remarks", "entity_type", "supertype", "attributes"})
+public final class EntityDocument extends DatabaseObjectDocument {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
-  private final String schemaName;
-  private final String entityName;
-  private final EntityType entityType;
   private final String supertype;
   private final Collection<EntityAttributeDocument> entityAttributes;
   private final String remarks;
 
   EntityDocument(final Entity entity) {
-    requireNonNull(entity, "No entity provided");
-
-    final String schema = entity.getTable().getSchema().getFullName();
-    if (!isBlank(schema)) {
-      schemaName = schema;
-    } else {
-      schemaName = null;
-    }
-    entityName = entity.getName();
-    entityType = entity.getType();
+    super(entity);
 
     if (entity instanceof final EntitySubtype subtype) {
       supertype = subtype.getSupertype().getName();
@@ -82,23 +65,8 @@ public final class EntityDocument implements Document {
     return entityAttributes;
   }
 
-  @JsonProperty("entity-type")
-  public EntityType getEntityType() {
-    return entityType;
-  }
-
-  @Override
-  public String getName() {
-    return entityName;
-  }
-
   public String getRemarks() {
     return remarks;
-  }
-
-  @JsonProperty("schema")
-  public String getSchemaName() {
-    return schemaName;
   }
 
   @JsonProperty("supertype")
@@ -107,12 +75,8 @@ public final class EntityDocument implements Document {
   }
 
   @Override
-  public ObjectNode toObjectNode() {
-    return mapper.valueToTree(this);
-  }
-
-  @Override
-  public String toString() {
-    return toObjectNode().toString();
+  @JsonProperty("entity_type")
+  public String getType() {
+    return super.getType();
   }
 }

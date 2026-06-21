@@ -17,6 +17,8 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
+import schemacrawler.ermodel.model.Entity;
+import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.schema.DatabaseObject;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -42,6 +44,24 @@ public class DatabaseObjectDocument implements Document {
     this.schemaName = trimToEmpty(schemaName);
     databaseObjectName = databaseObject.getName();
     type = getTypeName(databaseObject).toLowerCase();
+  }
+
+  public DatabaseObjectDocument(final Entity entity) {
+    requireNonNull(entity, "No entity provided");
+
+    fullName = entity.getFullName();
+    schemaName = null;
+    databaseObjectName = entity.getName();
+    type = entity.getType().toString();
+  }
+
+  public DatabaseObjectDocument(final Relationship relationship) {
+    requireNonNull(relationship, "No relationship provided");
+
+    fullName = relationship.getFullName();
+    schemaName = null;
+    databaseObjectName = relationship.getName();
+    type = relationship.getType().toString();
   }
 
   public String getFullName() {

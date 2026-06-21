@@ -1,1 +1,1 @@
-[{"schema":"PUBLIC.BOOKS","name":"FK_PREVIOUSEDITION","cardinality":"zero_one","between":["BOOKS","BOOKS"],"hint":"Relationship name is the same as the foreign key"}]
+[{"full_name":"PUBLIC.BOOKS.BOOKS.FK_PREVIOUSEDITION","name":"FK_PREVIOUSEDITION","cardinality":"zero_one","between":["BOOKS","BOOKS"],"hint":"Relationship name is the same as the foreign key"}]

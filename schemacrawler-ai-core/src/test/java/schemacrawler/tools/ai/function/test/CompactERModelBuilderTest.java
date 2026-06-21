@@ -82,7 +82,7 @@ public class CompactERModelBuilderTest extends AbstractFunctionTest {
     builder.withEntityTypes(type);
     final Collection<EntityDocument> filteredEntities = builder.buildEntityDocuments();
     for (final EntityDocument doc : filteredEntities) {
-      assertThat(doc.getEntityType(), is(type));
+      assertThat(doc.getType(), is(type));
     }
 
     // Reset filter
@@ -104,7 +104,7 @@ public class CompactERModelBuilderTest extends AbstractFunctionTest {
     final Collection<RelationshipDocument> filteredRelationships =
         builder.buildRelationshipDocuments();
     for (final RelationshipDocument doc : filteredRelationships) {
-      assertThat(doc.getCardinality(), is(cardinality));
+      assertThat(doc.getType(), is(cardinality));
     }
 
     // Reset filter
