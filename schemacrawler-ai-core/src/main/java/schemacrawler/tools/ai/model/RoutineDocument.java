@@ -41,7 +41,7 @@ import tools.jackson.databind.node.ObjectNode;
   "remarks",
   "definition"
 })
-public final class RoutineDocument extends NamedObjectDocument {
+public final class RoutineDocument extends BaseObjectDocument {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
@@ -59,7 +59,7 @@ public final class RoutineDocument extends NamedObjectDocument {
   }
 
   private final List<RoutineParameterDocument> parameters;
-  private final Collection<NamedObjectDocument> referencedObjects;
+  private final Collection<BaseObjectDocument> referencedObjects;
   private final String remarks;
   private final String definition;
 
@@ -80,7 +80,7 @@ public final class RoutineDocument extends NamedObjectDocument {
       Collections.sort(new ArrayList<>(references));
       referencedObjects = new ArrayList<>();
       for (final DatabaseObject referencedObject : references) {
-        referencedObjects.add(new NamedObjectDocument(referencedObject));
+        referencedObjects.add(new BaseObjectDocument(referencedObject));
       }
     } else {
       referencedObjects = null;
@@ -108,7 +108,7 @@ public final class RoutineDocument extends NamedObjectDocument {
     return parameters;
   }
 
-  public Collection<NamedObjectDocument> getReferencedObjects() {
+  public Collection<BaseObjectDocument> getReferencedObjects() {
     return referencedObjects;
   }
 

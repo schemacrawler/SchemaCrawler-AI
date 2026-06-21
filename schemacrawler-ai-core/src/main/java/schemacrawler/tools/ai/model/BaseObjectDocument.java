@@ -28,7 +28,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"full_name", "schema", "name", "type"})
-public class NamedObjectDocument implements Document {
+public class BaseObjectDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
@@ -37,7 +37,7 @@ public class NamedObjectDocument implements Document {
   private final String name;
   private final String type;
 
-  public NamedObjectDocument(final NamedObject namedObject) {
+  public BaseObjectDocument(final NamedObject namedObject) {
     requireNonNull(namedObject, "No named object provided");
 
     fullName = namedObject.getFullName();
