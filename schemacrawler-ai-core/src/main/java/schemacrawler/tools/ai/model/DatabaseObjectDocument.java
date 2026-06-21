@@ -17,9 +17,9 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
-import schemacrawler.ermodel.model.Entity;
-import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.schema.DatabaseObject;
+import schemacrawler.schema.NamedObject;
+import schemacrawler.schema.TypedObject;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 import tools.jackson.databind.node.ObjectNode;
@@ -33,35 +33,29 @@ public class DatabaseObjectDocument implements Document {
 
   private final String fullName;
   private final String schemaName;
-  private final String databaseObjectName;
+  private final String name;
   private final String type;
 
-  public DatabaseObjectDocument(final DatabaseObject databaseObject) {
-    requireNonNull(databaseObject, "No database object provided");
+  public DatabaseObjectDocument(final NamedObject namedObject) {
+    requireNonNull(namedObject, "No named object provided");
 
-    fullName = databaseObject.getFullName();
-    final String schemaName = databaseObject.getSchema().getFullName();
-    this.schemaName = trimToEmpty(schemaName);
-    databaseObjectName = databaseObject.getName();
-    type = getTypeName(databaseObject).toLowerCase();
-  }
+    fullName = namedObject.getFullName();
 
-  public DatabaseObjectDocument(final Entity entity) {
-    requireNonNull(entity, "No entity provided");
+    schemaName =
+        switch (namedObject) {
+          case final DatabaseObject databaseObject ->
+              trimToEmpty(databaseObject.getSchema().getFullName());
+          default -> null;
+        };
 
-    fullName = entity.getFullName();
-    schemaName = null;
-    databaseObjectName = entity.getName();
-    type = entity.getType().toString();
-  }
+    name = namedObject.getName();
 
-  public DatabaseObjectDocument(final Relationship relationship) {
-    requireNonNull(relationship, "No relationship provided");
-
-    fullName = relationship.getFullName();
-    schemaName = null;
-    databaseObjectName = relationship.getName();
-    type = relationship.getType().toString();
+    type =
+        switch (namedObject) {
+          case final DatabaseObject databaseObject -> getTypeName(databaseObject).toLowerCase();
+          case final TypedObject<?> typedObject -> typedObject.getType().toString();
+          default -> null;
+        };
   }
 
   public String getFullName() {
@@ -70,7 +64,7 @@ public class DatabaseObjectDocument implements Document {
 
   @Override
   public String getName() {
-    return databaseObjectName;
+    return name;
   }
 
   @JsonProperty("schema")
