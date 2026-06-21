@@ -17,11 +17,13 @@ import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
+import java.util.EnumSet;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.TestWriter;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
@@ -30,6 +32,13 @@ import us.fatehi.test.utility.extensions.TestContext;
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class DescribeTablesFunctionTest extends AbstractFunctionTest {
+
+  @Test
+  public void describeAllTableDetails(final TestContext testContext) throws Exception {
+    final DescribeTablesFunctionParameters args =
+        new DescribeTablesFunctionParameters("AUTHORS", EnumSet.allOf(TableDescriptionScope.class));
+    describeTable(testContext, args, true);
+  }
 
   @Test
   public void describeAllTables(final TestContext testContext) throws Exception {
