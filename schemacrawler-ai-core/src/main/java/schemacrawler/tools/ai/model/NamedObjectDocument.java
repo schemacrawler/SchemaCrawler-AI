@@ -13,7 +13,6 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import schemacrawler.schema.DatabaseObject;
@@ -33,7 +32,7 @@ public class NamedObjectDocument implements Document {
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
   private final String fullName;
-  private final String schemaName;
+  private final String schema;
   private final String name;
   private final String type;
 
@@ -42,7 +41,7 @@ public class NamedObjectDocument implements Document {
 
     fullName = namedObject.getFullName();
 
-    schemaName =
+    schema =
         switch (namedObject) {
           case final DatabaseObject databaseObject ->
               trimToEmpty(databaseObject.getSchema().getFullName());
@@ -69,9 +68,8 @@ public class NamedObjectDocument implements Document {
     return name;
   }
 
-  @JsonProperty("schema")
   public String getSchemaName() {
-    return schemaName;
+    return schema;
   }
 
   public String getType() {
