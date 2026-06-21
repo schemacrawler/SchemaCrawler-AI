@@ -60,17 +60,17 @@ import tools.jackson.databind.node.ObjectNode;
   "attributes",
   "definition"
 })
-public final class TableDocument extends DatabaseObjectDocument {
+public final class TableDocument extends NamedObjectDocument {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<DatabaseObjectDocument> referencedTables;
+  private final Collection<NamedObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final Collection<TriggerDocument> triggers;
-  private final Collection<DatabaseObjectDocument> usedByObjects;
+  private final Collection<NamedObjectDocument> usedByObjects;
   private final Map<String, String> attributes;
   private final EntityType entityType;
 
@@ -102,7 +102,7 @@ public final class TableDocument extends DatabaseObjectDocument {
       Collections.sort(new ArrayList<>(references));
       referencedTables = new ArrayList<>();
       for (final Table referencedTable : references) {
-        referencedTables.add(new DatabaseObjectDocument(referencedTable));
+        referencedTables.add(new NamedObjectDocument(referencedTable));
       }
     } else {
       referencedTables = null;
@@ -142,7 +142,7 @@ public final class TableDocument extends DatabaseObjectDocument {
       Collections.sort(usedByDatabaseObjects);
       usedByObjects = new ArrayList<>();
       for (final DatabaseObject usingDatabaseObject : usedByDatabaseObjects) {
-        usedByObjects.add(new DatabaseObjectDocument(usingDatabaseObject));
+        usedByObjects.add(new NamedObjectDocument(usingDatabaseObject));
       }
     } else {
       usedByObjects = null;
@@ -204,7 +204,7 @@ public final class TableDocument extends DatabaseObjectDocument {
    *
    * @return Referenced tables
    */
-  public Collection<DatabaseObjectDocument> getReferencedTables() {
+  public Collection<NamedObjectDocument> getReferencedTables() {
     return referencedTables;
   }
 
@@ -216,7 +216,7 @@ public final class TableDocument extends DatabaseObjectDocument {
     return triggers;
   }
 
-  public Collection<DatabaseObjectDocument> getUsedByObjects() {
+  public Collection<NamedObjectDocument> getUsedByObjects() {
     return usedByObjects;
   }
 

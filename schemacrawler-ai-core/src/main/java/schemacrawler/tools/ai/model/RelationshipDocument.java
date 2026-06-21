@@ -23,7 +23,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"full_name", "name", "cardinality", "between", "remarks", "hint"})
-public final class RelationshipDocument extends DatabaseObjectDocument {
+public final class RelationshipDocument extends NamedObjectDocument {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 

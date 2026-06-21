@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -19,6 +18,8 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.NamedObject;
+import schemacrawler.schema.Sequence;
+import schemacrawler.schema.Synonym;
 import schemacrawler.schema.TypedObject;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
@@ -27,7 +28,7 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({"full_name", "schema", "name", "type"})
-public class DatabaseObjectDocument implements Document {
+public class NamedObjectDocument implements Document {
 
   @Serial private static final long serialVersionUID = -6765691827862270251L;
 
@@ -36,7 +37,7 @@ public class DatabaseObjectDocument implements Document {
   private final String name;
   private final String type;
 
-  public DatabaseObjectDocument(final NamedObject namedObject) {
+  public NamedObjectDocument(final NamedObject namedObject) {
     requireNonNull(namedObject, "No named object provided");
 
     fullName = namedObject.getFullName();
@@ -52,8 +53,9 @@ public class DatabaseObjectDocument implements Document {
 
     type =
         switch (namedObject) {
-          case final DatabaseObject databaseObject -> getTypeName(databaseObject).toLowerCase();
-          case final TypedObject<?> typedObject -> typedObject.getType().toString();
+          case final TypedObject<?> typedObject -> typedObject.getType().toString().toLowerCase();
+          case final Synonym synonym -> "synonym";
+          case final Sequence sequence -> "sequence";
           default -> null;
         };
   }
