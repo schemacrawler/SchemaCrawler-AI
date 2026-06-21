@@ -26,7 +26,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "columns", "is-unique"})
+@JsonPropertyOrder({"name", "columns", "is_unique"})
 public final class IndexDocument implements Document {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;

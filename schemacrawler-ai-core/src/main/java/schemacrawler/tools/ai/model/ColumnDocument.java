@@ -74,7 +74,6 @@ public final class ColumnDocument implements Document {
     return referencedColumn;
   }
 
-  @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
   }

@@ -26,11 +26,11 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
   "name",
-  "action-condition",
-  "action-statement",
-  "action-orientation",
-  "condition-timing",
-  "event-manipulation"
+  "action_condition",
+  "action_statement",
+  "action_orientation",
+  "condition_timing",
+  "event_manipulation"
 })
 public final class TriggerDocument implements Document {
 

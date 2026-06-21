@@ -37,7 +37,7 @@ import tools.jackson.databind.node.ObjectNode;
   "name",
   "type",
   "parameters",
-  "referenced-objects",
+  "referenced_objects",
   "remarks",
   "definition"
 })

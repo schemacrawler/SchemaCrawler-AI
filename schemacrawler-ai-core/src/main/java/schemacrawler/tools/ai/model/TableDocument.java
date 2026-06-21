@@ -49,14 +49,14 @@ import tools.jackson.databind.node.ObjectNode;
   "schema",
   "name",
   "type",
-  "entity-type",
+  "entity_type",
   "remarks",
   "columns",
-  "primary-key",
-  "referenced-tables",
+  "primary_key",
+  "referenced_tables",
   "indexes",
   "triggers",
-  "using-objects",
+  "used_by_objects",
   "attributes",
   "definition"
 })
