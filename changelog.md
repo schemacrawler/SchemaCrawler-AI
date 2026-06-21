@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.3-2"></a>
+## Release 17.11.3-2 - 2026-06-22
+
+- Make JSON returned by tools more usable by AI agents
+
+
 <a name="v17.11.3-1"></a>
 ## Release 17.11.3-1 - 2026-06-12
 

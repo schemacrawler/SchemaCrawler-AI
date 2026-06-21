@@ -23,7 +23,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"full_name", "name", "remarks", "data_type", "foreign_key_to"})
+@JsonPropertyOrder({"full_name", "name", "remarks", "data_type", "is_nullable", "foreign_key_to"})
 public final class ColumnDocument implements Document {
 
   @Serial private static final long serialVersionUID = 5110252842937512910L;
@@ -31,6 +31,7 @@ public final class ColumnDocument implements Document {
   private final String fullName;
   private final String columnName;
   private final String dataType;
+  private final boolean isNullable;
   private final String remarks;
   private final String referencedColumn;
 
@@ -41,6 +42,8 @@ public final class ColumnDocument implements Document {
     columnName = column.getName();
 
     dataType = column.getColumnDataType().getName();
+
+    isNullable = column.isNullable();
 
     final String remarks = column.getRemarks();
     if (!isBlank(remarks)) {
@@ -76,6 +79,10 @@ public final class ColumnDocument implements Document {
 
   public String getRemarks() {
     return remarks;
+  }
+
+  public boolean isNullable() {
+    return isNullable;
   }
 
   @Override
