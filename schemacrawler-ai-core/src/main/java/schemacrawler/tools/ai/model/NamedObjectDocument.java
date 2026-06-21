@@ -73,7 +73,7 @@ public class NamedObjectDocument implements Document {
     return name;
   }
 
-  public String getSchemaName() {
+  public String getSchema() {
     return schema;
   }
 
