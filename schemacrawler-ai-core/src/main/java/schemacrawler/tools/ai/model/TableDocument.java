@@ -138,10 +138,8 @@ public final class TableDocument extends BaseObjectDocument {
     }
 
     if (details.get(USED_BY_OBJECTS)) {
-      final List<DatabaseObject> usedByDatabaseObjects = new ArrayList<>(table.getUsedByObjects());
-      Collections.sort(usedByDatabaseObjects);
       usedByObjects = new ArrayList<>();
-      for (final DatabaseObject usingDatabaseObject : usedByDatabaseObjects) {
+      for (final DatabaseObject usingDatabaseObject : table.getUsedByObjects()) {
         usedByObjects.add(new BaseObjectDocument(usingDatabaseObject));
       }
     } else {
