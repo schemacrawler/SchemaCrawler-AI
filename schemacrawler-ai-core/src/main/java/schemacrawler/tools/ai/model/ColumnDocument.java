@@ -32,6 +32,7 @@ public final class ColumnDocument implements Document {
   private final String columnName;
   private final String dataType;
   private final boolean isNullable;
+  private final String defaultValue;
   private final String remarks;
   private final String referencedColumn;
 
@@ -44,6 +45,11 @@ public final class ColumnDocument implements Document {
     dataType = column.getColumnDataType().getName();
 
     isNullable = column.isNullable();
+    if (column.hasDefaultValue()) {
+      defaultValue = column.getDefaultValue();
+    } else {
+      defaultValue = null;
+    }
 
     final String remarks = column.getRemarks();
     if (!isBlank(remarks)) {
@@ -61,6 +67,10 @@ public final class ColumnDocument implements Document {
 
   public String getDataType() {
     return dataType;
+  }
+
+  public String getDefaultValue() {
+    return defaultValue;
   }
 
   public String getFullName() {
