@@ -1,1 +1,1 @@
-{"list":[{"schema":"PUBLIC.BOOKS","name":"PUBLISHER_ID_SEQ","type":"sequence"}]}
+{"list":[{"full_name":"PUBLIC.BOOKS.PUBLISHER_ID_SEQ","schema":"PUBLIC.BOOKS","name":"PUBLISHER_ID_SEQ","type":"sequence"}]}

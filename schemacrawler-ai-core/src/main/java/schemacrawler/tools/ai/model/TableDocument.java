@@ -17,14 +17,12 @@ import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TAB
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static schemacrawler.utility.MetaDataUtility.getTypeName;
-import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
+import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -32,7 +30,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
@@ -48,34 +45,32 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
+  "full_name",
   "schema",
   "name",
   "type",
-  "entity-type",
+  "entity_type",
   "remarks",
   "columns",
-  "primary-key",
-  "referenced-tables",
+  "primary_key",
+  "referenced_tables",
   "indexes",
   "triggers",
-  "using-objects",
+  "used_by_objects",
   "attributes",
   "definition"
 })
-public final class TableDocument implements Document {
+public final class TableDocument extends BaseObjectDocument {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
-  private final String schemaName;
-  private final String tableName;
-  private final String type;
   private final String remarks;
   private final List<ColumnDocument> columns;
   private final IndexDocument primaryKey;
-  private final Collection<DatabaseObjectDocument> referencedTables;
+  private final Collection<BaseObjectDocument> referencedTables;
   private final Collection<IndexDocument> indexes;
   private final Collection<TriggerDocument> triggers;
-  private final Collection<DatabaseObjectDocument> usedByObjects;
+  private final Collection<BaseObjectDocument> usedByObjects;
   private final Map<String, String> attributes;
   private final EntityType entityType;
 
@@ -85,14 +80,8 @@ public final class TableDocument implements Document {
       final Table table,
       final EntityType entityType,
       final Map<AdditionalTableDetails, Boolean> tableDetails) {
-    Objects.requireNonNull(table, "No table provided");
+    super(table);
     final Map<AdditionalTableDetails, Boolean> details = defaults(tableDetails);
-
-    final String schemaName = table.getSchema().getFullName();
-    this.schemaName = trimToEmpty(schemaName);
-
-    tableName = table.getName();
-    type = getTypeName(table).toLowerCase();
 
     final Map<String, Column> referencedColumns = mapReferencedColumns(table);
     columns = new ArrayList<>();
@@ -113,7 +102,7 @@ public final class TableDocument implements Document {
       Collections.sort(new ArrayList<>(references));
       referencedTables = new ArrayList<>();
       for (final Table referencedTable : references) {
-        referencedTables.add(new DatabaseObjectDocument(referencedTable));
+        referencedTables.add(new BaseObjectDocument(referencedTable));
       }
     } else {
       referencedTables = null;
@@ -149,11 +138,11 @@ public final class TableDocument implements Document {
     }
 
     if (details.get(USED_BY_OBJECTS)) {
-      final Collection<DatabaseObject> usedByDatabaseObjects = table.getUsedByObjects();
-      Collections.sort(new ArrayList<>(usedByDatabaseObjects));
+      final List<DatabaseObject> usedByDatabaseObjects = new ArrayList<>(table.getUsedByObjects());
+      Collections.sort(usedByDatabaseObjects);
       usedByObjects = new ArrayList<>();
       for (final DatabaseObject usingDatabaseObject : usedByDatabaseObjects) {
-        usedByObjects.add(new DatabaseObjectDocument(usingDatabaseObject));
+        usedByObjects.add(new BaseObjectDocument(usingDatabaseObject));
       }
     } else {
       usedByObjects = null;
@@ -168,8 +157,13 @@ public final class TableDocument implements Document {
     if (details.get(ATTRIBUTES)) {
       attributes = new HashMap<>();
       table.getAttributes().entrySet().stream()
-          .filter(entry -> entry.getValue() != null && !isBlank(entry.getValue().toString()))
-          .forEach(entry -> attributes.put(entry.getKey(), String.valueOf(entry.getValue())));
+          .filter(entry -> entry.getValue() != null)
+          .map(
+              entry ->
+                  new AbstractMap.SimpleImmutableEntry<String, String>(
+                      entry.getKey(), String.valueOf(entry.getValue())))
+          .filter(entry -> !"REMARKS".equals(entry.getKey()))
+          .forEach(entry -> attributes.put(entry.getKey(), entry.getValue()));
     } else {
       attributes = null;
     }
@@ -201,11 +195,6 @@ public final class TableDocument implements Document {
     return indexes;
   }
 
-  @Override
-  public String getName() {
-    return tableName;
-  }
-
   public IndexDocument getPrimaryKey() {
     return primaryKey;
   }
@@ -215,7 +204,7 @@ public final class TableDocument implements Document {
    *
    * @return Referenced tables
    */
-  public Collection<DatabaseObjectDocument> getReferencedTables() {
+  public Collection<BaseObjectDocument> getReferencedTables() {
     return referencedTables;
   }
 
@@ -223,20 +212,11 @@ public final class TableDocument implements Document {
     return remarks;
   }
 
-  @JsonProperty("schema")
-  public String getSchemaName() {
-    return schemaName;
-  }
-
   public Collection<TriggerDocument> getTriggers() {
     return triggers;
   }
 
-  public String getType() {
-    return type;
-  }
-
-  public Collection<DatabaseObjectDocument> getUsedByObjects() {
+  public Collection<BaseObjectDocument> getUsedByObjects() {
     return usedByObjects;
   }
 

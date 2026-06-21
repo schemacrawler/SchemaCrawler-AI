@@ -22,7 +22,7 @@ import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.ai.model.DatabaseObjectDocument;
+import schemacrawler.tools.ai.model.BaseObjectDocument;
 import schemacrawler.tools.ai.model.DatabaseObjectType;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
@@ -93,8 +93,7 @@ public final class ListFunctionExecutor
       if (databaseObject == null) {
         continue;
       }
-      final DatabaseObjectDocument databaseObjectDocument =
-          new DatabaseObjectDocument(databaseObject);
+      final BaseObjectDocument databaseObjectDocument = new BaseObjectDocument(databaseObject);
       list.add(mapper.valueToTree(databaseObjectDocument));
     }
 

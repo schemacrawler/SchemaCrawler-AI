@@ -11,11 +11,9 @@ package schemacrawler.tools.ai.model;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.REFERENCED_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static schemacrawler.utility.MetaDataUtility.getTypeName;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import java.util.ArrayList;
@@ -24,7 +22,6 @@ import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.RoutineParameter;
@@ -35,15 +32,16 @@ import tools.jackson.databind.node.ObjectNode;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @JsonPropertyOrder({
+  "full_name",
   "schema",
   "name",
   "type",
   "parameters",
-  "referenced-objects",
+  "referenced_objects",
   "remarks",
   "definition"
 })
-public final class RoutineDocument implements Document {
+public final class RoutineDocument extends BaseObjectDocument {
 
   @Serial private static final long serialVersionUID = 1873929712139211255L;
 
@@ -60,24 +58,15 @@ public final class RoutineDocument implements Document {
     return details;
   }
 
-  private final String schemaName;
-  private final String routineName;
-  private final String type;
   private final List<RoutineParameterDocument> parameters;
-  private final Collection<DatabaseObjectDocument> referencedObjects;
+  private final Collection<BaseObjectDocument> referencedObjects;
   private final String remarks;
   private final String definition;
 
   RoutineDocument(
       final Routine routine, final Map<AdditionalRoutineDetails, Boolean> routineDetails) {
-    Objects.requireNonNull(routine, "No routine provided");
+    super(routine);
     final Map<AdditionalRoutineDetails, Boolean> details = defaults(routineDetails);
-
-    final String schemaName = routine.getSchema().getFullName();
-    this.schemaName = trimToEmpty(schemaName);
-
-    routineName = routine.getName();
-    type = getTypeName(routine);
 
     parameters = new ArrayList<>();
     for (final RoutineParameter<? extends Routine> routineParameter : routine.getParameters()) {
@@ -91,7 +80,7 @@ public final class RoutineDocument implements Document {
       Collections.sort(new ArrayList<>(references));
       referencedObjects = new ArrayList<>();
       for (final DatabaseObject referencedObject : references) {
-        referencedObjects.add(new DatabaseObjectDocument(referencedObject));
+        referencedObjects.add(new BaseObjectDocument(referencedObject));
       }
     } else {
       referencedObjects = null;
@@ -115,30 +104,16 @@ public final class RoutineDocument implements Document {
     return definition;
   }
 
-  @Override
-  public String getName() {
-    return routineName;
-  }
-
   public List<RoutineParameterDocument> getParameters() {
     return parameters;
   }
 
-  public Collection<DatabaseObjectDocument> getReferencedObjects() {
+  public Collection<BaseObjectDocument> getReferencedObjects() {
     return referencedObjects;
   }
 
   public String getRemarks() {
     return remarks;
-  }
-
-  @JsonProperty("schema")
-  public String getSchemaName() {
-    return schemaName;
-  }
-
-  public String getType() {
-    return type;
   }
 
   @Override

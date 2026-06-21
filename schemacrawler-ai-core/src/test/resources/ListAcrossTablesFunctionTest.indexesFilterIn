@@ -1,1 +1,1 @@
-{"indexes":[{"name":"U_PREVIOUSEDITION","columns":["PREVIOUSEDITIONID"],"unique":true,"schema":"PUBLIC.BOOKS","table":"BOOKS"}]}
+{"indexes":[{"name":"U_PREVIOUSEDITION","columns":["PUBLIC.BOOKS.BOOKS.PREVIOUSEDITIONID"],"unique":true,"schema":"PUBLIC.BOOKS","table":"BOOKS"}]}

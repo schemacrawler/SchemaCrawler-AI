@@ -1,1 +1,1 @@
-{"columns":[{"name":"PUBLICATIONDATE","remarks":"Book publication date","data-type":"DATE","schema":"PUBLIC.BOOKS","table":"BOOKS"}]}
+{"columns":[{"full_name":"PUBLIC.BOOKS.BOOKS.PUBLICATIONDATE","name":"PUBLICATIONDATE","remarks":"Book publication date","data_type":"DATE","nullable":true,"schema":"PUBLIC.BOOKS","table":"BOOKS"}]}

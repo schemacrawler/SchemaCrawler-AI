@@ -1,1 +1,1 @@
-{"list":[{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"},{"schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"}]}
+{"list":[{"full_name":"PUBLIC.BOOKS.CUSTOMADD","schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"},{"full_name":"PUBLIC.BOOKS.CUSTOMADD","schema":"PUBLIC.BOOKS","name":"CUSTOMADD","type":"function"}]}

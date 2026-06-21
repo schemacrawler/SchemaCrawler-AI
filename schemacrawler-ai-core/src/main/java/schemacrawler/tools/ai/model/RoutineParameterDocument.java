@@ -24,7 +24,7 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"name", "mode", "data-type", "remarks"})
+@JsonPropertyOrder({"name", "mode", "data_type", "remarks"})
 public final class RoutineParameterDocument implements Document {
 
   @Serial private static final long serialVersionUID = 5110252842937512910L;
@@ -63,7 +63,6 @@ public final class RoutineParameterDocument implements Document {
     return parameterMode;
   }
 
-  @JsonProperty("remarks")
   public String getRemarks() {
     return remarks;
   }
