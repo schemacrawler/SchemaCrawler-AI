@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.model;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
@@ -41,12 +42,16 @@ public class NamedObjectDocument implements Document {
 
     fullName = namedObject.getFullName();
 
-    schema =
-        switch (namedObject) {
-          case final DatabaseObject databaseObject ->
-              trimToEmpty(databaseObject.getSchema().getFullName());
-          default -> null;
-        };
+    if (namedObject instanceof final DatabaseObject databaseObject) {
+      final String schemaName = databaseObject.getSchema().getFullName();
+      if (isBlank(schemaName)) {
+        schema = null;
+      } else {
+        schema = trimToEmpty(schemaName);
+      }
+    } else {
+      schema = null;
+    }
 
     name = namedObject.getName();
 
