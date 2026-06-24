@@ -72,11 +72,17 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
     requireNonNull(foreignKey, "No foreign key provided");
     // Relationship cardinality is available for entities other than bridge tables
     // For bridge tables, infer it using the utility method
-    final RelationshipCardinality cardinality =
-        erModel
-            .lookupRelationship(foreignKey)
-            .map(Relationship::getType)
-            .orElseGet(() -> ERModelUtility.inferCardinality(foreignKey));
+    final RelationshipCardinality cardinality;
+    if (erModel != null) {
+      cardinality =
+          erModel
+              .lookupRelationship(foreignKey)
+              .filter(relationship -> relationship != null)
+              .map(Relationship::getType)
+              .orElseGet(() -> ERModelUtility.inferCardinality(foreignKey));
+    } else {
+      cardinality = null;
+    }
     final ForeignKeyDocument fkDocument = new ForeignKeyDocument(foreignKey, cardinality);
     return fkDocument;
   }
@@ -95,7 +101,17 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
 
   public TableDocument buildTableDocument(final Table table) {
     requireNonNull(table, "No table provided");
-    final EntityType entityType = erModel.lookupEntity(table).map(Entity::getType).orElse(null);
+    final EntityType entityType;
+    if (erModel != null) {
+      entityType =
+          erModel
+              .lookupEntity(table)
+              .filter(entity -> entity != null)
+              .map(Entity::getType)
+              .orElse(null);
+    } else {
+      entityType = null;
+    }
     final TableDocument tableDocument =
         new TableDocument(table, entityType, additionalTableDetails);
     return tableDocument;

@@ -80,7 +80,7 @@ public final class InErrorFactory {
             case "toString" -> "empty-ermodel"; // For debugging
             case "equals" -> proxy == args[0];
             case "hashCode" -> System.identityHashCode(proxy);
-            default -> throw new IllegalStateException(errorMessage);
+            default -> returnEmpty(method);
           };
         };
 
