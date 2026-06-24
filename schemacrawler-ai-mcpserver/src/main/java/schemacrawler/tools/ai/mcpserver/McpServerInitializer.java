@@ -8,16 +8,14 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.util.Objects.requireNonNull;
+
 import java.util.Collection;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-
-import static java.util.Objects.requireNonNull;
-
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
@@ -94,7 +92,7 @@ public class McpServerInitializer extends AbstractExecutionState
     }
     setCatalog(catalog);
 
-    if (!isInErrorState && hasERModel()) {
+    if (!isInErrorState) {
       setERModel(SchemaCrawlerUtility.buildERModel(catalog));
     } else {
       setERModel(InErrorFactory.createErroredERModel());
