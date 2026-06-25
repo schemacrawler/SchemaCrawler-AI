@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.4-1"></a>
+## Release 17.11.4-1 - 2026-06-24
+
+- Fix serialization and deserialization issues, for use with serialization format "ser" and "offline" connections
+
+
 <a name="v17.11.3-2"></a>
 ## Release 17.11.3-2 - 2026-06-22
 
