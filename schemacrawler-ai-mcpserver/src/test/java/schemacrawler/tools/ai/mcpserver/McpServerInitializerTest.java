@@ -3,8 +3,8 @@ package schemacrawler.tools.ai.mcpserver;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -55,7 +55,8 @@ public class McpServerInitializerTest {
   }
 
   @Test
-  public void testLogLevelBeanNotRegisteredWhenContextNull() {
+  public void testLogLevelBeanRegisteredInBothConstructors() {
+    // Constructor 1: Creates SchemaCrawlerContext to read environment, so bean IS registered
     final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
 
     final McpServerInitializer initializer =
@@ -63,7 +64,8 @@ public class McpServerInitializerTest {
             catalog, connectionSource, McpServerTransportType.stdio, Collections.emptyList());
     final ApplicationContext context = getContext(initializer);
 
-    assertFalse(context.containsBean("logLevel"));
+    // logLevel bean should exist (from environment via SchemaCrawlerContext)
+    assertTrue(context.containsBean("logLevel"));
   }
 
   @Test

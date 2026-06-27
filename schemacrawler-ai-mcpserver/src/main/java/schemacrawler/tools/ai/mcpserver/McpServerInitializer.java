@@ -42,7 +42,7 @@ public class McpServerInitializer extends AbstractExecutionState
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
 
-    this.logLevel = null;
+    logLevel = new SchemaCrawlerContext().getLogLevel();
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
       throw new ExecutionRuntimeException("Unknown MCP Server transport type");
@@ -77,7 +77,7 @@ public class McpServerInitializer extends AbstractExecutionState
     requireNonNull(scContext, "No SchemaCrawler context provided");
     requireNonNull(context, "No MCP Server context provided");
 
-    this.logLevel = scContext.getLogLevel();
+    logLevel = scContext.getLogLevel();
     mcpTransport = context.mcpTransport();
 
     // Load the catalog with the catalog data source
@@ -149,9 +149,6 @@ public class McpServerInitializer extends AbstractExecutionState
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
 
     // Register log level so LoggingRestorationListener can access it
-    // Only register if logLevel is available (second constructor path)
-    if (logLevel != null) {
-      context.registerBean("logLevel", Level.class, () -> logLevel);
-    }
+    context.registerBean("logLevel", Level.class, () -> logLevel);
   }
 }

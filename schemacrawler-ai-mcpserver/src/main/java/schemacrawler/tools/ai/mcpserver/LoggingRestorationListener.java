@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Component;
+import us.fatehi.utility.LoggingConfig;
 
 /**
  * Listens for Spring context initialization and restores JUL log levels for SchemaCrawler loggers.
@@ -44,17 +45,16 @@ public final class LoggingRestorationListener {
   @EventListener
   public void onContextRefreshed(final ContextRefreshedEvent event) {
     if (logLevel == null) {
-      LOGGER.log(Level.FINE, "Log level is null; skipping log level restoration");
+      LOGGER.log(Level.WARNING, "Log level is null; skipping log level restoration");
       return;
     }
 
     try {
-      Logger.getLogger("schemacrawler").setLevel(logLevel);
-      Logger.getLogger("us.fatehi").setLevel(logLevel);
+      new LoggingConfig(logLevel);
 
       LOGGER.log(
           Level.FINE,
-          () -> "Restored JUL log level to " + logLevel.getName() + " after Spring init");
+          () -> "Restored log level to <%s> after Spring Boot initialization".formatted(logLevel));
     } catch (final Exception e) {
       LOGGER.log(Level.WARNING, "Could not restore JUL log levels after Spring init", e);
     }
