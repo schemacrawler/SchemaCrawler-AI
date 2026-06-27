@@ -46,26 +46,6 @@ public class LoggingInitializer extends AbstractExecutionState
   private static final Logger LOGGER = Logger.getLogger(LoggingInitializer.class.getName());
 
   /**
-   * Initialize during Spring context creation (ApplicationContextInitializer phase).
-   *
-   * @param context The Spring application context
-   */
-  @Override
-  public void initialize(@NonNull final GenericApplicationContext context) {
-    initialize();
-  }
-
-  /**
-   * Restore logging configuration after Spring context is fully refreshed.
-   *
-   * @param event The context refreshed event
-   */
-  @EventListener
-  public void onContextRefreshed(final ContextRefreshedEvent event) {
-    initialize();
-  }
-
-  /**
    * Main initialization logic for logging configuration. This method coordinates the setup of both
    * JUL and SLF4J logging systems.
    */
@@ -146,5 +126,25 @@ public class LoggingInitializer extends AbstractExecutionState
       default:
         return LogLevel.INFO;
     }
+  }
+
+  /**
+   * Initialize during Spring context creation (ApplicationContextInitializer phase).
+   *
+   * @param context The Spring application context
+   */
+  @Override
+  public void initialize(@NonNull final GenericApplicationContext context) {
+    initialize();
+  }
+
+  /**
+   * Restore logging configuration after Spring context is fully refreshed.
+   *
+   * @param event The context refreshed event
+   */
+  @EventListener
+  public void onContextRefreshed(final ContextRefreshedEvent event) {
+    initialize();
   }
 }
