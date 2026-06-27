@@ -18,6 +18,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -68,6 +69,16 @@ public final class SchemaCrawlerContext {
 
     this.logLevel = readLogLevel();
     new LoggingConfig(this.logLevel);
+
+    // Install JUL-to-SLF4J bridge to route JUL logs through Logback (Spring Boot logging)
+    try {
+      SLF4JBridgeHandler.removeHandlersForRootLogger();
+      SLF4JBridgeHandler.install();
+      LOGGER.log(
+          Level.FINE, () -> "Installed JUL-to-SLF4J bridge for Spring Boot logging integration");
+    } catch (final Exception e) {
+      LOGGER.log(Level.WARNING, "Could not install JUL-to-SLF4J bridge", e);
+    }
 
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
   }

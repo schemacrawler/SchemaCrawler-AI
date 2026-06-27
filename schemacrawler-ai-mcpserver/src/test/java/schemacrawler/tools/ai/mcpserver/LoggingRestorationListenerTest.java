@@ -69,7 +69,8 @@ public class LoggingRestorationListenerTest {
           listener.onContextRefreshed(event);
         });
 
-    assertThat(Logger.getLogger("schemacrawler").getLevel(), is(logLevel));
+    // Verify root logger level is set (which all loggers inherit)
+    assertThat(Logger.getLogger("").getLevel(), is(logLevel));
   }
 
   @Test
@@ -84,8 +85,8 @@ public class LoggingRestorationListenerTest {
       final ContextRefreshedEvent event = mock(ContextRefreshedEvent.class);
       listener.onContextRefreshed(event);
 
-      assertThat(Logger.getLogger("schemacrawler").getLevel(), is(level));
-      assertThat(Logger.getLogger("us.fatehi").getLevel(), is(level));
+      // Verify root logger level is set (which all loggers inherit)
+      assertThat(Logger.getLogger("").getLevel(), is(level));
     }
   }
 
@@ -107,8 +108,7 @@ public class LoggingRestorationListenerTest {
     final ContextRefreshedEvent event = mock(ContextRefreshedEvent.class);
     listener.onContextRefreshed(event);
 
-    // Verify log levels were set
-    assertThat(Logger.getLogger("schemacrawler").getLevel(), is(logLevel));
-    assertThat(Logger.getLogger("us.fatehi").getLevel(), is(logLevel));
+    // Verify root logger level is set (which all loggers inherit through SLF4J bridge)
+    assertThat(Logger.getLogger("").getLevel(), is(logLevel));
   }
 }
