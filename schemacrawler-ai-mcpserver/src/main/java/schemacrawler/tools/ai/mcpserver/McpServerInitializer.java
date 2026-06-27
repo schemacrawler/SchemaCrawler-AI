@@ -103,7 +103,7 @@ public class McpServerInitializer extends AbstractExecutionState
       DatabaseConnectionSource connectionSource;
       try {
         connectionSource = scContext.buildOperationsDatabaseConnectionSource();
-        requireNonNull(connectionSource, "Coonection source is not built");
+        requireNonNull(connectionSource, "Connection source is not built");
       } catch (final Exception e) {
         if (mcpTransport != McpServerTransportType.stdio) {
           throw e;

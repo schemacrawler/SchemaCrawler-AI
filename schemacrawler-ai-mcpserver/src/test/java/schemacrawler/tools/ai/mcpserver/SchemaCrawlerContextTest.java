@@ -159,43 +159,4 @@ public class SchemaCrawlerContextTest {
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readInfoLevel(), is(InfoLevel.standard));
   }
-
-  @Test
-  @DisplayName("Should validate log levels correctly")
-  void shouldValidateLogLevels() {
-    // Test INFO level
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "INFO");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("INFO"));
-
-    // Test WARNING level
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "WARNING");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("WARNING"));
-
-    // Test SEVERE level
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "SEVERE");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("SEVERE"));
-
-    // Test FINE level
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "FINE");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("FINE"));
-
-    // Test null defaults to INFO
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", null);
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("INFO"));
-
-    // Test empty string defaults to INFO
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("INFO"));
-
-    // Test invalid value defaults to INFO
-    envAccessor.put("SCHCRWLR_LOG_LEVEL", "invalid");
-    context = new SchemaCrawlerContext(envAccessor);
-    assertThat(context.readLogLevel().getName(), is("INFO"));
-  }
 }

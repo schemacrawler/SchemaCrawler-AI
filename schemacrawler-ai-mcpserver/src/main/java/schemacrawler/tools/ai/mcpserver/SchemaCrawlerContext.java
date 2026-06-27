@@ -34,7 +34,6 @@ import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.DatabaseConnectorUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import tools.jackson.databind.JsonNode;
-import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
 import us.fatehi.utility.readconfig.ReadConfig;
@@ -46,7 +45,6 @@ public final class SchemaCrawlerContext {
 
   private static final String ADDITIONAL_CONFIG = "SCHCRWLR_ADDITIONAL_CONFIG";
   private static final String INFO_LEVEL = "SCHCRWLR_INFO_LEVEL";
-  private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
   private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
   private final ReadConfig envAccessor;
@@ -64,10 +62,6 @@ public final class SchemaCrawlerContext {
    */
   public SchemaCrawlerContext(final ReadConfig envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
-
-    final Level logLevel = readLogLevel();
-    new LoggingConfig(logLevel);
-
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
   }
 
@@ -160,27 +154,6 @@ public final class SchemaCrawlerContext {
         infoLevel = defaultValue;
       }
       return infoLevel;
-    } catch (final Exception e) {
-      return defaultValue;
-    }
-  }
-
-  /**
-   * Parses a string and returns a valid log level.
-   *
-   * @param value The log level string to check
-   * @return Level Non-null value
-   */
-  Level readLogLevel() {
-
-    final Level defaultValue = Level.INFO;
-
-    final String value = envAccessor.getStringValue(LOG_LEVEL, "");
-    if (isBlank(value)) {
-      return defaultValue;
-    }
-    try {
-      return Level.parse(value.toUpperCase());
     } catch (final Exception e) {
       return defaultValue;
     }

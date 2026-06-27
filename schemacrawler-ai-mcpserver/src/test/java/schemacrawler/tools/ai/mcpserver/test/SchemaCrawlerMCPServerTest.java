@@ -18,6 +18,7 @@ import static org.mockito.Mockito.when;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -48,6 +49,16 @@ public class SchemaCrawlerMCPServerTest {
 
   @TestConfiguration
   static class MockConfig {
+    @Bean
+    public Level logLevel() {
+      return Level.OFF;
+    }
+
+    @Bean
+    public RestClient.Builder restClientBuilder() {
+      return RestClient.builder();
+    }
+
     @Bean
     Catalog catalog() {
       return InErrorFactory.createErroredCatalog();
@@ -91,11 +102,6 @@ public class SchemaCrawlerMCPServerTest {
     @Bean
     ServerHealth serverHealth() {
       return mock(ServerHealth.class);
-    }
-
-    @Bean
-    public RestClient.Builder restClientBuilder() {
-      return RestClient.builder();
     }
   }
 
