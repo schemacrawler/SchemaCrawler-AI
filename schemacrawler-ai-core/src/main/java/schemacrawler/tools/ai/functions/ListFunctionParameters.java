@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
+import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -48,6 +49,9 @@ public record ListFunctionParameters(
   public ListFunctionParameters {
     if (databaseObjectType == null) {
       databaseObjectType = ALL;
+    }
+    if (isBlank(databaseObjectName)) {
+      databaseObjectName = "";
     }
   }
 

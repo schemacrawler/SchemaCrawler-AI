@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.functions;
 
 import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
+import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
@@ -59,6 +60,9 @@ public record ListAcrossTablesFunctionParameters(
   public ListAcrossTablesFunctionParameters {
     if (dependantObjectType == null) {
       dependantObjectType = NONE;
+    }
+    if (isBlank(dependantObjectName)) {
+      dependantObjectName = "";
     }
   }
 

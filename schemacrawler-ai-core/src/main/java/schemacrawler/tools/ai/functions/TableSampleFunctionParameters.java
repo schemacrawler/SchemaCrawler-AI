@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.functions;
 
+import static us.fatehi.utility.Utility.isBlank;
+
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyDescription;
 import schemacrawler.tools.ai.tools.FunctionParameters;
@@ -34,7 +36,7 @@ public record TableSampleFunctionParameters(
   }
 
   public TableSampleFunctionParameters {
-    if (tableName == null || tableName.isBlank()) {
+    if (isBlank(tableName)) {
       tableName = "";
     }
   }
