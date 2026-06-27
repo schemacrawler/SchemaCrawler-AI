@@ -51,6 +51,7 @@ public final class SchemaCrawlerContext {
 
   private final ReadConfig envAccessor;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
+  private final Level logLevel;
 
   /** Default constructor that uses System.getenv */
   public SchemaCrawlerContext() {
@@ -65,8 +66,8 @@ public final class SchemaCrawlerContext {
   public SchemaCrawlerContext(final ReadConfig envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
 
-    final Level logLevel = readLogLevel();
-    new LoggingConfig(logLevel);
+    this.logLevel = readLogLevel();
+    new LoggingConfig(this.logLevel);
 
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
   }
@@ -80,6 +81,15 @@ public final class SchemaCrawlerContext {
     final DatabaseConnectionSource databaseConnectionSource =
         EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor).build();
     return databaseConnectionSource;
+  }
+
+  /**
+   * Returns the configured log level.
+   *
+   * @return The log level configured from the environment variable
+   */
+  public Level getLogLevel() {
+    return logLevel;
   }
 
   public Catalog loadCatalog() {

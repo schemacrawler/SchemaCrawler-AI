@@ -34,6 +34,7 @@ public class McpServerInitializer extends AbstractExecutionState
   private final boolean isInErrorState;
   private final McpServerTransportType mcpTransport;
   private final ExcludeTools excludeTools;
+  private final Level logLevel;
 
   public McpServerInitializer(
       final Catalog catalog,
@@ -41,6 +42,7 @@ public class McpServerInitializer extends AbstractExecutionState
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
 
+    this.logLevel = null;
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
       throw new ExecutionRuntimeException("Unknown MCP Server transport type");
@@ -75,6 +77,7 @@ public class McpServerInitializer extends AbstractExecutionState
     requireNonNull(scContext, "No SchemaCrawler context provided");
     requireNonNull(context, "No MCP Server context provided");
 
+    this.logLevel = scContext.getLogLevel();
     mcpTransport = context.mcpTransport();
 
     // Load the catalog with the catalog data source
@@ -103,7 +106,7 @@ public class McpServerInitializer extends AbstractExecutionState
       DatabaseConnectionSource connectionSource;
       try {
         connectionSource = scContext.buildOperationsDatabaseConnectionSource();
-        requireNonNull(connectionSource, "Coonection source is not built");
+        requireNonNull(connectionSource, "Connection source is not built");
       } catch (final Exception e) {
         if (mcpTransport != McpServerTransportType.stdio) {
           throw e;
@@ -144,5 +147,11 @@ public class McpServerInitializer extends AbstractExecutionState
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
+
+    // Register log level so LoggingRestorationListener can access it
+    // Only register if logLevel is available (second constructor path)
+    if (logLevel != null) {
+      context.registerBean("logLevel", Level.class, () -> logLevel);
+    }
   }
 }

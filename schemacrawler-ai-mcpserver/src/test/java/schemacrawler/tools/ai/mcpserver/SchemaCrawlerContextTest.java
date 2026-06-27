@@ -49,6 +49,61 @@ public class SchemaCrawlerContextTest {
   }
 
   @Test
+  @DisplayName("Should return default log level when SCHCRWLR_LOG_LEVEL not set")
+  void shouldGetDefaultLogLevel() {
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", null);
+    context = new SchemaCrawlerContext(envAccessor);
+
+    assertThat(context.getLogLevel(), notNullValue());
+    assertThat(context.getLogLevel().getName(), is("INFO"));
+  }
+
+  @Test
+  @DisplayName("Should get different log levels for different configurations")
+  void shouldGetDifferentLogLevels() {
+    // Test FINE level (instead of DEBUG, which doesn't exist in JUL)
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "FINE");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.getLogLevel().getName(), is("FINE"));
+
+    // Test INFO level
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "INFO");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.getLogLevel().getName(), is("INFO"));
+
+    // Test WARNING level
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "WARNING");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.getLogLevel().getName(), is("WARNING"));
+
+    // Test SEVERE level
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "SEVERE");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.getLogLevel().getName(), is("SEVERE"));
+  }
+
+  @Test
+  @DisplayName("Should get log level from getLogLevel()")
+  void shouldGetLogLevel() {
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "FINE");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    assertThat(context.getLogLevel(), notNullValue());
+    assertThat(context.getLogLevel().getName(), is("FINE"));
+  }
+
+  @Test
+  @DisplayName("Should handle empty string log level in getLogLevel()")
+  void shouldHandleEmptyStringLogLevel() {
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    // Should default to INFO on empty string
+    assertThat(context.getLogLevel(), notNullValue());
+    assertThat(context.getLogLevel().getName(), is("INFO"));
+  }
+
+  @Test
   @DisplayName("Should handle invalid JSON in SCHCRWLR_ADDITIONAL_CONFIG gracefully")
   void shouldHandleInvalidAdditionalConfigJson() {
     envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "this-is-not-json");
@@ -57,6 +112,17 @@ public class SchemaCrawlerContextTest {
     final schemacrawler.tools.options.Config config = context.readAdditionalConfig();
     // Should fall back to empty config
     assertThat(config.getStringValue("any", "default"), is("default"));
+  }
+
+  @Test
+  @DisplayName("Should handle invalid log level in getLogLevel()")
+  void shouldHandleInvalidLogLevelInGetLogLevel() {
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "INVALID_LEVEL");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    // Should default to INFO on invalid value
+    assertThat(context.getLogLevel(), notNullValue());
+    assertThat(context.getLogLevel().getName(), is("INFO"));
   }
 
   @Test
@@ -124,6 +190,18 @@ public class SchemaCrawlerContextTest {
     envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "   \t  \n  ");
     context = new SchemaCrawlerContext(envAccessor);
     assertThat(context.readAdditionalConfig().getStringValue("some-key", "default"), is("default"));
+  }
+
+  @Test
+  @DisplayName("Should return same log level instance on multiple calls")
+  void shouldReturnSameLogLevelInstance() {
+    envAccessor.put("SCHCRWLR_LOG_LEVEL", "WARNING");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    final java.util.logging.Level level1 = context.getLogLevel();
+    final java.util.logging.Level level2 = context.getLogLevel();
+
+    assertThat(level1, is(level2));
   }
 
   @Test
