@@ -36,6 +36,9 @@ public class McpServerMain {
   }
 
   public static void startMcpServer() {
+
+    LoggingInitializer.initialize();
+
     final SchemaCrawlerContext scContext = new SchemaCrawlerContext();
     final McpServerContext context = new McpServerContext();
     final McpServerTransportType mcpTransport = context.mcpTransport();
@@ -54,6 +57,9 @@ public class McpServerMain {
       final DatabaseConnectionSource databaseConnectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
+
+    LoggingInitializer.initialize();
+
     final ConfigurableApplicationContext app =
         new SpringApplicationBuilder(McpServer.class)
             .initializers(

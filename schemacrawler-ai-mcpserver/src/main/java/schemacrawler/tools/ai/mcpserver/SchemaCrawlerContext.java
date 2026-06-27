@@ -18,7 +18,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.slf4j.bridge.SLF4JBridgeHandler;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.LimitOptions;
@@ -35,7 +34,6 @@ import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.DatabaseConnectorUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import tools.jackson.databind.JsonNode;
-import us.fatehi.utility.LoggingConfig;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
 import us.fatehi.utility.readconfig.ReadConfig;
@@ -47,12 +45,10 @@ public final class SchemaCrawlerContext {
 
   private static final String ADDITIONAL_CONFIG = "SCHCRWLR_ADDITIONAL_CONFIG";
   private static final String INFO_LEVEL = "SCHCRWLR_INFO_LEVEL";
-  private static final String LOG_LEVEL = "SCHCRWLR_LOG_LEVEL";
   private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
   private final ReadConfig envAccessor;
   private final SchemaCrawlerOptions schemaCrawlerOptions;
-  private final Level logLevel;
 
   /** Default constructor that uses System.getenv */
   public SchemaCrawlerContext() {
@@ -66,20 +62,6 @@ public final class SchemaCrawlerContext {
    */
   public SchemaCrawlerContext(final ReadConfig envAccessor) {
     this.envAccessor = requireNonNull(envAccessor, "No environment accessor provided");
-
-    this.logLevel = readLogLevel();
-    new LoggingConfig(this.logLevel);
-
-    // Install JUL-to-SLF4J bridge to route JUL logs through Logback (Spring Boot logging)
-    try {
-      SLF4JBridgeHandler.removeHandlersForRootLogger();
-      SLF4JBridgeHandler.install();
-      LOGGER.log(
-          Level.FINE, () -> "Installed JUL-to-SLF4J bridge for Spring Boot logging integration");
-    } catch (final Exception e) {
-      LOGGER.log(Level.WARNING, "Could not install JUL-to-SLF4J bridge", e);
-    }
-
     schemaCrawlerOptions = buildSchemaCrawlerOptions();
   }
 
@@ -92,15 +74,6 @@ public final class SchemaCrawlerContext {
     final DatabaseConnectionSource databaseConnectionSource =
         EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor).build();
     return databaseConnectionSource;
-  }
-
-  /**
-   * Returns the configured log level.
-   *
-   * @return The log level configured from the environment variable
-   */
-  public Level getLogLevel() {
-    return logLevel;
   }
 
   public Catalog loadCatalog() {
@@ -181,27 +154,6 @@ public final class SchemaCrawlerContext {
         infoLevel = defaultValue;
       }
       return infoLevel;
-    } catch (final Exception e) {
-      return defaultValue;
-    }
-  }
-
-  /**
-   * Parses a string and returns a valid log level.
-   *
-   * @param value The log level string to check
-   * @return Level Non-null value
-   */
-  Level readLogLevel() {
-
-    final Level defaultValue = Level.INFO;
-
-    final String value = envAccessor.getStringValue(LOG_LEVEL, "");
-    if (isBlank(value)) {
-      return defaultValue;
-    }
-    try {
-      return Level.parse(value.toUpperCase());
     } catch (final Exception e) {
       return defaultValue;
     }
