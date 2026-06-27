@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Catalog;
-import schemacrawler.schema.DatabaseObject;
+import schemacrawler.schema.NamedObject;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -41,8 +41,11 @@ public final class ListFunctionExecutor
     refilterCatalog();
 
     final Catalog catalog = getCatalog();
-    final Collection<DatabaseObject> databaseObjects = new ArrayList<>();
+    final Collection<NamedObject> databaseObjects = new ArrayList<>();
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
+    if (databaseObjectType == DatabaseObjectType.SCHEMAS || databaseObjectType == ALL) {
+      databaseObjects.addAll(catalog.getSchemas());
+    } // fall through - no else
     if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {
       databaseObjects.addAll(catalog.getTables());
     } // fall through - no else
@@ -66,6 +69,9 @@ public final class ListFunctionExecutor
         makeInclusionRule(commandOptions.databaseObjectName());
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     final LimitOptionsBuilder limitOptionsBuilder = LimitOptionsBuilder.builder();
+    if (databaseObjectType == DatabaseObjectType.SCHEMAS || databaseObjectType == ALL) {
+      limitOptionsBuilder.includeSchemas(databaseObjectPattern);
+    } // fall through - no else
     if (databaseObjectType == DatabaseObjectType.TABLES || databaseObjectType == ALL) {
       limitOptionsBuilder.includeTables(databaseObjectPattern);
     } // fall through - no else
@@ -83,13 +89,13 @@ public final class ListFunctionExecutor
         .withLimitOptions(limitOptionsBuilder.toOptions());
   }
 
-  private ArrayNode createTypedObjectsArray(final Collection<DatabaseObject> databaseObjects) {
+  private ArrayNode createTypedObjectsArray(final Collection<NamedObject> databaseObjects) {
     final ArrayNode list = mapper.createArrayNode();
     if (databaseObjects == null || databaseObjects.isEmpty()) {
       return list;
     }
 
-    for (final DatabaseObject databaseObject : databaseObjects) {
+    for (final NamedObject databaseObject : databaseObjects) {
       if (databaseObject == null) {
         continue;
       }

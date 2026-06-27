@@ -7,8 +7,8 @@
     "properties" : {
       "database_object_type" : {
         "type" : "string",
-        "description" : "Type of database object to list, like tables (including views),\nroutines (that is, stored procedures and functions),\nschemas (that is, catalogs), sequences, or synonyms.\nIf the parameter is not provided, all database objects are listed.\n",
-        "enum" : [ "ALL", "TABLES", "ROUTINES", "SEQUENCES", "SYNONYMS" ]
+        "description" : "Type of database object to list, like tables (including views),\nroutines (that is, stored procedures and functions),\nschemas (that is, databases or catalogs), sequences, or synonyms.\nIf the parameter is not provided, all database objects are listed.\n",
+        "enum" : [ "ALL", "SCHEMAS", "TABLES", "ROUTINES", "SEQUENCES", "SYNONYMS" ]
       },
       "database_object_name" : {
         "type" : "string",

@@ -24,7 +24,7 @@ public record ListFunctionParameters(
             """
             Type of database object to list, like tables (including views),
             routines (that is, stored procedures and functions),
-            schemas (that is, catalogs), sequences, or synonyms.
+            schemas (that is, databases or catalogs), sequences, or synonyms.
             If the parameter is not provided, all database objects are listed.
             """)
         @JsonProperty(defaultValue = "ALL", required = false)

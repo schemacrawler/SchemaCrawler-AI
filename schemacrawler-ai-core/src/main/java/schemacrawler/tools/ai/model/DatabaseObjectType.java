@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.model;
 
 public enum DatabaseObjectType {
   ALL,
+  SCHEMAS,
   TABLES,
   ROUTINES,
   SEQUENCES,
