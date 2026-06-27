@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.function.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
+import static schemacrawler.tools.ai.model.DatabaseObjectType.SCHEMAS;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SEQUENCES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SYNONYMS;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.TABLES;
@@ -41,6 +42,12 @@ public class ListFunctionTest extends AbstractFunctionTest {
   @Test
   public void dbRoutines(final TestContext testContext) throws Exception {
     final ListFunctionParameters args = new ListFunctionParameters(ROUTINES, null);
+    databaseObjects(testContext, args);
+  }
+
+  @Test
+  public void dbSchemas(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args = new ListFunctionParameters(SCHEMAS, null);
     databaseObjects(testContext, args);
   }
 

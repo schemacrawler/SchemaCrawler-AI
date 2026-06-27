@@ -18,6 +18,7 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import java.io.Serial;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.NamedObject;
+import schemacrawler.schema.Schema;
 import schemacrawler.schema.Sequence;
 import schemacrawler.schema.Synonym;
 import schemacrawler.schema.TypedObject;
@@ -60,6 +61,7 @@ public class BaseObjectDocument implements Document {
           case final TypedObject<?> typedObject -> typedObject.getType().toString().toLowerCase();
           case final Synonym synonym -> "synonym";
           case final Sequence sequence -> "sequence";
+          case final Schema schema -> "schema";
           default -> null;
         };
   }
