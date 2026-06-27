@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.4-2"></a>
+## Release 17.11.4-2 - 2026-06-28
+
+- Support configured log levels in Spring Boot and Spring AI logging
+
+
 <a name="v17.11.4-1"></a>
 ## Release 17.11.4-1 - 2026-06-24
 
