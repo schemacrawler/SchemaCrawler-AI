@@ -26,12 +26,12 @@ import tools.jackson.databind.node.ObjectNode;
 
 public final class CallToolLogger {
 
-  private static final Logger LOGGER = Logger.getLogger(CallToolLogger.class.getCanonicalName());
-
   public enum TurnType {
     REQUEST,
     RESPONSE
   }
+
+  private static final Logger LOGGER = Logger.getLogger(CallToolLogger.class.getCanonicalName());
 
   private final UUID instanceId;
   private final McpSyncServerExchange exchange;
