@@ -34,19 +34,23 @@ public final class LoggingUtility {
 
   private static final Logger LOGGER = Logger.getLogger(LoggingUtility.class.getCanonicalName());
 
+  public static void log(final McpSyncServerExchange exchange, final String message) {
+    log(exchange, message, null);
+  }
+
   public static void log(
       final McpSyncServerExchange exchange, final String message, final JsonNode logData) {
-    if (exchange == null || logData == null) {
+    if (exchange == null) {
       return;
     }
     // Log to client
-    final String clientLogMessage = message + "\n" + logData.toPrettyString().indent(2);
+    final String clientLogMessage = "\n" + makeClientLogMessage(message, logData);
     exchange.loggingNotification(
         LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
             .logger(LOGGER.getName())
             .build());
     // Log to server
-    final String serverLogMessage = "\n" + toServerLog(exchange, message, logData);
+    final String serverLogMessage = "\n" + makeServerLogMessage(exchange, message, logData);
     LOGGER.log(Level.INFO, serverLogMessage);
   }
 
@@ -127,27 +131,39 @@ public final class LoggingUtility {
     }
   }
 
-  private static String toServerLog(
+  private static String makeClientLogMessage(final String message, final JsonNode logData) {
+    final String clientLogMessage;
+    if (logData == null) {
+      clientLogMessage = message;
+    } else {
+      clientLogMessage = "%s%n%s".formatted(message, logData.toPrettyString().indent(2));
+    }
+    return clientLogMessage;
+  }
+
+  private static String makeServerLogMessage(
       final McpSyncServerExchange exchange, final String message, final JsonNode logData) {
-    if (exchange == null) {
-      return "";
-    }
-    try {
-      final Implementation clientInfo = exchange.getClientInfo();
-      final ObjectNode logRecord = JsonUtility.mapper.createObjectNode();
-      final ObjectNode logMessage = logRecord.putObject("log-message");
-      logMessage.put("message", message);
-      logMessage.set("data", logData);
-      final ObjectNode session = logRecord.putObject("session");
-      session.put("session-id", exchange.sessionId());
-      if (clientInfo != null) {
-        session.put("client-name", clientInfo.name());
-        session.put("client-version", clientInfo.version());
+
+    final ObjectNode clientSession = JsonUtility.mapper.createObjectNode();
+    if (exchange != null) {
+      try {
+        final Implementation clientInfo = exchange.getClientInfo();
+        if (clientInfo != null) {
+          clientSession.put("client-name", clientInfo.name());
+          clientSession.put("client-version", clientInfo.version());
+        }
+        clientSession.put("session-id", exchange.sessionId());
+      } catch (final Exception e) {
+        // Ignore
       }
-      return logRecord.toPrettyString();
-    } catch (final Exception e) {
-      return "";
     }
+
+    final String serverLogMessage =
+        "%s%s"
+            .formatted(
+                makeClientLogMessage(message, logData),
+                makeClientLogMessage("for client session:", clientSession));
+    return serverLogMessage;
   }
 
   private LoggingUtility() {
