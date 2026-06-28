@@ -76,10 +76,11 @@ public final class CallToolLogger {
 
   private String makeMessage(final String message, final JsonNode logData) {
     final StringBuilder builder = new StringBuilder();
-    builder.append("Request id: ").append(instanceId).append(lineSeparator());
+    builder.append("Call tool request id: ").append(instanceId).append(lineSeparator());
     if (!isBlank(message)) {
       builder.append(message).append(lineSeparator());
     }
+    builder.append("Call tool request: ").append(lineSeparator());
     if (logData != null) {
       builder.append(logData.toPrettyString().indent(2)).append(lineSeparator());
     }
@@ -106,7 +107,7 @@ public final class CallToolLogger {
     final String serverLogMessage =
         "%s%s"
             .formatted(
-                makeMessage(message, logData), makeMessage("for client session:", clientSession));
+                makeMessage(message, logData), makeMessage("For client session:", clientSession));
     return serverLogMessage;
   }
 }

@@ -12,8 +12,6 @@ import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
@@ -30,13 +28,9 @@ import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 public final class DescribeTablesFunctionExecutor
     extends AbstractJsonFunctionExecutor<DescribeTablesFunctionParameters> {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(DescribeTablesFunctionExecutor.class.getCanonicalName());
 
   protected DescribeTablesFunctionExecutor(final PropertyName functionName) {
     super(functionName);
@@ -54,11 +48,8 @@ public final class DescribeTablesFunctionExecutor
             .withAdditionalTableDetails(tableDetails)
             .build();
 
-    LOGGER.log(
-        Level.FINE,
-        new StringFormat("%nExecuted function <%s>%nwith parameters%n%s", command, commandOptions));
-    LOGGER.log(Level.FINE, new StringFormat("Returned %d tables", catalog.getTables().size()));
-    return new JsonFunctionReturn(catalogDocument);
+    return new JsonFunctionReturn(catalogDocument)
+        .withSummary("Returned %d tables".formatted(catalog.getTables().size()));
   }
 
   @Override

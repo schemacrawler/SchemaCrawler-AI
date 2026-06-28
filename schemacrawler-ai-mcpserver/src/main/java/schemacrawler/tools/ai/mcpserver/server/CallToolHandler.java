@@ -54,6 +54,7 @@ class CallToolHandler
       final DatabaseConnectionSource connectionSource =
           DatabaseConnectionService.getDatabaseConnectionSource();
       functionReturn = functionCallback.execute(arguments, connectionSource);
+      logger.log(functionReturn.getSummary());
     } catch (final Exception e) {
       logger.log(e);
       functionReturn = new ExceptionFunctionReturn(e);

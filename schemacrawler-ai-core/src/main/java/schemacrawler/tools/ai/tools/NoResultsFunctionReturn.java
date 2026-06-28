@@ -19,4 +19,9 @@ public record NoResultsFunctionReturn() implements FunctionReturn {
   public String get() {
     return "No results returned from tool call.";
   }
+
+  @Override
+  public String getSummary() {
+    return get();
+  }
 }

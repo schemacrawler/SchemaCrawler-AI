@@ -16,8 +16,6 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.NamedObject;
@@ -30,13 +28,9 @@ import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 public final class ListFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListFunctionParameters> {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(ListFunctionExecutor.class.getCanonicalName());
 
   protected ListFunctionExecutor(final PropertyName functionName) {
     super(functionName);
@@ -67,12 +61,9 @@ public final class ListFunctionExecutor
 
     final ArrayNode list = createTypedObjectsArray(databaseObjects);
 
-    LOGGER.log(
-        Level.FINE,
-        new StringFormat("%nExecuted function <%s>%nwith parameters%n%s", command, commandOptions));
-    LOGGER.log(
-        Level.FINE, new StringFormat("Returned %d %s", databaseObjects.size(), databaseObjectType));
-    return new JsonFunctionReturn("list", list);
+    return new JsonFunctionReturn("list", list)
+        .withSummary(
+            "Returned %d %s objects".formatted(databaseObjects.size(), databaseObjectType));
   }
 
   @Override

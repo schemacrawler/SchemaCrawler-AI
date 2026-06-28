@@ -13,8 +13,6 @@ import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
@@ -36,13 +34,9 @@ import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 public final class ListAcrossTablesFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListAcrossTablesFunctionParameters> {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(ListAcrossTablesFunctionExecutor.class.getCanonicalName());
 
   protected ListAcrossTablesFunctionExecutor(final PropertyName functionName) {
     super(functionName);
@@ -77,11 +71,8 @@ public final class ListAcrossTablesFunctionExecutor
     final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
     final ArrayNode list = createDependantObjectsArray(dependantObjects);
 
-    LOGGER.log(
-        Level.FINE,
-        new StringFormat("%nExecuted function <%s>%nwith parameters%n%s", command, commandOptions));
-    LOGGER.log(Level.FINE, new StringFormat("Returned %d objects", dependantObjects.size()));
-    return new JsonFunctionReturn(listName, list);
+    return new JsonFunctionReturn(listName, list)
+        .withSummary("Returned %d objects".formatted(dependantObjects.size()));
   }
 
   @Override

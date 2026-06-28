@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.tools;
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.requireNotBlank;
+import static us.fatehi.utility.Utility.trimToEmpty;
 
 import schemacrawler.tools.ai.model.Document;
 import tools.jackson.databind.JsonNode;
@@ -20,6 +21,7 @@ import tools.jackson.databind.node.ObjectNode;
 public final class JsonFunctionReturn implements FunctionReturn {
 
   private final JsonNode jsonNode;
+  private String summary = "";
 
   public JsonFunctionReturn() {
     jsonNode = mapper.missingNode();
@@ -55,5 +57,15 @@ public final class JsonFunctionReturn implements FunctionReturn {
 
   public JsonNode getResult() {
     return jsonNode;
+  }
+
+  @Override
+  public String getSummary() {
+    return summary;
+  }
+
+  public JsonFunctionReturn withSummary(final String summary) {
+    this.summary = trimToEmpty(summary);
+    return this;
   }
 }

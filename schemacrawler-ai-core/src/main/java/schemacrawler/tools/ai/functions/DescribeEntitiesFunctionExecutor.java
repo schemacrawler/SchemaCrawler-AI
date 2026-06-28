@@ -12,8 +12,6 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.ermodel.model.RelationshipCardinality;
@@ -27,13 +25,9 @@ import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
-import us.fatehi.utility.string.StringFormat;
 
 public final class DescribeEntitiesFunctionExecutor
     extends AbstractJsonFunctionExecutor<DescribeEntitiesFunctionParameters> {
-
-  private static final Logger LOGGER =
-      Logger.getLogger(DescribeEntitiesFunctionExecutor.class.getCanonicalName());
 
   protected DescribeEntitiesFunctionExecutor(final PropertyName functionName) {
     super(functionName);
@@ -73,11 +67,8 @@ public final class DescribeEntitiesFunctionExecutor
 
     final ArrayNode entitiesArray = createDocumentsArray(documents);
 
-    LOGGER.log(
-        Level.FINE,
-        new StringFormat("%nExecuted function <%s>%nwith parameters%n%s", command, commandOptions));
-    LOGGER.log(Level.FINE, new StringFormat("Returned %d entities", documents.size()));
-    return new JsonFunctionReturn(entitiesArray);
+    return new JsonFunctionReturn(entitiesArray)
+        .withSummary("Returned %d entities".formatted(documents.size()));
   }
 
   @Override
