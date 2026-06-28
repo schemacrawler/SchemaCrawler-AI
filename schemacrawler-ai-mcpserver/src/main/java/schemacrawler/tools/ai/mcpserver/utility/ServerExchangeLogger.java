@@ -8,12 +8,16 @@
 
 package schemacrawler.tools.ai.mcpserver.utility;
 
+import static java.lang.System.lineSeparator;
+import static us.fatehi.utility.Utility.isBlank;
+
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
 import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -25,17 +29,65 @@ public final class ServerExchangeLogger {
   private static final Logger LOGGER =
       Logger.getLogger(ServerExchangeLogger.class.getCanonicalName());
 
-  private static String makeClientLogMessage(final String message, final JsonNode logData) {
-    final String clientLogMessage;
-    if (logData == null) {
-      clientLogMessage = message;
-    } else {
-      clientLogMessage = "%s%n%s".formatted(message, logData.toPrettyString().indent(2));
-    }
-    return clientLogMessage;
+  private final UUID instanceId;
+  private final McpSyncServerExchange exchange;
+  private JsonNode functionCallbackNode;
+
+  public ServerExchangeLogger(final McpSyncServerExchange exchange) {
+    instanceId = UUID.randomUUID();
+    this.exchange = exchange;
   }
 
-  private static String makeServerLogMessage(
+  public void log(final Exception e) {
+    if (exchange == null || e == null) {
+      return;
+    }
+    // Log to client
+    final StringWriter stWriter = new StringWriter();
+    e.printStackTrace(new PrintWriter(stWriter));
+    final String clientLogMessage =
+        "\n" + makeMessage(e.getMessage(), functionCallbackNode) + stWriter.toString().indent(2);
+    exchange.loggingNotification(
+        LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
+            .logger(LOGGER.getName())
+            .build());
+  }
+
+  public void log(final String message) {
+    if (exchange != null) {
+      // Log to client
+      final String clientLogMessage = "\n" + makeMessage(message, functionCallbackNode);
+      exchange.loggingNotification(
+          LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
+              .logger(LOGGER.getName())
+              .build());
+    }
+    // Log to server
+    final String serverLogMessage =
+        "\n" + makeServerLogMessage(exchange, message, functionCallbackNode);
+    LOGGER.log(Level.INFO, serverLogMessage);
+  }
+
+  public void setFunctionCallbackNode(final JsonNode functionCallbackNode) {
+    if (this.functionCallbackNode != null) {
+      throw new IllegalArgumentException("Cannot reset function callback information");
+    }
+    this.functionCallbackNode = functionCallbackNode;
+  }
+
+  private String makeMessage(final String message, final JsonNode logData) {
+    final StringBuilder builder = new StringBuilder();
+    builder.append("Request id: ").append(instanceId).append(lineSeparator());
+    if (!isBlank(message)) {
+      builder.append(message).append(lineSeparator());
+    }
+    if (logData != null) {
+      builder.append(logData.toPrettyString().indent(2)).append(lineSeparator());
+    }
+    return builder.toString();
+  }
+
+  private String makeServerLogMessage(
       final McpSyncServerExchange exchange, final String message, final JsonNode logData) {
 
     final ObjectNode clientSession = JsonUtility.mapper.createObjectNode();
@@ -55,52 +107,7 @@ public final class ServerExchangeLogger {
     final String serverLogMessage =
         "%s%s"
             .formatted(
-                makeClientLogMessage(message, logData),
-                makeClientLogMessage("for client session:", clientSession));
+                makeMessage(message, logData), makeMessage("for client session:", clientSession));
     return serverLogMessage;
-  }
-
-  private final McpSyncServerExchange exchange;
-  private JsonNode functionCallbackNode;
-
-  public ServerExchangeLogger(final McpSyncServerExchange exchange) {
-    this.exchange = exchange;
-  }
-
-  public void log(final Exception e) {
-    if (exchange == null || e == null) {
-      return;
-    }
-    // Log to client
-    final StringWriter stWriter = new StringWriter();
-    e.printStackTrace(new PrintWriter(stWriter));
-    final String clientLogMessage =
-        "\n"
-            + makeClientLogMessage(e.getMessage(), functionCallbackNode)
-            + stWriter.toString().indent(2);
-    exchange.loggingNotification(
-        LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
-            .logger(LOGGER.getName())
-            .build());
-  }
-
-  public void log(final String message) {
-    if (exchange == null) {
-      return;
-    }
-    // Log to client
-    final String clientLogMessage = "\n" + makeClientLogMessage(message, functionCallbackNode);
-    exchange.loggingNotification(
-        LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
-            .logger(LOGGER.getName())
-            .build());
-    // Log to server
-    final String serverLogMessage =
-        "\n" + makeServerLogMessage(exchange, message, functionCallbackNode);
-    LOGGER.log(Level.INFO, serverLogMessage);
-  }
-
-  public void setFunctionCallbackNode(final JsonNode functionCallbackNode) {
-    this.functionCallbackNode = functionCallbackNode;
   }
 }
