@@ -30,6 +30,7 @@ import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
+import us.fatehi.utility.string.StringFormat;
 
 public final class ListFunctionExecutor
     extends AbstractJsonFunctionExecutor<ListFunctionParameters> {
@@ -64,8 +65,13 @@ public final class ListFunctionExecutor
       databaseObjects.addAll(catalog.getSynonyms());
     } // fall through - no else
 
-    LOGGER.log(Level.FINE, "Returning %d %s".formatted(databaseObjects.size(), databaseObjectType));
     final ArrayNode list = createTypedObjectsArray(databaseObjects);
+
+    LOGGER.log(
+        Level.FINE,
+        new StringFormat("%nExecuted function <%s>%nwith parameters%n%s", command, commandOptions));
+    LOGGER.log(
+        Level.FINE, new StringFormat("Returned %d %s", databaseObjects.size(), databaseObjectType));
     return new JsonFunctionReturn("list", list);
   }
 
