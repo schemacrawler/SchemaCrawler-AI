@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
+
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import java.util.ArrayList;
@@ -70,7 +72,7 @@ public class ToolProvider {
     // Log execution
     final CallToolLogger logger = new CallToolLogger(exchange);
     logger.setFunctionCallbackNode(clientNode);
-    logger.log("Returned SchemaCrawler AI MCP Server health");
+    logger.log(RESPONSE, "Returned SchemaCrawler AI MCP Server health");
 
     return objectNode;
   }

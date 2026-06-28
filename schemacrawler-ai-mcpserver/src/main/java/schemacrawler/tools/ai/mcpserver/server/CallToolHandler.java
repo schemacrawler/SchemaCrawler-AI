@@ -10,6 +10,8 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.REQUEST;
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
@@ -49,11 +51,11 @@ class CallToolHandler
     try {
       final String arguments = mapper.writeValueAsString(request.arguments());
       logger.setFunctionCallbackNode(functionCallback.toCallObject(arguments));
-      logger.log("Executing");
+      logger.log(REQUEST, "Executing tool");
       final DatabaseConnectionSource connectionSource =
           DatabaseConnectionService.getDatabaseConnectionSource();
       functionReturn = functionCallback.execute(arguments, connectionSource);
-      logger.log(functionReturn.getSummary());
+      logger.log(RESPONSE, functionReturn.getSummary());
     } catch (final Exception e) {
       logger.log(e);
       functionReturn = new ExceptionFunctionReturn(e);

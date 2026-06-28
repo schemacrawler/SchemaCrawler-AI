@@ -28,6 +28,11 @@ public final class CallToolLogger {
 
   private static final Logger LOGGER = Logger.getLogger(CallToolLogger.class.getCanonicalName());
 
+  public enum TurnType {
+    REQUEST,
+    RESPONSE
+  }
+
   private final UUID instanceId;
   private final McpSyncServerExchange exchange;
   private JsonNode functionCallbackNode;
@@ -47,7 +52,7 @@ public final class CallToolLogger {
     final String clientLogMessage =
         "%s%nStack trace: %n%s"
             .formatted(
-                makeMessage(null, e.getMessage(), functionCallbackNode),
+                makeMessage(TurnType.RESPONSE, null, e.getMessage(), functionCallbackNode),
                 stWriter.toString().indent(2));
     exchange.loggingNotification(
         LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
@@ -55,10 +60,10 @@ public final class CallToolLogger {
             .build());
   }
 
-  public void log(final String message) {
+  public void log(final TurnType turnType, final String message) {
     if (exchange != null) {
       // Log to client
-      final String clientLogMessage = makeMessage(null, message, functionCallbackNode);
+      final String clientLogMessage = makeMessage(turnType, null, message, functionCallbackNode);
       exchange.loggingNotification(
           LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
               .logger(LOGGER.getName())
@@ -66,7 +71,7 @@ public final class CallToolLogger {
     }
     // Log to server
     final String serverLogMessage =
-        "\n" + makeServerLogMessage(exchange, message, functionCallbackNode);
+        makeServerLogMessage(turnType, exchange, message, functionCallbackNode);
     LOGGER.log(Level.INFO, serverLogMessage);
   }
 
@@ -78,12 +83,22 @@ public final class CallToolLogger {
   }
 
   private String makeMessage(
-      final JsonNode clientSession, final String message, final JsonNode logData) {
+      final TurnType turnType,
+      final JsonNode clientSession,
+      final String message,
+      final JsonNode logData) {
     final StringBuilder builder = new StringBuilder();
     builder.append(lineSeparator());
     builder.append("Call tool request id: ").append(instanceId).append(lineSeparator());
+    if (turnType != null) {
+      builder.append(turnType).append(lineSeparator());
+    }
     if (!isBlank(message)) {
-      builder.append("Message: ").append(lineSeparator()).append(message).append(lineSeparator());
+      builder
+          .append("Message: ")
+          .append(lineSeparator())
+          .append(message.indent(2))
+          .append(lineSeparator());
     }
     if (logData != null) {
       builder.append("Call tool request: ").append(lineSeparator());
@@ -97,7 +112,10 @@ public final class CallToolLogger {
   }
 
   private String makeServerLogMessage(
-      final McpSyncServerExchange exchange, final String message, final JsonNode logData) {
+      final TurnType turnType,
+      final McpSyncServerExchange exchange,
+      final String message,
+      final JsonNode logData) {
 
     final ObjectNode clientSession = JsonUtility.mapper.createObjectNode();
     if (exchange != null) {
@@ -113,6 +131,6 @@ public final class CallToolLogger {
       }
     }
 
-    return makeMessage(clientSession, message, logData);
+    return makeMessage(turnType, clientSession, message, logData);
   }
 }
