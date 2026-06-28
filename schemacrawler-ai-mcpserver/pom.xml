@@ -76,13 +76,7 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
-
-    <!-- JUL to SLF4J bridge for routing JUL logs through Logback (Spring Boot logging) -->
-    <dependency>
-      <groupId>org.slf4j</groupId>
-      <artifactId>jul-to-slf4j</artifactId>
-    </dependency>
-
+    
     <!-- Test dependencies -->
     <dependency>
       <groupId>us.fatehi</groupId>
