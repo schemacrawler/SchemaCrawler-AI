@@ -18,7 +18,22 @@ docker run \
   --mount type=bind,source="$(pwd)",target=/home/schcrwlr/share \
   schemacrawler/schemacrawler-ai:local-test
 ```
-4. Clean Docker Local Build
+4. Verify local image
+```sh
+mvn \
+  --no-transfer-progress \
+  --batch-mode \
+  clean install
+
+mvn \
+  --no-transfer-progress \
+  --batch-mode \
+  -Dverify \
+  -Ddocker_image_tag=local-test \
+  -pl schemacrawler-ai-verify \
+  test
+```
+5. Clean Docker Local Build
 ```sh
 docker buildx prune --all
 ```
