@@ -31,7 +31,7 @@ import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-class ToolCallHandler
+class CallToolHandler
     implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
 
   private static final ObjectMapper NO_INDENT_MAPPER =
@@ -39,7 +39,7 @@ class ToolCallHandler
 
   private final FunctionCallback<? extends FunctionParameters> functionCallback;
 
-  ToolCallHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
+  CallToolHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
     this.functionCallback = requireNonNull(functionCallback, "No function callback provided");
   }
 
