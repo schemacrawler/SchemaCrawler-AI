@@ -22,7 +22,7 @@ import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import java.util.List;
 import java.util.function.BiFunction;
-import schemacrawler.tools.ai.mcpserver.utility.ServerExchangeLogger;
+import schemacrawler.tools.ai.mcpserver.utility.CallToolLogger;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionParameters;
@@ -45,7 +45,7 @@ class ToolCallHandler
 
   @Override
   public CallToolResult apply(final McpSyncServerExchange exchange, final CallToolRequest request) {
-    final ServerExchangeLogger logger = new ServerExchangeLogger(exchange);
+    final CallToolLogger logger = new CallToolLogger(exchange);
     FunctionReturn functionReturn;
     try {
       final String arguments = mapper.writeValueAsString(request.arguments());

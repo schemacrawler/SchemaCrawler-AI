@@ -24,16 +24,15 @@ import schemacrawler.tools.ai.utility.JsonUtility;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 
-public final class ServerExchangeLogger {
+public final class CallToolLogger {
 
-  private static final Logger LOGGER =
-      Logger.getLogger(ServerExchangeLogger.class.getCanonicalName());
+  private static final Logger LOGGER = Logger.getLogger(CallToolLogger.class.getCanonicalName());
 
   private final UUID instanceId;
   private final McpSyncServerExchange exchange;
   private JsonNode functionCallbackNode;
 
-  public ServerExchangeLogger(final McpSyncServerExchange exchange) {
+  public CallToolLogger(final McpSyncServerExchange exchange) {
     instanceId = UUID.randomUUID();
     this.exchange = exchange;
   }

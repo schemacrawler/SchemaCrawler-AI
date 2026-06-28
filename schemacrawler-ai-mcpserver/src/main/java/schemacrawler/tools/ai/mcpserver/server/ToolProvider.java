@@ -21,7 +21,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
-import schemacrawler.tools.ai.mcpserver.utility.ServerExchangeLogger;
+import schemacrawler.tools.ai.mcpserver.utility.CallToolLogger;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -69,7 +69,7 @@ public class ToolProvider {
     clientNode.put("mcp-event-id", eventId);
 
     if (exchange != null) {
-      final ServerExchangeLogger logger = new ServerExchangeLogger(exchange);
+      final CallToolLogger logger = new CallToolLogger(exchange);
       logger.setFunctionCallbackNode(objectNode);
       logger.log("SchemaCrawler MCP Server Health");
     }
