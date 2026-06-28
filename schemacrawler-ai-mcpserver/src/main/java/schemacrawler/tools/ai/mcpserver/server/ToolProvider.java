@@ -21,7 +21,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
-import schemacrawler.tools.ai.mcpserver.utility.CallToolLogger;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.ai.utility.JsonUtility;
@@ -50,7 +49,7 @@ public class ToolProvider {
       description = "Gets the SchemaCrawler AI MCP Server version and uptime status.",
       annotations =
           @McpTool.McpAnnotations(
-              title = "MCP Server Health",
+              title = "SchemaCrawler AI MCP Server Health",
               readOnlyHint = true,
               destructiveHint = false,
               idempotentHint = false, // Health can change based on server uptime
@@ -68,11 +67,10 @@ public class ToolProvider {
     clientNode.put("mcp-client-id", clientId);
     clientNode.put("mcp-event-id", eventId);
 
-    if (exchange != null) {
-      final CallToolLogger logger = new CallToolLogger(exchange);
-      logger.setFunctionCallbackNode(objectNode);
-      logger.log("SchemaCrawler MCP Server Health");
-    }
+    // Log execution
+    final CallToolLogger logger = new CallToolLogger(exchange);
+    logger.setFunctionCallbackNode(clientNode);
+    logger.log("Returned SchemaCrawler AI MCP Server health");
 
     return objectNode;
   }

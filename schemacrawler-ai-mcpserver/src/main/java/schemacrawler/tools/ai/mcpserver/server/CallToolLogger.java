@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.mcpserver.utility;
+package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.lang.System.lineSeparator;
 import static us.fatehi.utility.Utility.isBlank;
@@ -45,7 +45,10 @@ public final class CallToolLogger {
     final StringWriter stWriter = new StringWriter();
     e.printStackTrace(new PrintWriter(stWriter));
     final String clientLogMessage =
-        "\n" + makeMessage(e.getMessage(), functionCallbackNode) + stWriter.toString().indent(2);
+        "%s%nStack trace: %n%s"
+            .formatted(
+                makeMessage(null, e.getMessage(), functionCallbackNode),
+                stWriter.toString().indent(2));
     exchange.loggingNotification(
         LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
             .logger(LOGGER.getName())
@@ -55,7 +58,7 @@ public final class CallToolLogger {
   public void log(final String message) {
     if (exchange != null) {
       // Log to client
-      final String clientLogMessage = "\n" + makeMessage(message, functionCallbackNode);
+      final String clientLogMessage = makeMessage(null, message, functionCallbackNode);
       exchange.loggingNotification(
           LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
               .logger(LOGGER.getName())
@@ -74,15 +77,21 @@ public final class CallToolLogger {
     this.functionCallbackNode = functionCallbackNode;
   }
 
-  private String makeMessage(final String message, final JsonNode logData) {
+  private String makeMessage(
+      final JsonNode clientSession, final String message, final JsonNode logData) {
     final StringBuilder builder = new StringBuilder();
+    builder.append(lineSeparator());
     builder.append("Call tool request id: ").append(instanceId).append(lineSeparator());
     if (!isBlank(message)) {
-      builder.append(message).append(lineSeparator());
+      builder.append("Message: ").append(lineSeparator()).append(message).append(lineSeparator());
     }
-    builder.append("Call tool request: ").append(lineSeparator());
     if (logData != null) {
+      builder.append("Call tool request: ").append(lineSeparator());
       builder.append(logData.toPrettyString().indent(2)).append(lineSeparator());
+    }
+    if (clientSession != null) {
+      builder.append("For client: ").append(lineSeparator());
+      builder.append(clientSession.toPrettyString().indent(2)).append(lineSeparator());
     }
     return builder.toString();
   }
@@ -104,10 +113,6 @@ public final class CallToolLogger {
       }
     }
 
-    final String serverLogMessage =
-        "%s%s"
-            .formatted(
-                makeMessage(message, logData), makeMessage("For client session:", clientSession));
-    return serverLogMessage;
+    return makeMessage(clientSession, message, logData);
   }
 }

@@ -36,7 +36,8 @@ public final class ServerInformationFunctionExecutor
     // refilterCatalog();
 
     final JsonNode serverInfo = createServerInfoArray();
-    return new JsonFunctionReturn(serverInfo);
+    return new JsonFunctionReturn(serverInfo)
+        .withSummary(getCatalog().getDatabaseInfo().toString());
   }
 
   @Override
