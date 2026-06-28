@@ -10,8 +10,6 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
@@ -24,6 +22,7 @@ import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import java.util.List;
 import java.util.function.BiFunction;
+import schemacrawler.tools.ai.mcpserver.utility.ServerExchangeLogger;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionParameters;
@@ -46,16 +45,17 @@ class ToolCallHandler
 
   @Override
   public CallToolResult apply(final McpSyncServerExchange exchange, final CallToolRequest request) {
+    final ServerExchangeLogger logger = new ServerExchangeLogger(exchange);
     FunctionReturn functionReturn;
     try {
       final String arguments = mapper.writeValueAsString(request.arguments());
-      log(exchange, "Executing", functionCallback.toCallObject(arguments));
+      logger.setFunctionCallbackNode(functionCallback.toCallObject(arguments));
+      logger.log("Executing");
       final DatabaseConnectionSource connectionSource =
           DatabaseConnectionService.getDatabaseConnectionSource();
       functionReturn = functionCallback.execute(arguments, connectionSource);
     } catch (final Exception e) {
-      logExceptionToClient(
-          exchange, functionCallback.getFunctionName().getName() + ":\n" + request.arguments(), e);
+      logger.log(e);
       functionReturn = new ExceptionFunctionReturn(e);
     }
     final List<Content> content = createContent(functionReturn);
