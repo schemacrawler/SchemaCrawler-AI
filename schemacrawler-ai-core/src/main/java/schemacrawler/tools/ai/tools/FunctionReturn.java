@@ -17,4 +17,6 @@ public sealed interface FunctionReturn extends Supplier<String>
         ExceptionFunctionReturn {
 
   FunctionReturnMetadata getMetadata();
+
+  String getSummary();
 }

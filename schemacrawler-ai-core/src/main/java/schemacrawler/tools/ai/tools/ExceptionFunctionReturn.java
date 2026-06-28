@@ -31,4 +31,9 @@ public record ExceptionFunctionReturn(Exception exception) implements FunctionRe
     objectNode.putPOJO("exception", new ExceptionInfo(exception));
     return objectNode.toString();
   }
+
+  @Override
+  public String getSummary() {
+    return exception.getMessage();
+  }
 }

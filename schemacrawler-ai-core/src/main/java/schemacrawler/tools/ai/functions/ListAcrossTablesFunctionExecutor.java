@@ -70,7 +70,9 @@ public final class ListAcrossTablesFunctionExecutor
 
     final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
     final ArrayNode list = createDependantObjectsArray(dependantObjects);
-    return new JsonFunctionReturn(listName, list);
+
+    return new JsonFunctionReturn(listName, list)
+        .withSummary("Returned %d objects".formatted(dependantObjects.size()));
   }
 
   @Override

@@ -32,4 +32,9 @@ public record TextFunctionReturn(String text, FunctionReturnMetadata metadata)
   public FunctionReturnMetadata getMetadata() {
     return metadata;
   }
+
+  @Override
+  public String getSummary() {
+    return "";
+  }
 }

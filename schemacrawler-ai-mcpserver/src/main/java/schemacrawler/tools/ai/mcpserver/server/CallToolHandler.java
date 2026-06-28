@@ -10,8 +10,8 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.logExceptionToClient;
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.REQUEST;
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static tools.jackson.databind.SerializationFeature.INDENT_OUTPUT;
 
@@ -32,7 +32,7 @@ import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.ObjectMapper;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
-class ToolCallHandler
+class CallToolHandler
     implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
 
   private static final ObjectMapper NO_INDENT_MAPPER =
@@ -40,22 +40,24 @@ class ToolCallHandler
 
   private final FunctionCallback<? extends FunctionParameters> functionCallback;
 
-  ToolCallHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
+  CallToolHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
     this.functionCallback = requireNonNull(functionCallback, "No function callback provided");
   }
 
   @Override
   public CallToolResult apply(final McpSyncServerExchange exchange, final CallToolRequest request) {
+    final CallToolLogger logger = new CallToolLogger(exchange);
     FunctionReturn functionReturn;
     try {
       final String arguments = mapper.writeValueAsString(request.arguments());
-      log(exchange, "Executing", functionCallback.toCallObject(arguments));
+      logger.setFunctionCallbackNode(functionCallback.toCallObject(arguments));
+      logger.log(REQUEST, "Executing tool");
       final DatabaseConnectionSource connectionSource =
           DatabaseConnectionService.getDatabaseConnectionSource();
       functionReturn = functionCallback.execute(arguments, connectionSource);
+      logger.log(RESPONSE, functionReturn.getSummary());
     } catch (final Exception e) {
-      logExceptionToClient(
-          exchange, functionCallback.getFunctionName().getName() + ":\n" + request.arguments(), e);
+      logger.log(e);
       functionReturn = new ExceptionFunctionReturn(e);
     }
     final List<Content> content = createContent(functionReturn);

@@ -37,13 +37,16 @@ public final class DescribeRelationshipsFunctionExecutor
     final RelationshipCardinality cardinality = commandOptions.cardinality().cardinality();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.relationshipName());
     final ERModel erModel = getERModel();
-    final Collection<RelationshipDocument> entities =
+    final Collection<RelationshipDocument> documents =
         CompactERModelBuilder.builder(erModel)
             .withRelationshipCardinalities(cardinality)
             .withRelationshipInclusionRule(inclusionRule)
             .buildRelationshipDocuments();
-    final ArrayNode relationshipsArray = createRelationshipsArray(entities);
-    return new JsonFunctionReturn(relationshipsArray);
+
+    final ArrayNode relationshipsArray = createRelationshipsArray(documents);
+
+    return new JsonFunctionReturn(relationshipsArray)
+        .withSummary("Returned %d relationships".formatted(documents.size()));
   }
 
   @Override

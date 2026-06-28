@@ -8,11 +8,10 @@
 
 package schemacrawler.tools.ai.mcpserver.server;
 
-import static schemacrawler.tools.ai.mcpserver.utility.LoggingUtility.log;
+import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
 
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
-import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -52,7 +51,7 @@ public class ToolProvider {
       description = "Gets the SchemaCrawler AI MCP Server version and uptime status.",
       annotations =
           @McpTool.McpAnnotations(
-              title = "MCP Server Health",
+              title = "SchemaCrawler AI MCP Server Health",
               readOnlyHint = true,
               destructiveHint = false,
               idempotentHint = false, // Health can change based on server uptime
@@ -70,13 +69,10 @@ public class ToolProvider {
     clientNode.put("mcp-client-id", clientId);
     clientNode.put("mcp-event-id", eventId);
 
-    if (exchange != null) {
-      final Implementation clientInfo = exchange.getClientInfo();
-      if (clientInfo != null) {
-        clientNode.putPOJO("client-info", clientInfo);
-      }
-      log(exchange, "MCP Server Health", objectNode);
-    }
+    // Log execution
+    final CallToolLogger logger = new CallToolLogger(exchange);
+    logger.setFunctionCallbackNode(clientNode);
+    logger.log(RESPONSE, "Returned SchemaCrawler AI MCP Server health");
 
     return objectNode;
   }

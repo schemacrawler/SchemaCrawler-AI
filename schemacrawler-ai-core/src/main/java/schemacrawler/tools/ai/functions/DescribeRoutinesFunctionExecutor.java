@@ -16,6 +16,7 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -41,11 +42,14 @@ public final class DescribeRoutinesFunctionExecutor
 
     final Collection<AdditionalRoutineDetails> routineDetails = getRoutineDetails();
     final ERModel erModel = getERModel();
+    final Catalog catalog = getCatalog();
     final CatalogDocument catalogDocument =
-        CompactCatalogBuilder.builder(getCatalog(), erModel)
+        CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalRoutineDetails(routineDetails)
             .build();
-    return new JsonFunctionReturn(catalogDocument);
+
+    return new JsonFunctionReturn(catalogDocument)
+        .withSummary("Returned %d routines".formatted(catalog.getRoutines().size()));
   }
 
   @Override

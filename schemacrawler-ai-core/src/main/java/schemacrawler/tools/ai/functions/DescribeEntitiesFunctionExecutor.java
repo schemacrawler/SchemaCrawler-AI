@@ -66,7 +66,9 @@ public final class DescribeEntitiesFunctionExecutor
     }
 
     final ArrayNode entitiesArray = createDocumentsArray(documents);
-    return new JsonFunctionReturn(entitiesArray);
+
+    return new JsonFunctionReturn(entitiesArray)
+        .withSummary("Returned %d entities".formatted(documents.size()));
   }
 
   @Override

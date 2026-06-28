@@ -42,7 +42,7 @@ public class ToolHelper {
     final Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
         new FunctionCallback<>(functionDefinition, catalog, erModel);
-    final ToolCallHandler toolCallHandler = new ToolCallHandler(functionCallback);
+    final CallToolHandler toolCallHandler = new CallToolHandler(functionCallback);
 
     return new McpServerFeatures.SyncToolSpecification(tool, toolCallHandler);
   }
