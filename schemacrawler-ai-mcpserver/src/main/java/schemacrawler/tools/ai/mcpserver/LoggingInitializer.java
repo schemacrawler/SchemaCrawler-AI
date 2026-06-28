@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import java.util.logging.Level;
+
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggingSystem;
@@ -17,6 +18,7 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
+
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.state.AbstractExecutionState;
 import us.fatehi.utility.LoggingConfig;
@@ -28,14 +30,8 @@ import us.fatehi.utility.LoggingConfig;
  * during Spring context creation 2. EventListener: Restores logging configuration after Spring Boot
  * initializes
  *
- * <p>The initialization process: 1. Reads SCHCRWLR_LOG_LEVEL from environment variable (via
- * LoggingContext) 2. Installs JUL-to-SLF4J bridge to route all JUL logs through Logback 3.
- * Configures JUL root logger to the specified level 4. Maps JUL log level to Spring LogLevel and
- * configures SchemaCrawler loggers
- *
- * <p>Why both JUL and SLF4J configuration? - SchemaCrawler uses JUL (java.util.logging) - Spring
- * Boot uses SLF4J/Logback - We need to bridge JUL→SLF4J and ensure both systems respect the
- * configured level
+ * <p>The initialization process reads SCHCRWLR_LOG_LEVEL from environment variable (via
+ * LoggingContext), configures SchemaCrawler loggers and maps JUL log level to Spring LogLevel.
  */
 @Component
 public class LoggingInitializer extends AbstractExecutionState
