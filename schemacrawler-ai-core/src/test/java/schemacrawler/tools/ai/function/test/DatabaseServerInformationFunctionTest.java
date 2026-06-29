@@ -15,7 +15,7 @@ import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.tools.ai.functions.ServerInformationFunctionDefinition;
+import schemacrawler.tools.ai.functions.DatabaseServerInformationFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
@@ -25,12 +25,12 @@ import us.fatehi.test.utility.extensions.TestContext;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ServerInformationFunctionTest extends AbstractFunctionTest {
+public class DatabaseServerInformationFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void serverInformation(final TestContext testContext) throws Exception {
-    final ServerInformationFunctionDefinition functionDefinition =
-        new ServerInformationFunctionDefinition();
+    final DatabaseServerInformationFunctionDefinition functionDefinition =
+        new DatabaseServerInformationFunctionDefinition();
 
     final TestWriter testout = new TestWriter();
     try (final TestWriter out = testout) {

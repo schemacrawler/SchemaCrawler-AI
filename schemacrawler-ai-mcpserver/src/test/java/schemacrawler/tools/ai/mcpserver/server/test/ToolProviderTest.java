@@ -116,7 +116,7 @@ public class ToolProviderTest {
             "lint",
             "list",
             "list_across_tables",
-            "server_information",
+            "database_server_information",
             "table_sample"));
   }
 }

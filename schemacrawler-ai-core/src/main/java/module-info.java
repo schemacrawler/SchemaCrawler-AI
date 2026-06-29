@@ -27,7 +27,7 @@ module us.fatehi.schemacrawler.ai_core {
       schemacrawler.tools.ai.functions.ListFunctionDefinition,
       schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DiagramFunctionDefinition,
-      schemacrawler.tools.ai.functions.ServerInformationFunctionDefinition,
+      schemacrawler.tools.ai.functions.DatabaseServerInformationFunctionDefinition,
       schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
 
   // Export only the public API packages
