@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.ATTRIBUTES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.DEFINIITION;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.INDEXES;
-import static schemacrawler.tools.ai.model.AdditionalTableDetails.PRIMARY_KEY;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.TRIGGERS;
 import static schemacrawler.tools.ai.model.AdditionalTableDetails.USED_BY_OBJECTS;
@@ -91,7 +90,7 @@ public final class TableDocument extends BaseObjectDocument {
       columns.add(columnDocument);
     }
 
-    if (details.get(PRIMARY_KEY) && table.hasPrimaryKey()) {
+    if (table.hasPrimaryKey()) {
       primaryKey = new IndexDocument(table.getPrimaryKey());
     } else {
       primaryKey = null;

@@ -11,6 +11,7 @@ package schemacrawler.tools.ai.function.test;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.notNullValue;
@@ -152,11 +153,12 @@ public class CompactCatalogBuilderTest extends AbstractFunctionTest {
 
     // Without details
     TableDocument tableDocument = builder.buildTableDocument(table);
-    assertThat(tableDocument.getPrimaryKey(), is(nullValue()));
+    assertThat(tableDocument.getPrimaryKey(), is(not(nullValue())));
+    assertThat(tableDocument.getIndexes(), is(nullValue()));
 
     // With details
-    builder.withAdditionalTableDetails(List.of(AdditionalTableDetails.PRIMARY_KEY));
+    builder.withAdditionalTableDetails(List.of(AdditionalTableDetails.INDEXES));
     tableDocument = builder.buildTableDocument(table);
-    assertThat(tableDocument.getPrimaryKey(), is(notNullValue()));
+    assertThat(tableDocument.getIndexes(), hasSize(3));
   }
 }

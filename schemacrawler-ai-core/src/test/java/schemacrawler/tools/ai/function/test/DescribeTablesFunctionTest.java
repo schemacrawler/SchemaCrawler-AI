@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.INDEXES;
-import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.PRIMARY_KEY;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.REFERENCED_TABLES;
 import static schemacrawler.tools.ai.functions.DescribeTablesFunctionParameters.TableDescriptionScope.TRIGGERS;
 import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
@@ -78,13 +77,6 @@ public class DescribeTablesFunctionTest extends AbstractFunctionTest {
   public void describeTableIndexes(final TestContext testContext) throws Exception {
     final DescribeTablesFunctionParameters args =
         new DescribeTablesFunctionParameters("BOOKAUTHORS", List.of(INDEXES));
-    describeTable(testContext, args, true);
-  }
-
-  @Test
-  public void describeTablePrimaryKey(final TestContext testContext) throws Exception {
-    final DescribeTablesFunctionParameters args =
-        new DescribeTablesFunctionParameters("AUTHORS", List.of(PRIMARY_KEY));
     describeTable(testContext, args, true);
   }
 

@@ -51,7 +51,6 @@ public record DescribeTablesFunctionParameters(
 
   public enum TableDescriptionScope {
     DEFAULT(null),
-    PRIMARY_KEY(AdditionalTableDetails.PRIMARY_KEY),
     REFERENCED_TABLES(AdditionalTableDetails.REFERENCED_TABLES),
     INDEXES(AdditionalTableDetails.INDEXES),
     TRIGGERS(AdditionalTableDetails.TRIGGERS),
