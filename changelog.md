@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.11.4-3"></a>
+## Release 17.11.4-3 - 2026-06-30
+
+- Return primary keys in table description by default
+
+
 <a name="v17.11.4-2"></a>
 ## Release 17.11.4-2 - 2026-06-28
 
