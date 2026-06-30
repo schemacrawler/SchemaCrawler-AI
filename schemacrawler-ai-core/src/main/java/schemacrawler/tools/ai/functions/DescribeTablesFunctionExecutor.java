@@ -49,7 +49,37 @@ public final class DescribeTablesFunctionExecutor
             .build();
 
     return new JsonFunctionReturn(catalogDocument)
-        .withSummary("Returned %d tables".formatted(catalog.getTables().size()));
+        .withSummary("Returned %d tables".formatted(catalog.getTables().size()))
+        .withNextSteps(describeTablesNextSteps(commandOptions.descriptionScope()));
+  }
+
+  private String describeTablesNextSteps(
+      final Collection<TableDescriptionScope> descriptionScopes) {
+    if (descriptionScopes == null
+        || descriptionScopes.isEmpty()
+        || descriptionScopes.stream().anyMatch(scope -> scope == null || scope == DEFAULT)) {
+      return "Inspect table indexes next.";
+    }
+
+    if (descriptionScopes.stream().anyMatch(scope -> scope == TableDescriptionScope.INDEXES)) {
+      return "Inspect referenced tables, triggers, or objects that use this table next.";
+    }
+
+    if (descriptionScopes.stream()
+        .anyMatch(scope -> scope == TableDescriptionScope.REFERENCED_TABLES)) {
+      return "Inspect table indexes or triggers next.";
+    }
+
+    if (descriptionScopes.stream().anyMatch(scope -> scope == TableDescriptionScope.TRIGGERS)) {
+      return "Inspect referenced tables or objects that use this table next.";
+    }
+
+    if (descriptionScopes.stream()
+        .anyMatch(scope -> scope == TableDescriptionScope.USED_BY_OBJECTS)) {
+      return "Inspect table indexes or referenced tables next.";
+    }
+
+    return "Refine the table filter or inspect related entities next.";
   }
 
   @Override

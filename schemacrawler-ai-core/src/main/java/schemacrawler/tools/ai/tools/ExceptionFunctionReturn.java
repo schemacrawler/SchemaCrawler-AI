@@ -22,7 +22,7 @@ public record ExceptionFunctionReturn(Exception exception) implements FunctionRe
 
   @Override
   public FunctionReturnMetadata getMetadata() {
-    return FunctionReturnMetadata.JSON;
+    return new FunctionReturnMetadata("json", "application/json", "");
   }
 
   @Override

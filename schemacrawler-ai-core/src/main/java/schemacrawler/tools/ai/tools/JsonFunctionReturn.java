@@ -22,6 +22,8 @@ public final class JsonFunctionReturn implements FunctionReturn {
 
   private final JsonNode jsonNode;
   private String summary = "";
+  private FunctionReturnMetadata metadata =
+      new FunctionReturnMetadata("json", "application/json", "");
 
   public JsonFunctionReturn() {
     jsonNode = mapper.missingNode();
@@ -52,7 +54,7 @@ public final class JsonFunctionReturn implements FunctionReturn {
 
   @Override
   public FunctionReturnMetadata getMetadata() {
-    return FunctionReturnMetadata.JSON;
+    return metadata;
   }
 
   public JsonNode getResult() {
@@ -66,6 +68,12 @@ public final class JsonFunctionReturn implements FunctionReturn {
 
   public JsonFunctionReturn withSummary(final String summary) {
     this.summary = trimToEmpty(summary);
+    return this;
+  }
+
+  public JsonFunctionReturn withNextSteps(final String nextSteps) {
+    metadata =
+        new FunctionReturnMetadata(metadata.format(), metadata.mimeType(), trimToEmpty(nextSteps));
     return this;
   }
 }

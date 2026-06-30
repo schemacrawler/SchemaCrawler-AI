@@ -38,7 +38,13 @@ public final class DatabaseServerInformationFunctionExecutor
     final JsonNode serverInfo = createServerInfoArray();
     return new JsonFunctionReturn(serverInfo)
         .withSummary(
-            "Returned %n%s".formatted(getCatalog().getDatabaseInfo().getDatabaseProductName()));
+            "Returned database information for %s"
+                .formatted(getCatalog().getDatabaseInfo().getDatabaseProductName()))
+        .withNextSteps(databaseServerInformationNextSteps());
+  }
+
+  private String databaseServerInformationNextSteps() {
+    return "Inspect tables or routines in the schema next.";
   }
 
   @Override

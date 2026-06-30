@@ -46,7 +46,15 @@ public final class DescribeRelationshipsFunctionExecutor
     final ArrayNode relationshipsArray = createRelationshipsArray(documents);
 
     return new JsonFunctionReturn(relationshipsArray)
-        .withSummary("Returned %d relationships".formatted(documents.size()));
+        .withSummary("Returned %d relationships".formatted(documents.size()))
+        .withNextSteps(describeRelationshipsNextSteps(documents.size()));
+  }
+
+  private String describeRelationshipsNextSteps(final int relationshipCount) {
+    if (relationshipCount == 0) {
+      return "Widen the relationship filter or inspect related tables next.";
+    }
+    return "Inspect the related tables or entities next.";
   }
 
   @Override

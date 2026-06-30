@@ -98,10 +98,10 @@ public record DiagramFunctionParameters(
     }
 
     public FunctionReturnMetadata getMetadata() {
-      final String renderHint =
+      final String nextSteps =
           "Render as an image using the appropriate plugin, use an online service such as Kroki, "
               + "or ask the user to use %s".formatted(onlineEditorUrl);
-      return new FunctionReturnMetadata(name().toLowerCase(), mediaType, renderHint);
+      return new FunctionReturnMetadata(name().toLowerCase(), mediaType, nextSteps);
     }
 
     public String getOutputFormatValue() {

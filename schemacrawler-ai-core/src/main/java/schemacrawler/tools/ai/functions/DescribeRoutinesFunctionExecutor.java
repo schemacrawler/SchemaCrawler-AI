@@ -49,7 +49,33 @@ public final class DescribeRoutinesFunctionExecutor
             .build();
 
     return new JsonFunctionReturn(catalogDocument)
-        .withSummary("Returned %d routines".formatted(catalog.getRoutines().size()));
+        .withSummary("Returned %d routines".formatted(catalog.getRoutines().size()))
+        .withNextSteps(describeRoutinesNextSteps(commandOptions.descriptionScope()));
+  }
+
+  private String describeRoutinesNextSteps(
+      final Collection<RoutineDescriptionScope> descriptionScopes) {
+    if (descriptionScopes == null
+        || descriptionScopes.isEmpty()
+        || descriptionScopes.stream().anyMatch(scope -> scope == null || scope == DEFAULT)) {
+      return "Inspect routine attributes or referenced objects next.";
+    }
+
+    if (descriptionScopes.stream()
+        .anyMatch(scope -> scope == RoutineDescriptionScope.REFERENCED_OBJECTS)) {
+      return "Inspect the related tables or views next.";
+    }
+
+    if (descriptionScopes.stream().anyMatch(scope -> scope == RoutineDescriptionScope.ATTRIBUTES)) {
+      return "Inspect the referenced objects for the same routines next.";
+    }
+
+    if (descriptionScopes.stream()
+        .anyMatch(scope -> scope == RoutineDescriptionScope.DEFINIITION)) {
+      return "Inspect routine attributes or referenced objects for more context next.";
+    }
+
+    return "Refine the routine filter or inspect related tables next.";
   }
 
   @Override

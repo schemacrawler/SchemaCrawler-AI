@@ -12,17 +12,15 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.util.Map;
 
-public record FunctionReturnMetadata(String format, String mimeType, String renderHint) {
+public record FunctionReturnMetadata(String format, String mimeType, String nextSteps) {
 
   public static final FunctionReturnMetadata TEXT =
       new FunctionReturnMetadata("text", "text/plain", "");
-  public static final FunctionReturnMetadata JSON =
-      new FunctionReturnMetadata("json", "application/json", "");
 
   public FunctionReturnMetadata {
     format = trimToEmpty(format);
     mimeType = trimToEmpty(mimeType);
-    renderHint = trimToEmpty(renderHint);
+    nextSteps = trimToEmpty(nextSteps);
   }
 
   /** Returns a flat map with no key prefix. */
@@ -38,7 +36,7 @@ public record FunctionReturnMetadata(String format, String mimeType, String rend
         format,
         namespace + "mime-type",
         mimeType,
-        namespace + "render-hint",
-        renderHint);
+        namespace + "next_steps",
+        nextSteps);
   }
 }

@@ -167,5 +167,6 @@ public class ToolHelperTest {
     assertThat(textContent.meta().containsKey("schemacrawler-ai/mime-type"), is(true));
     final TextContent metadataContent = (TextContent) callToolResult.content().getLast();
     assertThat(metadataContent.text(), containsString("mime-type"));
+    assertThat(metadataContent.text(), containsString("next_steps"));
   }
 }

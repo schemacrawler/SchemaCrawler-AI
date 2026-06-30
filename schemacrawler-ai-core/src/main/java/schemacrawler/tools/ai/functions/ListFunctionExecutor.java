@@ -62,8 +62,23 @@ public final class ListFunctionExecutor
     final ArrayNode list = createTypedObjectsArray(databaseObjects);
 
     return new JsonFunctionReturn("list", list)
-        .withSummary(
-            "Returned %d %s objects".formatted(databaseObjects.size(), databaseObjectType));
+        .withSummary("Returned %d %s objects".formatted(databaseObjects.size(), databaseObjectType))
+        .withNextSteps(listNextSteps(databaseObjectType, databaseObjects.size()));
+  }
+
+  private String listNextSteps(final DatabaseObjectType databaseObjectType, final int objectCount) {
+    if (objectCount == 0) {
+      return "Narrow the object filter or choose a specific object type next.";
+    }
+
+    return switch (databaseObjectType) {
+      case ALL -> "Narrow the object type to schemas, tables, routines, sequences, or synonyms.";
+      case SCHEMAS -> "Inspect tables in the selected schema next.";
+      case TABLES -> "Inspect table details, indexes, or relationships next.";
+      case ROUTINES -> "Inspect routine details or referenced objects next.";
+      case SEQUENCES -> "Inspect the tables that use these sequences next.";
+      case SYNONYMS -> "Inspect the underlying tables or routines next.";
+    };
   }
 
   @Override

@@ -68,7 +68,20 @@ public final class DescribeEntitiesFunctionExecutor
     final ArrayNode entitiesArray = createDocumentsArray(documents);
 
     return new JsonFunctionReturn(entitiesArray)
-        .withSummary("Returned %d entities".formatted(documents.size()));
+        .withSummary("Returned %d entities".formatted(documents.size()))
+        .withNextSteps(describeEntitiesNextSteps(entityKind, documents.size()));
+  }
+
+  private String describeEntitiesNextSteps(final EntityKind entityKind, final int entityCount) {
+    if (entityCount == 0) {
+      return "Widen the entity filter or inspect related relationships next.";
+    }
+
+    return switch (entityKind) {
+      case ALL, ASSOCIATION -> "Inspect relationships for the same scope next.";
+      case STRONG_ENTITY, WEAK_ENTITY, SUBTYPE ->
+          "Inspect relationships to see how these entities connect next.";
+    };
   }
 
   @Override

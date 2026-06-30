@@ -72,7 +72,23 @@ public final class ListAcrossTablesFunctionExecutor
     final ArrayNode list = createDependantObjectsArray(dependantObjects);
 
     return new JsonFunctionReturn(listName, list)
-        .withSummary("Returned %d objects".formatted(dependantObjects.size()));
+        .withSummary("Returned %d objects".formatted(dependantObjects.size()))
+        .withNextSteps(listAcrossTablesNextSteps(dependantObjectType, dependantObjects.size()));
+  }
+
+  private String listAcrossTablesNextSteps(
+      final DependantObjectType dependantObjectType, final int objectCount) {
+    if (objectCount == 0) {
+      return "Choose columns, indexes, foreign keys, or triggers next.";
+    }
+
+    return switch (dependantObjectType) {
+      case NONE -> "Choose columns, indexes, foreign keys, or triggers next.";
+      case COLUMNS -> "Inspect table indexes or referenced tables next.";
+      case INDEXES -> "Inspect table details or referenced tables next.";
+      case FOREIGN_KEYS -> "Inspect referenced tables or objects that use these tables next.";
+      case TRIGGERS -> "Inspect table details or referenced tables next.";
+    };
   }
 
   @Override
