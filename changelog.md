@@ -6,6 +6,7 @@ SchemaCrawler AI release notes.
 <a name="v17.11.4-3"></a>
 ## Release 17.11.4-3 - 2026-06-30
 
+- Rename database server function
 - Return primary keys in table description by default
 
 
