@@ -44,7 +44,8 @@ public final class DatabaseServerInformationFunctionExecutor
   }
 
   private String databaseServerInformationNextSteps() {
-    return "Inspect tables or routines in the schema next.";
+    return "Inspect tables or routines in the schema next, because server information alone does"
+               + " not reveal database objects.";
   }
 
   @Override

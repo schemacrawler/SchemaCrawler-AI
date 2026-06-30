@@ -58,28 +58,34 @@ public final class DescribeTablesFunctionExecutor
     if (descriptionScopes == null
         || descriptionScopes.isEmpty()
         || descriptionScopes.stream().anyMatch(scope -> scope == null || scope == DEFAULT)) {
-      return "Inspect table indexes next.";
+      return "Inspect table indexes next, because the table description output does not include"
+                 + " index details.";
     }
 
     if (descriptionScopes.stream().anyMatch(scope -> scope == TableDescriptionScope.INDEXES)) {
-      return "Inspect referenced tables, triggers, or objects that use this table next.";
+      return "Inspect referenced tables, triggers, or objects that use this table next, because the"
+                 + " current table details do not show downstream usage.";
     }
 
     if (descriptionScopes.stream()
         .anyMatch(scope -> scope == TableDescriptionScope.REFERENCED_TABLES)) {
-      return "Inspect table indexes or triggers next.";
+      return "Inspect table indexes or triggers next, because those details are not included in the"
+                 + " current result.";
     }
 
     if (descriptionScopes.stream().anyMatch(scope -> scope == TableDescriptionScope.TRIGGERS)) {
-      return "Inspect referenced tables or objects that use this table next.";
+      return "Inspect referenced tables or objects that use this table next, because trigger"
+                 + " behavior often depends on related objects.";
     }
 
     if (descriptionScopes.stream()
         .anyMatch(scope -> scope == TableDescriptionScope.USED_BY_OBJECTS)) {
-      return "Inspect table indexes or referenced tables next.";
+      return "Inspect table indexes or referenced tables next, because the current result does not"
+                 + " include those relationships.";
     }
 
-    return "Refine the table filter or inspect related entities next.";
+    return "Refine the table filter or inspect related entities next, because the current selection"
+               + " may be too broad.";
   }
 
   @Override

@@ -52,9 +52,11 @@ public final class DescribeRelationshipsFunctionExecutor
 
   private String describeRelationshipsNextSteps(final int relationshipCount) {
     if (relationshipCount == 0) {
-      return "Widen the relationship filter or inspect related tables next.";
+      return "Widen the relationship filter or inspect related tables next, because no"
+                 + " relationships matched the current selection.";
     }
-    return "Inspect the related tables or entities next.";
+    return "Inspect the related tables or entities next, because the current result only shows"
+               + " relationship metadata.";
   }
 
   @Override

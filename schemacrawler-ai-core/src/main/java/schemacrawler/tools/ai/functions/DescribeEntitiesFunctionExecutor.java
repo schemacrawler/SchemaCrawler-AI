@@ -74,13 +74,17 @@ public final class DescribeEntitiesFunctionExecutor
 
   private String describeEntitiesNextSteps(final EntityKind entityKind, final int entityCount) {
     if (entityCount == 0) {
-      return "Widen the entity filter or inspect related relationships next.";
+      return "Widen the entity filter or inspect related relationships next, because no entities"
+                 + " matched the current selection.";
     }
 
     return switch (entityKind) {
-      case ALL, ASSOCIATION -> "Inspect relationships for the same scope next.";
+      case ALL, ASSOCIATION ->
+          "Inspect relationships for the same scope next, because the current result does not"
+              + " include how entities connect.";
       case STRONG_ENTITY, WEAK_ENTITY, SUBTYPE ->
-          "Inspect relationships to see how these entities connect next.";
+          "Inspect relationships to see how these entities connect next, because the current result"
+              + " only shows entity records.";
     };
   }
 

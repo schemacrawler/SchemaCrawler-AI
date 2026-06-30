@@ -79,15 +79,26 @@ public final class ListAcrossTablesFunctionExecutor
   private String listAcrossTablesNextSteps(
       final DependantObjectType dependantObjectType, final int objectCount) {
     if (objectCount == 0) {
-      return "Choose columns, indexes, foreign keys, or triggers next.";
+      return "Choose columns, indexes, foreign keys, or triggers next, because no dependent objects"
+                 + " matched the current selection.";
     }
 
     return switch (dependantObjectType) {
-      case NONE -> "Choose columns, indexes, foreign keys, or triggers next.";
-      case COLUMNS -> "Inspect table indexes or referenced tables next.";
-      case INDEXES -> "Inspect table details or referenced tables next.";
-      case FOREIGN_KEYS -> "Inspect referenced tables or objects that use these tables next.";
-      case TRIGGERS -> "Inspect table details or referenced tables next.";
+      case NONE ->
+          "Choose columns, indexes, foreign keys, or triggers next, because no dependent object"
+              + " type was selected.";
+      case COLUMNS ->
+          "Inspect table indexes or referenced tables next, because column listing does not show"
+              + " the table's wider relationships.";
+      case INDEXES ->
+          "Inspect table details or referenced tables next, because the index list does not include"
+              + " full table context.";
+      case FOREIGN_KEYS ->
+          "Inspect referenced tables or objects that use these tables next, because foreign keys"
+              + " only show one side of the relationship.";
+      case TRIGGERS ->
+          "Inspect table details or referenced tables next, because triggers do not show the full"
+              + " table picture.";
     };
   }
 

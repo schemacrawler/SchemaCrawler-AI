@@ -55,7 +55,10 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
     assertThat(functionReturn.getSummary(), containsString("Returned"));
     assertThat(
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
-        hasEntry("schemacrawler-ai/next_steps", "Inspect table indexes next."));
+        hasEntry(
+            "schemacrawler-ai/next_steps",
+            "Inspect table indexes next, because the table description output does not include"
+                + " index details."));
   }
 
   @Test
@@ -68,7 +71,10 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
     assertThat(functionReturn.getSummary(), containsString("Returned"));
     assertThat(
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
-        hasEntry("schemacrawler-ai/next_steps", "Inspect relationships for the same scope next."));
+        hasEntry(
+            "schemacrawler-ai/next_steps",
+            "Inspect relationships for the same scope next, because the current result does not"
+                + " include how entities connect."));
   }
 
   @Test
@@ -83,7 +89,8 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
         hasEntry(
             "schemacrawler-ai/next_steps",
-            "Inspect routine attributes or referenced objects next."));
+            "Inspect routine attributes or referenced objects next, because the routine summary"
+                + " does not include execution details."));
   }
 
   @Test
@@ -96,7 +103,10 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
     assertThat(functionReturn.getSummary(), containsString("Returned"));
     assertThat(
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
-        hasEntry("schemacrawler-ai/next_steps", "Inspect the related tables or entities next."));
+        hasEntry(
+            "schemacrawler-ai/next_steps",
+            "Inspect the related tables or entities next, because the current result only shows"
+                + " relationship metadata."));
   }
 
   @Test
@@ -109,7 +119,10 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
     assertThat(functionReturn.getSummary(), containsString("Returned database information"));
     assertThat(
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
-        hasEntry("schemacrawler-ai/next_steps", "Inspect tables or routines in the schema next."));
+        hasEntry(
+            "schemacrawler-ai/next_steps",
+            "Inspect tables or routines in the schema next, because server information alone does"
+                + " not reveal database objects."));
   }
 
   @Test
@@ -124,7 +137,8 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
         hasEntry(
             "schemacrawler-ai/next_steps",
-            "Inspect table details, indexes, or relationships next."));
+            "Inspect table details, indexes, or relationships next, because the table list does not"
+                + " include those details."));
   }
 
   @Test
@@ -142,7 +156,9 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
     assertThat(
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
         hasEntry(
-            "schemacrawler-ai/next_steps", "Inspect table details or referenced tables next."));
+            "schemacrawler-ai/next_steps",
+            "Inspect table details or referenced tables next, because the index list does not"
+                + " include full table context."));
   }
 
   @Test
@@ -157,7 +173,8 @@ public class JsonFunctionMetadataTest extends AbstractFunctionTest {
         functionReturn.getMetadata().toMetadataMap("schemacrawler-ai/"),
         hasEntry(
             "schemacrawler-ai/next_steps",
-            "Inspect referenced tables or objects that use these tables next."));
+            "Inspect referenced tables or objects that use these tables next, because foreign keys"
+                + " only show one side of the relationship."));
   }
 
   private <P extends FunctionParameters> JsonFunctionReturn execute(

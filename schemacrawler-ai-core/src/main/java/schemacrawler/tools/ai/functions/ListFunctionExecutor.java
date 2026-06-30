@@ -68,16 +68,29 @@ public final class ListFunctionExecutor
 
   private String listNextSteps(final DatabaseObjectType databaseObjectType, final int objectCount) {
     if (objectCount == 0) {
-      return "Narrow the object filter or choose a specific object type next.";
+      return "Narrow the object filter or choose a specific object type next, because no objects"
+                 + " matched the current selection.";
     }
 
     return switch (databaseObjectType) {
-      case ALL -> "Narrow the object type to schemas, tables, routines, sequences, or synonyms.";
-      case SCHEMAS -> "Inspect tables in the selected schema next.";
-      case TABLES -> "Inspect table details, indexes, or relationships next.";
-      case ROUTINES -> "Inspect routine details or referenced objects next.";
-      case SEQUENCES -> "Inspect the tables that use these sequences next.";
-      case SYNONYMS -> "Inspect the underlying tables or routines next.";
+      case ALL ->
+          "Narrow the object type to schemas, tables, routines, sequences, or synonyms, because the"
+              + " combined result can be large.";
+      case SCHEMAS ->
+          "Inspect tables in the selected schema next, because schema listing does not show table"
+              + " structure.";
+      case TABLES ->
+          "Inspect table details, indexes, or relationships next, because the table list does not"
+              + " include those details.";
+      case ROUTINES ->
+          "Inspect routine details or referenced objects next, because routine listing does not"
+              + " show dependencies.";
+      case SEQUENCES ->
+          "Inspect the tables that use these sequences next, because sequence usage is not shown"
+              + " here.";
+      case SYNONYMS ->
+          "Inspect the underlying tables or routines next, because the synonym target is not"
+              + " included.";
     };
   }
 

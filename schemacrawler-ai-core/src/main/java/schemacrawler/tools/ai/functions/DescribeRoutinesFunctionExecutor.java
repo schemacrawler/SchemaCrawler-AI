@@ -58,24 +58,29 @@ public final class DescribeRoutinesFunctionExecutor
     if (descriptionScopes == null
         || descriptionScopes.isEmpty()
         || descriptionScopes.stream().anyMatch(scope -> scope == null || scope == DEFAULT)) {
-      return "Inspect routine attributes or referenced objects next.";
+      return "Inspect routine attributes or referenced objects next, because the routine summary"
+                 + " does not include execution details.";
     }
 
     if (descriptionScopes.stream()
         .anyMatch(scope -> scope == RoutineDescriptionScope.REFERENCED_OBJECTS)) {
-      return "Inspect the related tables or views next.";
+      return "Inspect the related tables or views next, because the current result only shows"
+                 + " routine metadata.";
     }
 
     if (descriptionScopes.stream().anyMatch(scope -> scope == RoutineDescriptionScope.ATTRIBUTES)) {
-      return "Inspect the referenced objects for the same routines next.";
+      return "Inspect the referenced objects for the same routines next, because behavior depends"
+                 + " on downstream dependencies.";
     }
 
     if (descriptionScopes.stream()
         .anyMatch(scope -> scope == RoutineDescriptionScope.DEFINIITION)) {
-      return "Inspect routine attributes or referenced objects for more context next.";
+      return "Inspect routine attributes or referenced objects for more context next, because the"
+                 + " current result does not include body details.";
     }
 
-    return "Refine the routine filter or inspect related tables next.";
+    return "Refine the routine filter or inspect related tables next, because the current selection"
+               + " may be too broad.";
   }
 
   @Override

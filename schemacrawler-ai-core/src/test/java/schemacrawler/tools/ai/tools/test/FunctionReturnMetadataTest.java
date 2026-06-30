@@ -21,12 +21,18 @@ public class FunctionReturnMetadataTest {
   @Test
   public void testToMetadataMapUsesNextStepsKey() {
     final FunctionReturnMetadata metadata =
-        new FunctionReturnMetadata("json", "application/json", "Next steps: inspect INDEXES.");
+        new FunctionReturnMetadata(
+            "json",
+            "application/json",
+            "Inspect indexes next, because table details do not include index information.");
 
     final Map<String, Object> metadataMap = metadata.toMetadataMap("schemacrawler-ai/");
 
     assertThat(
-        metadataMap, hasEntry("schemacrawler-ai/next_steps", "Next steps: inspect INDEXES."));
+        metadataMap,
+        hasEntry(
+            "schemacrawler-ai/next_steps",
+            "Inspect indexes next, because table details do not include index information."));
     assertThat(metadataMap.containsKey("schemacrawler-ai/render-hint"), is(false));
   }
 }
