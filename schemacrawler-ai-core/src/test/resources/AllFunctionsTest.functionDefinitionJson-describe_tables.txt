@@ -11,7 +11,7 @@
       },
       "description_scope" : {
         "type" : "array",
-        "description" : "Indicates what details of the database table or view to return -\ncolumns, primary key, foreign keys, indexes, triggers, attributes,\nand table definition. Also returns which objects reference a given table\nas \"used by objects\".\nColumns, foreign key references to other tables, and remarks or comments\nare always returned by default. The other details can be requested.\nThe results could be large.\n",
+        "description" : "Indicates what details of the database table or view to return -\ncolumns, primary key, foreign keys, indexes, triggers, attributes,\nand table definition. Also returns which objects reference a given table\nas \"used by objects\".\nColumns, primary keys, foreign key references to other tables,\nand remarks or comments are always returned by default.\nThe other details can be requested.\nThe results could be large.\n",
         "items" : {
           "type" : "string",
           "enum" : [ "DEFAULT", "REFERENCED_TABLES", "INDEXES", "TRIGGERS", "USED_BY_OBJECTS", "ATTRIBUTES", "DEFINIITION" ]

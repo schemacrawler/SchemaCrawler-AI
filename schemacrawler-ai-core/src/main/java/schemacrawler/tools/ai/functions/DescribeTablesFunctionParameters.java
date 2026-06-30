@@ -37,8 +37,9 @@ public record DescribeTablesFunctionParameters(
             columns, primary key, foreign keys, indexes, triggers, attributes,
             and table definition. Also returns which objects reference a given table
             as "used by objects".
-            Columns, foreign key references to other tables, and remarks or comments
-            are always returned by default. The other details can be requested.
+            Columns, primary keys, foreign key references to other tables,
+            and remarks or comments are always returned by default.
+            The other details can be requested.
             The results could be large.
             """)
         @JsonProperty(required = false)
