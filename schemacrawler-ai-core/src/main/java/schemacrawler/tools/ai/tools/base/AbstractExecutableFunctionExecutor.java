@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.tools.base;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.IOUtility.isFileReadable;
 
 import java.io.IOException;
 import java.io.UncheckedIOException;
@@ -104,7 +103,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   }
 
   protected final FunctionReturn returnJson(final Path outputFilePath) {
-    if (!isFileReadable(outputFilePath)) {
+    if (!outputFileHasResults(outputFilePath)) {
       return new NoResultsFunctionReturn();
     }
 
@@ -129,7 +128,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
 
   protected final FunctionReturn returnText(
       final Path outputFilePath, final FunctionReturnMetadata metadata) {
-    if (!isFileReadable(outputFilePath)) {
+    if (!outputFileHasResults(outputFilePath)) {
       return new NoResultsFunctionReturn();
     }
 
@@ -196,5 +195,25 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       LOGGER.log(
           Level.WARNING, "Could not delete temporary file <%s>".formatted(outputFilePath), e);
     }
+  }
+
+  private boolean outputFileHasResults(final Path outputFilePath) {
+    if (outputFilePath == null
+        || !Files.exists(outputFilePath)
+        || !Files.isRegularFile(outputFilePath)
+        || !Files.isReadable(outputFilePath)) {
+      return false;
+    }
+
+    try {
+      if (!hasResults() || Files.size(outputFilePath) == 0) {
+        return false;
+      }
+    } catch (final IOException e) {
+      LOGGER.log(Level.FINE, "Could not detemine results file length", e);
+      return false;
+    }
+
+    return true;
   }
 }
