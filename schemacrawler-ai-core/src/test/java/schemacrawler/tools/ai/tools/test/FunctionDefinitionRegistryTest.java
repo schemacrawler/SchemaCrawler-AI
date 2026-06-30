@@ -19,13 +19,13 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
+import schemacrawler.tools.ai.functions.DatabaseServerInformationFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
-import schemacrawler.tools.ai.functions.ServerInformationFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
@@ -62,7 +62,7 @@ public class FunctionDefinitionRegistryTest {
             "list",
             "list_across_tables",
             "diagram",
-            "server_information",
+            "database_server_information",
             "table_sample"));
   }
 
@@ -83,7 +83,7 @@ public class FunctionDefinitionRegistryTest {
             ListFunctionDefinition.class.getSimpleName(),
             ListAcrossTablesFunctionDefinition.class.getSimpleName(),
             DiagramFunctionDefinition.class.getSimpleName(),
-            ServerInformationFunctionDefinition.class.getSimpleName(),
+            DatabaseServerInformationFunctionDefinition.class.getSimpleName(),
             TableSampleFunctionDefinition.class.getSimpleName()));
   }
 
