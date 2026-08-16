@@ -24,7 +24,7 @@ import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaReference;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
-import schemacrawler.test.utility.crawl.LightRoutine;
+import schemacrawler.test.utility.crawl.LightProcedure;
 import schemacrawler.test.utility.crawl.LightTable;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -101,7 +101,7 @@ public class ResourceProviderTest {
 
   @Test
   public void testGetRoutineDetails() {
-    final Routine routine = new LightRoutine(schema, "NEW_BOOK");
+    final Routine routine = new LightProcedure(schema, "NEW_BOOK");
     when(catalog.getRoutines()).thenReturn(List.of(routine));
 
     final String details = resourceProvider.getRoutineDetails("PUBLIC.BOOKS.NEW_BOOK");
