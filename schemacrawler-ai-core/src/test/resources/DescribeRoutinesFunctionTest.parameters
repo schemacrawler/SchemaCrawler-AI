@@ -1,4 +1,3 @@
 {
-  "routine_name" : "GetBooksCount",
-  "description_scope" : [ ]
+  "routine_name" : "GetBooksCount"
 }
