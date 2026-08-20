@@ -23,10 +23,10 @@ import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.Property;
 import us.fatehi.utility.property.PropertyName;
 
-public final class DatabaseServerInformationFunctionExecutor
+public final class AboutDatabaseFunctionExecutor
     extends AbstractJsonFunctionExecutor<NoParameters> {
 
-  protected DatabaseServerInformationFunctionExecutor(final PropertyName functionName) {
+  protected AboutDatabaseFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 
