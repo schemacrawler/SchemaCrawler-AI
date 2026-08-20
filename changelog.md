@@ -3,6 +3,12 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.12.3-1"></a>
+## Release 17.12.3-1 - 2026-08-21
+
+- Moved title moved into SchemaCrawlerOptions, from OutputOptions
+
+
 <a name="v17.11.4-3"></a>
 ## Release 17.11.4-3 - 2026-06-30
 

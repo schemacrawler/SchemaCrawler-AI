@@ -20,7 +20,7 @@ public class CommandPluginTest {
 
   @Test
   public void testCommandPlugin() throws Exception {
-    final CommandRegistry registry = CommandRegistry.getCommandRegistry();
+    final CommandRegistry registry = CommandRegistry.getRegistry();
     assertThat(isCommandSupported(registry, "mcpserver"), is(true));
   }
 
