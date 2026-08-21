@@ -11,7 +11,7 @@ package schemacrawler.tools.ai.functions;
 import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.ai.tools.base.AbstractFunctionDefinition;
 
-public final class DatabaseServerInformationFunctionDefinition
+public final class AboutDatabaseFunctionDefinition
     extends AbstractFunctionDefinition<NoParameters> {
 
   @Override
@@ -39,8 +39,8 @@ public final class DatabaseServerInformationFunctionDefinition
   }
 
   @Override
-  public DatabaseServerInformationFunctionExecutor newExecutor() {
-    return new DatabaseServerInformationFunctionExecutor(getFunctionName());
+  public AboutDatabaseFunctionExecutor newExecutor() {
+    return new AboutDatabaseFunctionExecutor(getFunctionName());
   }
 
   @Override

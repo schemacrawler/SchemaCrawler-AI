@@ -11,6 +11,9 @@ package schemacrawler.tools.ai.functions;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.Collection;
+import java.util.List;
+import schemacrawler.loader.catalog.summary.CatalogStats.SchemaStats;
+import schemacrawler.loader.catalog.summary.CatalogStatsUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -23,10 +26,10 @@ import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.Property;
 import us.fatehi.utility.property.PropertyName;
 
-public final class DatabaseServerInformationFunctionExecutor
+public final class AboutDatabaseFunctionExecutor
     extends AbstractJsonFunctionExecutor<NoParameters> {
 
-  protected DatabaseServerInformationFunctionExecutor(final PropertyName functionName) {
+  protected AboutDatabaseFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 
@@ -67,6 +70,12 @@ public final class DatabaseServerInformationFunctionExecutor
       serverPropertyNode.put("name", serverProperty.getName());
       serverPropertyNode.put("description", serverProperty.getDescription());
       serverPropertyNode.put("value", serverProperty.getValue().toString());
+    }
+
+    final List<SchemaStats> schemaStats = CatalogStatsUtility.schemaStatsFrom(catalog);
+    if (schemaStats != null && !schemaStats.isEmpty()) {
+      final JsonNode schemaStatsNode = mapper.valueToTree(schemaStats);
+      databaseInfo.set("schemas", schemaStatsNode);
     }
 
     return databaseInfo;

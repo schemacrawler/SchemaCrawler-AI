@@ -3,10 +3,11 @@
 SchemaCrawler AI release notes.
 
 
-<a name="v17.12.3-1"></a>
-## Release 17.12.3-1 - 2026-08-21
+<a name="v17.14.0-1"></a>
+## Release 17.14.0-1 - 2026-08-21
 
-- Moved title moved into SchemaCrawlerOptions, from OutputOptions
+- Move title moved into SchemaCrawlerOptions, from OutputOptions
+- Rename database server information to about, and add schema stats
 
 
 <a name="v17.11.4-3"></a>

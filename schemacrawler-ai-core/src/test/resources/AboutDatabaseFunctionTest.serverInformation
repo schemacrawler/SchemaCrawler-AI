@@ -1,0 +1,124 @@
+{
+  "database-server" : {
+    "database-product-name" : "HSQL Database Engine",
+    "database-product-version" : "2.7.4"
+  },
+  "server-info" : [ {
+    "name" : "CATALOG_NAME",
+    "description" : "Current catalog name",
+    "value" : "PUBLIC"
+  }, {
+    "name" : "DATABASE_ISOLATION_LEVEL",
+    "description" : "Default transaction isolation level for the database - READ COMMITTED or SERIALIZABLE",
+    "value" : "READ COMMITTED"
+  }, {
+    "name" : "DATABASE_NAME",
+    "description" : "Database name",
+    "value" : "HSQLDBA0259D190E"
+  }, {
+    "name" : "PRODUCT_NAME",
+    "description" : "Product family name (Java-based embedded/remote DB)",
+    "value" : "HyperSQL (HSQLDB)"
+  }, {
+    "name" : "PRODUCT_VERSION",
+    "description" : "HSQLDB engine version",
+    "value" : "2.7.4"
+  }, {
+    "name" : "TRANSACTION_CONTROL",
+    "description" : "Returns the current transaction model for the database - LOCKS, MVLOCKS or MVCC",
+    "value" : "LOCKS"
+  } ],
+  "schemas" : [ {
+    "schema" : {
+      "catalogName" : "PUBLIC",
+      "fullName" : "PUBLIC.BOOKS",
+      "name" : "BOOKS"
+    },
+    "counts" : {
+      "dataTypes" : {
+        "count" : 6
+      },
+      "tables" : {
+        "count" : 11
+      },
+      "routines" : {
+        "count" : 5
+      },
+      "synonyms" : {
+        "count" : 1
+      },
+      "sequences" : {
+        "count" : 1
+      }
+    }
+  }, {
+    "schema" : {
+      "catalogName" : "PUBLIC",
+      "fullName" : "PUBLIC.INFORMATION_SCHEMA",
+      "name" : "INFORMATION_SCHEMA"
+    },
+    "counts" : {
+      "dataTypes" : {
+        "count" : 0
+      },
+      "tables" : {
+        "count" : 0
+      },
+      "routines" : {
+        "count" : 0
+      },
+      "synonyms" : {
+        "count" : 0
+      },
+      "sequences" : {
+        "count" : 0
+      }
+    }
+  }, {
+    "schema" : {
+      "catalogName" : "PUBLIC",
+      "fullName" : "PUBLIC.PUBLIC",
+      "name" : "PUBLIC"
+    },
+    "counts" : {
+      "dataTypes" : {
+        "count" : 0
+      },
+      "tables" : {
+        "count" : 0
+      },
+      "routines" : {
+        "count" : 0
+      },
+      "synonyms" : {
+        "count" : 0
+      },
+      "sequences" : {
+        "count" : 0
+      }
+    }
+  }, {
+    "schema" : {
+      "catalogName" : "PUBLIC",
+      "fullName" : "PUBLIC.\"PUBLISHER SALES\"",
+      "name" : "PUBLISHER SALES"
+    },
+    "counts" : {
+      "dataTypes" : {
+        "count" : 0
+      },
+      "tables" : {
+        "count" : 3
+      },
+      "routines" : {
+        "count" : 0
+      },
+      "synonyms" : {
+        "count" : 0
+      },
+      "sequences" : {
+        "count" : 0
+      }
+    }
+  } ]
+}

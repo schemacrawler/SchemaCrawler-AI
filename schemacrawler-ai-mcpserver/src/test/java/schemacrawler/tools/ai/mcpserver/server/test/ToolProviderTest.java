@@ -108,6 +108,7 @@ public class ToolProviderTest {
     assertThat(
         actualToolNames,
         containsInAnyOrder(
+            "about_database",
             "describe_entities",
             "describe_relationships",
             "describe_routines",
@@ -116,7 +117,6 @@ public class ToolProviderTest {
             "lint",
             "list",
             "list_across_tables",
-            "database_server_information",
             "table_sample"));
   }
 }
