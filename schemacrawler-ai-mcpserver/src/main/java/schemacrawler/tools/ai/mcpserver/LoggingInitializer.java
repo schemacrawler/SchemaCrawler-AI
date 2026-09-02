@@ -9,7 +9,6 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import java.util.logging.Level;
-
 import org.jspecify.annotations.NonNull;
 import org.springframework.boot.logging.LogLevel;
 import org.springframework.boot.logging.LoggingSystem;
@@ -18,10 +17,9 @@ import org.springframework.context.event.ContextRefreshedEvent;
 import org.springframework.context.event.EventListener;
 import org.springframework.context.support.GenericApplicationContext;
 import org.springframework.stereotype.Component;
-
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.state.AbstractExecutionState;
-import us.fatehi.utility.LoggingConfig;
+import us.fatehi.utility.logging.LoggingConfig;
 
 /**
  * Initializes and configures the JUL and SLF4J logging systems for the MCP Server.
