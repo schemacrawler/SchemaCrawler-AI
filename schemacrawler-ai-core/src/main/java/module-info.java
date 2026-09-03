@@ -11,6 +11,7 @@ module us.fatehi.schemacrawler.ai_core {
   requires us.fatehi.schemacrawler.scripting;
   requires us.fatehi.schemacrawler.offline;
   requires us.fatehi.schemacrawler.lint;
+  requires schemacrawler.importance;
   requires us.fatehi.mcp_json_schema;
 
   // Other dependencies
@@ -28,7 +29,9 @@ module us.fatehi.schemacrawler.ai_core {
       schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DiagramFunctionDefinition,
       schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition,
-      schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
+      schemacrawler.tools.ai.functions.TableSampleFunctionDefinition,
+      schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition,
+      schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 
   // Export only the public API packages
   exports schemacrawler.tools.ai.tools;

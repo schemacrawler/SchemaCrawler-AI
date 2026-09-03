@@ -13,6 +13,7 @@ import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.regex.Pattern;
 import schemacrawler.filter.ReducerFactory;
+import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
@@ -27,6 +28,8 @@ import us.fatehi.utility.property.PropertyName;
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     extends AbstractCommand<P> implements FunctionExecutor<P> {
 
+  private SchemaGraphModel schemaGraphModel;
+
   protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
   }
@@ -36,7 +39,16 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     return command.getName();
   }
 
+  @Override
+  public final void setSchemaGraphModel(final SchemaGraphModel schemaGraphModel) {
+    this.schemaGraphModel = schemaGraphModel;
+  }
+
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+
+  protected final SchemaGraphModel getSchemaGraphModel() {
+    return schemaGraphModel;
+  }
 
   protected InclusionRule makeInclusionRule(final String objectName) {
     final InclusionRule inclusionRule;

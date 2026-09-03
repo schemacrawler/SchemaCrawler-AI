@@ -1,0 +1,16 @@
+{
+  "name" : "table_importance",
+  "title" : "Report table and view importance",
+  "description" : "Returns schema graph importance metrics for tables and views, including dependency centrality, table counts, and traits. An optional regular expression filters fully qualified table and view names. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of database table or view to report importance for.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nTry not to match all tables, but instead use a regular expression\nto match a subset or match a single table, since otherwise results may\nbe large.\n"
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}

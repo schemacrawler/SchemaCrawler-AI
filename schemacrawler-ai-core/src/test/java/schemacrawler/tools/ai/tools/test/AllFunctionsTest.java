@@ -24,6 +24,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.util.SchemaGraphModelBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -42,7 +44,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 @ResolveTestContext
 public class AllFunctionsTest {
 
-  private static final int NUM_FUNCTIONS = 8;
+  private static final int NUM_FUNCTIONS = 10;
 
   private static Stream<FunctionDefinition<?>> functionDefinitionsProvider() {
     final FunctionDefinitionRegistry registry =
@@ -55,22 +57,24 @@ public class AllFunctionsTest {
   private DatabaseConnectionSource connectionSource;
   private Catalog catalog;
   private ERModel erModel;
+  private SchemaGraphModel schemaGraphModel;
 
   @BeforeEach
   public void setupCatalog() {
     connectionSource = DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     catalog = LightCatalogUtility.lightCatalog();
     erModel = TestObjectUtility.makeTestObject(ERModel.class);
+    schemaGraphModel = SchemaGraphModelBuilder.builder(catalog).build();
   }
 
   @ParameterizedTest
   @MethodSource("functionDefinitionsProvider")
   public void testExecute(final FunctionDefinition<?> functionDefinition) throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, schemaGraphModel);
     final FunctionReturn actualReturn =
         switch (functionDefinition.getName()) {
-          case "diagram" -> new JsonFunctionReturn();
+          case "diagram", "table_path" -> new JsonFunctionReturn();
           default ->
               assertDoesNotThrow(
                   () -> callback.execute(null, connectionSource), functionDefinition.getName());
@@ -83,9 +87,9 @@ public class AllFunctionsTest {
   public void testInstantiateInvalidArguments(final FunctionDefinition<?> functionDefinition)
       throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, schemaGraphModel);
     switch (functionDefinition.getName()) {
-      case "diagram":
+      case "diagram", "table_path":
         break;
       default:
         assertDoesNotThrow(

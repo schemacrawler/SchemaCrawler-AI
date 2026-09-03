@@ -25,6 +25,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -54,6 +55,11 @@ public class ToolProviderTest {
     @Bean
     ERModel erModel() {
       return InErrorFactory.createErroredERModel();
+    }
+
+    @Bean
+    SchemaGraphModel schemaGraphModel() {
+      return mock(SchemaGraphModel.class);
     }
 
     @Bean
@@ -93,7 +99,7 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 10;
+  private static final int NUM_TOOLS = 12;
 
   @Autowired private ToolProvider toolProvider;
 
@@ -117,6 +123,8 @@ public class ToolProviderTest {
             "lint",
             "list",
             "list_across_tables",
-            "table_sample"));
+            "table_sample",
+            "table_importance",
+            "table_path"));
   }
 }

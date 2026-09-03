@@ -1,0 +1,20 @@
+{
+  "name" : "table_path",
+  "title" : "Find a forward table dependency path",
+  "description" : "Finds the shortest forward dependency path from one table or view to another. Both regular expressions must resolve to exactly one fully qualified table or view name. Foreign-key relationships are preferred; implied associations are used only as a fallback. Returns data as a JSON object.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "source_table_name" : {
+        "type" : "string",
+        "description" : "Name of source database table or view for the dependency path.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nMust match exactly one table or view.\n"
+      },
+      "target_table_name" : {
+        "type" : "string",
+        "description" : "Name of target database table or view for the dependency path.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nMust match exactly one table or view.\n"
+      }
+    },
+    "required" : [ "source_table_name", "target_table_name" ],
+    "additionalProperties" : false
+  }
+}

@@ -26,6 +26,8 @@ import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
+import schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition;
+import schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
@@ -33,7 +35,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 8;
+  private static final int NUM_FUNCTIONS = 10;
 
   @Test
   public void name() {
@@ -63,7 +65,9 @@ public class FunctionDefinitionRegistryTest {
             "list",
             "list_across_tables",
             "diagram",
-            "table_sample"));
+            "table_sample",
+            "table_importance",
+            "table_path"));
   }
 
   @Test
@@ -84,7 +88,9 @@ public class FunctionDefinitionRegistryTest {
             ListAcrossTablesFunctionDefinition.class.getSimpleName(),
             DiagramFunctionDefinition.class.getSimpleName(),
             AboutDatabaseFunctionDefinition.class.getSimpleName(),
-            TableSampleFunctionDefinition.class.getSimpleName()));
+            TableSampleFunctionDefinition.class.getSimpleName(),
+            TableImportanceFunctionDefinition.class.getSimpleName(),
+            TablePathFunctionDefinition.class.getSimpleName()));
   }
 
   @Test

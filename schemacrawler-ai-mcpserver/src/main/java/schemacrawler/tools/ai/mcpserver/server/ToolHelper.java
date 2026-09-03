@@ -20,6 +20,7 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -35,13 +36,16 @@ public class ToolHelper {
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
 
+  @Autowired(required = false)
+  private SchemaGraphModel schemaGraphModel;
+
   public <P extends FunctionParameters>
       McpServerFeatures.SyncToolSpecification toSyncToolSpecification(
           final FunctionDefinition<P> functionDefinition) {
 
     final Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, schemaGraphModel);
     final CallToolHandler toolCallHandler = new CallToolHandler(functionCallback);
 
     return new McpServerFeatures.SyncToolSpecification(tool, toolCallHandler);
