@@ -1,0 +1,20 @@
+{
+  "name" : "table_path",
+  "title" : "Find table dependency path",
+  "description" : "Finds the shortest forward dependency path from a source table or view to a target table or view in the schema graph. Requires source table name and target table name , each specified as a regular expression matching a fully qualified table or view name (each must resolve to exactly one match). Foreign-key relationships are preferred; implied associations (from column name matching) are used as a fallback. Returns a JSON object containing: 1) path: an ordered array of fully qualified table or view names representing the step-by-step dependency chain from source to target 2) uses implied associations: a boolean flag indicating whether implied relationships were required to complete the path",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "source_table_name" : {
+        "type" : "string",
+        "description" : "Name of source database table or view for the dependency path.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nMust match exactly one table or view.\n"
+      },
+      "target_table_name" : {
+        "type" : "string",
+        "description" : "Name of target database table or view for the dependency path.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nMust match exactly one table or view.\n"
+      }
+    },
+    "required" : [ "source_table_name", "target_table_name" ],
+    "additionalProperties" : false
+  }
+}

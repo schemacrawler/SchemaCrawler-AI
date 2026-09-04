@@ -8,3 +8,5 @@ schemacrawler.tools.ai.functions.LintFunctionDefinition
 schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition
 schemacrawler.tools.ai.functions.ListFunctionDefinition
 schemacrawler.tools.ai.functions.TableSampleFunctionDefinition
+schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition
+schemacrawler.tools.ai.functions.TablePathFunctionDefinition

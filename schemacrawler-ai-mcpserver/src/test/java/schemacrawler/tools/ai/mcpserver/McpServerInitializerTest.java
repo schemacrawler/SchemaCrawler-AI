@@ -14,6 +14,7 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
+import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializerTest {
@@ -22,7 +23,7 @@ public class McpServerInitializerTest {
 
   @BeforeEach
   public void setupCatalog() {
-    catalog = mock(Catalog.class);
+    catalog = LightCatalogUtility.lightCatalog();
   }
 
   @Test
@@ -82,6 +83,9 @@ public class McpServerInitializerTest {
     final ApplicationContext context = getContext(initializer);
 
     assertThat(context.getBean("catalog"), is(catalog));
+    assertThat(
+        context.getBean("schemaGraphModel"),
+        instanceOf(schemacrawler.importance.model.SchemaGraphModel.class));
     assertThat(context.getBean("mcpTransport"), is(McpServerTransportType.stdio));
     assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
   }
