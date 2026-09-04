@@ -36,7 +36,7 @@ public final class TableImportanceFunctionExecutor
   public JsonFunctionReturn call() {
     final List<ImportanceReportEntry> entries =
         new ImportanceReportGenerator(requireSchemaGraphModel())
-            .report(makeTableInclusionRule(commandOptions.tableName()));
+            .report(makeTableInclusionRule(commandOptions.tableName()), commandOptions.maxTables());
     final ArrayNode importance = mapper.valueToTree(entries);
     return new JsonFunctionReturn("importance", importance)
         .withSummary(

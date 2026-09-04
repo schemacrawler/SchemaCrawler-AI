@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
 import org.junit.jupiter.api.Test;
-import schemacrawler.importance.util.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
 import schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableImportanceFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -25,17 +25,16 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
   @Test
   public void reportAllTablesAndViews() throws Exception {
     final JsonNode importance =
-        execute(new TableImportanceFunctionParameters()).getResult().get("importance");
+        execute(new TableImportanceFunctionParameters("", 0)).getResult().get("importance");
 
     assertThat(importance.size(), greaterThan(0));
     for (int i = 1; i < importance.size(); i++) {
       final JsonNode previous = importance.get(i - 1);
       final JsonNode current = importance.get(i);
-      final double previousCentrality =
-          previous.get("graphMetrics").get("betweennessCentrality").asDouble();
-      final double currentCentrality =
-          current.get("graphMetrics").get("betweennessCentrality").asDouble();
-      assertThat(previousCentrality >= currentCentrality, is(true));
+      final double previousScore =
+          previous.get("tableImportance").get("importanceScore").asDouble();
+      final double currentScore = current.get("tableImportance").get("importanceScore").asDouble();
+      assertThat(previousScore >= currentScore, is(true));
     }
   }
 
@@ -48,6 +47,14 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
 
     assertThat(importance.size(), is(1));
     assertThat(importance.get(0).get("tableFullName").asString(), is("PUBLIC.BOOKS.AUTHORS"));
+  }
+
+  @Test
+  public void reportDefaultMaxTables() throws Exception {
+    final JsonNode importance =
+        execute(new TableImportanceFunctionParameters()).getResult().get("importance");
+
+    assertThat(importance.size(), is(5));
   }
 
   private JsonFunctionReturn execute(final TableImportanceFunctionParameters parameters)

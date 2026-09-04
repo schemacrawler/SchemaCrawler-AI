@@ -16,9 +16,19 @@ public final class TableImportanceFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Returns schema graph importance metrics for tables and views, including dependency
-    centrality, table counts, and traits. An optional regular expression filters fully
-    qualified table and view names. Returns data as a JSON object.
+    Returns schema graph importance metrics, composite scores, counts, and traits for tables and
+    views to identify key entities and structural hubs.
+    The entry for each table includes:
+    1) Importance score: composite integer (0-100) combining structural graph metrics (50%) and
+    data-modeling attributes (50%)
+    2) Importance metrics: graph topology metrics including in-degree, out-degree,
+    betweenness centrality, and "impact reachability count"(blast radius for changes to the table)
+    3) Table counts: Attribute column (columns with data values) count, total column_count, and
+    foreign key, index, trigger, and row counts
+    4) Table traits: Entity model type (strong entity, weak entity, subtype,
+    bridge table, non entity) and boolean flags for whether primary_keys, foreign keys,
+    indexes, has triggers are present, and whether the table has data
+    Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")

@@ -25,7 +25,7 @@ import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.util.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
