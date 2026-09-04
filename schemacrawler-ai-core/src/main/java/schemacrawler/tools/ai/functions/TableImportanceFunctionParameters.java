@@ -32,7 +32,7 @@ public record TableImportanceFunctionParameters(
             """
             Maximum number of tables to include in the report. Defaults to 5.
             0 or a negative integer returns all matching tables without limiting.
-            Omit this parameter to all matching tables.
+            Omit this parameter to also return all matching tables.
             """)
         @JsonProperty(required = false)
         Integer maxTables)
