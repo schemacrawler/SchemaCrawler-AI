@@ -36,6 +36,7 @@ import schemacrawler.tools.ai.model.IndexDocument;
 import schemacrawler.tools.ai.model.RoutineDocument;
 import schemacrawler.tools.ai.model.TableDocument;
 import schemacrawler.tools.ai.model.TriggerDocument;
+import schemacrawler.tools.utility.EntityModelType;
 
 public class CompactCatalogBuilderTest extends AbstractFunctionTest {
 
@@ -111,6 +112,20 @@ public class CompactCatalogBuilderTest extends AbstractFunctionTest {
         CompactCatalogBuilder.builder(catalog, erModel).buildTableDocument(table);
     assertThat(tableDocument, is(notNullValue()));
     assertThat(tableDocument.getName(), is(equalTo(table.getName())));
+  }
+
+  @Test
+  public void identifiesBridgeTables() {
+    final Table table =
+        catalog.getTables().stream()
+            .filter(candidate -> "BOOKAUTHORS".equals(candidate.getName()))
+            .findFirst()
+            .orElseThrow();
+
+    final TableDocument tableDocument =
+        CompactCatalogBuilder.builder(catalog, erModel).buildTableDocument(table);
+
+    assertThat(tableDocument.getEntityType(), is(EntityModelType.bridge_table));
   }
 
   @Test

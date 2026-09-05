@@ -13,8 +13,6 @@ import static java.util.Objects.requireNonNull;
 import java.util.Collection;
 import java.util.EnumMap;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.ermodel.model.Entity;
-import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.ermodel.model.Relationship;
 import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.ermodel.utility.ERModelUtility;
@@ -25,6 +23,7 @@ import schemacrawler.schema.Index;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
+import schemacrawler.tools.utility.EntityModelType;
 import us.fatehi.utility.Builder;
 
 public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
@@ -101,17 +100,7 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
 
   public TableDocument buildTableDocument(final Table table) {
     requireNonNull(table, "No table provided");
-    final EntityType entityType;
-    if (erModel != null) {
-      entityType =
-          erModel
-              .lookupEntity(table)
-              .filter(entity -> entity != null)
-              .map(Entity::getType)
-              .orElse(null);
-    } else {
-      entityType = null;
-    }
+    final EntityModelType entityType = EntityModelType.from(table);
     final TableDocument tableDocument =
         new TableDocument(table, entityType, additionalTableDetails);
     return tableDocument;

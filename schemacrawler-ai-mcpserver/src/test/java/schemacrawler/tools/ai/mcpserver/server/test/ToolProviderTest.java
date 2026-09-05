@@ -99,7 +99,7 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 13;
+  private static final int NUM_TOOLS = 12;
 
   @Autowired private ToolProvider toolProvider;
 
@@ -115,7 +115,6 @@ public class ToolProviderTest {
         actualToolNames,
         containsInAnyOrder(
             "about_database",
-            "describe_er_entities",
             "describe_er_relationships",
             "describe_routines",
             "describe_tables",

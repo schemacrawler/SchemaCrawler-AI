@@ -21,8 +21,9 @@ public final class DescribeTablesFunctionDefinition
       foreign key relationships, index and trigger information, table attributes,
       and complete DDL definitions. Supports regular expression based table name
       filtering and configurable detail levels to optimize tool performance.
-      For business-domain ER concepts such as entity type or relationship cardinality,
-      use `describe_er_entities` or `describe_er_relationships`.
+      Includes entity type, including bridge-table classification. For
+      relationship cardinality and other ER relationship concepts, use
+      `describe_er_relationships`.
       Returns data as a JSON object.
     """
         .stripIndent()

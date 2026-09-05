@@ -22,7 +22,6 @@ module us.fatehi.schemacrawler.ai_core {
   uses schemacrawler.tools.ai.tools.FunctionDefinition;
 
   provides schemacrawler.tools.ai.tools.FunctionDefinition with
-      schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionDefinition,
       schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition,
       schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition,

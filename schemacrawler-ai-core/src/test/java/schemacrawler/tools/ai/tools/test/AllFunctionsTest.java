@@ -44,7 +44,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 @ResolveTestContext
 public class AllFunctionsTest {
 
-  private static final int NUM_FUNCTIONS = 13;
+  private static final int NUM_FUNCTIONS = 12;
 
   private static Stream<FunctionDefinition<?>> functionDefinitionsProvider() {
     final FunctionDefinitionRegistry registry =

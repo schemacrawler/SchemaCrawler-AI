@@ -20,7 +20,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
@@ -38,7 +37,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 13;
+  private static final int NUM_FUNCTIONS = 12;
 
   @Test
   public void name() {
@@ -62,7 +61,6 @@ public class FunctionDefinitionRegistryTest {
         names,
         containsInAnyOrder(
             "about_database",
-            "describe_er_entities",
             "describe_er_relationships",
             "describe_tables",
             "describe_routines",
@@ -88,7 +86,6 @@ public class FunctionDefinitionRegistryTest {
             .collect(Collectors.toList()),
         containsInAnyOrder(
             DescribeTablesFunctionDefinition.class.getSimpleName(),
-            DescribeErEntitiesFunctionDefinition.class.getSimpleName(),
             DescribeErRelationshipsFunctionDefinition.class.getSimpleName(),
             DescribeRoutinesFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),

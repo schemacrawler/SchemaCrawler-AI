@@ -12,6 +12,8 @@ SchemaCrawler AI release notes.
 - Rename `describe_entities` to `describe_er_entities` and
   `describe_relationships` to `describe_er_relationships` to distinguish
   conceptual ER-model descriptions from physical schema descriptions
+- **BREAKING** Remove the redundant `describe_er_entities` tool; use
+  `describe_tables` for entity types, including bridge-table classification
 - Rename `list_across_tables` to `list_members_of_tables` and clarify tool and
   parameter descriptions to help AI agents select the appropriate tool
 

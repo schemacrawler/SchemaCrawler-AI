@@ -1,5 +1,4 @@
 schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition
-schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionDefinition
 schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition
 schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition
 schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition
