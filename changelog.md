@@ -3,8 +3,8 @@
 SchemaCrawler AI release notes.
 
 
-<a name="unreleased"></a>
-## Unreleased
+<a name="v17.15.0-1"></a>
+## Release 17.15.0-1 - 2026-09-06
 
 - Add `table_importance`, `table_path`, and `detect_clusters` tools for schema
   importance analysis, table relationship paths, and cached schema-community
