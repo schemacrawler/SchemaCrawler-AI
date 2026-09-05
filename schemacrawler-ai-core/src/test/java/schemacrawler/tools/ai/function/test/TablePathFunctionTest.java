@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
+import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
 import schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 import schemacrawler.tools.ai.functions.TablePathFunctionParameters;
@@ -20,6 +21,12 @@ import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import tools.jackson.databind.JsonNode;
 
 public class TablePathFunctionTest extends AbstractFunctionTest {
+
+  @Test
+  public void parameterDefaults() {
+    assertThat(new TablePathFunctionParameters().maxPathDepth(), is(5));
+    assertThat(new TablePathFunctionParameters("", "", null).maxPathDepth(), is(5));
+  }
 
   @Test
   public void findForwardDependencyPath() throws Exception {
@@ -37,12 +44,18 @@ public class TablePathFunctionTest extends AbstractFunctionTest {
 
   private JsonFunctionReturn execute(final TablePathFunctionParameters parameters)
       throws Exception {
+    return execute(parameters, SchemaGraphModelBuilder.builder(catalog).build());
+  }
+
+  private JsonFunctionReturn execute(
+      final TablePathFunctionParameters parameters, final SchemaGraphModel schemaGraphModel)
+      throws Exception {
     final FunctionExecutor<TablePathFunctionParameters> executor =
         new TablePathFunctionDefinition().newExecutor();
     executor.configure(parameters);
     executor.setCatalog(catalog);
     executor.setERModel(erModel);
-    executor.setSchemaGraphModel(SchemaGraphModelBuilder.builder(catalog).build());
+    executor.setSchemaGraphModel(schemaGraphModel);
     return (JsonFunctionReturn) executor.call();
   }
 }

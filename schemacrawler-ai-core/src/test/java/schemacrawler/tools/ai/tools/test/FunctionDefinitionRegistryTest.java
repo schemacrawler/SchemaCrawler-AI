@@ -22,6 +22,7 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DetectClustersFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
@@ -35,7 +36,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 10;
+  private static final int NUM_FUNCTIONS = 11;
 
   @Test
   public void name() {
@@ -67,6 +68,7 @@ public class FunctionDefinitionRegistryTest {
             "diagram",
             "table_sample",
             "table_importance",
+            "detect_clusters",
             "table_path"));
   }
 
@@ -90,6 +92,7 @@ public class FunctionDefinitionRegistryTest {
             AboutDatabaseFunctionDefinition.class.getSimpleName(),
             TableSampleFunctionDefinition.class.getSimpleName(),
             TableImportanceFunctionDefinition.class.getSimpleName(),
+            DetectClustersFunctionDefinition.class.getSimpleName(),
             TablePathFunctionDefinition.class.getSimpleName()));
   }
 

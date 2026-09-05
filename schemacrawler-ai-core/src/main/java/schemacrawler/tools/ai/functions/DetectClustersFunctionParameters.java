@@ -16,10 +16,11 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record TableImportanceFunctionParameters(
+public record DetectClustersFunctionParameters(
     @JsonPropertyDescription(
             """
-            Name of database table or view to report importance for.
+            Name of a database table or view used to select communities. A community
+            is returned when any member matches.
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
             Try not to match all tables, but instead use a regular expression
@@ -30,27 +31,34 @@ public record TableImportanceFunctionParameters(
         String tableName,
     @JsonPropertyDescription(
             """
-            Maximum number of tables to include in the report. Defaults to 5.
-            Use -1 to return all matching tables.
+            Maximum number of communities to return. Defaults to 5.
+            -1 returns all matching communities without limiting.
             """)
         @JsonProperty(defaultValue = "5", required = false)
-        Integer maxImportantTables)
+        Integer maxCommunities,
+    @JsonPropertyDescription(
+            """
+            Maximum number of member tables and views to include per community.
+            Defaults to 5.
+            -1 returns all members without limiting.
+            """)
+        @JsonProperty(defaultValue = "5", required = false)
+        Integer maxCommunitySize)
     implements FunctionParameters {
 
-  public TableImportanceFunctionParameters() {
-    this("", 5);
+  public DetectClustersFunctionParameters() {
+    this("", 5, 5);
   }
 
-  public TableImportanceFunctionParameters(final String tableName) {
-    this(tableName, 5);
-  }
-
-  public TableImportanceFunctionParameters {
+  public DetectClustersFunctionParameters {
     if (tableName == null) {
       tableName = "";
     }
-    if (maxImportantTables == null) {
-      maxImportantTables = 5;
+    if (maxCommunities == null) {
+      maxCommunities = 5;
+    }
+    if (maxCommunitySize == null) {
+      maxCommunitySize = 5;
     }
   }
 

@@ -9,9 +9,9 @@
         "type" : "string",
         "description" : "Name of database table or view to report importance for.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nTry not to match all tables, but instead use a regular expression\nto match a subset or match a single table, since otherwise results may\nbe large.\n"
       },
-      "max_tables" : {
+      "max_important_tables" : {
         "type" : "integer",
-        "description" : "Maximum number of tables to include in the report. Defaults to 5.\n0 or a negative integer returns all matching tables without limiting.\nOmit this parameter to also return all matching tables.\n"
+        "description" : "Maximum number of tables to include in the report. Defaults to 5.\nUse -1 to return all matching tables.\n"
       }
     },
     "required" : [ ],
