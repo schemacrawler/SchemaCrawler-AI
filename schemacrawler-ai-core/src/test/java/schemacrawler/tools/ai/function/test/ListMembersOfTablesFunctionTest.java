@@ -13,7 +13,6 @@ import static org.hamcrest.Matchers.hasEntry;
 import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.COLUMNS;
 import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.FOREIGN_KEYS;
 import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.INDEXES;
-import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.NONE;
 import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.TRIGGERS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
@@ -112,12 +111,12 @@ public class ListMembersOfTablesFunctionTest extends AbstractFunctionTest {
   public void parameters() throws Exception {
 
     final ListMembersOfTablesFunctionParameters args =
-        new ListMembersOfTablesFunctionParameters(NONE, null, null);
+        new ListMembersOfTablesFunctionParameters(COLUMNS, null, null);
 
     final Map<String, String> resultMap =
         mapper.readValue(args.toString(), new TypeReference<Map<String, String>>() {});
 
-    assertThat(resultMap, hasEntry("member_type", "NONE"));
+    assertThat(resultMap, hasEntry("member_type", "COLUMNS"));
   }
 
   @Test

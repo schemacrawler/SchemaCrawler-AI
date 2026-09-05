@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.functions;
 
-import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.NONE;
+import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.COLUMNS;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -23,16 +23,17 @@ public record ListMembersOfTablesFunctionParameters(
     @JsonPropertyDescription(
             """
             Type of table member to list, such as columns, indexes, foreign keys,
-            or triggers. Use NONE when no member type is selected.
+            or triggers.
             """)
-        @JsonProperty(defaultValue = "NONE", required = true)
+        @JsonProperty(defaultValue = "COLUMNS", required = true)
         TableMemberType memberType,
     @JsonPropertyDescription(
             """
             Name of table member.
             May be a regular expression, matching the fully qualified
-            member name (including the schema and table). May match more than
-            one member. Use an empty string if all members are requested.
+            member name (including the schema, table and member name).
+            May match more than one member. Use an empty string if all
+            members are requested.
             If not specified, all table members will be returned,
             but the results could be large.
             """)
@@ -58,15 +59,17 @@ public record ListMembersOfTablesFunctionParameters(
 
   public ListMembersOfTablesFunctionParameters {
     if (memberType == null) {
-      memberType = NONE;
+      memberType = COLUMNS;
     }
     if (isBlank(memberName)) {
       memberName = "";
     }
+    if (isBlank(tableName)) {
+      tableName = "";
+    }
   }
 
   public enum TableMemberType {
-    NONE(""),
     COLUMNS("column"),
     INDEXES("index"),
     FOREIGN_KEYS("foreign-key"),

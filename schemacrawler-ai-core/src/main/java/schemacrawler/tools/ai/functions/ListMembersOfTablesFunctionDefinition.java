@@ -16,12 +16,12 @@ public final class ListMembersOfTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Lists members belonging to one or more database tables across the schema,
-    including columns, indexes, foreign keys, and triggers. Use this tool when
-    you need table members, not when you need to discover tables or other schema
-    objects; use list for that. Supports regex-based table and member-name
-    filtering. For complete physical table details, use describe_tables.
-    Returns JSON data.
+       Lists members belonging to one or more database tables across the schema,
+       including columns, indexes, foreign keys, and triggers. Use this tool when
+       you need table members, not when you need to discover tables or other schema
+       objects; use list for that. Supports regular expression based table and
+    member-name filtering. For complete physical table details, use describe tables.
+       Returns JSON data.
     """
         .stripIndent()
         .replace("\n", " ")

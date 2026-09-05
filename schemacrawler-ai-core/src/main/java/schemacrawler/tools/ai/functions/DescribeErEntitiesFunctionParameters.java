@@ -36,7 +36,8 @@ public record DescribeErEntitiesFunctionParameters(
     @JsonPropertyDescription(
             """
             Indicates the types of entities to return - for example, strong, weak
-            or subtype entities. It can also return associations (or bridge or join tables).
+            or subtype entities. It can also return associations (or bridge or
+            join tables).
             """)
         @JsonProperty(required = false)
         EntityKind entityKind)

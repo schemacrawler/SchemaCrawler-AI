@@ -16,11 +16,13 @@ public final class DescribeErEntitiesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates detailed documentation for entities in the ER model, including
-    entity type such as strong, weak and subtype entities, and attributes.
-    Supports regex-based entity name filtering to optimize tool performance.
-    Returns conceptual ER-model entities as a JSON object. For raw physical
-    schema details such as columns, constraints, and DDL, use describe_tables.
+       Generates detailed documentation for entities in the ER model, including
+       entity type such as strong, weak and subtype entities, and attributes.
+       Supports regular expression based entity name filtering to optimize tool
+    performance.
+       Returns conceptual ER-model entities. For raw physical schema details
+       such as columns, constraints, and DDL, use describe tables.
+       Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")
@@ -34,7 +36,7 @@ public final class DescribeErEntitiesFunctionDefinition
 
   @Override
   public String getTitle() {
-    return "Describe entities in the ER model; use describe_tables for physical schema details";
+    return "Describe entities in the ER model";
   }
 
   @Override

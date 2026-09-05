@@ -16,11 +16,13 @@ public final class DescribeErRelationshipsFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates detailed documentation for relationships in the ER model, including
-    1..1, 1..M, M..N and optional relationships.
-    Supports regex-based relationship name filtering  to optimize tool performance.
-    Returns conceptual ER-model relationships as a JSON object. For raw physical
-    schema details such as columns, constraints, and DDL, use describe_tables.
+       Generates detailed documentation for relationships in the ER model, including
+       1..1, 1..M, M..N and optional relationships.
+       Supports regular expression based relationship name filtering  to optimize
+    tool performance.
+       Returns conceptual ER-model relationships. For raw physical
+       schema details such as columns, constraints, and DDL, use describe tables.
+       Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")
@@ -34,8 +36,7 @@ public final class DescribeErRelationshipsFunctionDefinition
 
   @Override
   public String getTitle() {
-    return "Describe relationships in the ER model; use describe_tables for physical schema"
-        + " details";
+    return "Describe relationships in the ER model";
   }
 
   @Override

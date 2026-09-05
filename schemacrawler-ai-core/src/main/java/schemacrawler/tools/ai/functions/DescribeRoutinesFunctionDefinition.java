@@ -16,12 +16,12 @@ public final class DescribeRoutinesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates detailed documentation for database routines (stored procedures and
-    functions), including parameter metadata (input/ output parameters, data types,
-    default values), return types, dependencies (on tables, views, or other
-    routines), and full DDL definitions. Supports regex-based routine name
-    filtering and configurable detail levels to optimize tool performance.
-    Returns data as a JSON object.
+       Generates detailed documentation for database routines (stored procedures and
+       functions), including parameter metadata (input/ output parameters, data types,
+       default values), return types, dependencies (on tables, views, or other
+       routines), and full DDL definitions. Supports regular expression based routine
+    name filtering and configurable detail levels to optimize tool performance.
+       Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")

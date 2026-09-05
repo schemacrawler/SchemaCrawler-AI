@@ -16,14 +16,14 @@ public final class DescribeTablesFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Generates detailed documentation for database tables and views, including
-    column definitions (names, data types, constraints, nullability), primary and
-    foreign key relationships, index and trigger information, table attributes,
-    and complete DDL definitions. Supports regex-based table name filtering and
-    configurable detail levels to optimize tool performance. For business-domain
-    ER concepts such as entity type or relationship cardinality, use
-    describe_er_entities or describe_er_relationships.
-    Returns physical schema data as a JSON object.
+       Generates detailed documentation for database tables and views, including
+       column definitions (names, data types, constraints, nullability), primary and
+       foreign key relationships, index and trigger information, table attributes,
+       and complete DDL definitions. Supports regular expression based table name
+    filtering and configurable detail levels to optimize tool performance.
+       For business-domain ER concepts such as entity type or relationship cardinality,
+       use tools that can describe ER entities or  ER relationships.
+       Returns data as a JSON object.
     """
         .stripIndent()
         .replace("\n", " ")
