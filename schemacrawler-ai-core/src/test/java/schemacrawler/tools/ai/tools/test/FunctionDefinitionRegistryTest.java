@@ -20,13 +20,14 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.DetectClustersFunctionDefinition;
 import schemacrawler.tools.ai.functions.DiagramFunctionDefinition;
 import schemacrawler.tools.ai.functions.LintFunctionDefinition;
-import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.ListFunctionDefinition;
+import schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition;
 import schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableSampleFunctionDefinition;
@@ -36,7 +37,7 @@ import us.fatehi.utility.property.PropertyName;
 
 public class FunctionDefinitionRegistryTest {
 
-  private static final int NUM_FUNCTIONS = 11;
+  private static final int NUM_FUNCTIONS = 12;
 
   @Test
   public void name() {
@@ -60,11 +61,12 @@ public class FunctionDefinitionRegistryTest {
         names,
         containsInAnyOrder(
             "about_database",
+            "describe_er_relationships",
             "describe_tables",
             "describe_routines",
             "lint",
             "list",
-            "list_across_tables",
+            "list_members_of_tables",
             "diagram",
             "table_sample",
             "table_importance",
@@ -84,10 +86,11 @@ public class FunctionDefinitionRegistryTest {
             .collect(Collectors.toList()),
         containsInAnyOrder(
             DescribeTablesFunctionDefinition.class.getSimpleName(),
+            DescribeErRelationshipsFunctionDefinition.class.getSimpleName(),
             DescribeRoutinesFunctionDefinition.class.getSimpleName(),
             LintFunctionDefinition.class.getSimpleName(),
             ListFunctionDefinition.class.getSimpleName(),
-            ListAcrossTablesFunctionDefinition.class.getSimpleName(),
+            ListMembersOfTablesFunctionDefinition.class.getSimpleName(),
             DiagramFunctionDefinition.class.getSimpleName(),
             AboutDatabaseFunctionDefinition.class.getSimpleName(),
             TableSampleFunctionDefinition.class.getSimpleName(),

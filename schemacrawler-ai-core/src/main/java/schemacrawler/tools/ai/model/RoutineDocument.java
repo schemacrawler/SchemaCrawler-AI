@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.model;
 
-import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINIITION;
+import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.DEFINITION;
 import static schemacrawler.tools.ai.model.AdditionalRoutineDetails.REFERENCED_OBJECTS;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.trimToEmpty;
@@ -93,7 +93,7 @@ public final class RoutineDocument extends BaseObjectDocument {
       remarks = null;
     }
 
-    if (details.get(DEFINIITION) && routine.hasDefinition()) {
+    if (details.get(DEFINITION) && routine.hasDefinition()) {
       definition = routine.getDefinition();
     } else {
       definition = null;

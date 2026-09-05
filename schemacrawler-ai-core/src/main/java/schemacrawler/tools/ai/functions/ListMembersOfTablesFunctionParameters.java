@@ -8,7 +8,7 @@
 
 package schemacrawler.tools.ai.functions;
 
-import static schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType.NONE;
+import static schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType.COLUMNS;
 import static us.fatehi.utility.Utility.isBlank;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
@@ -19,32 +19,32 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record ListAcrossTablesFunctionParameters(
+public record ListMembersOfTablesFunctionParameters(
     @JsonPropertyDescription(
             """
-            Type of database table dependant objects, like columns, indexes,
-            foreign keys or triggers.
+            Type of table member to list, such as columns, indexes, foreign keys,
+            or triggers.
             """)
-        @JsonProperty(defaultValue = "NONE", required = true)
-        DependantObjectType dependantObjectType,
+        @JsonProperty(defaultValue = "COLUMNS", required = true)
+        TableMemberType memberType,
     @JsonPropertyDescription(
             """
-            Name of table dependant object.
+            Name of table member (or members).
             May be a regular expression, matching the fully qualified
-            dependant object name (including the schema and table). May match
-            more than one dependant object.
-            Use an empty string if all dependant objects are requested.
-            If not specified, all table dependant objects will be returned,
+            member name (including the schema, table and member name).
+            May match more than one member. Use an empty string if all
+            members are requested.
+            If not specified, all table members will be returned,
             but the results could be large.
             """)
         @JsonProperty(defaultValue = "", required = false)
-        String dependantObjectName,
+        String memberName,
     @JsonPropertyDescription(
             """
-            Name of database table for which dependant objects are described.
+            Name of a database table (or tables) whose members are listed.
             May be a regular expression, matching the fully qualified
             table name (including the schema), in which case, multiple tables
-            may be returned.
+            may be selected.
             Use an empty string if all tables are requested.
             If not specified, all tables will be returned, but the results
             could be large.
@@ -53,21 +53,23 @@ public record ListAcrossTablesFunctionParameters(
         String tableName)
     implements FunctionParameters {
 
-  public ListAcrossTablesFunctionParameters() {
+  public ListMembersOfTablesFunctionParameters() {
     this(null, null, null);
   }
 
-  public ListAcrossTablesFunctionParameters {
-    if (dependantObjectType == null) {
-      dependantObjectType = NONE;
+  public ListMembersOfTablesFunctionParameters {
+    if (memberType == null) {
+      memberType = COLUMNS;
     }
-    if (isBlank(dependantObjectName)) {
-      dependantObjectName = "";
+    if (isBlank(memberName)) {
+      memberName = "";
+    }
+    if (isBlank(tableName)) {
+      tableName = "";
     }
   }
 
-  public enum DependantObjectType {
-    NONE(""),
+  public enum TableMemberType {
     COLUMNS("column"),
     INDEXES("index"),
     FOREIGN_KEYS("foreign-key"),
@@ -75,7 +77,7 @@ public record ListAcrossTablesFunctionParameters(
 
     private final String nameAttribute;
 
-    DependantObjectType(final String nameAttribute) {
+    TableMemberType(final String nameAttribute) {
       this.nameAttribute = nameAttribute;
     }
 

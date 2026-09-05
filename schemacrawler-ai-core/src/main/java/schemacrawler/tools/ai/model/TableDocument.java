@@ -29,7 +29,6 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import schemacrawler.ermodel.model.EntityType;
 import schemacrawler.schema.Column;
 import schemacrawler.schema.ColumnReference;
 import schemacrawler.schema.DatabaseObject;
@@ -37,6 +36,7 @@ import schemacrawler.schema.ForeignKey;
 import schemacrawler.schema.Index;
 import schemacrawler.schema.Table;
 import schemacrawler.schema.Trigger;
+import schemacrawler.tools.utility.EntityModelType;
 import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 import tools.jackson.databind.node.ObjectNode;
@@ -71,13 +71,13 @@ public final class TableDocument extends BaseObjectDocument {
   private final Collection<TriggerDocument> triggers;
   private final Collection<BaseObjectDocument> usedByObjects;
   private final Map<String, String> attributes;
-  private final EntityType entityType;
+  private final EntityModelType entityType;
 
   private final String definition;
 
   TableDocument(
       final Table table,
-      final EntityType entityType,
+      final EntityModelType entityType,
       final Map<AdditionalTableDetails, Boolean> tableDetails) {
     super(table);
     final Map<AdditionalTableDetails, Boolean> details = defaults(tableDetails);
@@ -165,7 +165,7 @@ public final class TableDocument extends BaseObjectDocument {
       attributes = null;
     }
 
-    if (entityType == EntityType.unknown) {
+    if (entityType == EntityModelType.unknown) {
       this.entityType = null;
     } else {
       this.entityType = entityType;
@@ -184,7 +184,7 @@ public final class TableDocument extends BaseObjectDocument {
     return definition;
   }
 
-  public EntityType getEntityType() {
+  public EntityModelType getEntityType() {
     return entityType;
   }
 

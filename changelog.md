@@ -3,6 +3,21 @@
 SchemaCrawler AI release notes.
 
 
+<a name="v17.15.0-1"></a>
+## Release 17.15.0-1 - 2026-09-06
+
+- Add `table_importance`, `table_path`, and `detect_clusters` tools for schema
+  importance analysis, table relationship paths, and cached schema-community
+  discovery
+- Rename `describe_entities` to `describe_er_entities` and
+  `describe_relationships` to `describe_er_relationships` to distinguish
+  conceptual ER-model descriptions from physical schema descriptions
+- **BREAKING** Remove the redundant `describe_er_entities` tool; use
+  `describe_tables` for entity types, including bridge-table classification
+- Rename `list_across_tables` to `list_members_of_tables` and clarify tool and
+  parameter descriptions to help AI agents select the appropriate tool
+
+
 <a name="v17.14.0-1"></a>
 ## Release 17.14.0-1 - 2026-08-21
 

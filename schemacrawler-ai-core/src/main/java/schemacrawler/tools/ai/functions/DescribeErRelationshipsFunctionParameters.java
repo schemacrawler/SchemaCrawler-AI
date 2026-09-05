@@ -23,22 +23,22 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record DescribeRelationshipsFunctionParameters(
+public record DescribeErRelationshipsFunctionParameters(
     @JsonPropertyDescription(
             """
-            Name of relationships to describe, from the ER model.
+            Name of a relationship (or relationships) to describe from the ER model.
             May be specified as a regular expression, matching the fully qualified
             relationship name (including the schema).
             Try not to match all relationships, but instead use a regular expression
-            to match a subset or match a single relationships, since otherwise results may
-            be large.
+            to match a subset or a single relationship, since otherwise results may
+            be large. If not specified, all relationships are returned.
             """)
         @JsonProperty(required = false)
         String relationshipName,
     @JsonPropertyDescription(
             """
             Indicates the types of relationships to return - for example, 1..1, 1..M, M..N
-            and optional relationships.
+            and optional relationships. Defaults to all types of relationships.
             """)
         @JsonProperty(required = false)
         Cardinality cardinality)
@@ -63,11 +63,11 @@ public record DescribeRelationshipsFunctionParameters(
     }
   }
 
-  public DescribeRelationshipsFunctionParameters() {
+  public DescribeErRelationshipsFunctionParameters() {
     this(null, null);
   }
 
-  public DescribeRelationshipsFunctionParameters {
+  public DescribeErRelationshipsFunctionParameters {
     if (relationshipName == null || relationshipName.isBlank()) {
       relationshipName = "";
     }

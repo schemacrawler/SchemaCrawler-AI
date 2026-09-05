@@ -18,8 +18,8 @@ import java.util.ArrayList;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import tools.jackson.databind.JsonNode;
@@ -30,15 +30,15 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class ExecuteDescribeRelationshipsFunctionTest extends AbstractFunctionTest {
+public class ExecuteDescribeErRelationshipsFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void testExecute() throws Exception {
     final DatabaseConnectionSource connectionSource =
         DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
-    final DescribeRelationshipsFunctionDefinition definition =
-        new DescribeRelationshipsFunctionDefinition();
-    final FunctionCallback<DescribeRelationshipsFunctionParameters> callback =
+    final DescribeErRelationshipsFunctionDefinition definition =
+        new DescribeErRelationshipsFunctionDefinition();
+    final FunctionCallback<DescribeErRelationshipsFunctionParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel);
     final String arguments =
         """
