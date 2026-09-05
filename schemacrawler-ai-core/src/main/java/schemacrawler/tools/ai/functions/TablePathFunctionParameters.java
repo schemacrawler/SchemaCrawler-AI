@@ -34,11 +34,28 @@ public record TablePathFunctionParameters(
             Must match exactly one table or view.
             """)
         @JsonProperty(required = true)
-        String targetTableName)
+        String targetTableName,
+    @JsonPropertyDescription(
+            """
+            Maximum number of relationship hops in the path. Defaults to 5.
+            Use -1 for an unlimited path depth.
+            """)
+        @JsonProperty(defaultValue = "5", required = false)
+        Integer maxPathDepth)
     implements FunctionParameters {
 
   public TablePathFunctionParameters() {
-    this("", "");
+    this("", "", 5);
+  }
+
+  public TablePathFunctionParameters(final String sourceTableName, final String targetTableName) {
+    this(sourceTableName, targetTableName, 5);
+  }
+
+  public TablePathFunctionParameters {
+    if (maxPathDepth == null) {
+      maxPathDepth = 5;
+    }
   }
 
   @Override

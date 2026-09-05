@@ -42,7 +42,8 @@ public final class TablePathFunctionExecutor
     final DatabaseObjectNodeId target =
         resolveTableNode(schemaGraphModel, commandOptions.targetTableName(), "target");
     final PathResult pathResult =
-        new PathService(schemaGraphModel).findShortestPath(source, target);
+        new PathService(schemaGraphModel)
+            .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
             .map(schemaGraphModel::getObjectByNodeId)

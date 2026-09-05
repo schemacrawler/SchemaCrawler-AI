@@ -13,6 +13,8 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import schemacrawler.importance.options.ImportanceOptions;
+import schemacrawler.importance.options.ImportanceOptionsBuilder;
 import schemacrawler.importance.report.ImportanceReportEntry;
 import schemacrawler.importance.report.ImportanceReportGenerator;
 import schemacrawler.inclusionrule.IncludeAll;
@@ -34,9 +36,13 @@ public final class TableImportanceFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
+    final ImportanceOptions importanceOptions =
+        ImportanceOptionsBuilder.builder()
+            .withTableInclusionRule(makeTableInclusionRule(commandOptions.tableName()))
+            .withMaxImportantTables(commandOptions.maxImportantTables())
+            .toOptions();
     final List<ImportanceReportEntry> entries =
-        new ImportanceReportGenerator(requireSchemaGraphModel())
-            .report(makeTableInclusionRule(commandOptions.tableName()), commandOptions.maxTables());
+        new ImportanceReportGenerator(requireSchemaGraphModel()).report(importanceOptions).tables();
     final ArrayNode importance = mapper.valueToTree(entries);
     return new JsonFunctionReturn("importance", importance)
         .withSummary(

@@ -1,0 +1,24 @@
+{
+  "name" : "detect_clusters",
+  "title" : "Detect table and view clusters",
+  "description" : "Returns communities or clusters of related tables and views. Communities can be selected by a regular expression matching any member's fully qualified name. Each community includes its full names of the tables in the community, and the anchor table.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of a database table or view used to select communities. A community\nis returned when any member matches.\nMay be specified as a regular expression, matching the fully qualified\ntable name (including the schema).\nTry not to match all tables, but instead use a regular expression\nto match a subset or match a single table, since otherwise results may\nbe large.\n"
+      },
+      "max_communities" : {
+        "type" : "integer",
+        "description" : "Maximum number of communities to return. Defaults to 5.\n-1 returns all matching communities without limiting.\n"
+      },
+      "max_community_size" : {
+        "type" : "integer",
+        "description" : "Maximum number of member tables and views to include per community.\nDefaults to 5.\n-1 returns all members without limiting.\n"
+      }
+    },
+    "required" : [ ],
+    "additionalProperties" : false
+  }
+}
