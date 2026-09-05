@@ -10,60 +10,60 @@ package schemacrawler.tools.ai.function.test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionParameters;
-import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionParameters.EntityKind;
+import schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionParameters.EntityKind;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DescribeEntitiesFunctionTest extends AbstractFunctionTest {
+public class DescribeErEntitiesFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void describeAllEntities(final TestContext testContext) throws Exception {
-    final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters(null, null);
+    final DescribeErEntitiesFunctionParameters args =
+        new DescribeErEntitiesFunctionParameters(null, null);
     describeEntity(testContext, args, true);
   }
 
   @Test
   public void describeAssociations(final TestContext testContext) throws Exception {
-    final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters("AUTHORS", EntityKind.ASSOCIATION);
+    final DescribeErEntitiesFunctionParameters args =
+        new DescribeErEntitiesFunctionParameters("AUTHORS", EntityKind.ASSOCIATION);
     describeEntity(testContext, args, true);
   }
 
   @Test
   public void describeEntity(final TestContext testContext) throws Exception {
-    final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters("AUTHORS", null);
+    final DescribeErEntitiesFunctionParameters args =
+        new DescribeErEntitiesFunctionParameters("AUTHORS", null);
     describeEntity(testContext, args, true);
   }
 
   @Test
   public void describeStrongEntities(final TestContext testContext) throws Exception {
-    final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters("BOOKS", EntityKind.STRONG_ENTITY);
+    final DescribeErEntitiesFunctionParameters args =
+        new DescribeErEntitiesFunctionParameters("BOOKS", EntityKind.STRONG_ENTITY);
     describeEntity(testContext, args, true);
   }
 
   @Test
   public void describeUnknownEntity(final TestContext testContext) throws Exception {
-    final DescribeEntitiesFunctionParameters args =
-        new DescribeEntitiesFunctionParameters("NOT_A_TABLE", null);
+    final DescribeErEntitiesFunctionParameters args =
+        new DescribeErEntitiesFunctionParameters("NOT_A_TABLE", null);
     describeEntity(testContext, args, true);
   }
 
   private void describeEntity(
       final TestContext testContext,
-      final DescribeEntitiesFunctionParameters args,
+      final DescribeErEntitiesFunctionParameters args,
       final boolean hasResults)
       throws Exception {
 
-    final DescribeEntitiesFunctionDefinition functionDefinition =
-        new DescribeEntitiesFunctionDefinition();
+    final DescribeErEntitiesFunctionDefinition functionDefinition =
+        new DescribeErEntitiesFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
         testContext, functionDefinition, args, catalog, erModel, null, hasResults);
   }

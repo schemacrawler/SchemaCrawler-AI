@@ -26,7 +26,7 @@ import schemacrawler.schemacrawler.GrepOptionsBuilder;
 import schemacrawler.schemacrawler.LimitOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.ai.functions.ListAcrossTablesFunctionParameters.DependantObjectType;
+import schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionParameters.TableMemberType;
 import schemacrawler.tools.ai.model.CompactCatalogBuilder;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
@@ -35,10 +35,10 @@ import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
 
-public final class ListAcrossTablesFunctionExecutor
-    extends AbstractJsonFunctionExecutor<ListAcrossTablesFunctionParameters> {
+public final class ListMembersOfTablesFunctionExecutor
+    extends AbstractJsonFunctionExecutor<ListMembersOfTablesFunctionParameters> {
 
-  protected ListAcrossTablesFunctionExecutor(final PropertyName functionName) {
+  protected ListMembersOfTablesFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 
@@ -47,10 +47,10 @@ public final class ListAcrossTablesFunctionExecutor
     refilterCatalog();
 
     final Collection<DependantObject<Table>> dependantObjects = new ArrayList<>();
-    final DependantObjectType dependantObjectType = commandOptions.dependantObjectType();
+    final TableMemberType memberType = commandOptions.memberType();
 
     for (final Table table : getCatalog().getTables()) {
-      switch (dependantObjectType) {
+      switch (memberType) {
         case COLUMNS:
           dependantObjects.addAll(table.getColumns());
           break;
@@ -68,7 +68,7 @@ public final class ListAcrossTablesFunctionExecutor
       }
     }
 
-    final String listName = dependantObjectType.name().replace('_', '-').toLowerCase();
+    final String listName = memberType.name().replace('_', '-').toLowerCase();
     final ArrayNode list = createDependantObjectsArray(dependantObjects);
 
     return new JsonFunctionReturn(listName, list)
@@ -96,7 +96,7 @@ public final class ListAcrossTablesFunctionExecutor
       final Collection<DependantObject<Table>> dependantObjects) {
 
     final InclusionRule dependantObjectinclusionRule =
-        makeInclusionRule(commandOptions.dependantObjectName());
+        makeInclusionRule(commandOptions.memberName());
     final InclusionRule tableInclusionRule = makeInclusionRule(commandOptions.tableName());
 
     final ArrayNode list = mapper.createArrayNode();

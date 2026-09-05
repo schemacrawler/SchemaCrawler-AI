@@ -22,11 +22,13 @@ module us.fatehi.schemacrawler.ai_core {
   uses schemacrawler.tools.ai.tools.FunctionDefinition;
 
   provides schemacrawler.tools.ai.tools.FunctionDefinition with
+      schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionDefinition,
+      schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition,
       schemacrawler.tools.ai.functions.DescribeTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DescribeRoutinesFunctionDefinition,
       schemacrawler.tools.ai.functions.LintFunctionDefinition,
       schemacrawler.tools.ai.functions.ListFunctionDefinition,
-      schemacrawler.tools.ai.functions.ListAcrossTablesFunctionDefinition,
+      schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DiagramFunctionDefinition,
       schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition,
       schemacrawler.tools.ai.functions.TableSampleFunctionDefinition,

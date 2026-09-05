@@ -10,8 +10,8 @@ package schemacrawler.tools.ai.functions;
 
 import schemacrawler.tools.ai.tools.base.AbstractFunctionDefinition;
 
-public final class DescribeEntitiesFunctionDefinition
-    extends AbstractFunctionDefinition<DescribeEntitiesFunctionParameters> {
+public final class DescribeErEntitiesFunctionDefinition
+    extends AbstractFunctionDefinition<DescribeErEntitiesFunctionParameters> {
 
   @Override
   public String getDescription() {
@@ -19,7 +19,8 @@ public final class DescribeEntitiesFunctionDefinition
     Generates detailed documentation for entities in the ER model, including
     entity type such as strong, weak and subtype entities, and attributes.
     Supports regex-based entity name filtering to optimize tool performance.
-    Returns data as a JSON object.
+    Returns conceptual ER-model entities as a JSON object. For raw physical
+    schema details such as columns, constraints, and DDL, use describe_tables.
     """
         .stripIndent()
         .replace("\n", " ")
@@ -27,22 +28,22 @@ public final class DescribeEntitiesFunctionDefinition
   }
 
   @Override
-  public Class<DescribeEntitiesFunctionParameters> getParametersClass() {
-    return DescribeEntitiesFunctionParameters.class;
+  public Class<DescribeErEntitiesFunctionParameters> getParametersClass() {
+    return DescribeErEntitiesFunctionParameters.class;
   }
 
   @Override
   public String getTitle() {
-    return "Describe entities in the ER model";
+    return "Describe entities in the ER model; use describe_tables for physical schema details";
   }
 
   @Override
-  public DescribeEntitiesFunctionExecutor newExecutor() {
-    return new DescribeEntitiesFunctionExecutor(getFunctionName());
+  public DescribeErEntitiesFunctionExecutor newExecutor() {
+    return new DescribeErEntitiesFunctionExecutor(getFunctionName());
   }
 
   @Override
-  public DescribeEntitiesFunctionParameters newParameters() {
-    return new DescribeEntitiesFunctionParameters();
+  public DescribeErEntitiesFunctionParameters newParameters() {
+    return new DescribeErEntitiesFunctionParameters();
   }
 }

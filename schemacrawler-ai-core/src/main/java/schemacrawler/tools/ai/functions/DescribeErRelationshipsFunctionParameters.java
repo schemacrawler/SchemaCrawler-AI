@@ -23,7 +23,7 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record DescribeRelationshipsFunctionParameters(
+public record DescribeErRelationshipsFunctionParameters(
     @JsonPropertyDescription(
             """
             Name of relationships to describe, from the ER model.
@@ -63,11 +63,11 @@ public record DescribeRelationshipsFunctionParameters(
     }
   }
 
-  public DescribeRelationshipsFunctionParameters() {
+  public DescribeErRelationshipsFunctionParameters() {
     this(null, null);
   }
 
-  public DescribeRelationshipsFunctionParameters {
+  public DescribeErRelationshipsFunctionParameters {
     if (relationshipName == null || relationshipName.isBlank()) {
       relationshipName = "";
     }

@@ -18,7 +18,7 @@ import schemacrawler.ermodel.model.RelationshipCardinality;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
-import schemacrawler.tools.ai.functions.DescribeEntitiesFunctionParameters.EntityKind;
+import schemacrawler.tools.ai.functions.DescribeErEntitiesFunctionParameters.EntityKind;
 import schemacrawler.tools.ai.model.CompactERModelBuilder;
 import schemacrawler.tools.ai.model.Document;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
@@ -26,10 +26,10 @@ import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
 
-public final class DescribeEntitiesFunctionExecutor
-    extends AbstractJsonFunctionExecutor<DescribeEntitiesFunctionParameters> {
+public final class DescribeErEntitiesFunctionExecutor
+    extends AbstractJsonFunctionExecutor<DescribeErEntitiesFunctionParameters> {
 
-  protected DescribeEntitiesFunctionExecutor(final PropertyName functionName) {
+  protected DescribeErEntitiesFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 

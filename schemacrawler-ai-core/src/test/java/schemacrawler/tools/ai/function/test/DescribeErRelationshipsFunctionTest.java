@@ -10,60 +10,60 @@ package schemacrawler.tools.ai.function.test;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionDefinition;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters;
-import schemacrawler.tools.ai.functions.DescribeRelationshipsFunctionParameters.Cardinality;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionDefinition;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionParameters;
+import schemacrawler.tools.ai.functions.DescribeErRelationshipsFunctionParameters.Cardinality;
 import schemacrawler.tools.ai.utility.test.FunctionExecutionTestUtility;
 import us.fatehi.test.utility.extensions.ResolveTestContext;
 import us.fatehi.test.utility.extensions.TestContext;
 
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class DescribeRelationshipsFunctionTest extends AbstractFunctionTest {
+public class DescribeErRelationshipsFunctionTest extends AbstractFunctionTest {
 
   @Test
   public void describe1NRelationships(final TestContext testContext) throws Exception {
-    final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters("FK_SALES_REGIONS", Cardinality.ONE_MANY);
+    final DescribeErRelationshipsFunctionParameters args =
+        new DescribeErRelationshipsFunctionParameters("FK_SALES_REGIONS", Cardinality.ONE_MANY);
     describeRelationship(testContext, args, true);
   }
 
   @Test
   public void describeAllRelationships(final TestContext testContext) throws Exception {
-    final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters(null, null);
+    final DescribeErRelationshipsFunctionParameters args =
+        new DescribeErRelationshipsFunctionParameters(null, null);
     describeRelationship(testContext, args, true);
   }
 
   @Test
   public void describeRelationship(final TestContext testContext) throws Exception {
-    final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters("FK_PREVIOUSEDITION", null);
+    final DescribeErRelationshipsFunctionParameters args =
+        new DescribeErRelationshipsFunctionParameters("FK_PREVIOUSEDITION", null);
     describeRelationship(testContext, args, true);
   }
 
   @Test
   public void describeRelationshipType(final TestContext testContext) throws Exception {
-    final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters(null, Cardinality.MANY_MANY);
+    final DescribeErRelationshipsFunctionParameters args =
+        new DescribeErRelationshipsFunctionParameters(null, Cardinality.MANY_MANY);
     describeRelationship(testContext, args, true);
   }
 
   @Test
   public void describeUnknownRelationship(final TestContext testContext) throws Exception {
-    final DescribeRelationshipsFunctionParameters args =
-        new DescribeRelationshipsFunctionParameters("NOT_A_REL", null);
+    final DescribeErRelationshipsFunctionParameters args =
+        new DescribeErRelationshipsFunctionParameters("NOT_A_REL", null);
     describeRelationship(testContext, args, true);
   }
 
   private void describeRelationship(
       final TestContext testContext,
-      final DescribeRelationshipsFunctionParameters args,
+      final DescribeErRelationshipsFunctionParameters args,
       final boolean hasResults)
       throws Exception {
 
-    final DescribeRelationshipsFunctionDefinition functionDefinition =
-        new DescribeRelationshipsFunctionDefinition();
+    final DescribeErRelationshipsFunctionDefinition functionDefinition =
+        new DescribeErRelationshipsFunctionDefinition();
     FunctionExecutionTestUtility.assertFunctionExecution(
         testContext, functionDefinition, args, catalog, erModel, null, hasResults);
   }

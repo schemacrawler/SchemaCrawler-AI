@@ -23,10 +23,10 @@ import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
 import tools.jackson.databind.node.ArrayNode;
 import us.fatehi.utility.property.PropertyName;
 
-public final class DescribeRelationshipsFunctionExecutor
-    extends AbstractJsonFunctionExecutor<DescribeRelationshipsFunctionParameters> {
+public final class DescribeErRelationshipsFunctionExecutor
+    extends AbstractJsonFunctionExecutor<DescribeErRelationshipsFunctionParameters> {
 
-  protected DescribeRelationshipsFunctionExecutor(final PropertyName functionName) {
+  protected DescribeErRelationshipsFunctionExecutor(final PropertyName functionName) {
     super(functionName);
   }
 

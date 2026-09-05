@@ -21,7 +21,7 @@ import tools.jackson.databind.PropertyNamingStrategies;
 import tools.jackson.databind.annotation.JsonNaming;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
-public record DescribeEntitiesFunctionParameters(
+public record DescribeErEntitiesFunctionParameters(
     @JsonPropertyDescription(
             """
             Name of entity to describe, from the ER model.
@@ -60,11 +60,11 @@ public record DescribeEntitiesFunctionParameters(
     }
   }
 
-  public DescribeEntitiesFunctionParameters() {
+  public DescribeErEntitiesFunctionParameters() {
     this(null, null);
   }
 
-  public DescribeEntitiesFunctionParameters {
+  public DescribeErEntitiesFunctionParameters {
     if (entityName == null || entityName.isBlank()) {
       entityName = "";
     }

@@ -20,6 +20,8 @@ public final class ListFunctionDefinition
     procedures, functions, sequences, synonyms, and more. This is an essential
     starting point for database exploration, database asset management, and schema
     analysis. The tool supports object type filtering and pattern-based searching.
+    Use list_members_of_tables instead when you need columns, indexes, foreign
+    keys, or triggers belonging to one or more tables.
     Returns JSON data.
     """
         .stripIndent()

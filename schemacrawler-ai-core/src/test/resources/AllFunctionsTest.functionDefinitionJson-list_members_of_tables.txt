@@ -1,0 +1,25 @@
+{
+  "name" : "list_members_of_tables",
+  "title" : "List members of one or more tables",
+  "description" : "Lists members belonging to one or more database tables across the schema, including columns, indexes, foreign keys, and triggers. Use this tool when you need table members, not when you need to discover tables or other schema objects; use list for that. Supports regex-based table and member-name filtering. For complete physical table details, use describe_tables. Returns JSON data.",
+  "inputSchema" : {
+    "type" : "object",
+    "properties" : {
+      "member_type" : {
+        "type" : "string",
+        "description" : "Type of table member to list, such as columns, indexes, foreign keys,\nor triggers. Use NONE when no member type is selected.\n",
+        "enum" : [ "NONE", "COLUMNS", "INDEXES", "FOREIGN_KEYS", "TRIGGERS" ]
+      },
+      "member_name" : {
+        "type" : "string",
+        "description" : "Name of table member.\nMay be a regular expression, matching the fully qualified\nmember name (including the schema and table). May match more than\none member. Use an empty string if all members are requested.\nIf not specified, all table members will be returned,\nbut the results could be large.\n"
+      },
+      "table_name" : {
+        "type" : "string",
+        "description" : "Name of database table whose members are described.\nMay be a regular expression, matching the fully qualified\ntable name (including the schema), in which case, multiple tables\nmay be returned.\nUse an empty string if all tables are requested.\nIf not specified, all tables will be returned, but the results\ncould be large.\n"
+      }
+    },
+    "required" : [ "member_type" ],
+    "additionalProperties" : false
+  }
+}
