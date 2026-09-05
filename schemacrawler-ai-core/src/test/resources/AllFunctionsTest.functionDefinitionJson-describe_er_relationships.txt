@@ -1,17 +1,17 @@
 {
   "name" : "describe_er_relationships",
   "title" : "Describe relationships in the ER model",
-  "description" : "Generates detailed documentation for relationships in the ER model, including    1..1, 1..M, M..N and optional relationships.    Supports regular expression based relationship name filtering  to optimize tool performance.    Returns conceptual ER-model relationships. For raw physical    schema details such as columns, constraints, and DDL, use describe tables.    Returns data as a JSON object.",
+  "description" : "Generates detailed documentation for relationships in the ER model, including   1..1, 1..M, M..N and optional relationships.   Supports regular expression based relationship name filtering to optimize   tool performance.   Returns conceptual ER-model relationships. For raw physical   schema details such as columns, constraints, and DDL, use `describe_tables`.   Returns data as a JSON object.",
   "inputSchema" : {
     "type" : "object",
     "properties" : {
       "relationship_name" : {
         "type" : "string",
-        "description" : "Name of relationships to describe, from the ER model.\nMay be specified as a regular expression, matching the fully qualified\nrelationship name (including the schema).\nTry not to match all relationships, but instead use a regular expression\nto match a subset or match a single relationships, since otherwise results may\nbe large.\n"
+        "description" : "Name of a relationship (or relationships) to describe from the ER model.\nMay be specified as a regular expression, matching the fully qualified\nrelationship name (including the schema).\nTry not to match all relationships, but instead use a regular expression\nto match a subset or a single relationship, since otherwise results may\nbe large. If not specified, all relationships are returned.\n"
       },
       "cardinality" : {
         "type" : "string",
-        "description" : "Indicates the types of relationships to return - for example, 1..1, 1..M, M..N\nand optional relationships.\n",
+        "description" : "Indicates the types of relationships to return - for example, 1..1, 1..M, M..N\nand optional relationships. Defaults to all types of relationships.\n",
         "enum" : [ "ALL", "ZERO_ONE", "ZERO_MANY", "ONE_ONE", "ONE_MANY", "MANY_MANY" ]
       }
     },

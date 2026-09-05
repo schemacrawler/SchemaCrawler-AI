@@ -24,12 +24,12 @@ import tools.jackson.databind.annotation.JsonNaming;
 public record DescribeErEntitiesFunctionParameters(
     @JsonPropertyDescription(
             """
-            Name of entity to describe, from the ER model.
-            May be specified as a regular expression, matching the fully qualified
-            entity name (including the schema).
+            Name of an entity (or entities) to describe from the ER model.
+            May be specified as a regular expression, matching fully qualified
+            entity names (including the schema).
             Try not to match all entities, but instead use a regular expression
             to match a subset or match a single entity, since otherwise results may
-            be large.
+            be large. If not specified, all entities are returned.
             """)
         @JsonProperty(required = false)
         String entityName,
@@ -37,7 +37,7 @@ public record DescribeErEntitiesFunctionParameters(
             """
             Indicates the types of entities to return - for example, strong, weak
             or subtype entities. It can also return associations (or bridge or
-            join tables).
+            join tables). Defaults to all types.
             """)
         @JsonProperty(required = false)
         EntityKind entityKind)

@@ -141,7 +141,7 @@ public class CompactCatalogBuilderTest extends AbstractFunctionTest {
     assertThat(routineDocument.getDefinition(), is(nullValue()));
 
     // With details
-    builder.withAdditionalRoutineDetails(List.of(AdditionalRoutineDetails.DEFINIITION));
+    builder.withAdditionalRoutineDetails(List.of(AdditionalRoutineDetails.DEFINITION));
     routineDocument = builder.buildRoutineDocument(routine);
     assertThat(routineDocument.getDefinition(), is(notNullValue()));
   }

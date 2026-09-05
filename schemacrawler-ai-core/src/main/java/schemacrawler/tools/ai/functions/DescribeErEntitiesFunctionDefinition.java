@@ -21,7 +21,7 @@ public final class DescribeErEntitiesFunctionDefinition
        Supports regular expression based entity name filtering to optimize tool
     performance.
        Returns conceptual ER-model entities. For raw physical schema details
-       such as columns, constraints, and DDL, use describe tables.
+       such as columns, constraints, and DDL, use `describe_tables`.
        Returns data as a JSON object.
     """
         .stripIndent()

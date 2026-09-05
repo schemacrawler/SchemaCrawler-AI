@@ -49,7 +49,7 @@ public record DescribeRoutinesFunctionParameters(
     DEFAULT(null),
     REFERENCED_OBJECTS(AdditionalRoutineDetails.REFERENCED_OBJECTS),
     ATTRIBUTES(AdditionalRoutineDetails.ATTRIBUTES),
-    DEFINIITION(AdditionalRoutineDetails.DEFINIITION);
+    DEFINIITION(AdditionalRoutineDetails.DEFINITION);
 
     private final AdditionalRoutineDetails additionalRoutineDetails;
 

@@ -1,17 +1,17 @@
 {
   "name" : "describe_er_entities",
   "title" : "Describe entities in the ER model",
-  "description" : "Generates detailed documentation for entities in the ER model, including    entity type such as strong, weak and subtype entities, and attributes.    Supports regular expression based entity name filtering to optimize tool performance.    Returns conceptual ER-model entities. For raw physical schema details    such as columns, constraints, and DDL, use describe tables.    Returns data as a JSON object.",
+  "description" : "Generates detailed documentation for entities in the ER model, including    entity type such as strong, weak and subtype entities, and attributes.    Supports regular expression based entity name filtering to optimize tool performance.    Returns conceptual ER-model entities. For raw physical schema details    such as columns, constraints, and DDL, use `describe_tables`.    Returns data as a JSON object.",
   "inputSchema" : {
     "type" : "object",
     "properties" : {
       "entity_name" : {
         "type" : "string",
-        "description" : "Name of entity to describe, from the ER model.\nMay be specified as a regular expression, matching the fully qualified\nentity name (including the schema).\nTry not to match all entities, but instead use a regular expression\nto match a subset or match a single entity, since otherwise results may\nbe large.\n"
+        "description" : "Name of an entity (or entities) to describe from the ER model.\nMay be specified as a regular expression, matching fully qualified\nentity names (including the schema).\nTry not to match all entities, but instead use a regular expression\nto match a subset or match a single entity, since otherwise results may\nbe large. If not specified, all entities are returned.\n"
       },
       "entity_kind" : {
         "type" : "string",
-        "description" : "Indicates the types of entities to return - for example, strong, weak\nor subtype entities. It can also return associations (or bridge or\njoin tables).\n",
+        "description" : "Indicates the types of entities to return - for example, strong, weak\nor subtype entities. It can also return associations (or bridge or\njoin tables). Defaults to all types.\n",
         "enum" : [ "ALL", "STRONG_ENTITY", "WEAK_ENTITY", "SUBTYPE", "ASSOCIATION" ]
       }
     },

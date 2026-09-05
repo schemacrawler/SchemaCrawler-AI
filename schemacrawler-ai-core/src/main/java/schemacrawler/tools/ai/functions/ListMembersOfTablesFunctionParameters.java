@@ -29,7 +29,7 @@ public record ListMembersOfTablesFunctionParameters(
         TableMemberType memberType,
     @JsonPropertyDescription(
             """
-            Name of table member.
+            Name of table member (or members).
             May be a regular expression, matching the fully qualified
             member name (including the schema, table and member name).
             May match more than one member. Use an empty string if all
@@ -41,10 +41,10 @@ public record ListMembersOfTablesFunctionParameters(
         String memberName,
     @JsonPropertyDescription(
             """
-            Name of database table whose members are described.
+            Name of a database table (or tables) whose members are listed.
             May be a regular expression, matching the fully qualified
             table name (including the schema), in which case, multiple tables
-            may be returned.
+            may be selected.
             Use an empty string if all tables are requested.
             If not specified, all tables will be returned, but the results
             could be large.
