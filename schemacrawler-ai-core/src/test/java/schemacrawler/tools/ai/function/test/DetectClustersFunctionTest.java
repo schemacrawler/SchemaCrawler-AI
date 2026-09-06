@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.importance.model.DatabaseObjectNodeId;
 import schemacrawler.importance.model.SchemaCommunity;
 import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
 import schemacrawler.tools.ai.functions.DetectClustersFunctionDefinition;
 import schemacrawler.tools.ai.functions.DetectClustersFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -72,7 +72,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
             .orElse(schemaGraphModel.getCommunities().getFirst());
     final DatabaseObjectNodeId matchingMember = expectedCommunity.memberNodes().getLast();
     final String matchingFullName =
-        schemaGraphModel.getObjectByNodeId(matchingMember).getFullName();
+        schemaGraphModel.lookupByVertexNodeId(matchingMember).orElseThrow().getFullName();
 
     final JsonNode communities =
         execute(

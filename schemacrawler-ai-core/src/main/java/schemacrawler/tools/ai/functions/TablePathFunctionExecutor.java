@@ -46,7 +46,8 @@ public final class TablePathFunctionExecutor
             .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
-            .map(schemaGraphModel::getObjectByNodeId)
+            .map(schemaGraphModel::lookupByVertexNodeId)
+            .map(java.util.Optional::orElseThrow)
             .map(DatabaseObject::getFullName)
             .toList();
     return new JsonFunctionReturn(
@@ -67,33 +68,36 @@ public final class TablePathFunctionExecutor
   private DatabaseObjectNodeId resolveTableNode(
       final SchemaGraphModel schemaGraphModel, final String patternText, final String role) {
     if (patternText == null || patternText.isBlank()) {
-      throw new IllegalArgumentException("No %s table or view pattern provided".formatted(role));
+      throw new IllegalArgumentException("No %s table pattern provided".formatted(role));
     }
     final Pattern pattern = Pattern.compile(patternText);
     final List<DatabaseObjectNodeId> matchingNodes =
         schemaGraphModel.getTableNodes().stream()
             .filter(
                 nodeId -> {
-                  final DatabaseObject object = schemaGraphModel.getObjectByNodeId(nodeId);
+                  final DatabaseObject object =
+                      schemaGraphModel.lookupByVertexNodeId(nodeId).orElse(null);
                   return object instanceof Table && pattern.matcher(object.getFullName()).matches();
                 })
             .sorted(
                 Comparator.comparing(
-                    nodeId -> schemaGraphModel.getObjectByNodeId(nodeId).getFullName()))
+                    nodeId ->
+                        schemaGraphModel.lookupByVertexNodeId(nodeId).orElseThrow().getFullName()))
             .toList();
     if (matchingNodes.isEmpty()) {
       throw new IllegalArgumentException(
-          "No table or view matches %s pattern: %s".formatted(role, patternText));
+          "No table matches %s pattern: %s".formatted(role, patternText));
     }
     if (matchingNodes.size() > 1) {
       final String matches =
           matchingNodes.stream()
-              .map(schemaGraphModel::getObjectByNodeId)
+              .map(schemaGraphModel::lookupByVertexNodeId)
+              .map(java.util.Optional::orElseThrow)
               .map(DatabaseObject::getFullName)
               .reduce((first, second) -> "%s, %s".formatted(first, second))
               .orElse("");
       throw new IllegalArgumentException(
-          "Multiple tables or views match %s pattern %s: %s".formatted(role, patternText, matches));
+          "Multiple tables match %s pattern %s: %s".formatted(role, patternText, matches));
     }
     return matchingNodes.getFirst();
   }

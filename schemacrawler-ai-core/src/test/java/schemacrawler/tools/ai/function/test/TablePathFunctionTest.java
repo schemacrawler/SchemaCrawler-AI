@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
 import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
 import schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 import schemacrawler.tools.ai.functions.TablePathFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;

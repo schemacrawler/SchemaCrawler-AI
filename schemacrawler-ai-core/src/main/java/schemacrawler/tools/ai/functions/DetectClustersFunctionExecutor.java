@@ -81,7 +81,8 @@ public final class DetectClustersFunctionExecutor
 
   private String getFullName(
       final SchemaGraphModel schemaGraphModel, final DatabaseObjectNodeId nodeId) {
-    final DatabaseObject databaseObject = schemaGraphModel.getObjectByNodeId(nodeId);
+    final DatabaseObject databaseObject =
+        schemaGraphModel.lookupByVertexNodeId(nodeId).orElse(null);
     return databaseObject == null ? nodeId.key().toString() : databaseObject.getFullName();
   }
 

@@ -18,7 +18,7 @@ import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.builder.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
