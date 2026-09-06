@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 import schemacrawler.importance.model.DatabaseObjectNodeId;
 import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.importance.model.TableCluster;
-import schemacrawler.importance.report.CommunityReportEntry;
+import schemacrawler.importance.report.ClusterReportEntry;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -38,7 +38,7 @@ public final class DetectClustersFunctionExecutor
   public JsonFunctionReturn call() {
     final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
     final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
-    final List<CommunityReportEntry> communities = new ArrayList<>();
+    final List<ClusterReportEntry> communities = new ArrayList<>();
     for (final TableCluster tableCluster : schemaGraphModel.getTableClusters()) {
       final List<String> memberFullNames =
           tableCluster.memberNodes().stream()
@@ -56,7 +56,7 @@ public final class DetectClustersFunctionExecutor
               ? Math.min(maxCommunitySize, tableCluster.memberNodes().size())
               : tableCluster.memberNodes().size();
       communities.add(
-          new CommunityReportEntry(
+          new ClusterReportEntry(
               tableCluster.id(),
               tableCluster.anchorNode(),
               getFullName(schemaGraphModel, tableCluster.anchorNode()),

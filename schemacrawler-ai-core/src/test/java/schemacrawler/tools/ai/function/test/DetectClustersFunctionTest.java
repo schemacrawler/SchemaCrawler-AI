@@ -56,7 +56,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
       assertThat(community.has("id"), is(true));
       assertThat(community.has("anchorNodeId"), is(true));
       assertThat(community.has("anchorTableFullName"), is(true));
-      assertThat(community.has("totalCommunitySize"), is(true));
+      assertThat(community.has("totalClusterSize"), is(true));
       assertThat(community.get("memberNodeIds").size(), lessThanOrEqualTo(5));
       assertThat(community.get("memberTableFullNames").size(), lessThanOrEqualTo(5));
     }
@@ -84,7 +84,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(communities.size(), is(1));
     assertThat(communities.get(0).get("id").asString(), is(expectedTableCluster.id().toString()));
     assertThat(
-        communities.get(0).get("totalCommunitySize").asInt(),
+        communities.get(0).get("totalClusterSize").asInt(),
         is(expectedTableCluster.memberNodes().size()));
     assertThat(communities.get(0).get("memberNodeIds").size(), is(1));
   }
@@ -100,7 +100,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(limited.size(), is(1));
     assertThat(limited.get(0).get("memberNodeIds").size(), is(1));
     assertThat(limited.get(0).get("memberTableFullNames").size(), is(1));
-    assertThat(limited.get(0).get("totalCommunitySize").asInt(), greaterThan(0));
+    assertThat(limited.get(0).get("totalClusterSize").asInt(), greaterThan(0));
 
     final JsonNode unlimited =
         execute(new DetectClustersFunctionParameters("", 0, -1), schemaGraphModel)
@@ -109,10 +109,10 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(unlimited.size(), is(schemaGraphModel.getTableClusters().size()));
     for (final JsonNode community : unlimited) {
       assertThat(
-          community.get("memberNodeIds").size(), is(community.get("totalCommunitySize").asInt()));
+          community.get("memberNodeIds").size(), is(community.get("totalClusterSize").asInt()));
       assertThat(
           community.get("memberTableFullNames").size(),
-          is(community.get("totalCommunitySize").asInt()));
+          is(community.get("totalClusterSize").asInt()));
     }
   }
 

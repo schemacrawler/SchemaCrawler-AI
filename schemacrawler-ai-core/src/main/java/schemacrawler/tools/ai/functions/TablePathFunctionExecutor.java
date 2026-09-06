@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.regex.Pattern;
 import schemacrawler.importance.model.DatabaseObjectNodeId;
 import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.service.PathResult;
-import schemacrawler.importance.service.PathService;
+import schemacrawler.importance.path.PathFinder;
+import schemacrawler.importance.path.PathResult;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -42,7 +42,7 @@ public final class TablePathFunctionExecutor
     final DatabaseObjectNodeId target =
         resolveTableNode(schemaGraphModel, commandOptions.targetTableName(), "target");
     final PathResult pathResult =
-        new PathService(schemaGraphModel)
+        new PathFinder(schemaGraphModel)
             .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
