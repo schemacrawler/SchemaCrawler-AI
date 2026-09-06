@@ -14,7 +14,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-import schemacrawler.importance.model.DatabaseObjectNodeId;
+import schemacrawler.importance.model.DatabaseObjectVertexId;
 import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.importance.path.PathFinder;
 import schemacrawler.importance.path.PathResult;
@@ -37,16 +37,16 @@ public final class TablePathFunctionExecutor
   @Override
   public JsonFunctionReturn call() {
     final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
-    final DatabaseObjectNodeId source =
+    final DatabaseObjectVertexId source =
         resolveTableNode(schemaGraphModel, commandOptions.sourceTableName(), "source");
-    final DatabaseObjectNodeId target =
+    final DatabaseObjectVertexId target =
         resolveTableNode(schemaGraphModel, commandOptions.targetTableName(), "target");
     final PathResult pathResult =
         new PathFinder(schemaGraphModel)
             .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
-            .map(schemaGraphModel::lookupByVertexNodeId)
+            .map(schemaGraphModel::lookupByVertexId)
             .map(java.util.Optional::orElseThrow)
             .map(DatabaseObject::getFullName)
             .toList();
@@ -65,24 +65,24 @@ public final class TablePathFunctionExecutor
     return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
   }
 
-  private DatabaseObjectNodeId resolveTableNode(
+  private DatabaseObjectVertexId resolveTableNode(
       final SchemaGraphModel schemaGraphModel, final String patternText, final String role) {
     if (patternText == null || patternText.isBlank()) {
       throw new IllegalArgumentException("No %s table pattern provided".formatted(role));
     }
     final Pattern pattern = Pattern.compile(patternText);
-    final List<DatabaseObjectNodeId> matchingNodes =
-        schemaGraphModel.getTableNodes().stream()
+    final List<DatabaseObjectVertexId> matchingNodes =
+        schemaGraphModel.getTableVertexIds().stream()
             .filter(
-                nodeId -> {
+                vertexId -> {
                   final DatabaseObject object =
-                      schemaGraphModel.lookupByVertexNodeId(nodeId).orElse(null);
+                      schemaGraphModel.lookupByVertexId(vertexId).orElse(null);
                   return object instanceof Table && pattern.matcher(object.getFullName()).matches();
                 })
             .sorted(
                 Comparator.comparing(
-                    nodeId ->
-                        schemaGraphModel.lookupByVertexNodeId(nodeId).orElseThrow().getFullName()))
+                    vertexId ->
+                        schemaGraphModel.lookupByVertexId(vertexId).orElseThrow().getFullName()))
             .toList();
     if (matchingNodes.isEmpty()) {
       throw new IllegalArgumentException(
@@ -91,7 +91,7 @@ public final class TablePathFunctionExecutor
     if (matchingNodes.size() > 1) {
       final String matches =
           matchingNodes.stream()
-              .map(schemaGraphModel::lookupByVertexNodeId)
+              .map(schemaGraphModel::lookupByVertexId)
               .map(java.util.Optional::orElseThrow)
               .map(DatabaseObject::getFullName)
               .reduce((first, second) -> "%s, %s".formatted(first, second))

@@ -15,7 +15,7 @@ import static org.hamcrest.Matchers.lessThanOrEqualTo;
 
 import java.util.regex.Pattern;
 import org.junit.jupiter.api.Test;
-import schemacrawler.importance.model.DatabaseObjectNodeId;
+import schemacrawler.importance.model.DatabaseObjectVertexId;
 import schemacrawler.importance.model.SchemaGraphModel;
 import schemacrawler.importance.model.TableCluster;
 import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
@@ -54,10 +54,10 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(result.size(), is(1));
     for (final JsonNode community : communities) {
       assertThat(community.has("id"), is(true));
-      assertThat(community.has("anchorNodeId"), is(true));
+      assertThat(community.has("anchorVertexId"), is(true));
       assertThat(community.has("anchorTableFullName"), is(true));
       assertThat(community.has("totalClusterSize"), is(true));
-      assertThat(community.get("memberNodeIds").size(), lessThanOrEqualTo(5));
+      assertThat(community.get("memberVertexIds").size(), lessThanOrEqualTo(5));
       assertThat(community.get("memberTableFullNames").size(), lessThanOrEqualTo(5));
     }
   }
@@ -67,12 +67,12 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     final SchemaGraphModel schemaGraphModel = SchemaGraphModelBuilder.builder(catalog).build();
     final TableCluster expectedTableCluster =
         schemaGraphModel.getTableClusters().stream()
-            .filter(tableCluster -> tableCluster.memberNodes().size() > 1)
+            .filter(tableCluster -> tableCluster.memberVertexIds().size() > 1)
             .findFirst()
             .orElse(schemaGraphModel.getTableClusters().getFirst());
-    final DatabaseObjectNodeId matchingMember = expectedTableCluster.memberNodes().getLast();
+    final DatabaseObjectVertexId matchingMember = expectedTableCluster.memberVertexIds().getLast();
     final String matchingFullName =
-        schemaGraphModel.lookupByVertexNodeId(matchingMember).orElseThrow().getFullName();
+        schemaGraphModel.lookupByVertexId(matchingMember).orElseThrow().getFullName();
 
     final JsonNode communities =
         execute(
@@ -85,8 +85,8 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(communities.get(0).get("id").asString(), is(expectedTableCluster.id().toString()));
     assertThat(
         communities.get(0).get("totalClusterSize").asInt(),
-        is(expectedTableCluster.memberNodes().size()));
-    assertThat(communities.get(0).get("memberNodeIds").size(), is(1));
+        is(expectedTableCluster.memberVertexIds().size()));
+    assertThat(communities.get(0).get("memberVertexIds").size(), is(1));
   }
 
   @Test
@@ -98,7 +98,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
             .getResult()
             .get("communities");
     assertThat(limited.size(), is(1));
-    assertThat(limited.get(0).get("memberNodeIds").size(), is(1));
+    assertThat(limited.get(0).get("memberVertexIds").size(), is(1));
     assertThat(limited.get(0).get("memberTableFullNames").size(), is(1));
     assertThat(limited.get(0).get("totalClusterSize").asInt(), greaterThan(0));
 
@@ -109,7 +109,7 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(unlimited.size(), is(schemaGraphModel.getTableClusters().size()));
     for (final JsonNode community : unlimited) {
       assertThat(
-          community.get("memberNodeIds").size(), is(community.get("totalClusterSize").asInt()));
+          community.get("memberVertexIds").size(), is(community.get("totalClusterSize").asInt()));
       assertThat(
           community.get("memberTableFullNames").size(),
           is(community.get("totalClusterSize").asInt()));
