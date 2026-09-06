@@ -13,11 +13,12 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
-import schemacrawler.importance.model.DatabaseObjectNodeId;
-import schemacrawler.importance.model.SchemaCommunity;
-import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.report.CommunityReportEntry;
+import schemacrawler.importance.model.DatabaseObjectVertexId;
+import schemacrawler.importance.model.ImportanceModel;
+import schemacrawler.importance.model.TableCluster;
+import schemacrawler.importance.report.ClusterReportEntry;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -35,13 +36,13 @@ public final class DetectClustersFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
+    final ImportanceModel importanceModel = requireImportanceModel();
     final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
-    final List<CommunityReportEntry> communities = new ArrayList<>();
-    for (final SchemaCommunity community : schemaGraphModel.getCommunities()) {
+    final List<ClusterReportEntry> communities = new ArrayList<>();
+    for (final TableCluster tableCluster : importanceModel.getTableClusters()) {
       final List<String> memberFullNames =
-          community.memberNodes().stream()
-              .map(nodeId -> getFullName(schemaGraphModel, nodeId))
+          tableCluster.memberVertexIds().stream()
+              .map(vertexId -> getFullName(importanceModel, vertexId))
               .toList();
       if (tableNamePattern != null
           && memberFullNames.stream()
@@ -52,15 +53,15 @@ public final class DetectClustersFunctionExecutor
       final int maxCommunitySize = commandOptions.maxCommunitySize();
       final int memberLimit =
           maxCommunitySize > 0
-              ? Math.min(maxCommunitySize, community.memberNodes().size())
-              : community.memberNodes().size();
+              ? Math.min(maxCommunitySize, tableCluster.memberVertexIds().size())
+              : tableCluster.memberVertexIds().size();
       communities.add(
-          new CommunityReportEntry(
-              community.id(),
-              community.anchorNode(),
-              getFullName(schemaGraphModel, community.anchorNode()),
-              community.memberNodes().size(),
-              community.memberNodes().subList(0, memberLimit),
+          new ClusterReportEntry(
+              tableCluster.id(),
+              tableCluster.anchorVertexId(),
+              getFullName(importanceModel, tableCluster.anchorVertexId()),
+              tableCluster.memberVertexIds().size(),
+              tableCluster.memberVertexIds().subList(0, memberLimit),
               memberFullNames.subList(0, memberLimit)));
 
       if (commandOptions.maxCommunities() > 0
@@ -80,16 +81,19 @@ public final class DetectClustersFunctionExecutor
   }
 
   private String getFullName(
-      final SchemaGraphModel schemaGraphModel, final DatabaseObjectNodeId nodeId) {
-    final DatabaseObject databaseObject = schemaGraphModel.getObjectByNodeId(nodeId);
-    return databaseObject == null ? nodeId.key().toString() : databaseObject.getFullName();
+      final ImportanceModel importanceModel, final DatabaseObjectVertexId vertexId) {
+    final Optional<DatabaseObject> databaseObjectOptional =
+        importanceModel.lookupByVertexId(vertexId);
+    return databaseObjectOptional.isEmpty()
+        ? vertexId.key().toString()
+        : databaseObjectOptional.get().getFullName();
   }
 
   private Pattern makeTableNamePattern(final String tableName) {
     return tableName == null || tableName.isBlank() ? null : Pattern.compile(tableName);
   }
 
-  private SchemaGraphModel requireSchemaGraphModel() {
-    return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
+  private ImportanceModel requireImportanceModel() {
+    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 }

@@ -14,10 +14,10 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
-import schemacrawler.importance.model.DatabaseObjectNodeId;
-import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.service.PathResult;
-import schemacrawler.importance.service.PathService;
+import schemacrawler.importance.model.DatabaseObjectVertexId;
+import schemacrawler.importance.model.ImportanceModel;
+import schemacrawler.importance.path.PathFinder;
+import schemacrawler.importance.path.PathResult;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -36,17 +36,18 @@ public final class TablePathFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
-    final DatabaseObjectNodeId source =
-        resolveTableNode(schemaGraphModel, commandOptions.sourceTableName(), "source");
-    final DatabaseObjectNodeId target =
-        resolveTableNode(schemaGraphModel, commandOptions.targetTableName(), "target");
+    final ImportanceModel importanceModel = requireImportanceModel();
+    final DatabaseObjectVertexId source =
+        resolveTableVertexId(importanceModel, commandOptions.sourceTableName(), "source");
+    final DatabaseObjectVertexId target =
+        resolveTableVertexId(importanceModel, commandOptions.targetTableName(), "target");
     final PathResult pathResult =
-        new PathService(schemaGraphModel)
+        new PathFinder(importanceModel)
             .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
-            .map(schemaGraphModel::getObjectByNodeId)
+            .map(importanceModel::lookupByVertexId)
+            .map(java.util.Optional::orElseThrow)
             .map(DatabaseObject::getFullName)
             .toList();
     return new JsonFunctionReturn(
@@ -60,41 +61,44 @@ public final class TablePathFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
   }
 
-  private SchemaGraphModel requireSchemaGraphModel() {
-    return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
+  private ImportanceModel requireImportanceModel() {
+    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 
-  private DatabaseObjectNodeId resolveTableNode(
-      final SchemaGraphModel schemaGraphModel, final String patternText, final String role) {
+  private DatabaseObjectVertexId resolveTableVertexId(
+      final ImportanceModel importanceModel, final String patternText, final String role) {
     if (patternText == null || patternText.isBlank()) {
-      throw new IllegalArgumentException("No %s table or view pattern provided".formatted(role));
+      throw new IllegalArgumentException("No %s table pattern provided".formatted(role));
     }
     final Pattern pattern = Pattern.compile(patternText);
-    final List<DatabaseObjectNodeId> matchingNodes =
-        schemaGraphModel.getTableNodes().stream()
+    final List<DatabaseObjectVertexId> matchingVertexIds =
+        importanceModel.getTableVertexIds().stream()
             .filter(
-                nodeId -> {
-                  final DatabaseObject object = schemaGraphModel.getObjectByNodeId(nodeId);
+                vertexId -> {
+                  final DatabaseObject object =
+                      importanceModel.lookupByVertexId(vertexId).orElse(null);
                   return object instanceof Table && pattern.matcher(object.getFullName()).matches();
                 })
             .sorted(
                 Comparator.comparing(
-                    nodeId -> schemaGraphModel.getObjectByNodeId(nodeId).getFullName()))
+                    vertexId ->
+                        importanceModel.lookupByVertexId(vertexId).orElseThrow().getFullName()))
             .toList();
-    if (matchingNodes.isEmpty()) {
+    if (matchingVertexIds.isEmpty()) {
       throw new IllegalArgumentException(
-          "No table or view matches %s pattern: %s".formatted(role, patternText));
+          "No table matches %s pattern: %s".formatted(role, patternText));
     }
-    if (matchingNodes.size() > 1) {
+    if (matchingVertexIds.size() > 1) {
       final String matches =
-          matchingNodes.stream()
-              .map(schemaGraphModel::getObjectByNodeId)
+          matchingVertexIds.stream()
+              .map(importanceModel::lookupByVertexId)
+              .map(java.util.Optional::orElseThrow)
               .map(DatabaseObject::getFullName)
               .reduce((first, second) -> "%s, %s".formatted(first, second))
               .orElse("");
       throw new IllegalArgumentException(
-          "Multiple tables or views match %s pattern %s: %s".formatted(role, patternText, matches));
+          "Multiple tables match %s pattern %s: %s".formatted(role, patternText, matches));
     }
-    return matchingNodes.getFirst();
+    return matchingVertexIds.getFirst();
   }
 }
