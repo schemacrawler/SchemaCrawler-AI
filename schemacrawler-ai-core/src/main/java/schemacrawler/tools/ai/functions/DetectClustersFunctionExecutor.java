@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
 import schemacrawler.importance.model.DatabaseObjectVertexId;
-import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.model.TableCluster;
 import schemacrawler.importance.report.ClusterReportEntry;
 import schemacrawler.schema.DatabaseObject;
@@ -36,13 +36,13 @@ public final class DetectClustersFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
+    final ImportanceModel importanceModel = requireImportanceModel();
     final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
     final List<ClusterReportEntry> communities = new ArrayList<>();
-    for (final TableCluster tableCluster : schemaGraphModel.getTableClusters()) {
+    for (final TableCluster tableCluster : importanceModel.getTableClusters()) {
       final List<String> memberFullNames =
           tableCluster.memberVertexIds().stream()
-              .map(vertexId -> getFullName(schemaGraphModel, vertexId))
+              .map(vertexId -> getFullName(importanceModel, vertexId))
               .toList();
       if (tableNamePattern != null
           && memberFullNames.stream()
@@ -59,7 +59,7 @@ public final class DetectClustersFunctionExecutor
           new ClusterReportEntry(
               tableCluster.id(),
               tableCluster.anchorVertexId(),
-              getFullName(schemaGraphModel, tableCluster.anchorVertexId()),
+              getFullName(importanceModel, tableCluster.anchorVertexId()),
               tableCluster.memberVertexIds().size(),
               tableCluster.memberVertexIds().subList(0, memberLimit),
               memberFullNames.subList(0, memberLimit)));
@@ -81,9 +81,9 @@ public final class DetectClustersFunctionExecutor
   }
 
   private String getFullName(
-      final SchemaGraphModel schemaGraphModel, final DatabaseObjectVertexId vertexId) {
+      final ImportanceModel importanceModel, final DatabaseObjectVertexId vertexId) {
     final Optional<DatabaseObject> databaseObjectOptional =
-        schemaGraphModel.lookupByVertexId(vertexId);
+        importanceModel.lookupByVertexId(vertexId);
     return databaseObjectOptional.isEmpty()
         ? vertexId.key().toString()
         : databaseObjectOptional.get().getFullName();
@@ -93,7 +93,7 @@ public final class DetectClustersFunctionExecutor
     return tableName == null || tableName.isBlank() ? null : Pattern.compile(tableName);
   }
 
-  private SchemaGraphModel requireSchemaGraphModel() {
-    return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
+  private ImportanceModel requireImportanceModel() {
+    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 }

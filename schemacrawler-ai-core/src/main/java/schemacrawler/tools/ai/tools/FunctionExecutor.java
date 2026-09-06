@@ -8,11 +8,11 @@
 
 package schemacrawler.tools.ai.tools;
 
-import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.tools.command.CallableCommand;
 
 public interface FunctionExecutor<P extends FunctionParameters>
     extends CallableCommand<P, FunctionReturn> {
 
-  default void setSchemaGraphModel(final SchemaGraphModel schemaGraphModel) {}
+  default void setImportanceModel(final ImportanceModel importanceModel) {}
 }

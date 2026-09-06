@@ -17,8 +17,8 @@ import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.ImportanceModel;
+import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
@@ -128,8 +128,8 @@ public class McpServerInitializer extends AbstractExecutionState
     final Catalog catalog = getCatalog();
     final ERModel erModel = getERModel();
     final DatabaseConnectionSource connectionSource = getConnectionSource();
-    final SchemaGraphModel schemaGraphModel =
-        isInErrorState ? null : SchemaGraphModelBuilder.builder(catalog).build();
+    final ImportanceModel importanceModel =
+        isInErrorState ? null : ImportanceModelBuilder.builder(catalog).build();
 
     context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
     context.registerBean(
@@ -137,8 +137,8 @@ public class McpServerInitializer extends AbstractExecutionState
     context.registerAlias("databaseConnectionSource", "connectionSource");
     context.registerBean("catalog", Catalog.class, () -> catalog);
     context.registerBean("erModel", ERModel.class, () -> erModel);
-    if (schemaGraphModel != null) {
-      context.registerBean("schemaGraphModel", SchemaGraphModel.class, () -> schemaGraphModel);
+    if (importanceModel != null) {
+      context.registerBean("importanceModel", ImportanceModel.class, () -> importanceModel);
     }
     context.registerBean("isInErrorState", Boolean.class, () -> isInErrorState);
     context.registerBean(

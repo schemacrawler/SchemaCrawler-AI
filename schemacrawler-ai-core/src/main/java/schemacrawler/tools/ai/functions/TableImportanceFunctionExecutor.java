@@ -13,6 +13,7 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.List;
 import java.util.regex.Pattern;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.options.ImportanceOptions;
 import schemacrawler.importance.options.ImportanceOptionsBuilder;
 import schemacrawler.importance.report.ImportanceReportEntry;
@@ -42,7 +43,7 @@ public final class TableImportanceFunctionExecutor
             .withMaxImportantTables(commandOptions.maxImportantTables())
             .toOptions();
     final List<ImportanceReportEntry> entries =
-        new ImportanceReportGenerator(requireSchemaGraphModel()).report(importanceOptions).tables();
+        new ImportanceReportGenerator(requireImportanceModel()).report(importanceOptions).tables();
     final ArrayNode importance = mapper.valueToTree(entries);
     return new JsonFunctionReturn("importance", importance)
         .withSummary(
@@ -61,7 +62,7 @@ public final class TableImportanceFunctionExecutor
     return new RegularExpressionInclusionRule(Pattern.compile(tableName));
   }
 
-  private schemacrawler.importance.model.SchemaGraphModel requireSchemaGraphModel() {
-    return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
+  private ImportanceModel requireImportanceModel() {
+    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 }

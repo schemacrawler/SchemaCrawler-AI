@@ -84,8 +84,8 @@ public class McpServerInitializerTest {
 
     assertThat(context.getBean("catalog"), is(catalog));
     assertThat(
-        context.getBean("schemaGraphModel"),
-        instanceOf(schemacrawler.importance.model.SchemaGraphModel.class));
+        context.getBean("importanceModel"),
+        instanceOf(schemacrawler.importance.model.ImportanceModel.class));
     assertThat(context.getBean("mcpTransport"), is(McpServerTransportType.stdio));
     assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
   }

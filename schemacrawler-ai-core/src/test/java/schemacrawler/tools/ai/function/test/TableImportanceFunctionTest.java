@@ -13,7 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.greaterThan;
 
 import org.junit.jupiter.api.Test;
-import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
 import schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition;
 import schemacrawler.tools.ai.functions.TableImportanceFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -82,7 +82,7 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
     executor.configure(parameters);
     executor.setCatalog(catalog);
     executor.setERModel(erModel);
-    executor.setSchemaGraphModel(SchemaGraphModelBuilder.builder(catalog).build());
+    executor.setImportanceModel(ImportanceModelBuilder.builder(catalog).build());
     return (JsonFunctionReturn) executor.call();
   }
 }

@@ -12,8 +12,8 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
-import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.ImportanceModel;
+import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
 import schemacrawler.tools.ai.functions.TablePathFunctionDefinition;
 import schemacrawler.tools.ai.functions.TablePathFunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -44,18 +44,18 @@ public class TablePathFunctionTest extends AbstractFunctionTest {
 
   private JsonFunctionReturn execute(final TablePathFunctionParameters parameters)
       throws Exception {
-    return execute(parameters, SchemaGraphModelBuilder.builder(catalog).build());
+    return execute(parameters, ImportanceModelBuilder.builder(catalog).build());
   }
 
   private JsonFunctionReturn execute(
-      final TablePathFunctionParameters parameters, final SchemaGraphModel schemaGraphModel)
+      final TablePathFunctionParameters parameters, final ImportanceModel importanceModel)
       throws Exception {
     final FunctionExecutor<TablePathFunctionParameters> executor =
         new TablePathFunctionDefinition().newExecutor();
     executor.configure(parameters);
     executor.setCatalog(catalog);
     executor.setERModel(erModel);
-    executor.setSchemaGraphModel(schemaGraphModel);
+    executor.setImportanceModel(importanceModel);
     return (JsonFunctionReturn) executor.call();
   }
 }

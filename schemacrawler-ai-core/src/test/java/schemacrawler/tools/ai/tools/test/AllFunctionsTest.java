@@ -24,8 +24,8 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.importance.model.SchemaGraphModel;
-import schemacrawler.importance.model.implementation.SchemaGraphModelBuilder;
+import schemacrawler.importance.model.ImportanceModel;
+import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -57,21 +57,21 @@ public class AllFunctionsTest {
   private DatabaseConnectionSource connectionSource;
   private Catalog catalog;
   private ERModel erModel;
-  private SchemaGraphModel schemaGraphModel;
+  private ImportanceModel importanceModel;
 
   @BeforeEach
   public void setupCatalog() {
     connectionSource = DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection());
     catalog = LightCatalogUtility.lightCatalog();
     erModel = TestObjectUtility.makeTestObject(ERModel.class);
-    schemaGraphModel = SchemaGraphModelBuilder.builder(catalog).build();
+    importanceModel = ImportanceModelBuilder.builder(catalog).build();
   }
 
   @ParameterizedTest
   @MethodSource("functionDefinitionsProvider")
   public void testExecute(final FunctionDefinition<?> functionDefinition) throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, schemaGraphModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
     final FunctionReturn actualReturn =
         switch (functionDefinition.getName()) {
           case "diagram", "table_path" -> new JsonFunctionReturn();
@@ -87,7 +87,7 @@ public class AllFunctionsTest {
   public void testInstantiateInvalidArguments(final FunctionDefinition<?> functionDefinition)
       throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, schemaGraphModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
     switch (functionDefinition.getName()) {
       case "diagram", "table_path":
         break;

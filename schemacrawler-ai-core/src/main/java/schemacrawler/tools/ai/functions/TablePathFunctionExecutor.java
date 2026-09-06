@@ -15,7 +15,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 import schemacrawler.importance.model.DatabaseObjectVertexId;
-import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.path.PathFinder;
 import schemacrawler.importance.path.PathResult;
 import schemacrawler.schema.DatabaseObject;
@@ -36,17 +36,17 @@ public final class TablePathFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
+    final ImportanceModel importanceModel = requireImportanceModel();
     final DatabaseObjectVertexId source =
-        resolveTableNode(schemaGraphModel, commandOptions.sourceTableName(), "source");
+        resolveTableVertexId(importanceModel, commandOptions.sourceTableName(), "source");
     final DatabaseObjectVertexId target =
-        resolveTableNode(schemaGraphModel, commandOptions.targetTableName(), "target");
+        resolveTableVertexId(importanceModel, commandOptions.targetTableName(), "target");
     final PathResult pathResult =
-        new PathFinder(schemaGraphModel)
+        new PathFinder(importanceModel)
             .findShortestPath(source, target, commandOptions.maxPathDepth());
     final List<String> path =
         pathResult.path().stream()
-            .map(schemaGraphModel::lookupByVertexId)
+            .map(importanceModel::lookupByVertexId)
             .map(java.util.Optional::orElseThrow)
             .map(DatabaseObject::getFullName)
             .toList();
@@ -61,37 +61,37 @@ public final class TablePathFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
   }
 
-  private SchemaGraphModel requireSchemaGraphModel() {
-    return requireNonNull(getSchemaGraphModel(), "No schema graph model provided");
+  private ImportanceModel requireImportanceModel() {
+    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 
-  private DatabaseObjectVertexId resolveTableNode(
-      final SchemaGraphModel schemaGraphModel, final String patternText, final String role) {
+  private DatabaseObjectVertexId resolveTableVertexId(
+      final ImportanceModel importanceModel, final String patternText, final String role) {
     if (patternText == null || patternText.isBlank()) {
       throw new IllegalArgumentException("No %s table pattern provided".formatted(role));
     }
     final Pattern pattern = Pattern.compile(patternText);
-    final List<DatabaseObjectVertexId> matchingNodes =
-        schemaGraphModel.getTableVertexIds().stream()
+    final List<DatabaseObjectVertexId> matchingVertexIds =
+        importanceModel.getTableVertexIds().stream()
             .filter(
                 vertexId -> {
                   final DatabaseObject object =
-                      schemaGraphModel.lookupByVertexId(vertexId).orElse(null);
+                      importanceModel.lookupByVertexId(vertexId).orElse(null);
                   return object instanceof Table && pattern.matcher(object.getFullName()).matches();
                 })
             .sorted(
                 Comparator.comparing(
                     vertexId ->
-                        schemaGraphModel.lookupByVertexId(vertexId).orElseThrow().getFullName()))
+                        importanceModel.lookupByVertexId(vertexId).orElseThrow().getFullName()))
             .toList();
-    if (matchingNodes.isEmpty()) {
+    if (matchingVertexIds.isEmpty()) {
       throw new IllegalArgumentException(
           "No table matches %s pattern: %s".formatted(role, patternText));
     }
-    if (matchingNodes.size() > 1) {
+    if (matchingVertexIds.size() > 1) {
       final String matches =
-          matchingNodes.stream()
-              .map(schemaGraphModel::lookupByVertexId)
+          matchingVertexIds.stream()
+              .map(importanceModel::lookupByVertexId)
               .map(java.util.Optional::orElseThrow)
               .map(DatabaseObject::getFullName)
               .reduce((first, second) -> "%s, %s".formatted(first, second))
@@ -99,6 +99,6 @@ public final class TablePathFunctionExecutor
       throw new IllegalArgumentException(
           "Multiple tables match %s pattern %s: %s".formatted(role, patternText, matches));
     }
-    return matchingNodes.getFirst();
+    return matchingVertexIds.getFirst();
   }
 }

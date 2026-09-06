@@ -25,7 +25,7 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.ermodel.model.ERModel;
-import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
@@ -58,8 +58,8 @@ public class ToolProviderTest {
     }
 
     @Bean
-    SchemaGraphModel schemaGraphModel() {
-      return mock(SchemaGraphModel.class);
+    ImportanceModel importanceModel() {
+      return mock(ImportanceModel.class);
     }
 
     @Bean
