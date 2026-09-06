@@ -13,10 +13,11 @@ import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Pattern;
 import schemacrawler.importance.model.DatabaseObjectNodeId;
-import schemacrawler.importance.model.SchemaCommunity;
 import schemacrawler.importance.model.SchemaGraphModel;
+import schemacrawler.importance.model.TableCluster;
 import schemacrawler.importance.report.CommunityReportEntry;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
@@ -38,9 +39,9 @@ public final class DetectClustersFunctionExecutor
     final SchemaGraphModel schemaGraphModel = requireSchemaGraphModel();
     final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
     final List<CommunityReportEntry> communities = new ArrayList<>();
-    for (final SchemaCommunity community : schemaGraphModel.getCommunities()) {
+    for (final TableCluster tableCluster : schemaGraphModel.getTableClusters()) {
       final List<String> memberFullNames =
-          community.memberNodes().stream()
+          tableCluster.memberNodes().stream()
               .map(nodeId -> getFullName(schemaGraphModel, nodeId))
               .toList();
       if (tableNamePattern != null
@@ -52,15 +53,15 @@ public final class DetectClustersFunctionExecutor
       final int maxCommunitySize = commandOptions.maxCommunitySize();
       final int memberLimit =
           maxCommunitySize > 0
-              ? Math.min(maxCommunitySize, community.memberNodes().size())
-              : community.memberNodes().size();
+              ? Math.min(maxCommunitySize, tableCluster.memberNodes().size())
+              : tableCluster.memberNodes().size();
       communities.add(
           new CommunityReportEntry(
-              community.id(),
-              community.anchorNode(),
-              getFullName(schemaGraphModel, community.anchorNode()),
-              community.memberNodes().size(),
-              community.memberNodes().subList(0, memberLimit),
+              tableCluster.id(),
+              tableCluster.anchorNode(),
+              getFullName(schemaGraphModel, tableCluster.anchorNode()),
+              tableCluster.memberNodes().size(),
+              tableCluster.memberNodes().subList(0, memberLimit),
               memberFullNames.subList(0, memberLimit)));
 
       if (commandOptions.maxCommunities() > 0
@@ -81,9 +82,11 @@ public final class DetectClustersFunctionExecutor
 
   private String getFullName(
       final SchemaGraphModel schemaGraphModel, final DatabaseObjectNodeId nodeId) {
-    final DatabaseObject databaseObject =
-        schemaGraphModel.lookupByVertexNodeId(nodeId).orElse(null);
-    return databaseObject == null ? nodeId.key().toString() : databaseObject.getFullName();
+    final Optional<DatabaseObject> databaseObjectOptional =
+        schemaGraphModel.lookupByVertexNodeId(nodeId);
+    return databaseObjectOptional.isEmpty()
+        ? nodeId.key().toString()
+        : databaseObjectOptional.get().getFullName();
   }
 
   private Pattern makeTableNamePattern(final String tableName) {
