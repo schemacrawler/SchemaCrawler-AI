@@ -28,13 +28,15 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.SchemaRetrievalOptions;
 import schemacrawler.tools.databaseconnector.EnvironmentalDatabaseConnectionSourceBuilder;
-import schemacrawler.tools.offline.connectionsource.OfflineConnectionSourceUtility;
+import schemacrawler.tools.offline.jdbc.OfflineConnection;
+import schemacrawler.tools.offline.jdbc.OfflineConnectionUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
 import schemacrawler.tools.utility.DatabaseConnectorUtility;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 import us.fatehi.utility.readconfig.EnvironmentVariableConfig;
 import us.fatehi.utility.readconfig.ReadConfig;
 
@@ -99,8 +101,10 @@ public final class SchemaCrawlerContext {
     }
 
     final Path offlineDatabasePath = Path.of(offlineDatabasePathString);
+    final OfflineConnection offlineConnection =
+        OfflineConnectionUtility.newOfflineConnection(offlineDatabasePath);
     final DatabaseConnectionSource dbConnectionSource =
-        OfflineConnectionSourceUtility.newOfflineDatabaseConnectionSource(offlineDatabasePath);
+        DatabaseConnectionSources.fromConnection(offlineConnection);
     return dbConnectionSource;
   }
 
