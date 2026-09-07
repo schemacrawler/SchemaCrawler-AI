@@ -32,9 +32,10 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.7.2
+      uses: sualeh/prepare-maven-build@v1.8.0
       with:
         java-version: 21
+        fetch-depth: 0
 
 # BUILD DEPENDENCIES
     - id: build-schemacrawler-core
@@ -42,13 +43,13 @@ jobs:
       uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler-Core
-        artifact: us.fatehi:schemacrawler:17.15.0
+        artifact: us.fatehi:schemacrawler:17.15.1
     - id: build-schemacrawler
       name: Build SchemaCrawler
       uses: sualeh/build-maven-dependency@v1.0.9
       with:
         repository: schemacrawler/SchemaCrawler
-        artifact: us.fatehi:schemacrawler-commandline:17.15.0
+        artifact: us.fatehi:schemacrawler-commandline:17.15.1
 
 # BUILD FOR DISTRIBUTION
     - id: build
