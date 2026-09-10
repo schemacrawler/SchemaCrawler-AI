@@ -3,6 +3,7 @@ name: Build with Dependencies
 on:
   workflow_dispatch:
   push:
+
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -18,7 +19,7 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.8.0
+      uses: sualeh/prepare-maven-build@v1.8.2
       with:
         java-version: 21
     - id: install-graphviz
@@ -48,6 +49,7 @@ jobs:
         mvn \
           --no-transfer-progress \
           --batch-mode \
+          -Dreactor.printOrder \
           clean package
 
     - id: move-distrib
@@ -60,7 +62,7 @@ jobs:
         mv ./schemacrawler-ai-distrib/target/_ai-distrib .
         ls -l ./_ai-distrib
 
-    - id: upload-aichat-distrib
+    - id: upload-ai-distrib
       name: Upload SchemaCrawler AI distribution
       uses: actions/upload-artifact@v7
       with:

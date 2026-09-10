@@ -35,9 +35,10 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.8.0
+      uses: sualeh/prepare-maven-build@v1.8.2
       with:
         java-version: 21
+        gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
 
 # BUILD FOR DISTRIBUTION
     - id: build
@@ -74,17 +75,23 @@ jobs:
       env:
         GITSIGN_CONNECTOR_ID: "https://github.com/login/oauth"
         GITSIGN_TOKEN_PROVIDER: "github-actions"
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: docker-mcp-registry
+        SHA: ${{ github.sha }}
       shell: bash
       run: |
         # Move docker-mcp-registry tag
-        # Set up user
+        set -euo pipefail
+        ## Set username
         git config user.name "Sualeh Fatehi"
         git config user.email "sualeh@hotmail.com"
-        # Confirm gitsign is installed
+        ## Verify that gitsign is available
         gitsign --version
-        # Move tag
-        git tag -d docker-mcp-registry || true
-        git push --delete origin docker-mcp-registry || true
-        git tag -a docker-mcp-registry -m "SchemaCrawler AI Early Access Release"
-        git push --follow-tags origin docker-mcp-registry
-        git show --no-patch docker-mcp-registry
+        ## Delete previous Docker Hub release and its tag
+        gh release delete "$TAG" -y || true
+        git push origin --delete "$TAG" || true
+        git rev-parse -q --verify "refs/tags/$TAG" >/dev/null && git tag -d "$TAG" || true
+        ## Re-tag to last commit
+        git tag -a "$TAG" -m "SchemaCrawler AI Release to Docker Hub"
+        git push --follow-tags origin "$TAG"
+        git show --no-patch "$TAG"

@@ -20,9 +20,10 @@ jobs:
   build:
     name: Create Early Access Release
     if: |
-      (github.event.pull_request.merged == true &&
+      github.actor != 'dependabot[bot]' &&
+      ((github.event.pull_request.merged == true &&
       github.event.pull_request.base.ref == 'main') ||
-      github.event_name == 'workflow_dispatch'
+      github.event_name == 'workflow_dispatch')
     runs-on: ubuntu-latest
     permissions:
       id-token: write # Required for OIDC authentication
@@ -32,7 +33,7 @@ jobs:
 # SETUP BUILD ENVIRONMENT
     - id: prepare-maven-build
       name: Prepare Maven build
-      uses: sualeh/prepare-maven-build@v1.8.0
+      uses: sualeh/prepare-maven-build@v1.8.2
       with:
         java-version: 21
         fetch-depth: 0
@@ -80,20 +81,26 @@ jobs:
       env:
         GITSIGN_CONNECTOR_ID: "https://github.com/login/oauth"
         GITSIGN_TOKEN_PROVIDER: "github-actions"
+        GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        TAG: ${{ env.DOCKER_IMAGE_TAG }}
+        SHA: ${{ github.sha }}
       shell: bash
       run: |
         # Move early-access-release tag
-        # Set up user
+        set -euo pipefail
+        ## Set username
         git config user.name "Sualeh Fatehi"
         git config user.email "sualeh@hotmail.com"
-        # Confirm gitsign is installed
+        ## Verify that gitsign is available
         gitsign --version
-        # Move tag
-        git tag -d ${{ env.DOCKER_IMAGE_TAG }} || true
-        git push --delete origin ${{ env.DOCKER_IMAGE_TAG }} || true
-        git tag -a ${{ env.DOCKER_IMAGE_TAG }} -m "SchemaCrawler AI Early Access Release"
-        git push --follow-tags origin ${{ env.DOCKER_IMAGE_TAG }}
-        git show --no-patch ${{ env.DOCKER_IMAGE_TAG }}
+        ## Delete previous early release and its tag
+        gh release delete "$TAG" -y || true
+        git push origin --delete "$TAG" || true
+        git rev-parse -q --verify "refs/tags/$TAG" >/dev/null && git tag -d "$TAG" || true
+        ## Re-tag to last commit
+        git tag -a "$TAG" -m "SchemaCrawler AI Early Access Release"
+        git push origin "$TAG"
+
 
 # BUILD AND PUBLISH DOCKER IMAGE
     - id: setup-qemu
@@ -144,8 +151,6 @@ jobs:
         call: build
         file: ${{ env.DOCKERFILE_PATH }}
         context: ${{ env.DOCKER_CONTEXT_PATH }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
         # Build just for runner platform
         platforms: linux/amd64
         tags: ${{ steps.meta.outputs.tags }}
@@ -175,8 +180,6 @@ jobs:
         call: build
         file: ${{ env.DOCKERFILE_PATH }}
         context: ${{ env.DOCKER_CONTEXT_PATH }}
-        cache-from: type=gha
-        cache-to: type=gha,mode=max
         platforms: |-
           linux/amd64
           linux/arm64
