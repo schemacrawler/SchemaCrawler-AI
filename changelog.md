@@ -2,6 +2,11 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.15.2-1"></a>
+## Release 17.15.2-1 - 2026-09-10
+
+- Test CI/CD pipeline
+
 
 <a name="v17.15.0-1"></a>
 ## Release 17.15.0-1 - 2026-09-06
