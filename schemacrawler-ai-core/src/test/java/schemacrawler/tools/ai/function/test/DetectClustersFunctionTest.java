@@ -102,8 +102,9 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     assertThat(limited.get(0).get("memberTableFullNames").size(), is(1));
     assertThat(limited.get(0).get("totalClusterSize").asInt(), greaterThan(0));
 
+    // A negative limit means unlimited - all clusters, and all of their members, are returned.
     final JsonNode unlimited =
-        execute(new DetectClustersFunctionParameters("", 0, -1), importanceModel)
+        execute(new DetectClustersFunctionParameters("", -1, -1), importanceModel)
             .getResult()
             .get("communities");
     assertThat(unlimited.size(), is(importanceModel.getTableClusters().size()));
@@ -113,6 +114,12 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
           community.get("memberTableFullNames").size(),
           is(community.get("totalClusterSize").asInt()));
     }
+
+    // A zero limit on the number of communities means no results, not unlimited. Empty
+    // collections are omitted from the JSON output, so "communities" is absent altogether.
+    final JsonNode noneResult =
+        execute(new DetectClustersFunctionParameters("", 0, -1), importanceModel).getResult();
+    assertThat(noneResult.has("communities"), is(false));
   }
 
   private JsonFunctionReturn execute(
