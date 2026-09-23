@@ -10,15 +10,19 @@ package schemacrawler.tools.ai.functions;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
+import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import schemacrawler.filter.NamedObjectFilter;
+import schemacrawler.filter.NamedObjectFilters;
 import schemacrawler.importance.model.DatabaseObjectVertexId;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.model.TableCluster;
 import schemacrawler.importance.report.ClusterReportEntry;
+import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schema.DatabaseObject;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
@@ -38,15 +42,22 @@ public final class DetectClustersFunctionExecutor
   public JsonFunctionReturn call() {
     final ImportanceModel importanceModel = requireImportanceModel();
     final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
+    final NamedObjectFilter<DatabaseObject> tableNameFilter =
+        tableNamePattern == null
+            ? null
+            : NamedObjectFilters.fullName(new RegularExpressionInclusionRule(tableNamePattern));
     final List<ClusterReportEntry> communities = new ArrayList<>();
     for (final TableCluster tableCluster : importanceModel.getTableClusters()) {
       final List<String> memberFullNames =
           tableCluster.memberVertexIds().stream()
               .map(vertexId -> getFullName(importanceModel, vertexId))
               .toList();
-      if (tableNamePattern != null
-          && memberFullNames.stream()
-              .noneMatch(fullName -> tableNamePattern.matcher(fullName).matches())) {
+      if (tableNameFilter != null
+          && tableCluster.memberVertexIds().stream()
+              .noneMatch(
+                  vertexId ->
+                      matchesTableName(
+                          importanceModel, vertexId, tableNamePattern, tableNameFilter))) {
         continue;
       }
 
@@ -90,7 +101,19 @@ public final class DetectClustersFunctionExecutor
   }
 
   private Pattern makeTableNamePattern(final String tableName) {
-    return tableName == null || tableName.isBlank() ? null : Pattern.compile(tableName);
+    return isBlank(tableName) ? null : Pattern.compile(tableName);
+  }
+
+  private boolean matchesTableName(
+      final ImportanceModel importanceModel,
+      final DatabaseObjectVertexId vertexId,
+      final Pattern tableNamePattern,
+      final NamedObjectFilter<DatabaseObject> tableNameFilter) {
+    final Optional<DatabaseObject> databaseObjectOptional =
+        importanceModel.lookupByVertexId(vertexId);
+    return databaseObjectOptional
+        .map(tableNameFilter::test)
+        .orElseGet(() -> tableNamePattern.matcher(vertexId.key().toString()).matches());
   }
 
   private ImportanceModel requireImportanceModel() {
