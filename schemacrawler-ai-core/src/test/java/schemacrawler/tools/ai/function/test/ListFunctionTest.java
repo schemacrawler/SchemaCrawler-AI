@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.containsString;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ALL;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.ROUTINES;
 import static schemacrawler.tools.ai.model.DatabaseObjectType.SCHEMAS;
@@ -91,6 +92,31 @@ public class ListFunctionTest extends AbstractFunctionTest {
   public void someTables(final TestContext testContext) throws Exception {
     final ListFunctionParameters args = new ListFunctionParameters(TABLES, "AUTHORS");
     databaseObjects(testContext, args);
+  }
+
+  /**
+   * The "PUBLISHER SALES" schema requires quoting for display, since it contains a space. The
+   * documented contract for `databaseObjectName` is that it "may match the fully qualified database
+   * object name (including the schema)". An unquoted schema-qualified pattern like "PUBLISHER
+   * SALES.REGIONS" matches the *unquoted* full name ("PUBLIC.PUBLISHER SALES.REGIONS") as well as
+   * the *quoted* full name (PUBLIC."PUBLISHER SALES".REGIONS) that ListFunctionExecutor tests
+   * against, because ListFunctionExecutor filters using SchemaCrawler's "limit" options
+   * (LimitOptionsBuilder -> DatabaseObjectFilter), which is now quote-tolerant - consistent with
+   * the "grep" options used by most other AI function executors.
+   */
+  @Test
+  public void someTablesInQuotedSchema(final TestContext testContext) throws Exception {
+    final ListFunctionParameters args =
+        new ListFunctionParameters(TABLES, "PUBLISHER SALES.REGIONS");
+
+    final ListFunctionDefinition functionDefinition = new ListFunctionDefinition();
+    final FunctionExecutor<ListFunctionParameters> executor = functionDefinition.newExecutor();
+    executor.configure(args);
+    executor.setCatalog(catalog);
+    executor.setERModel(erModel);
+    final FunctionReturn functionReturn = executor.call();
+
+    assertThat(functionReturn.get(), containsString("REGIONS"));
   }
 
   private void databaseObjects(final TestContext testContext, final ListFunctionParameters args)
