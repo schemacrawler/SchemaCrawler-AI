@@ -33,22 +33,22 @@ public final class DetectClustersFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final ImportanceModel requireImportanceModel =
+    final ImportanceModel importanceModel =
         requireNonNull(getImportanceModel(), "No importance model provided");
     final ImportanceOptions importanceOptions =
         ImportanceOptionsBuilder.builder()
             .withTableInclusionRule(makeInclusionRule(commandOptions.tableName()))
-            .withMaxClusters(commandOptions.maxCommunities())
-            .withMaxClusterSize(commandOptions.maxCommunitySize())
+            .withMaxClusters(commandOptions.maxClusters())
+            .withMaxClusterSize(commandOptions.maxClusterSize())
             .toOptions();
     // Quote-tolerant matching, cluster-membership filtering, and result limiting are all
     // handled by the report generator, shared with table importance reporting.
-    final List<ClusterReportEntry> communities =
-        new ImportanceReportGenerator(requireImportanceModel).report(importanceOptions).clusters();
+    final List<ClusterReportEntry> tableClusters =
+        new ImportanceReportGenerator(importanceModel).report(importanceOptions).clusters();
 
-    final DetectClustersDocument document = new DetectClustersDocument(communities);
+    final DetectClustersDocument document = new DetectClustersDocument(tableClusters);
     return new JsonFunctionReturn(mapper.<JsonNode>valueToTree(document))
-        .withSummary("Returned %d schema communities".formatted(communities.size()));
+        .withSummary("Returned %d table clusters".formatted(tableClusters.size()));
   }
 
   @Override

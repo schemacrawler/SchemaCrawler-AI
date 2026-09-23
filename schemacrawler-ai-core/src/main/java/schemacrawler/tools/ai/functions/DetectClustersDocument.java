@@ -11,4 +11,4 @@ package schemacrawler.tools.ai.functions;
 import java.util.List;
 import schemacrawler.importance.report.ClusterReportEntry;
 
-record DetectClustersDocument(List<ClusterReportEntry> communities) {}
+record DetectClustersDocument(List<ClusterReportEntry> tableClusters) {}
