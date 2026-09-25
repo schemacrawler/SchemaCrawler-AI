@@ -16,6 +16,6 @@ public class SchemaCrawlerAiVersion extends BaseProductVersion {
   @Serial private static final long serialVersionUID = -7653937680189652866L;
 
   public SchemaCrawlerAiVersion() {
-    super("SchemaCrawler AI", "17.15.5-1");
+    super("SchemaCrawler AI", "17.15.6-1");
   }
 }
