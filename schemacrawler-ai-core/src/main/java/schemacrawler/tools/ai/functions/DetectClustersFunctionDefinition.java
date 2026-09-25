@@ -16,9 +16,13 @@ public final class DetectClustersFunctionDefinition
   @Override
   public String getDescription() {
     return """
-    Returns communities or clusters of related tables and views. Communities can be selected
-    by a regular expression matching any member's fully qualified name. Each community includes
-    its full names of the tables in the community, and the anchor table.
+    Detects table clusters - also known as communities, cliques, modules, or subsystems -
+    of tightly related tables and views, based on how they are connected by foreign keys
+    and other relationships. Use this tool to discover system domains, bounded contexts,
+    or functional areas within a database schema, without having to know table names in
+    advance. Table clusters can be filtered by a regular expression matching any member's
+    fully qualified name. Each table cluster includes the full names of its member tables
+    and views, and the anchor table (its most important, or representative, member).
     """
         .stripIndent()
         .replace("\n", " ")
@@ -32,7 +36,7 @@ public final class DetectClustersFunctionDefinition
 
   @Override
   public String getTitle() {
-    return "Detect table and view clusters";
+    return "Detect table clusters";
   }
 
   @Override

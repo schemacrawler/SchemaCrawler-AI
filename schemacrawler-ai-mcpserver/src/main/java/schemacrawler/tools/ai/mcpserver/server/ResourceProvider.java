@@ -14,15 +14,18 @@ import static us.fatehi.utility.Utility.trimToEmpty;
 
 import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
-import java.util.stream.Collectors;
+import java.util.regex.Pattern;
 import org.springframework.ai.mcp.annotation.McpArg;
 import org.springframework.ai.mcp.annotation.McpResource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.filter.CatalogSearcher;
+import schemacrawler.filter.NamedObjectFilter;
+import schemacrawler.filter.NamedObjectFilters;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.DatabaseObject;
+import schemacrawler.schema.NamedObject;
 import schemacrawler.schema.Routine;
 import schemacrawler.schema.Table;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
@@ -35,7 +38,31 @@ import schemacrawler.tools.ai.model.TableDocument;
 @Service
 public class ResourceProvider {
 
+  /**
+   * Matches a resource identifier exactly and literally against either an object's simple name or
+   * full name.
+   *
+   * <p>This preserves the MCP resource lookup contract: identifiers are not user-supplied regular
+   * expressions, a simple name remains valid, and ambiguous results are rejected by the caller. (In
+   * contrast, {@link NamedObjectFilters#fullName} accepts an inclusion rule and only considers full
+   * names. The component filters remain case-insensitive, and the full-name filter also accepts
+   * quoted identifier forms.)
+   *
+   * @param databaseObjectName resource identifier to match
+   * @return a literal simple-name-or-full-name filter
+   */
+  private static NamedObjectFilter<NamedObject> exactNameOrFullNameFilter(
+      final String databaseObjectName) {
+    // Quote user input so a literal database-object name is never interpreted as a
+    // regex
+    final String exactNameRegex = Pattern.quote(trimToEmpty(databaseObjectName));
+    return NamedObjectFilters.nameRegex(exactNameRegex)
+            .or(NamedObjectFilters.fullNameRegex(exactNameRegex))
+        ::test;
+  }
+
   @Autowired private Catalog catalog;
+
   @Autowired private ERModel erModel;
 
   @McpResource(
@@ -47,7 +74,10 @@ public class ResourceProvider {
   public String getRoutineDetails(
       @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
           final String routineName) {
-    final Routine routine = lookupDatabaseObject(routineName, catalog.getRoutines());
+
+    final Collection<Routine> routines =
+        CatalogSearcher.search(catalog).findRoutines(exactNameOrFullNameFilter(routineName));
+    final Routine routine = lookupDatabaseObject(routineName, routines);
     final EnumSet<AdditionalRoutineDetails> allRoutineDetails =
         EnumSet.allOf(AdditionalRoutineDetails.class);
     final RoutineDocument document =
@@ -66,7 +96,10 @@ public class ResourceProvider {
   public String getTableDetails(
       @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)
           final String tableName) {
-    final Table table = lookupDatabaseObject(tableName, catalog.getTables());
+
+    final Collection<Table> tables =
+        CatalogSearcher.search(catalog).findTables(exactNameOrFullNameFilter(tableName));
+    final Table table = lookupDatabaseObject(tableName, tables);
     final EnumSet<AdditionalTableDetails> allTableDetails =
         EnumSet.allOf(AdditionalTableDetails.class);
     final TableDocument document =
@@ -77,16 +110,10 @@ public class ResourceProvider {
   }
 
   private <DO extends DatabaseObject> DO lookupDatabaseObject(
-      final String databaseObjectName, final Collection<DO> allDatabaseObjects) {
-    requireNonNull(allDatabaseObjects, "No database objects provided");
-    final String searchObjectName = trimToEmpty(databaseObjectName);
-    final List<DO> databaseObjects =
-        allDatabaseObjects.stream()
-            .filter(
-                databaseObject ->
-                    databaseObject.getName().equalsIgnoreCase(searchObjectName)
-                        || databaseObject.getFullName().equalsIgnoreCase(searchObjectName))
-            .collect(Collectors.toList());
+      final String databaseObjectName, final Collection<DO> databaseObjects) {
+
+    requireNonNull(databaseObjects, "No database objects provided");
+
     if (databaseObjects.isEmpty()) {
       throw new ExecutionRuntimeException("<%s> not found".formatted(databaseObjectName));
     }
@@ -96,7 +123,7 @@ public class ResourceProvider {
               .formatted(databaseObjectName));
     }
 
-    final DO databaseObject = databaseObjects.get(0);
+    final DO databaseObject = databaseObjects.iterator().next();
     return databaseObject;
   }
 }

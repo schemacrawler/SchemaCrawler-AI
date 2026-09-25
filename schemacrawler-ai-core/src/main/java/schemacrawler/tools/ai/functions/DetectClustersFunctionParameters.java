@@ -19,7 +19,7 @@ import tools.jackson.databind.annotation.JsonNaming;
 public record DetectClustersFunctionParameters(
     @JsonPropertyDescription(
             """
-            Name of a database table or view used to select communities. A community
+            Name of a database table or view used to select table clusters. A table cluster
             is returned when any member matches.
             May be specified as a regular expression, matching the fully qualified
             table name (including the schema).
@@ -31,19 +31,19 @@ public record DetectClustersFunctionParameters(
         String tableName,
     @JsonPropertyDescription(
             """
-            Maximum number of communities to return. Defaults to 5.
-            -1 returns all matching communities without limiting.
+            Maximum number of table clusters to return. Defaults to 5.
+            -1 returns all matching table clusters without limiting.
             """)
         @JsonProperty(defaultValue = "5", required = false)
-        Integer maxCommunities,
+        Integer maxClusters,
     @JsonPropertyDescription(
             """
-            Maximum number of member tables and views to include per community.
+            Maximum number of member tables and views to include per table cluster.
             Defaults to 5.
             -1 returns all members without limiting.
             """)
         @JsonProperty(defaultValue = "5", required = false)
-        Integer maxCommunitySize)
+        Integer maxClusterSize)
     implements FunctionParameters {
 
   public DetectClustersFunctionParameters() {
@@ -54,11 +54,11 @@ public record DetectClustersFunctionParameters(
     if (tableName == null) {
       tableName = "";
     }
-    if (maxCommunities == null) {
-      maxCommunities = 5;
+    if (maxClusters == null) {
+      maxClusters = 5;
     }
-    if (maxCommunitySize == null) {
-      maxCommunitySize = 5;
+    if (maxClusterSize == null) {
+      maxClusterSize = 5;
     }
   }
 

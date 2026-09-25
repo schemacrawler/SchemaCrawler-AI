@@ -127,6 +127,16 @@ public class ResourceProviderTest {
   }
 
   @Test
+  public void testGetTableDetailsWithRegexMetacharacterName() {
+    final Table matchingTable = new LightTable(schema, "BOOKS.2026");
+    final Table wildcardTable = new LightTable(schema, "BOOKSx2026");
+    when(catalog.getTables()).thenReturn(List.of(matchingTable, wildcardTable));
+
+    final String details = resourceProvider.getTableDetails("BOOKS.2026");
+    assertThat(details, is(containsString("BOOKS.2026")));
+  }
+
+  @Test
   public void testGetTableDetailsNotFound() {
     when(catalog.getTables()).thenReturn(Collections.emptyList());
     final ExecutionRuntimeException e =

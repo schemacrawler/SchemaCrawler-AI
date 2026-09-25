@@ -11,15 +11,12 @@ package schemacrawler.tools.ai.functions;
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.regex.Pattern;
-import schemacrawler.importance.model.DatabaseObjectVertexId;
 import schemacrawler.importance.model.ImportanceModel;
-import schemacrawler.importance.model.TableCluster;
+import schemacrawler.importance.options.ImportanceOptions;
+import schemacrawler.importance.options.ImportanceOptionsBuilder;
 import schemacrawler.importance.report.ClusterReportEntry;
-import schemacrawler.schema.DatabaseObject;
+import schemacrawler.importance.report.ImportanceReportGenerator;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
@@ -36,64 +33,26 @@ public final class DetectClustersFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() {
-    final ImportanceModel importanceModel = requireImportanceModel();
-    final Pattern tableNamePattern = makeTableNamePattern(commandOptions.tableName());
-    final List<ClusterReportEntry> communities = new ArrayList<>();
-    for (final TableCluster tableCluster : importanceModel.getTableClusters()) {
-      final List<String> memberFullNames =
-          tableCluster.memberVertexIds().stream()
-              .map(vertexId -> getFullName(importanceModel, vertexId))
-              .toList();
-      if (tableNamePattern != null
-          && memberFullNames.stream()
-              .noneMatch(fullName -> tableNamePattern.matcher(fullName).matches())) {
-        continue;
-      }
+    final ImportanceModel importanceModel =
+        requireNonNull(getImportanceModel(), "No importance model provided");
+    final ImportanceOptions importanceOptions =
+        ImportanceOptionsBuilder.builder()
+            .withTableInclusionRule(makeInclusionRule(commandOptions.tableName()))
+            .withMaxClusters(commandOptions.maxClusters())
+            .withMaxClusterSize(commandOptions.maxClusterSize())
+            .toOptions();
+    // Quote-tolerant matching, cluster-membership filtering, and result limiting are all
+    // handled by the report generator, shared with table importance reporting.
+    final List<ClusterReportEntry> tableClusters =
+        new ImportanceReportGenerator(importanceModel).report(importanceOptions).clusters();
 
-      final int maxCommunitySize = commandOptions.maxCommunitySize();
-      final int memberLimit =
-          maxCommunitySize > 0
-              ? Math.min(maxCommunitySize, tableCluster.memberVertexIds().size())
-              : tableCluster.memberVertexIds().size();
-      communities.add(
-          new ClusterReportEntry(
-              tableCluster.id(),
-              tableCluster.anchorVertexId(),
-              getFullName(importanceModel, tableCluster.anchorVertexId()),
-              tableCluster.memberVertexIds().size(),
-              tableCluster.memberVertexIds().subList(0, memberLimit),
-              memberFullNames.subList(0, memberLimit)));
-
-      if (commandOptions.maxCommunities() > 0
-          && communities.size() >= commandOptions.maxCommunities()) {
-        break;
-      }
-    }
-
-    final DetectClustersDocument document = new DetectClustersDocument(communities);
+    final DetectClustersDocument document = new DetectClustersDocument(tableClusters);
     return new JsonFunctionReturn(mapper.<JsonNode>valueToTree(document))
-        .withSummary("Returned %d schema communities".formatted(communities.size()));
+        .withSummary("Returned %d table clusters".formatted(tableClusters.size()));
   }
 
   @Override
   protected SchemaCrawlerOptions createSchemaCrawlerOptions() {
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
-  }
-
-  private String getFullName(
-      final ImportanceModel importanceModel, final DatabaseObjectVertexId vertexId) {
-    final Optional<DatabaseObject> databaseObjectOptional =
-        importanceModel.lookupByVertexId(vertexId);
-    return databaseObjectOptional.isEmpty()
-        ? vertexId.key().toString()
-        : databaseObjectOptional.get().getFullName();
-  }
-
-  private Pattern makeTableNamePattern(final String tableName) {
-    return tableName == null || tableName.isBlank() ? null : Pattern.compile(tableName);
-  }
-
-  private ImportanceModel requireImportanceModel() {
-    return requireNonNull(getImportanceModel(), "No importance model provided");
   }
 }

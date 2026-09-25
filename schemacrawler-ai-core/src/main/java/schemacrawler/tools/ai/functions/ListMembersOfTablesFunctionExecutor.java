@@ -14,6 +14,8 @@ import static us.fatehi.utility.Utility.isBlank;
 import java.util.ArrayList;
 import java.util.Collection;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.filter.NamedObjectFilter;
+import schemacrawler.filter.NamedObjectFilters;
 import schemacrawler.inclusionrule.ExcludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.schema.Column;
@@ -95,19 +97,15 @@ public final class ListMembersOfTablesFunctionExecutor
   private ArrayNode createDependantObjectsArray(
       final Collection<DependantObject<Table>> dependantObjects) {
 
-    final InclusionRule dependantObjectinclusionRule =
-        makeInclusionRule(commandOptions.memberName());
-    final InclusionRule tableInclusionRule = makeInclusionRule(commandOptions.tableName());
-
     final ArrayNode list = mapper.createArrayNode();
     if (dependantObjects == null || dependantObjects.isEmpty()) {
       return list;
     }
 
+    final NamedObjectFilter<DependantObject<Table>> dependantObjectFilter =
+        createDependantObjectsFilter();
     for (final DependantObject<Table> dependantObject : dependantObjects) {
-      if (dependantObject == null
-          || !dependantObjectinclusionRule.test(dependantObject.getFullName())
-          || !tableInclusionRule.test(dependantObject.getParent().getFullName())) {
+      if (dependantObject == null || !dependantObjectFilter.test(dependantObject)) {
         continue;
       }
 
@@ -116,6 +114,18 @@ public final class ListMembersOfTablesFunctionExecutor
     }
 
     return list;
+  }
+
+  private NamedObjectFilter<DependantObject<Table>> createDependantObjectsFilter() {
+    // Match each member and its owning table by full name, including quoted identifier forms
+    final NamedObjectFilter<DependantObject<Table>> memberFilter =
+        NamedObjectFilters.fullName(makeInclusionRule(commandOptions.memberName()));
+    final NamedObjectFilter<Table> tableFilter =
+        NamedObjectFilters.fullName(makeInclusionRule(commandOptions.tableName()));
+    final NamedObjectFilter<DependantObject<Table>> dependantObjectFilter =
+        dependantObject ->
+            memberFilter.test(dependantObject) && tableFilter.test(dependantObject.getParent());
+    return dependantObjectFilter;
   }
 
   private ObjectNode createDependentObjectNode(final DependantObject<Table> dependantObject) {

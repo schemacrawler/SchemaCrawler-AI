@@ -72,7 +72,7 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
 
     assertThat(result.size(), is(1));
     assertThat(result.has("importance"), is(true));
-    assertThat(result.has("communities"), is(false));
+    assertThat(result.has("tableClusters"), is(false));
   }
 
   private JsonFunctionReturn execute(final TableImportanceFunctionParameters parameters)
