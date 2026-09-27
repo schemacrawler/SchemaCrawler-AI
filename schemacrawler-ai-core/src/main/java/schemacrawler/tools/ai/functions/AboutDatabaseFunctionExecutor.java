@@ -38,7 +38,7 @@ public final class AboutDatabaseFunctionExecutor
     // No need to refilter, but leave this boilerplate
     // refilterCatalog();
 
-    final JsonNode serverInfo = createServerInfoArray();
+    final ObjectNode serverInfo = createServerInfoArray();
     return new JsonFunctionReturn(serverInfo)
         .withSummary(
             "Returned %n%s".formatted(getCatalog().getDatabaseInfo().getDatabaseProductName()));
@@ -49,7 +49,7 @@ public final class AboutDatabaseFunctionExecutor
     return SchemaCrawlerOptionsBuilder.newSchemaCrawlerOptions();
   }
 
-  private JsonNode createServerInfoArray() {
+  private ObjectNode createServerInfoArray() {
 
     final ObjectNode databaseInfo = mapper.createObjectNode();
     final Catalog catalog = getCatalog();

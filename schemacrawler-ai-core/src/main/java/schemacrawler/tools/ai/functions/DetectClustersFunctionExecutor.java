@@ -21,7 +21,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
-import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
 
 public final class DetectClustersFunctionExecutor
@@ -47,7 +47,7 @@ public final class DetectClustersFunctionExecutor
         new ImportanceReportGenerator(importanceModel).report(importanceOptions).clusters();
 
     final DetectClustersDocument document = new DetectClustersDocument(tableClusters);
-    return new JsonFunctionReturn(mapper.<JsonNode>valueToTree(document))
+    return new JsonFunctionReturn(mapper.<ObjectNode>valueToTree(document))
         .withSummary("Returned %d table clusters".formatted(tableClusters.size()));
   }
 

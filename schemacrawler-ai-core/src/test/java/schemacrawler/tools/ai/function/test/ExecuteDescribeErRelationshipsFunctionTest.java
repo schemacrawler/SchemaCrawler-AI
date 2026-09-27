@@ -51,7 +51,9 @@ public class ExecuteDescribeErRelationshipsFunctionTest extends AbstractFunction
 
     assertThat(actualReturn, is(not(nullValue())));
 
-    final JsonNode jsonNode = actualReturn.getResult();
+    final JsonNode resultNode = actualReturn.getResult();
+    assertThat(resultNode.isObject(), is(true));
+    final JsonNode jsonNode = resultNode.get("relationships");
     assertThat(jsonNode.isArray(), is(true));
 
     final List<JsonNode> list = new ArrayList<>();

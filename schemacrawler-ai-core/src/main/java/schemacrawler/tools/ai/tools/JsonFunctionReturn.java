@@ -32,7 +32,7 @@ public final class JsonFunctionReturn implements FunctionReturn {
     jsonNode = document.toObjectNode();
   }
 
-  public JsonFunctionReturn(final JsonNode objectNode) {
+  public JsonFunctionReturn(final ObjectNode objectNode) {
     jsonNode = requireNonNull(objectNode, "No object node provided");
   }
 

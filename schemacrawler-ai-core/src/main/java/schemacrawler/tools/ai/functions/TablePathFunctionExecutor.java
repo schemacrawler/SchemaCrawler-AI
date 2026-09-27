@@ -28,7 +28,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
-import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.property.PropertyName;
 
 public final class TablePathFunctionExecutor
@@ -59,7 +59,7 @@ public final class TablePathFunctionExecutor
             .toList();
 
     return new JsonFunctionReturn(
-            mapper.<JsonNode>valueToTree(
+            mapper.<ObjectNode>valueToTree(
                 new TablePathDocument(path, pathResult.usesImpliedAssociations())))
         .withSummary("Returned a path with %d tables and views".formatted(path.size()));
   }
