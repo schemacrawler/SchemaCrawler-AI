@@ -23,7 +23,9 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.state.AbstractExecutionState;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -36,12 +38,23 @@ public class McpServerInitializer extends AbstractExecutionState
   private final boolean isInErrorState;
   private final McpServerTransportType mcpTransport;
   private final ExcludeTools excludeTools;
+  private final DatabaseIdentity databaseIdentity;
 
   public McpServerInitializer(
       final Catalog catalog,
       final DatabaseConnectionSource connectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
+    this(catalog, connectionSource, mcpTransport, excludeTools, null, null);
+  }
+
+  public McpServerInitializer(
+      final Catalog catalog,
+      final DatabaseConnectionSource connectionSource,
+      final McpServerTransportType mcpTransport,
+      final Collection<String> excludeTools,
+      final String databaseAlias,
+      final String databaseDescription) {
 
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
@@ -64,6 +77,9 @@ public class McpServerInitializer extends AbstractExecutionState
       setConnectionSource(connectionSource);
     }
     this.isInErrorState = isInErrorState;
+
+    databaseIdentity =
+        DatabaseIdentityUtility.from(databaseAlias, databaseDescription, nonErroredCatalog());
 
     if (excludeTools == null) {
       this.excludeTools = new ExcludeTools();
@@ -119,6 +135,10 @@ public class McpServerInitializer extends AbstractExecutionState
 
     this.isInErrorState = isInErrorState;
 
+    databaseIdentity =
+        DatabaseIdentityUtility.from(
+            scContext.databaseAlias(), scContext.databaseDescription(), nonErroredCatalog());
+
     excludeTools = new ExcludeTools(context.excludeTools());
   }
 
@@ -151,5 +171,11 @@ public class McpServerInitializer extends AbstractExecutionState
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
+    context.registerBean("databaseIdentity", DatabaseIdentity.class, () -> databaseIdentity);
+  }
+
+  // The errored catalog throws on every call, so it cannot provide identity values
+  private Catalog nonErroredCatalog() {
+    return isInErrorState ? null : getCatalog();
   }
 }

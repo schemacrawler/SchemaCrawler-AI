@@ -49,6 +49,33 @@ public class SchemaCrawlerContextTest {
   }
 
   @Test
+  @DisplayName("Should read trimmed database alias and description when set")
+  void shouldReadDatabaseAliasAndDescription() {
+    envAccessor.put("SCHCRWLR_DATABASE_ALIAS", "  crm-prod ");
+    envAccessor.put("SCHCRWLR_DATABASE_DESCRIPTION", " CRM system of record ");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    assertThat(context.databaseAlias(), is("crm-prod"));
+    assertThat(context.databaseDescription(), is("CRM system of record"));
+  }
+
+  @Test
+  @DisplayName("Should return empty database alias and description when unset or blank")
+  void shouldReturnEmptyDatabaseAliasAndDescriptionWhenUnsetOrBlank() {
+    // Unset
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.databaseAlias(), is(""));
+    assertThat(context.databaseDescription(), is(""));
+
+    // Whitespace
+    envAccessor.put("SCHCRWLR_DATABASE_ALIAS", "   \t ");
+    envAccessor.put("SCHCRWLR_DATABASE_DESCRIPTION", " \n ");
+    context = new SchemaCrawlerContext(envAccessor);
+    assertThat(context.databaseAlias(), is(""));
+    assertThat(context.databaseDescription(), is(""));
+  }
+
+  @Test
   @DisplayName("Should handle invalid JSON in SCHCRWLR_ADDITIONAL_CONFIG gracefully")
   void shouldHandleInvalidAdditionalConfigJson() {
     envAccessor.put("SCHCRWLR_ADDITIONAL_CONFIG", "this-is-not-json");

@@ -15,6 +15,8 @@ import org.springframework.context.support.GenericApplicationContext;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializerTest {
@@ -24,6 +26,63 @@ public class McpServerInitializerTest {
   @BeforeEach
   public void setupCatalog() {
     catalog = LightCatalogUtility.lightCatalog();
+  }
+
+  @Test
+  public void testDatabaseIdentityFromCatalogConstructor() {
+    final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
+    final McpServerInitializer initializer =
+        new McpServerInitializer(
+            catalog,
+            connectionSource,
+            McpServerTransportType.stdio,
+            Collections.emptyList(),
+            " crm-prod ",
+            "CRM system of record");
+
+    final DatabaseIdentity identity =
+        getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
+
+    assertThat(identity.alias(), is("crm-prod"));
+    assertThat(identity.description(), is("CRM system of record"));
+    // A mock connection source cannot connect, so the server is in an error state
+    assertThat(identity.fingerprint(), is(""));
+    assertThat(identity.databaseProductName(), is(""));
+  }
+
+  @Test
+  public void testDatabaseIdentityFromCatalogConstructorWithoutAlias() {
+    final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
+    final McpServerInitializer initializer =
+        new McpServerInitializer(
+            catalog, connectionSource, McpServerTransportType.stdio, Collections.emptyList());
+
+    final DatabaseIdentity identity =
+        getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
+
+    assertThat(identity.alias(), is(""));
+    assertThat(identity.description(), is(""));
+  }
+
+  @Test
+  public void testDatabaseIdentityFromEnvironmentConstructor() {
+    final SchemaCrawlerContext scContext = mock(SchemaCrawlerContext.class);
+    final McpServerContext serverContext = mock(McpServerContext.class);
+
+    when(scContext.loadCatalog()).thenReturn(catalog);
+    when(scContext.databaseAlias()).thenReturn("crm-prod");
+    when(scContext.databaseDescription()).thenReturn("CRM system of record");
+    when(serverContext.mcpTransport()).thenReturn(McpServerTransportType.stdio);
+    when(serverContext.excludeTools()).thenReturn(Collections.emptyList());
+
+    final McpServerInitializer initializer = new McpServerInitializer(scContext, serverContext);
+
+    final DatabaseIdentity identity =
+        getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
+
+    final DatabaseIdentity expected =
+        DatabaseIdentityUtility.from("crm-prod", "CRM system of record", catalog);
+    assertThat(identity, is(expected));
   }
 
   @Test
