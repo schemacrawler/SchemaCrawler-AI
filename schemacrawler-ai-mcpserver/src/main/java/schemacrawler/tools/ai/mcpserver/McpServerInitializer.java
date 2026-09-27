@@ -9,13 +9,20 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static java.util.Objects.requireNonNull;
+import static us.fatehi.utility.Utility.isBlank;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.UncheckedIOException;
+import java.nio.charset.StandardCharsets;
 import java.util.Collection;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
+import org.springframework.core.env.MapPropertySource;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
@@ -34,6 +41,20 @@ public class McpServerInitializer extends AbstractExecutionState
     implements ApplicationContextInitializer<GenericApplicationContext> {
 
   private static final Logger LOGGER = Logger.getLogger(McpServerInitializer.class.getName());
+
+  private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
+  private static final String TOOL_USAGE_GUIDE_RESOURCE = "tool-usage-guide.md";
+
+  static String toolUsageGuide() {
+    try (final InputStream in =
+        McpServerInitializer.class.getResourceAsStream(TOOL_USAGE_GUIDE_RESOURCE)) {
+      requireNonNull(in, "Tool usage guide not found");
+      // Normalize line endings, since the resource may be checked out with CRLF
+      return new String(in.readAllBytes(), StandardCharsets.UTF_8).replace("\r\n", "\n").strip();
+    } catch (final IOException e) {
+      throw new UncheckedIOException("Could not read tool usage guide", e);
+    }
+  }
 
   private final boolean isInErrorState;
   private final McpServerTransportType mcpTransport;
@@ -172,6 +193,23 @@ public class McpServerInitializer extends AbstractExecutionState
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
     context.registerBean("databaseIdentity", DatabaseIdentity.class, () -> databaseIdentity);
+
+    // Highest precedence, so that the generated instructions cannot be overridden
+    context
+        .getEnvironment()
+        .getPropertySources()
+        .addFirst(
+            new MapPropertySource(
+                "schemacrawlerInstructions", Map.of(INSTRUCTIONS_PROPERTY, instructions())));
+  }
+
+  private String instructions() {
+    final String description = databaseIdentity.description();
+    final String toolUsageGuide = toolUsageGuide();
+    if (isBlank(description)) {
+      return toolUsageGuide;
+    }
+    return description + "\n\n" + toolUsageGuide;
   }
 
   // The errored catalog throws on every call, so it cannot provide identity values
