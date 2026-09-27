@@ -32,6 +32,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseConnectionService;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
@@ -140,6 +141,11 @@ public class ToolHelperTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return InErrorFactory.createErroredConnectionSource();
+    }
+
+    @Bean
+    DatabaseIdentity databaseIdentity() {
+      return DatabaseIdentity.empty();
     }
 
     @Bean

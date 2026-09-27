@@ -38,6 +38,7 @@ import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.test.SchemaCrawlerMCPServerTest.MockConfig;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
@@ -77,6 +78,11 @@ public class SchemaCrawlerMCPServerTest {
     @Bean
     ExcludeTools excludeTools() {
       return new ExcludeTools();
+    }
+
+    @Bean
+    DatabaseIdentity databaseIdentity() {
+      return DatabaseIdentity.empty();
     }
 
     @Bean
