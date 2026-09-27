@@ -71,7 +71,7 @@ public class AllFunctionsTest {
   @MethodSource("functionDefinitionsProvider")
   public void testExecute(final FunctionDefinition<?> functionDefinition) throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel, null);
     final FunctionReturn actualReturn =
         switch (functionDefinition.getName()) {
           case "diagram", "table_path" -> new JsonFunctionReturn();
@@ -87,7 +87,7 @@ public class AllFunctionsTest {
   public void testInstantiateInvalidArguments(final FunctionDefinition<?> functionDefinition)
       throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel, null);
     switch (functionDefinition.getName()) {
       case "diagram", "table_path":
         break;

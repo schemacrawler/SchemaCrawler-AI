@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.tools.base;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElse;
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.regex.Pattern;
@@ -20,6 +21,7 @@ import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CatalogReducer;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.command.AbstractCommand;
@@ -29,6 +31,7 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     extends AbstractCommand<P> implements FunctionExecutor<P> {
 
   private ImportanceModel importanceModel;
+  private DatabaseIdentity databaseIdentity = DatabaseIdentity.empty();
 
   protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
@@ -40,11 +43,20 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
   }
 
   @Override
+  public final void setDatabaseIdentity(final DatabaseIdentity databaseIdentity) {
+    this.databaseIdentity = requireNonNullElse(databaseIdentity, DatabaseIdentity.empty());
+  }
+
+  @Override
   public final void setImportanceModel(final ImportanceModel importanceModel) {
     this.importanceModel = importanceModel;
   }
 
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
+
+  protected final DatabaseIdentity getDatabaseIdentity() {
+    return databaseIdentity;
+  }
 
   protected final ImportanceModel getImportanceModel() {
     return importanceModel;

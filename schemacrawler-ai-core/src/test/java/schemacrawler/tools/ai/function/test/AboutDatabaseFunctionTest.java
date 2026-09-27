@@ -8,6 +8,7 @@
 
 package schemacrawler.tools.ai.function.test;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
@@ -16,9 +17,11 @@ import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.SerializationFeature;
@@ -30,6 +33,34 @@ import us.fatehi.test.utility.extensions.TestContext;
 @ResolveTestContext
 @TestInstance(TestInstance.Lifecycle.PER_CLASS)
 public class AboutDatabaseFunctionTest extends AbstractFunctionTest {
+
+  @Test
+  public void serverInformationWithIdentity() throws Exception {
+    final AboutDatabaseFunctionDefinition functionDefinition =
+        new AboutDatabaseFunctionDefinition();
+    final DatabaseIdentity identity =
+        DatabaseIdentityUtility.from("crm-prod", "CRM system of record", catalog);
+
+    final FunctionExecutor<NoParameters> executor = functionDefinition.newExecutor();
+    executor.setCatalog(catalog);
+    executor.setERModel(erModel);
+    executor.setDatabaseIdentity(identity);
+    final JsonNode node = JsonUtility.mapper.readTree(executor.call().get());
+
+    assertThat(node.properties().iterator().next().getKey(), is("database"));
+    final JsonNode databaseNode = node.get("database");
+    assertThat(databaseNode.get("alias").asString(), is("crm-prod"));
+    assertThat(databaseNode.get("description").asString(), is("CRM system of record"));
+    assertThat(databaseNode.get("database-product-name").asString(), is("HSQL Database Engine"));
+    assertThat(databaseNode.get("fingerprint").asString(), is(identity.fingerprint()));
+    assertThat(
+        databaseNode.get("database-system-identifier").asString(),
+        is(identity.serverFingerprint().databaseSystemIdentifier()));
+    assertThat(databaseNode.has("host-classification"), is(true));
+    assertThat(databaseNode.has("confidence"), is(true));
+    assertThat(node.has("database-server"), is(true));
+    assertThat(node.has("server-info"), is(true));
+  }
 
   @Test
   public void serverInformation(final TestContext testContext) throws Exception {

@@ -14,5 +14,7 @@ import schemacrawler.tools.command.CallableCommand;
 public interface FunctionExecutor<P extends FunctionParameters>
     extends CallableCommand<P, FunctionReturn> {
 
+  void setDatabaseIdentity(final DatabaseIdentity databaseIdentity);
+
   void setImportanceModel(final ImportanceModel importanceModel);
 }

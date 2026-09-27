@@ -20,6 +20,7 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptionsBuilder;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.NoParameters;
 import schemacrawler.tools.ai.tools.base.AbstractJsonFunctionExecutor;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
@@ -53,6 +54,11 @@ public final class AboutDatabaseFunctionExecutor
 
     final ObjectNode databaseInfo = mapper.createObjectNode();
     final Catalog catalog = getCatalog();
+
+    final ObjectNode identityNode = DatabaseIdentityUtility.toDetailNode(getDatabaseIdentity());
+    if (!identityNode.isEmpty()) {
+      databaseInfo.set("database", identityNode);
+    }
 
     final ObjectNode databaseProductPropertyNode = databaseInfo.putObject("database-server");
     databaseProductPropertyNode.put(

@@ -148,7 +148,7 @@ public class CallToolHandlerTest {
     when(definition.newExecutor()).thenReturn(executor);
 
     final FunctionCallback<NoParameters> functionCallback =
-        new FunctionCallback<>(definition, null, null);
+        new FunctionCallback<>(definition, null, null, null, identity);
     final CallToolHandler handler = new CallToolHandler(functionCallback, identity);
 
     final CallToolResult result =

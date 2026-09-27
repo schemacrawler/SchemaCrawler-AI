@@ -39,7 +39,7 @@ public class ExecuteDescribeErRelationshipsFunctionTest extends AbstractFunction
     final DescribeErRelationshipsFunctionDefinition definition =
         new DescribeErRelationshipsFunctionDefinition();
     final FunctionCallback<DescribeErRelationshipsFunctionParameters> callback =
-        new FunctionCallback<>(definition, catalog, erModel);
+        new FunctionCallback<>(definition, catalog, erModel, null, null);
     final String arguments =
         """
         {

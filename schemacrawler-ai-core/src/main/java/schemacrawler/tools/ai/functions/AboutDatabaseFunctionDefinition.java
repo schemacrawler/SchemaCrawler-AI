@@ -21,7 +21,8 @@ public final class AboutDatabaseFunctionDefinition
     engine type and version, collation, encoding, parameters, capabilities, and
     platform details. Adapts output to the specific database (such as Oracle, SQL
     Server, PostgreSQL and so on) to support platform-aware SQL generation and
-    schema analysis.
+    schema analysis. Also reports the database identity, including the alias,
+    description, product name, and server fingerprint.
     """
         .stripIndent()
         .replace("\n", " ")
