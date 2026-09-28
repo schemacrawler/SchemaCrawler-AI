@@ -44,17 +44,17 @@ public final class DatabaseIdentityUtility {
   }
 
   /** Detailed identity, for the about database tool. */
-  public static ObjectNode toDetailNode(final DatabaseIdentity identity) {
-    requireNonNull(identity, "No database identity provided");
+  public static ObjectNode toDetailNode(final DatabaseIdentity databaseIdentity) {
+    requireNonNull(databaseIdentity, "No database identity provided");
 
     final ObjectNode node = mapper.createObjectNode();
-    putIfNotBlank(node, "alias", identity.alias());
-    putIfNotBlank(node, "description", identity.description());
-    final ProductVersion databaseProduct = identity.databaseProduct();
+    putIfNotBlank(node, "alias", databaseIdentity.alias());
+    putIfNotBlank(node, "description", databaseIdentity.description());
+    final ProductVersion databaseProduct = databaseIdentity.databaseProduct();
     if (databaseProduct != null && !isBlank(databaseProduct.getProductName())) {
       node.set("database_product", mapper.valueToTree(databaseProduct));
     }
-    final DatabaseServerFingerprint serverFingerprint = identity.serverFingerprint();
+    final DatabaseServerFingerprint serverFingerprint = databaseIdentity.serverFingerprint();
     if (serverFingerprint.confidence() == FingerprintConfidence.HIGH) {
       node.set("database_server_fingerprint", mapper.valueToTree(serverFingerprint));
     }
@@ -63,12 +63,12 @@ public final class DatabaseIdentityUtility {
   }
 
   /** Identity block that is added to every tool result. */
-  public static ObjectNode toResultNode(final DatabaseIdentity identity) {
-    requireNonNull(identity, "No database identity provided");
+  public static ObjectNode toResultNode(final DatabaseIdentity databaseIdentity) {
+    requireNonNull(databaseIdentity, "No database identity provided");
 
     final ObjectNode node = mapper.createObjectNode();
-    putIfNotBlank(node, "alias", identity.alias());
-    putIfNotBlank(node, "database_product", identity.databaseProduct().getName());
+    putIfNotBlank(node, "alias", databaseIdentity.alias());
+    putIfNotBlank(node, "database_product", databaseIdentity.databaseProduct().getName());
     return node;
   }
 
