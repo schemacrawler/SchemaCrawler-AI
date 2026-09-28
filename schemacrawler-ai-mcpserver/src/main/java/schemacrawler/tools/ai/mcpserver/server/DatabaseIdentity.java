@@ -60,8 +60,6 @@ public record DatabaseIdentity(
 
   /** True when there is nothing to report in tool results. */
   public boolean isEmpty() {
-    return isBlank(alias)
-        && isBlank(databaseProduct.getName())
-        && isBlank(serverFingerprint.databaseSystemIdentifier());
+    return isBlank(alias) && isBlank(databaseProduct.getName());
   }
 }

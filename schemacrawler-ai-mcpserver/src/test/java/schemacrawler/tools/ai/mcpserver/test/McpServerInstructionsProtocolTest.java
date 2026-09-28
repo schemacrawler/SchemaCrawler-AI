@@ -12,12 +12,14 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
 import io.modelcontextprotocol.client.transport.HttpClientStreamableHttpTransport;
+import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
+import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.InitializeResult;
+import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import java.time.Duration;
 import java.util.Collections;
 import org.junit.jupiter.api.Test;
@@ -27,7 +29,10 @@ import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.mcpserver.McpServerInitializer;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
-import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import schemacrawler.tools.ai.utility.JsonUtility;
+import tools.jackson.databind.JsonNode;
+import us.fatehi.test.utility.TestObjectUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSources;
 
 public class McpServerInstructionsProtocolTest {
 
@@ -36,9 +41,9 @@ public class McpServerInstructionsProtocolTest {
     final McpServerInitializer initializer =
         new McpServerInitializer(
             LightCatalogUtility.lightCatalog(),
-            mock(DatabaseConnectionSource.class),
+            DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection()),
             McpServerTransportType.http,
-            Collections.emptyList(),
+            Collections.singletonList("about_database"),
             "crm-prod",
             "CRM system of record");
 
@@ -67,6 +72,21 @@ public class McpServerInstructionsProtocolTest {
                 .filter(tool -> "about_database".equals(tool.name()))
                 .count(),
             is(1L));
+
+        final CallToolResult aboutDatabase =
+            client.callTool(
+                CallToolRequest.builder("about_database")
+                    .arguments(Collections.emptyMap())
+                    .build());
+        assertThat(aboutDatabase.isError(), is(false));
+        final JsonNode response =
+            JsonUtility.mapper.readTree(((TextContent) aboutDatabase.content().getFirst()).text());
+        final JsonNode databaseServer = response.get("database_server");
+        assertThat(databaseServer.get("alias").asString(), is("crm-prod"));
+        assertThat(databaseServer.get("description").asString(), is("CRM system of record"));
+        assertThat(response.has("database-server"), is(false));
+        assertThat(databaseServer.has("database_product"), is(true));
+        assertThat(response.has("server_info"), is(true));
       } finally {
         client.closeGracefully();
       }

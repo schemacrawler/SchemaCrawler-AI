@@ -50,7 +50,7 @@ public class DatabaseIdentityTest {
   public void notEmpty() {
     assertThat(new DatabaseIdentity("crm-prod", null, null, null).isEmpty(), is(false));
     assertThat(new DatabaseIdentity(null, null, null, null).isEmpty(), is(true));
-    assertThat(new DatabaseIdentity(null, null, null, SERVER_FINGERPRINT).isEmpty(), is(false));
+    assertThat(new DatabaseIdentity(null, null, null, SERVER_FINGERPRINT).isEmpty(), is(true));
   }
 
   @Test

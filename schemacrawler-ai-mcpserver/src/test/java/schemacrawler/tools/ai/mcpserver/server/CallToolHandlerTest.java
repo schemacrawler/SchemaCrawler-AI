@@ -72,8 +72,8 @@ public class CallToolHandlerTest {
     final CallToolResult result = callTool(executor, IDENTITY);
 
     assertThat(result.isError(), is(true));
-    assertThat(outputNode(result).has("database"), is(false));
-    assertIdentityBlock(metadataNode(result).get("database-server"));
+    assertThat(outputNode(result).has("database_server"), is(false));
+    assertIdentityBlock(metadataNode(result).get("database_server"));
   }
 
   @Test
@@ -84,7 +84,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(functionReturn), DatabaseIdentity.empty());
 
     assertThat(outputText(result), is(functionReturn.get()));
-    assertThat(metadataNode(result).has("database-server"), is(false));
+    assertThat(metadataNode(result).has("database_server"), is(false));
   }
 
   @Test
@@ -94,11 +94,11 @@ public class CallToolHandlerTest {
     final CallToolResult result = callTool(executorReturning(functionReturn), IDENTITY);
 
     final JsonNode outputNode = outputNode(result);
-    assertThat(outputNode.properties().iterator().next().getKey(), is("database-server"));
-    assertIdentityBlock(outputNode.get("database-server"));
+    assertThat(outputNode.properties().iterator().next().getKey(), is("database_server"));
+    assertIdentityBlock(outputNode.get("database_server"));
     assertThat(outputNode.get("list"), is(functionReturn.getResult().get("list")));
     assertThat(outputNode.size(), is(2));
-    assertThat(metadataNode(result).has("database-server"), is(false));
+    assertThat(metadataNode(result).has("database_server"), is(false));
   }
 
   @Test
@@ -107,7 +107,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new NoResultsFunctionReturn()), IDENTITY);
 
     assertThat(outputText(result), is(new NoResultsFunctionReturn().get()));
-    assertIdentityBlock(metadataNode(result).get("database-server"));
+    assertIdentityBlock(metadataNode(result).get("database_server"));
   }
 
   @Test
@@ -116,7 +116,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new TextFunctionReturn("ok")), DatabaseIdentity.empty());
 
     assertThat(outputText(result), is("ok"));
-    assertThat(metadataNode(result).has("database-server"), is(false));
+    assertThat(metadataNode(result).has("database_server"), is(false));
     assertThat(metadataNode(result).get("mime-type").asString(), is("text/plain"));
   }
 
@@ -126,17 +126,33 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new TextFunctionReturn("ok")), IDENTITY);
 
     assertThat(outputText(result), is("ok"));
-    assertIdentityBlock(metadataNode(result).get("database-server"));
+    assertIdentityBlock(metadataNode(result).get("database_server"));
     assertThat(metadataNode(result).get("mime-type").asString(), is("text/plain"));
   }
 
   private void assertIdentityBlock(final JsonNode databaseNode) {
     assertThat(databaseNode.get("alias").asString(), is("crm-prod"));
-    assertThat(databaseNode.get("database-product").asString(), is("PostgreSQL"));
+    assertThat(databaseNode.get("database_product").asString(), is("PostgreSQL"));
     assertThat(databaseNode.has("description"), is(false));
     assertThat(databaseNode.has("fingerprint"), is(false));
     assertThat(databaseNode.has("confidence"), is(false));
-    assertThat(databaseNode.has("host-classification"), is(false));
+    assertThat(databaseNode.has("host_classification"), is(false));
+  }
+
+  @Test
+  public void fingerprintOnlyIdentityDoesNotAddEmptyHeader() throws Exception {
+    final DatabaseIdentity fingerprintOnly =
+        new DatabaseIdentity(
+            null,
+            null,
+            null,
+            new DatabaseServerFingerprint(
+                "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.MEDIUM));
+    final JsonFunctionReturn functionReturn = new JsonFunctionReturn("list", listNode());
+
+    final CallToolResult result = callTool(executorReturning(functionReturn), fingerprintOnly);
+
+    assertThat(outputText(result), is(functionReturn.get()));
   }
 
   private CallToolResult callTool(

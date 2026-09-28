@@ -107,13 +107,13 @@ public class ToolProvider {
     final DatabaseInfo databaseInfo = catalog.getDatabaseInfo();
 
     final ObjectNode databaseServer = DatabaseIdentityUtility.toDetailNode(databaseIdentity);
-    databaseServer.remove("database-product");
-    final ObjectNode databaseProduct = databaseServer.putObject("database-product");
-    databaseProduct.put("database-product-name", databaseInfo.getDatabaseProductName());
-    databaseProduct.put("database-product-version", databaseInfo.getDatabaseProductVersion());
-    aboutDatabase.set("database-server", databaseServer);
+    databaseServer.remove("database_product");
+    final ObjectNode databaseProduct = databaseServer.putObject("database_product");
+    databaseProduct.put("database_product_name", databaseInfo.getDatabaseProductName());
+    databaseProduct.put("database_product_version", databaseInfo.getDatabaseProductVersion());
+    aboutDatabase.set("database_server", databaseServer);
 
-    final ArrayNode serverInfoArray = aboutDatabase.putArray("server-info");
+    final ArrayNode serverInfoArray = aboutDatabase.putArray("server_info");
     final Collection<Property> serverInfo = databaseInfo.getServerInfo();
     for (final Property serverProperty : serverInfo) {
       if (serverProperty == null || serverProperty.getValue() == null) {

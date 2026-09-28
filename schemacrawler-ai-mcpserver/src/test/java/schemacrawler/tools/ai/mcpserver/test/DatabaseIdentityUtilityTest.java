@@ -22,6 +22,7 @@ import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
 import us.fatehi.utility.jdbc.serverfingerprint.HostClassification;
+import us.fatehi.utility.property.BaseProductVersion;
 
 public class DatabaseIdentityUtilityTest {
 
@@ -30,7 +31,7 @@ public class DatabaseIdentityUtilityTest {
           "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.MEDIUM);
 
   @Test
-  public void detailNodeAllSet() {
+  public void detailNodeMediumConfidenceOmitsFingerprint() {
     final DatabaseIdentity identity =
         new DatabaseIdentity("crm-prod", "CRM system of record", null, SERVER_FINGERPRINT);
 
@@ -42,6 +43,25 @@ public class DatabaseIdentityUtilityTest {
             \"description\":\"CRM system of record\"}
             """
                 .strip()));
+  }
+
+  @Test
+  public void detailNodeHighConfidenceEmbedsSnakeCaseFingerprint() {
+    final DatabaseIdentity identity =
+        new DatabaseIdentity(
+            "crm-prod",
+            "CRM system of record",
+            null,
+            new DatabaseServerFingerprint(
+                "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.HIGH));
+
+    final ObjectNode detailNode = DatabaseIdentityUtility.toDetailNode(identity);
+    final ObjectNode fingerprint = (ObjectNode) detailNode.get("database_server_fingerprint");
+
+    assertThat(fingerprint.get("fingerprint").asString(), is("a1b2c3"));
+    assertThat(fingerprint.get("database_system_identifier").asString(), is("postgresql"));
+    assertThat(fingerprint.get("host_classification").asString(), is("internal"));
+    assertThat(fingerprint.get("confidence").asString(), is("high"));
   }
 
   @Test
@@ -58,8 +78,8 @@ public class DatabaseIdentityUtilityTest {
     final ObjectNode detailNode = DatabaseIdentityUtility.toDetailNode(identity);
 
     assertThat(detailNode.has("alias"), is(false));
-    assertThat(detailNode.has("database-product"), is(false));
-    assertThat(detailNode.has("database-server-fingerprint"), is(false));
+    assertThat(detailNode.has("database_product"), is(false));
+    assertThat(detailNode.has("database_server_fingerprint"), is(false));
     assertThat(detailNode.get("description").asString(), is("CRM"));
   }
 
@@ -120,7 +140,7 @@ public class DatabaseIdentityUtilityTest {
     final ObjectNode resultNode = DatabaseIdentityUtility.toResultNode(identity);
 
     assertThat(resultNode.has("confidence"), is(false));
-    assertThat(resultNode.has("host-classification"), is(false));
+    assertThat(resultNode.has("host_classification"), is(false));
   }
 
   @Test
@@ -133,8 +153,19 @@ public class DatabaseIdentityUtilityTest {
 
   @Test
   public void resultNodeProductNameOnly() {
-    final DatabaseIdentity identity = new DatabaseIdentity(null, null, null, null);
+    final DatabaseIdentity identity =
+        new DatabaseIdentity(null, null, new BaseProductVersion("PostgreSQL", "15"), null);
 
-    assertThat(DatabaseIdentityUtility.toResultNode(identity).toString(), is("{}"));
+    assertThat(
+        DatabaseIdentityUtility.toResultNode(identity).toString(),
+        is("{\"database_product\":\"PostgreSQL\"}"));
+  }
+
+  @Test
+  public void fingerprintOnlyIdentityIsEmptyForCompactResults() {
+    final DatabaseIdentity identity = new DatabaseIdentity(null, null, null, SERVER_FINGERPRINT);
+
+    assertThat(identity.isEmpty(), is(true));
+    assertThat(DatabaseIdentityUtility.toResultNode(identity).isEmpty(), is(true));
   }
 }

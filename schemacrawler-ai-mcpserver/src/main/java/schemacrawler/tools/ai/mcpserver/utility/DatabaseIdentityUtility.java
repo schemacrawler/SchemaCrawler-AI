@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
+import java.util.Locale;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schema.DatabaseInfo;
@@ -51,7 +52,16 @@ public final class DatabaseIdentityUtility {
     putIfNotBlank(node, "description", identity.description());
     final DatabaseServerFingerprint serverFingerprint = identity.serverFingerprint();
     if (serverFingerprint.confidence() == FingerprintConfidence.HIGH) {
-      node.putPOJO("database-server-fingerprint", serverFingerprint);
+      final ObjectNode fingerprint = node.putObject("database_server_fingerprint");
+      putIfNotBlank(fingerprint, "fingerprint", serverFingerprint.fingerprint());
+      putIfNotBlank(
+          fingerprint, "database_system_identifier", serverFingerprint.databaseSystemIdentifier());
+      if (serverFingerprint.hostClassification() != null) {
+        fingerprint.put(
+            "host_classification",
+            serverFingerprint.hostClassification().name().toLowerCase(Locale.ROOT));
+      }
+      fingerprint.put("confidence", serverFingerprint.confidence().name().toLowerCase(Locale.ROOT));
     }
 
     return node;
@@ -63,7 +73,7 @@ public final class DatabaseIdentityUtility {
 
     final ObjectNode node = mapper.createObjectNode();
     putIfNotBlank(node, "alias", identity.alias());
-    putIfNotBlank(node, "database-product", identity.databaseProduct().getName());
+    putIfNotBlank(node, "database_product", identity.databaseProduct().getName());
     return node;
   }
 
