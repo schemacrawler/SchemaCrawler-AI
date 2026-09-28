@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
-import java.util.Locale;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schema.DatabaseInfo;
@@ -48,20 +47,16 @@ public final class DatabaseIdentityUtility {
   public static ObjectNode toDetailNode(final DatabaseIdentity identity) {
     requireNonNull(identity, "No database identity provided");
 
-    final ObjectNode node = toResultNode(identity);
+    final ObjectNode node = mapper.createObjectNode();
+    putIfNotBlank(node, "alias", identity.alias());
     putIfNotBlank(node, "description", identity.description());
+    final ProductVersion databaseProduct = identity.databaseProduct();
+    if (databaseProduct != null && !isBlank(databaseProduct.getProductName())) {
+      node.set("database_product", mapper.valueToTree(databaseProduct));
+    }
     final DatabaseServerFingerprint serverFingerprint = identity.serverFingerprint();
     if (serverFingerprint.confidence() == FingerprintConfidence.HIGH) {
-      final ObjectNode fingerprint = node.putObject("database_server_fingerprint");
-      putIfNotBlank(fingerprint, "fingerprint", serverFingerprint.fingerprint());
-      putIfNotBlank(
-          fingerprint, "database_system_identifier", serverFingerprint.databaseSystemIdentifier());
-      if (serverFingerprint.hostClassification() != null) {
-        fingerprint.put(
-            "host_classification",
-            serverFingerprint.hostClassification().name().toLowerCase(Locale.ROOT));
-      }
-      fingerprint.put("confidence", serverFingerprint.confidence().name().toLowerCase(Locale.ROOT));
+      node.set("database_server_fingerprint", mapper.valueToTree(serverFingerprint));
     }
 
     return node;

@@ -18,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
@@ -55,13 +56,14 @@ public class DatabaseIdentityUtilityTest {
             new DatabaseServerFingerprint(
                 "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.HIGH));
 
-    final ObjectNode detailNode = DatabaseIdentityUtility.toDetailNode(identity);
-    final ObjectNode fingerprint = (ObjectNode) detailNode.get("database_server_fingerprint");
+    final JsonNode detailNode = DatabaseIdentityUtility.toDetailNode(identity);
+    final JsonNode fingerprint = detailNode.get("database_server_fingerprint");
 
     assertThat(fingerprint.get("fingerprint").asString(), is("a1b2c3"));
     assertThat(fingerprint.get("database_system_identifier").asString(), is("postgresql"));
-    assertThat(fingerprint.get("host_classification").asString(), is("internal"));
-    assertThat(fingerprint.get("confidence").asString(), is("high"));
+    assertThat(
+        fingerprint.get("host_classification").asString(), is(HostClassification.INTERNAL.name()));
+    assertThat(fingerprint.get("confidence").asString(), is(FingerprintConfidence.HIGH.name()));
   }
 
   @Test
