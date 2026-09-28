@@ -6,14 +6,14 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.tools.test;
+package schemacrawler.tools.command.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.notNullValue;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import org.junit.jupiter.api.Test;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
 import us.fatehi.utility.jdbc.serverfingerprint.HostClassification;

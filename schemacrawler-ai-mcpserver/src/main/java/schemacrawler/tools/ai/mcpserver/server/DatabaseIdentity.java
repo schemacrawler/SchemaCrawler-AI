@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.tools;
+package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNullElseGet;
 import static us.fatehi.utility.Utility.isBlank;

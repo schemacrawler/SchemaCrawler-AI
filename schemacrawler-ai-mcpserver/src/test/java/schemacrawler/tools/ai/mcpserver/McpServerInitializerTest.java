@@ -22,8 +22,8 @@ import org.springframework.core.env.MapPropertySource;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
-import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializerTest {

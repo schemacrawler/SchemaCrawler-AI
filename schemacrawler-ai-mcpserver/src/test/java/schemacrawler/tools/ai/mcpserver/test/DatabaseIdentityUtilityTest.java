@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.utility.test;
+package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
@@ -16,8 +16,8 @@ import static org.mockito.Mockito.when;
 
 import org.junit.jupiter.api.Test;
 import schemacrawler.schema.Catalog;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
-import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;

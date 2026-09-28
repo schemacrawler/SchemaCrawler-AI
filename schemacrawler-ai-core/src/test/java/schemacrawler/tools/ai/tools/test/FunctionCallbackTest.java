@@ -24,7 +24,6 @@ import org.junit.jupiter.api.Test;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
@@ -85,7 +84,6 @@ public class FunctionCallbackTest {
     when(executor.usesConnection()).thenReturn(true);
     when(executor.call()).thenReturn(expectedReturn);
 
-    final DatabaseIdentity identity = new DatabaseIdentity("crm-prod", null, null, null);
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel, null);
     final FunctionReturn actualReturn =

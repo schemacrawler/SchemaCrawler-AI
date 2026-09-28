@@ -6,7 +6,7 @@
  * SPDX-License-Identifier: BUSL-1.1
  */
 
-package schemacrawler.tools.ai.utility;
+package schemacrawler.tools.ai.mcpserver.utility;
 
 import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
@@ -15,7 +15,7 @@ import static us.fatehi.utility.Utility.isBlank;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schema.DatabaseInfo;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;

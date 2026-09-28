@@ -23,7 +23,6 @@ import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
-import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionParameters;
