@@ -28,14 +28,11 @@ public class DatabaseIdentityCatalogTest extends AbstractFunctionTest {
     final DatabaseIdentity identity = DatabaseIdentityUtility.from("test-db", null, catalog);
 
     assertThat(identity.serverFingerprint(), is(expected));
-    assertThat(identity.fingerprint(), is(not("")));
-    assertThat(identity.databaseProductName(), is("HSQL Database Engine"));
+    assertThat(identity.serverFingerprint().fingerprint(), is(not("")));
+    assertThat(identity.databaseProduct().getName(), is("HSQL Database Engine"));
 
     final ObjectNode resultNode = DatabaseIdentityUtility.toResultNode(identity);
-    assertThat(resultNode.get("fingerprint").asString(), is(expected.fingerprint()));
-    assertThat(resultNode.get("database-product-name").asString(), is("HSQL Database Engine"));
-    assertThat(
-        DatabaseIdentityUtility.toDetailNode(identity).get("database-system-identifier").asString(),
-        is(expected.databaseSystemIdentifier()));
+    assertThat(resultNode.get("alias").asString(), is("test-db"));
+    assertThat(resultNode.get("database-product").asString(), is("HSQL Database Engine"));
   }
 }

@@ -26,13 +26,13 @@ public class DatabaseIdentityTest {
 
   @Test
   public void blankValuesAreEmpty() {
-    final DatabaseIdentity identity = new DatabaseIdentity("  ", "\t", " ", null);
+    final DatabaseIdentity identity = new DatabaseIdentity("  ", "\t", null, null);
 
     assertThat(identity.alias(), is(""));
     assertThat(identity.description(), is(""));
-    assertThat(identity.databaseProductName(), is(""));
+    assertThat(identity.databaseProduct().getName(), is(""));
     assertThat(identity.serverFingerprint(), is(notNullValue()));
-    assertThat(identity.fingerprint(), is(""));
+    assertThat(identity.serverFingerprint().fingerprint(), is(""));
     assertThat(identity.isEmpty(), is(true));
   }
 
@@ -49,18 +49,18 @@ public class DatabaseIdentityTest {
   @Test
   public void notEmpty() {
     assertThat(new DatabaseIdentity("crm-prod", null, null, null).isEmpty(), is(false));
-    assertThat(new DatabaseIdentity(null, null, "PostgreSQL", null).isEmpty(), is(false));
+    assertThat(new DatabaseIdentity(null, null, null, null).isEmpty(), is(true));
     assertThat(new DatabaseIdentity(null, null, null, SERVER_FINGERPRINT).isEmpty(), is(false));
   }
 
   @Test
   public void trimmedValues() {
     final DatabaseIdentity identity =
-        new DatabaseIdentity(" crm-prod ", " CRM ", " PostgreSQL ", SERVER_FINGERPRINT);
+        new DatabaseIdentity(" crm-prod ", " CRM ", null, SERVER_FINGERPRINT);
 
     assertThat(identity.alias(), is("crm-prod"));
     assertThat(identity.description(), is("CRM"));
-    assertThat(identity.databaseProductName(), is("PostgreSQL"));
-    assertThat(identity.fingerprint(), is("a1b2c3"));
+    assertThat(identity.databaseProduct().getName(), is(""));
+    assertThat(identity.serverFingerprint().fingerprint(), is("a1b2c3"));
   }
 }

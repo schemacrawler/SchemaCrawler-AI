@@ -12,7 +12,6 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
-import java.util.Locale;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schema.DatabaseInfo;
@@ -20,45 +19,41 @@ import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
+import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
+import us.fatehi.utility.property.BaseProductVersion;
+import us.fatehi.utility.property.ProductVersion;
 
 @UtilityMarker
 public final class DatabaseIdentityUtility {
 
   public static DatabaseIdentity from(
       final String alias, final String description, final Catalog catalog) {
-    String databaseProductName = null;
+    ProductVersion databaseProduct = null;
     DatabaseServerFingerprint serverFingerprint = null;
     if (catalog != null) {
       final DatabaseInfo databaseInfo = catalog.getDatabaseInfo();
       if (databaseInfo != null) {
-        databaseProductName = databaseInfo.getDatabaseProductName();
+        databaseProduct = new BaseProductVersion(databaseInfo);
       }
       final CrawlInfo crawlInfo = catalog.getCrawlInfo();
       if (crawlInfo != null) {
         serverFingerprint = crawlInfo.getDatabaseServerFingerprint();
       }
     }
-    return new DatabaseIdentity(alias, description, databaseProductName, serverFingerprint);
+    return new DatabaseIdentity(alias, description, databaseProduct, serverFingerprint);
   }
 
   /** Detailed identity, for the about database tool. */
   public static ObjectNode toDetailNode(final DatabaseIdentity identity) {
     requireNonNull(identity, "No database identity provided");
-    final DatabaseServerFingerprint serverFingerprint = identity.serverFingerprint();
 
-    final ObjectNode node = mapper.createObjectNode();
-    putIfNotBlank(node, "alias", identity.alias());
+    final ObjectNode node = toResultNode(identity);
     putIfNotBlank(node, "description", identity.description());
-    putIfNotBlank(node, "database-product-name", identity.databaseProductName());
-    putIfNotBlank(node, "fingerprint", identity.fingerprint());
-    putIfNotBlank(node, "database-system-identifier", serverFingerprint.databaseSystemIdentifier());
-    // Host classification and confidence only qualify a fingerprint
-    if (!isBlank(identity.fingerprint())) {
-      if (serverFingerprint.hostClassification() != null) {
-        node.put("host-classification", lowerCase(serverFingerprint.hostClassification()));
-      }
-      node.put("confidence", lowerCase(serverFingerprint.confidence()));
+    final DatabaseServerFingerprint serverFingerprint = identity.serverFingerprint();
+    if (serverFingerprint.confidence() == FingerprintConfidence.HIGH) {
+      node.putPOJO("database-server-fingerprint", serverFingerprint);
     }
+
     return node;
   }
 
@@ -68,13 +63,8 @@ public final class DatabaseIdentityUtility {
 
     final ObjectNode node = mapper.createObjectNode();
     putIfNotBlank(node, "alias", identity.alias());
-    putIfNotBlank(node, "database-product-name", identity.databaseProductName());
-    putIfNotBlank(node, "fingerprint", identity.fingerprint());
+    putIfNotBlank(node, "database-product", identity.databaseProduct().getName());
     return node;
-  }
-
-  private static String lowerCase(final Enum<?> value) {
-    return value.name().toLowerCase(Locale.ROOT);
   }
 
   private static void putIfNotBlank(final ObjectNode node, final String key, final String value) {

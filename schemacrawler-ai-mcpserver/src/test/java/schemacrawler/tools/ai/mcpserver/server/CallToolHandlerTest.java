@@ -41,6 +41,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
 import us.fatehi.utility.jdbc.serverfingerprint.HostClassification;
+import us.fatehi.utility.property.BaseProductVersion;
 import us.fatehi.utility.property.PropertyName;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -60,7 +61,7 @@ public class CallToolHandlerTest {
       new DatabaseIdentity(
           "crm-prod",
           "CRM system of record",
-          "PostgreSQL",
+          new BaseProductVersion("PostgreSQL", ""),
           new DatabaseServerFingerprint(
               "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.MEDIUM));
 
@@ -73,7 +74,7 @@ public class CallToolHandlerTest {
 
     assertThat(result.isError(), is(true));
     assertThat(outputNode(result).has("database"), is(false));
-    assertIdentityBlock(metadataNode(result).get("database"));
+    assertIdentityBlock(metadataNode(result).get("database-server"));
   }
 
   @Test
@@ -84,7 +85,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(functionReturn), DatabaseIdentity.empty());
 
     assertThat(outputText(result), is(functionReturn.get()));
-    assertThat(metadataNode(result).has("database"), is(false));
+    assertThat(metadataNode(result).has("database-server"), is(false));
   }
 
   @Test
@@ -94,11 +95,11 @@ public class CallToolHandlerTest {
     final CallToolResult result = callTool(executorReturning(functionReturn), IDENTITY);
 
     final JsonNode outputNode = outputNode(result);
-    assertThat(outputNode.properties().iterator().next().getKey(), is("database"));
-    assertIdentityBlock(outputNode.get("database"));
+    assertThat(outputNode.properties().iterator().next().getKey(), is("database-server"));
+    assertIdentityBlock(outputNode.get("database-server"));
     assertThat(outputNode.get("list"), is(functionReturn.getResult().get("list")));
     assertThat(outputNode.size(), is(2));
-    assertThat(metadataNode(result).has("database"), is(false));
+    assertThat(metadataNode(result).has("database-server"), is(false));
   }
 
   @Test
@@ -107,7 +108,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new NoResultsFunctionReturn()), IDENTITY);
 
     assertThat(outputText(result), is(new NoResultsFunctionReturn().get()));
-    assertIdentityBlock(metadataNode(result).get("database"));
+    assertIdentityBlock(metadataNode(result).get("database-server"));
   }
 
   @Test
@@ -116,7 +117,7 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new TextFunctionReturn("ok")), DatabaseIdentity.empty());
 
     assertThat(outputText(result), is("ok"));
-    assertThat(metadataNode(result).has("database"), is(false));
+    assertThat(metadataNode(result).has("database-server"), is(false));
     assertThat(metadataNode(result).get("mime-type").asString(), is("text/plain"));
   }
 
@@ -126,15 +127,15 @@ public class CallToolHandlerTest {
         callTool(executorReturning(new TextFunctionReturn("ok")), IDENTITY);
 
     assertThat(outputText(result), is("ok"));
-    assertIdentityBlock(metadataNode(result).get("database"));
+    assertIdentityBlock(metadataNode(result).get("database-server"));
     assertThat(metadataNode(result).get("mime-type").asString(), is("text/plain"));
   }
 
   private void assertIdentityBlock(final JsonNode databaseNode) {
     assertThat(databaseNode.get("alias").asString(), is("crm-prod"));
-    assertThat(databaseNode.get("database-product-name").asString(), is("PostgreSQL"));
-    assertThat(databaseNode.get("fingerprint").asString(), is("a1b2c3"));
+    assertThat(databaseNode.get("database-product").asString(), is("PostgreSQL"));
     assertThat(databaseNode.has("description"), is(false));
+    assertThat(databaseNode.has("fingerprint"), is(false));
     assertThat(databaseNode.has("confidence"), is(false));
     assertThat(databaseNode.has("host-classification"), is(false));
   }
@@ -148,7 +149,7 @@ public class CallToolHandlerTest {
     when(definition.newExecutor()).thenReturn(executor);
 
     final FunctionCallback<NoParameters> functionCallback =
-        new FunctionCallback<>(definition, null, null, null, identity);
+        new FunctionCallback<>(definition, null, null, null);
     final CallToolHandler handler = new CallToolHandler(functionCallback, identity);
 
     final CallToolResult result =

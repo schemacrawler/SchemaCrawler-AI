@@ -9,7 +9,6 @@
 package schemacrawler.tools.ai.tools;
 
 import static java.util.Objects.requireNonNull;
-import static java.util.Objects.requireNonNullElse;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
@@ -39,7 +38,6 @@ public final class FunctionCallback<P extends FunctionParameters> {
   private final Catalog catalog;
   private final ERModel erModel;
   private final ImportanceModel importanceModel;
-  private final DatabaseIdentity databaseIdentity;
 
   /**
    * Function callbacks are created and registered ahead of time, with the required context that is
@@ -49,19 +47,16 @@ public final class FunctionCallback<P extends FunctionParameters> {
    * @param catalog Database catalog.
    * @param erModel Entity-relationship model.
    * @param importanceModel Table importance model, may be null.
-   * @param databaseIdentity Identity of the database, may be null.
    */
   public FunctionCallback(
       final FunctionDefinition<P> functionDefinition,
       final Catalog catalog,
       final ERModel erModel,
-      final ImportanceModel importanceModel,
-      final DatabaseIdentity databaseIdentity) {
+      final ImportanceModel importanceModel) {
     this.functionDefinition = requireNonNull(functionDefinition, "No function definition provided");
     this.catalog = catalog;
     this.erModel = erModel;
     this.importanceModel = importanceModel;
-    this.databaseIdentity = requireNonNullElse(databaseIdentity, DatabaseIdentity.empty());
   }
 
   /**
@@ -152,7 +147,6 @@ public final class FunctionCallback<P extends FunctionParameters> {
     functionExecutor.setCatalog(catalog);
     functionExecutor.setERModel(erModel);
     functionExecutor.setImportanceModel(importanceModel);
-    functionExecutor.setDatabaseIdentity(databaseIdentity);
     if (functionExecutor.usesConnection()) {
       functionExecutor.setConnectionSource(connectionSource);
     }

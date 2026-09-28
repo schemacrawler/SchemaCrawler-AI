@@ -29,7 +29,6 @@ module us.fatehi.schemacrawler.ai_core {
       schemacrawler.tools.ai.functions.ListFunctionDefinition,
       schemacrawler.tools.ai.functions.ListMembersOfTablesFunctionDefinition,
       schemacrawler.tools.ai.functions.DiagramFunctionDefinition,
-      schemacrawler.tools.ai.functions.AboutDatabaseFunctionDefinition,
       schemacrawler.tools.ai.functions.TableSampleFunctionDefinition,
       schemacrawler.tools.ai.functions.TableImportanceFunctionDefinition,
       schemacrawler.tools.ai.functions.DetectClustersFunctionDefinition,

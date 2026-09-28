@@ -62,6 +62,11 @@ public class McpServerInstructionsProtocolTest {
         assertThat(result.instructions(), startsWith("CRM system of record\n\n"));
         assertThat(result.instructions(), containsString("Start here"));
         assertThat(result.instructions(), containsString("`list_members_of_tables`"));
+        assertThat(
+            client.listTools().tools().stream()
+                .filter(tool -> "about_database".equals(tool.name()))
+                .count(),
+            is(1L));
       } finally {
         client.closeGracefully();
       }

@@ -61,15 +61,14 @@ public class FunctionCallbackTest {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, catalog, erModel, null, null);
+        new FunctionCallback<>(definition, catalog, erModel, null);
     assertThat(callback, is(notNullValue()));
   }
 
   @Test
   public void testConstructorWithNullDefinition() {
     assertThrows(
-        NullPointerException.class,
-        () -> new FunctionCallback<>(null, catalog, erModel, null, null));
+        NullPointerException.class, () -> new FunctionCallback<>(null, catalog, erModel, null));
   }
 
   @Test
@@ -88,7 +87,7 @@ public class FunctionCallbackTest {
 
     final DatabaseIdentity identity = new DatabaseIdentity("crm-prod", null, null, null);
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, catalog, erModel, null, identity);
+        new FunctionCallback<>(definition, catalog, erModel, null);
     final FunctionReturn actualReturn =
         callback.execute("{\"param1\": \"value1\"}", connectionSource);
 
@@ -97,7 +96,6 @@ public class FunctionCallbackTest {
     verify(executor).initialize();
     verify(executor).setCatalog(catalog);
     verify(executor).setERModel(erModel);
-    verify(executor).setDatabaseIdentity(identity);
     verify(executor).setConnectionSource(connectionSource);
   }
 
@@ -114,7 +112,7 @@ public class FunctionCallbackTest {
     when(executor.call()).thenThrow(new Exception("checked exception"));
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
 
     final Exception exception =
         assertThrows(
@@ -138,13 +136,12 @@ public class FunctionCallbackTest {
     when(executor.call()).thenReturn(expectedReturn);
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
     final FunctionReturn actualReturn = callback.execute("{}", connectionSource);
 
     assertThat(actualReturn, is(expectedReturn));
     verify(executor).configure(any(TestParameters.class));
     verify(executor).initialize();
-    verify(executor).setDatabaseIdentity(DatabaseIdentity.empty());
     verify(executor, org.mockito.Mockito.never()).setConnectionSource(any());
   }
 
@@ -160,7 +157,7 @@ public class FunctionCallbackTest {
     doThrow(new RuntimeException("test error")).when(executor).initialize();
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
 
     final RuntimeException exception =
         assertThrows(RuntimeException.class, () -> callback.execute("{}", connectionSource));
@@ -171,7 +168,7 @@ public class FunctionCallbackTest {
   public void testExecuteWithNullConnection() {
     final FunctionDefinition<TestParameters> definition = mock(FunctionDefinition.class);
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
 
     assertThrows(NullPointerException.class, () -> callback.execute("{}", null));
   }
@@ -183,7 +180,7 @@ public class FunctionCallbackTest {
     when(definition.getFunctionName()).thenReturn(propertyName);
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
     assertThat(callback.getFunctionName(), is(propertyName));
   }
 
@@ -199,7 +196,7 @@ public class FunctionCallbackTest {
     when(executor.call()).thenReturn(new TextFunctionReturn("ok"));
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
 
     // This should trigger the catch block in instantiateArguments and use default
     // constructor
@@ -214,7 +211,7 @@ public class FunctionCallbackTest {
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
 
     // Valid JSON
     final JsonNode node = callback.toCallObject("{\"param1\": \"value1\"}");
@@ -236,7 +233,7 @@ public class FunctionCallbackTest {
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
 
     final FunctionCallback<TestParameters> callback =
-        new FunctionCallback<>(definition, null, null, null, null);
+        new FunctionCallback<>(definition, null, null, null);
     final String toString = callback.toString();
     assertThat(toString, containsString("\"name\" : \"test-function\""));
   }

@@ -79,11 +79,6 @@ public class ToolHelperTest {
       public void initialize() {}
 
       @Override
-      public void setDatabaseIdentity(final DatabaseIdentity databaseIdentity) {
-        // No-op
-      }
-
-      @Override
       public boolean usesConnection() {
         return false;
       }

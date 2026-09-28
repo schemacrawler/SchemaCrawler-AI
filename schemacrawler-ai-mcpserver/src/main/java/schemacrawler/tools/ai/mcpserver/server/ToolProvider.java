@@ -13,6 +13,7 @@ import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RE
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,13 +22,21 @@ import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Service;
+import schemacrawler.loader.catalog.summary.CatalogStats.SchemaStats;
+import schemacrawler.loader.catalog.summary.CatalogStatsUtility;
+import schemacrawler.schema.Catalog;
+import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
+import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
+import us.fatehi.utility.property.Property;
 import us.fatehi.utility.string.StringFormat;
 
 /**
@@ -40,6 +49,8 @@ public class ToolProvider {
   private static final Logger LOGGER = Logger.getLogger(ToolProvider.class.getCanonicalName());
 
   @Autowired private ServerHealth serverHealth;
+  @Autowired private Catalog catalog;
+  @Autowired private DatabaseIdentity databaseIdentity;
   @Autowired private FunctionDefinitionRegistry functionDefinitionRegistry;
   @Autowired private ToolHelper toolHelper;
   @Autowired private ExcludeTools excludeTools;
@@ -75,6 +86,56 @@ public class ToolProvider {
     logger.log(RESPONSE, "Returned SchemaCrawler AI MCP Server health");
 
     return objectNode;
+  }
+
+  @McpTool(
+      name = "about_database",
+      title = "Show database server information",
+      description =
+          "Provides database environment and server configuration metadata, including engine "
+              + "type and version, collation, encoding, parameters, capabilities, and platform "
+              + "details. Also reports database identity, including alias, product, and server "
+              + "fingerprint.",
+      annotations =
+          @McpTool.McpAnnotations(
+              title = "Show database server information",
+              readOnlyHint = true,
+              destructiveHint = false,
+              idempotentHint = true,
+              openWorldHint = false))
+  public JsonNode aboutDatabase(final McpSyncServerExchange exchange) {
+    final ObjectNode aboutDatabase = JsonUtility.mapper.createObjectNode();
+    final DatabaseInfo databaseInfo = catalog.getDatabaseInfo();
+
+    final ObjectNode databaseServer = DatabaseIdentityUtility.toDetailNode(databaseIdentity);
+    databaseServer.remove("database-product");
+    final ObjectNode databaseProduct = databaseServer.putObject("database-product");
+    databaseProduct.put("database-product-name", databaseInfo.getDatabaseProductName());
+    databaseProduct.put("database-product-version", databaseInfo.getDatabaseProductVersion());
+    aboutDatabase.set("database-server", databaseServer);
+
+    final ArrayNode serverInfoArray = aboutDatabase.putArray("server-info");
+    final Collection<Property> serverInfo = databaseInfo.getServerInfo();
+    for (final Property serverProperty : serverInfo) {
+      if (serverProperty == null || serverProperty.getValue() == null) {
+        continue;
+      }
+      final ObjectNode serverPropertyNode = serverInfoArray.addObject();
+      serverPropertyNode.put("name", serverProperty.getName());
+      serverPropertyNode.put("description", serverProperty.getDescription());
+      serverPropertyNode.put("value", serverProperty.getValue().toString());
+    }
+
+    final List<SchemaStats> schemaStats = CatalogStatsUtility.schemaStatsFrom(catalog);
+    if (schemaStats != null && !schemaStats.isEmpty()) {
+      aboutDatabase.set("schemas", JsonUtility.mapper.valueToTree(schemaStats));
+    }
+
+    final CallToolLogger logger = new CallToolLogger(exchange);
+    logger.setFunctionCallbackNode(
+        JsonUtility.mapper.createObjectNode().put("name", "about_database"));
+    logger.log(RESPONSE, "Returned %s".formatted(databaseInfo.getDatabaseProductName()));
+    return aboutDatabase;
   }
 
   /**

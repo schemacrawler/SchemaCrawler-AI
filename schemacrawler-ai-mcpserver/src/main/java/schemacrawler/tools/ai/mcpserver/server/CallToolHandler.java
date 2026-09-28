@@ -100,7 +100,7 @@ class CallToolHandler
         Annotations.builder().audience(List.of(Role.ASSISTANT)).priority(0.7).build();
     final Map<String, Object> metadata = new LinkedHashMap<>(result.getMetadata().toMetadataMap());
     if (databaseNode != null && !isJsonObjectResult(result)) {
-      metadata.put("database", databaseNode);
+      metadata.put("database-server", databaseNode);
     }
     final Content metadataContent =
         TextContent.builder(NO_INDENT_MAPPER.writeValueAsString(metadata))
@@ -120,7 +120,7 @@ class CallToolHandler
     }
     // Put the database block first, so the source is seen before the payload
     final ObjectNode output = mapper.createObjectNode();
-    output.set("database", databaseNode.deepCopy());
+    output.set("database-server", databaseNode.deepCopy());
     output.setAll((ObjectNode) ((JsonFunctionReturn) result).getResult());
     return output.toString();
   }

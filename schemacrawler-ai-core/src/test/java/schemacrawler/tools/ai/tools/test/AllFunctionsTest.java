@@ -44,7 +44,7 @@ import us.fatehi.utility.datasource.DatabaseConnectionSources;
 @ResolveTestContext
 public class AllFunctionsTest {
 
-  private static final int NUM_FUNCTIONS = 12;
+  private static final int NUM_FUNCTIONS = 11;
 
   private static Stream<FunctionDefinition<?>> functionDefinitionsProvider() {
     final FunctionDefinitionRegistry registry =
@@ -71,7 +71,7 @@ public class AllFunctionsTest {
   @MethodSource("functionDefinitionsProvider")
   public void testExecute(final FunctionDefinition<?> functionDefinition) throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel, null);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
     final FunctionReturn actualReturn =
         switch (functionDefinition.getName()) {
           case "diagram", "table_path" -> new JsonFunctionReturn();
@@ -87,7 +87,7 @@ public class AllFunctionsTest {
   public void testInstantiateInvalidArguments(final FunctionDefinition<?> functionDefinition)
       throws Exception {
     final FunctionCallback<?> callback =
-        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel, null);
+        new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
     switch (functionDefinition.getName()) {
       case "diagram", "table_path":
         break;

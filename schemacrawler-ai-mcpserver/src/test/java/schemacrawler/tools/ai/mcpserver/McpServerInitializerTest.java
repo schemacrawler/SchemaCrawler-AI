@@ -56,7 +56,7 @@ public class McpServerInitializerTest {
     assertThat(identity.description(), is("CRM system of record"));
     // A mock connection source cannot connect, so the server is in an error state
     assertThat(identity.serverFingerprint().fingerprint(), is(""));
-    assertThat(identity.databaseProductName(), is(""));
+    assertThat(identity.databaseProduct().getName(), is(""));
   }
 
   @Test

@@ -27,6 +27,7 @@ import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.schema.Catalog;
+import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
@@ -35,6 +36,8 @@ import schemacrawler.tools.ai.mcpserver.server.ToolProvider;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.DatabaseIdentity;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.tools.ai.utility.DatabaseIdentityUtility;
+import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @TestInstance(Lifecycle.PER_CLASS)
@@ -45,7 +48,7 @@ public class ToolProviderTest {
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return InErrorFactory.createErroredCatalog();
+      return LightCatalogUtility.lightCatalog();
     }
 
     @Bean
@@ -54,8 +57,8 @@ public class ToolProviderTest {
     }
 
     @Bean
-    DatabaseIdentity databaseIdentity() {
-      return DatabaseIdentity.empty();
+    DatabaseIdentity databaseIdentity(final Catalog catalog) {
+      return DatabaseIdentityUtility.from("crm-prod", "CRM system of record", catalog);
     }
 
     @Bean
@@ -105,7 +108,7 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 12;
+  private static final int NUM_TOOLS = 11;
 
   @Autowired private ToolProvider toolProvider;
 
@@ -120,7 +123,6 @@ public class ToolProviderTest {
     assertThat(
         actualToolNames,
         containsInAnyOrder(
-            "about_database",
             "describe_er_relationships",
             "describe_routines",
             "describe_tables",
@@ -132,5 +134,22 @@ public class ToolProviderTest {
             "table_sample",
             "table_importance",
             "table_path"));
+  }
+
+  @Test
+  @DisplayName("about_database is provided by the MCP server with configured identity")
+  public void testAboutDatabase() {
+    final JsonNode result = toolProvider.aboutDatabase(null);
+    final JsonNode databaseServer = result.get("database-server");
+
+    assertThat(databaseServer.get("alias").asString(), is("crm-prod"));
+    assertThat(databaseServer.get("description").asString(), is("CRM system of record"));
+    assertThat(
+        databaseServer.get("database-product").get("database-product-name").asString(),
+        is("Test Database"));
+    assertThat(
+        databaseServer.get("database-product").get("database-product-version").asString().isBlank(),
+        is(false));
+    assertThat(result.get("server-info").isArray(), is(true));
   }
 }

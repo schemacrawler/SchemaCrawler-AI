@@ -32,17 +32,16 @@ public class DatabaseIdentityUtilityTest {
   @Test
   public void detailNodeAllSet() {
     final DatabaseIdentity identity =
-        new DatabaseIdentity("crm-prod", "CRM system of record", "PostgreSQL", SERVER_FINGERPRINT);
+        new DatabaseIdentity("crm-prod", "CRM system of record", null, SERVER_FINGERPRINT);
 
     assertThat(
         DatabaseIdentityUtility.toDetailNode(identity).toString(),
         is(
             """
-            {"alias":"crm-prod","description":"CRM system of record",\
-            "database-product-name":"PostgreSQL","fingerprint":"a1b2c3",\
-            "database-system-identifier":"postgresql","host-classification":"internal",\
-            "confidence":"medium"}\
-            """));
+            {\"alias\":\"crm-prod\",\
+            \"description\":\"CRM system of record\"}
+            """
+                .strip()));
   }
 
   @Test
@@ -59,12 +58,9 @@ public class DatabaseIdentityUtilityTest {
     final ObjectNode detailNode = DatabaseIdentityUtility.toDetailNode(identity);
 
     assertThat(detailNode.has("alias"), is(false));
-    assertThat(detailNode.has("database-product-name"), is(false));
-    assertThat(detailNode.has("fingerprint"), is(false));
-    assertThat(detailNode.has("host-classification"), is(false));
-    assertThat(detailNode.has("confidence"), is(false));
+    assertThat(detailNode.has("database-product"), is(false));
+    assertThat(detailNode.has("database-server-fingerprint"), is(false));
     assertThat(detailNode.get("description").asString(), is("CRM"));
-    assertThat(detailNode.get("database-system-identifier").asString(), is("postgresql"));
   }
 
   @Test
@@ -76,8 +72,8 @@ public class DatabaseIdentityUtilityTest {
     final DatabaseIdentity identity = DatabaseIdentityUtility.from("crm-prod", null, catalog);
 
     assertThat(identity.alias(), is("crm-prod"));
-    assertThat(identity.databaseProductName(), is(""));
-    assertThat(identity.fingerprint(), is(""));
+    assertThat(identity.databaseProduct().getName(), is(""));
+    assertThat(identity.serverFingerprint().fingerprint(), is(""));
   }
 
   @Test
@@ -86,8 +82,8 @@ public class DatabaseIdentityUtilityTest {
 
     assertThat(identity.alias(), is("crm-prod"));
     assertThat(identity.description(), is("CRM"));
-    assertThat(identity.databaseProductName(), is(""));
-    assertThat(identity.fingerprint(), is(""));
+    assertThat(identity.databaseProduct().getName(), is(""));
+    assertThat(identity.serverFingerprint().fingerprint(), is(""));
   }
 
   @Test
@@ -107,13 +103,13 @@ public class DatabaseIdentityUtilityTest {
   @Test
   public void resultNodeAllSet() {
     final DatabaseIdentity identity =
-        new DatabaseIdentity("crm-prod", "CRM system of record", "PostgreSQL", SERVER_FINGERPRINT);
+        new DatabaseIdentity("crm-prod", "CRM system of record", null, SERVER_FINGERPRINT);
 
     assertThat(
         DatabaseIdentityUtility.toResultNode(identity).toString(),
         is(
             """
-            {"alias":"crm-prod","database-product-name":"PostgreSQL","fingerprint":"a1b2c3"}\
+            {"alias":"crm-prod"}\
             """));
   }
 
@@ -123,7 +119,6 @@ public class DatabaseIdentityUtilityTest {
 
     final ObjectNode resultNode = DatabaseIdentityUtility.toResultNode(identity);
 
-    assertThat(resultNode.toString(), is("{\"fingerprint\":\"a1b2c3\"}"));
     assertThat(resultNode.has("confidence"), is(false));
     assertThat(resultNode.has("host-classification"), is(false));
   }
@@ -138,10 +133,8 @@ public class DatabaseIdentityUtilityTest {
 
   @Test
   public void resultNodeProductNameOnly() {
-    final DatabaseIdentity identity = new DatabaseIdentity(null, null, "PostgreSQL", null);
+    final DatabaseIdentity identity = new DatabaseIdentity(null, null, null, null);
 
-    assertThat(
-        DatabaseIdentityUtility.toResultNode(identity).toString(),
-        is("{\"database-product-name\":\"PostgreSQL\"}"));
+    assertThat(DatabaseIdentityUtility.toResultNode(identity).toString(), is("{}"));
   }
 }
