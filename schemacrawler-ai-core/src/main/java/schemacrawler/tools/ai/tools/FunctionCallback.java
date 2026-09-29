@@ -43,17 +43,11 @@ public final class FunctionCallback<P extends FunctionParameters> {
    * Function callbacks are created and registered ahead of time, with the required context that is
    * needed to run them.
    *
-   * @param functionName Name of the function to execute.
+   * @param functionDefinition Definition of the function to execute.
    * @param catalog Database catalog.
-   * @param connection A live connection to the database.
+   * @param erModel Entity-relationship model.
+   * @param importanceModel Table importance model, may be null.
    */
-  public FunctionCallback(
-      final FunctionDefinition<P> functionDefinition,
-      final Catalog catalog,
-      final ERModel erModel) {
-    this(functionDefinition, catalog, erModel, null);
-  }
-
   public FunctionCallback(
       final FunctionDefinition<P> functionDefinition,
       final Catalog catalog,

@@ -46,6 +46,8 @@ public final class SchemaCrawlerContext {
   private static final Logger LOGGER = Logger.getLogger(SchemaCrawlerContext.class.getName());
 
   private static final String ADDITIONAL_CONFIG = "SCHCRWLR_ADDITIONAL_CONFIG";
+  private static final String DATABASE_ALIAS = "SCHCRWLR_DATABASE_ALIAS";
+  private static final String DATABASE_DESCRIPTION = "SCHCRWLR_DATABASE_DESCRIPTION";
   private static final String INFO_LEVEL = "SCHCRWLR_INFO_LEVEL";
   private static final String OFFLINE_DATABASE = "SCHCRWLR_OFFLINE_DATABASE";
 
@@ -76,6 +78,24 @@ public final class SchemaCrawlerContext {
     final DatabaseConnectionSource databaseConnectionSource =
         EnvironmentalDatabaseConnectionSourceBuilder.builder(envAccessor).build();
     return databaseConnectionSource;
+  }
+
+  /**
+   * Database alias set by the MCP server administrator.
+   *
+   * @return Trimmed alias, or an empty string if not set
+   */
+  public String databaseAlias() {
+    return trimToEmpty(envAccessor.getStringValue(DATABASE_ALIAS, ""));
+  }
+
+  /**
+   * Database description set by the MCP server administrator.
+   *
+   * @return Trimmed description, or an empty string if not set
+   */
+  public String databaseDescription() {
+    return trimToEmpty(envAccessor.getStringValue(DATABASE_DESCRIPTION, ""));
   }
 
   public Catalog loadCatalog() {

@@ -14,5 +14,5 @@ import schemacrawler.tools.command.CallableCommand;
 public interface FunctionExecutor<P extends FunctionParameters>
     extends CallableCommand<P, FunctionReturn> {
 
-  default void setImportanceModel(final ImportanceModel importanceModel) {}
+  void setImportanceModel(final ImportanceModel importanceModel);
 }

@@ -24,17 +24,25 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
+import org.springframework.test.util.ReflectionTestUtils;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.schema.Catalog;
+import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.server.ToolProvider;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
+import us.fatehi.utility.jdbc.serverfingerprint.FingerprintConfidence;
+import us.fatehi.utility.jdbc.serverfingerprint.HostClassification;
 
 @TestInstance(Lifecycle.PER_CLASS)
 @SpringJUnitConfig(classes = {ToolProvider.class, ToolProviderTest.MockConfig.class})
@@ -44,12 +52,27 @@ public class ToolProviderTest {
   static class MockConfig {
     @Bean
     Catalog catalog() {
-      return InErrorFactory.createErroredCatalog();
+      return LightCatalogUtility.lightCatalog();
     }
 
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return mock(DatabaseConnectionSource.class);
+    }
+
+    @Bean
+    DatabaseIdentity databaseIdentity(final Catalog catalog) {
+      final DatabaseIdentity fromCatalog =
+          DatabaseIdentityUtility.from("crm-prod", "CRM system of record", catalog);
+      return new DatabaseIdentity(
+          fromCatalog.alias(),
+          fromCatalog.description(),
+          fromCatalog.databaseProduct(),
+          new DatabaseServerFingerprint(
+              "testdb",
+              HostClassification.INTERNAL,
+              "test-fingerprint",
+              FingerprintConfidence.HIGH));
     }
 
     @Bean
@@ -99,9 +122,10 @@ public class ToolProviderTest {
     }
   }
 
-  private static final int NUM_TOOLS = 12;
+  private static final int NUM_TOOLS = 11;
 
   @Autowired private ToolProvider toolProvider;
+  @Autowired private DatabaseIdentity databaseIdentity;
 
   @Test
   @DisplayName("ToolProvider should return the right tools")
@@ -114,7 +138,6 @@ public class ToolProviderTest {
     assertThat(
         actualToolNames,
         containsInAnyOrder(
-            "about_database",
             "describe_er_relationships",
             "describe_routines",
             "describe_tables",
@@ -126,5 +149,54 @@ public class ToolProviderTest {
             "table_sample",
             "table_importance",
             "table_path"));
+  }
+
+  @Test
+  @DisplayName("about_database is provided by the MCP server with configured identity")
+  public void testAboutDatabase() {
+    final JsonNode result = toolProvider.aboutDatabase(null);
+    final JsonNode databaseServer = result.get("database_server");
+
+    assertThat(databaseServer.get("alias").asString(), is("crm-prod"));
+    assertThat(databaseServer.get("description").asString(), is("CRM system of record"));
+    assertThat(databaseServer.get("database_product").get("name").asString(), is("Test Database"));
+    assertThat(
+        databaseServer.get("database_product").get("version").asString().isBlank(), is(false));
+    assertThat(
+        databaseServer.get("database_server_fingerprint").get("fingerprint").asString(),
+        is("test-fingerprint"));
+    assertThat(
+        databaseServer.get("database_server_fingerprint").get("confidence").asString(),
+        is(FingerprintConfidence.HIGH.name()));
+    assertThat(
+        databaseServer
+            .get("database_server_fingerprint")
+            .get("database_system_identifier")
+            .asString(),
+        is("testdb"));
+    assertThat(result.get("server_info").isArray(), is(true));
+  }
+
+  @Test
+  @DisplayName("about_database omits medium-confidence fingerprints")
+  public void testAboutDatabaseOmitsMediumConfidenceFingerprint() {
+    final DatabaseIdentity originalIdentity = databaseIdentity;
+    final DatabaseIdentity mediumIdentity =
+        new DatabaseIdentity(
+            "crm-prod",
+            "CRM system of record",
+            databaseIdentity.databaseProduct(),
+            new DatabaseServerFingerprint(
+                "testdb",
+                HostClassification.INTERNAL,
+                "test-fingerprint",
+                FingerprintConfidence.MEDIUM));
+    ReflectionTestUtils.setField(toolProvider, "databaseIdentity", mediumIdentity);
+    try {
+      final JsonNode databaseServer = toolProvider.aboutDatabase(null).get("database_server");
+      assertThat(databaseServer.has("database_server_fingerprint"), is(false));
+    } finally {
+      ReflectionTestUtils.setField(toolProvider, "databaseIdentity", originalIdentity);
+    }
   }
 }

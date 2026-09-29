@@ -48,8 +48,7 @@ public final class CompactCatalogBuilder implements Builder<CatalogDocument> {
   public CatalogDocument build() {
     requireNonNull(catalog, "No catalog provided");
 
-    final CatalogDocument catalogDocument =
-        new CatalogDocument(catalog.getDatabaseInfo().getDatabaseProductName());
+    final CatalogDocument catalogDocument = new CatalogDocument();
     for (final Table table : catalog.getTables()) {
       final TableDocument tableDocument = buildTableDocument(table);
       catalogDocument.addTable(tableDocument);

@@ -22,19 +22,17 @@ import tools.jackson.databind.node.ObjectNode;
 
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@JsonPropertyOrder({"db", "tables", "routines"})
+@JsonPropertyOrder({"tables", "routines"})
 public final class CatalogDocument implements Document {
 
   @Serial private static final long serialVersionUID = -1937966351313941597L;
 
-  private final String databaseProductName;
   private final List<TableDocument> tables;
   private final List<RoutineDocument> routines;
 
-  public CatalogDocument(final String databaseProductName) {
+  public CatalogDocument() {
     tables = new ArrayList<>();
     routines = new ArrayList<>();
-    this.databaseProductName = databaseProductName;
   }
 
   public void addRoutine(final RoutineDocument routine) {
@@ -47,11 +45,6 @@ public final class CatalogDocument implements Document {
     if (table != null) {
       tables.add(table);
     }
-  }
-
-  @JsonProperty("db")
-  public String getDatabaseProductName() {
-    return databaseProductName;
   }
 
   @Override

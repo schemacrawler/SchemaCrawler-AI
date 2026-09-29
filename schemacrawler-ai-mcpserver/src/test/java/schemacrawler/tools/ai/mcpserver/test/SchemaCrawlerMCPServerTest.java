@@ -35,6 +35,7 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.McpServerMain.McpServer;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import schemacrawler.tools.ai.mcpserver.server.ServerHealth;
 import schemacrawler.tools.ai.mcpserver.test.SchemaCrawlerMCPServerTest.MockConfig;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
@@ -77,6 +78,11 @@ public class SchemaCrawlerMCPServerTest {
     @Bean
     ExcludeTools excludeTools() {
       return new ExcludeTools();
+    }
+
+    @Bean
+    DatabaseIdentity databaseIdentity() {
+      return DatabaseIdentity.empty();
     }
 
     @Bean

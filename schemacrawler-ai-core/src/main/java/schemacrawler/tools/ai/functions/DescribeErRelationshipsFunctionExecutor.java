@@ -45,7 +45,7 @@ public final class DescribeErRelationshipsFunctionExecutor
 
     final ArrayNode relationshipsArray = createRelationshipsArray(documents);
 
-    return new JsonFunctionReturn(relationshipsArray)
+    return new JsonFunctionReturn("relationships", relationshipsArray)
         .withSummary("Returned %d relationships".formatted(documents.size()));
   }
 

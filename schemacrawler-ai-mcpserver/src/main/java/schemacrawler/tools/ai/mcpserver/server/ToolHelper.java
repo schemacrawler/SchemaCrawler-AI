@@ -35,6 +35,7 @@ public class ToolHelper {
 
   @Autowired private Catalog catalog;
   @Autowired private ERModel erModel;
+  @Autowired private DatabaseIdentity databaseIdentity;
 
   @Autowired(required = false)
   private ImportanceModel importanceModel;
@@ -46,7 +47,7 @@ public class ToolHelper {
     final Tool tool = toTool(functionDefinition);
     final FunctionCallback<P> functionCallback =
         new FunctionCallback<>(functionDefinition, catalog, erModel, importanceModel);
-    final CallToolHandler toolCallHandler = new CallToolHandler(functionCallback);
+    final CallToolHandler toolCallHandler = new CallToolHandler(functionCallback, databaseIdentity);
 
     return new McpServerFeatures.SyncToolSpecification(tool, toolCallHandler);
   }

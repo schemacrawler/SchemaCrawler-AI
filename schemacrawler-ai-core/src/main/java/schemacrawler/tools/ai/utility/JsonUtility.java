@@ -22,6 +22,8 @@ import static tools.jackson.databind.SerializationFeature.USE_EQUALITY_FOR_OBJEC
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.PropertyNamingStrategies;
+import tools.jackson.databind.annotation.JsonNaming;
 import tools.jackson.databind.cfg.MapperBuilder;
 import tools.jackson.databind.json.JsonMapper;
 import us.fatehi.utility.UtilityMarker;
@@ -32,22 +34,26 @@ public final class JsonUtility {
   public static final ObjectMapper mapper = newConfiguredObjectMapper(JsonMapper.builder());
 
   private static ObjectMapper newConfiguredObjectMapper(
-      final MapperBuilder<? extends ObjectMapper, ?> mapperBuilder) {
+      final MapperBuilder<? extends ObjectMapper, ?> builder) {
 
-    requireNonNull(mapperBuilder, "No mapper builder provided");
+    requireNonNull(builder, "No mapper builder provided");
     // De-serialization
-    mapperBuilder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
-    mapperBuilder.enable(FAIL_ON_UNKNOWN_PROPERTIES);
-    mapperBuilder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
+    builder.enable(INCLUDE_SOURCE_IN_LOCATION, IGNORE_UNDEFINED);
+    builder.enable(FAIL_ON_UNKNOWN_PROPERTIES);
+    builder.disable(FAIL_ON_NULL_FOR_PRIMITIVES);
     // Serialization
-    mapperBuilder.enable(IGNORE_UNKNOWN);
-    mapperBuilder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
-    mapperBuilder.enable(SORT_PROPERTIES_ALPHABETICALLY, ACCEPT_CASE_INSENSITIVE_ENUMS);
+    builder.enable(IGNORE_UNKNOWN);
+    builder.enable(ORDER_MAP_ENTRIES_BY_KEYS, INDENT_OUTPUT, USE_EQUALITY_FOR_OBJECT_ID);
+    builder.enable(SORT_PROPERTIES_ALPHABETICALLY, ACCEPT_CASE_INSENSITIVE_ENUMS);
     // Omit null and empty values in output
-    mapperBuilder.changeDefaultPropertyInclusion(
+    builder.changeDefaultPropertyInclusion(
         incl -> incl.withValueInclusion(JsonInclude.Include.NON_EMPTY));
 
-    final ObjectMapper objectMapper = mapperBuilder.build();
+    @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+    abstract class JacksonAnnotationMixIn {}
+    builder.addMixIn(Object.class, JacksonAnnotationMixIn.class);
+
+    final ObjectMapper objectMapper = builder.build();
     return objectMapper;
   }
 

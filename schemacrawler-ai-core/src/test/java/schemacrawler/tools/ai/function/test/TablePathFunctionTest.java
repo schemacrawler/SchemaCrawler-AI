@@ -39,7 +39,7 @@ public class TablePathFunctionTest extends AbstractFunctionTest {
     assertThat(path.get("path").size(), is(2));
     assertThat(path.get("path").get(0).asString(), is("PUBLIC.BOOKS.BOOKAUTHORS"));
     assertThat(path.get("path").get(1).asString(), is("PUBLIC.BOOKS.AUTHORS"));
-    assertThat(path.get("usesImpliedAssociations").asBoolean(), is(false));
+    assertThat(path.get("uses_implied_associations").asBoolean(), is(false));
   }
 
   private JsonFunctionReturn execute(final TablePathFunctionParameters parameters)

@@ -28,8 +28,10 @@ import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
 import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseConnectionService;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
@@ -79,6 +81,11 @@ public class ToolHelperTest {
       @Override
       public boolean usesConnection() {
         return false;
+      }
+
+      @Override
+      public void setImportanceModel(ImportanceModel importanceModel) {
+        // No-op
       }
     }
 
@@ -140,6 +147,11 @@ public class ToolHelperTest {
     @Bean
     DatabaseConnectionSource databaseConnectionSource() {
       return InErrorFactory.createErroredConnectionSource();
+    }
+
+    @Bean
+    DatabaseIdentity databaseIdentity() {
+      return DatabaseIdentity.empty();
     }
 
     @Bean

@@ -1,1 +1,1 @@
-[{"full_name":"PUBLIC.\"PUBLISHER SALES\".SALES.FK_SALES_REGIONS","name":"FK_SALES_REGIONS","cardinality":"one_many","between":["SALES","REGIONS"],"hint":"Relationship name is the same as the foreign key"}]
+{"relationships":[{"full_name":"PUBLIC.\"PUBLISHER SALES\".SALES.FK_SALES_REGIONS","name":"FK_SALES_REGIONS","cardinality":"one_many","between":["SALES","REGIONS"],"hint":"Relationship name is the same as the foreign key"}]}

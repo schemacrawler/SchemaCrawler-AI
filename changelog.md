@@ -2,6 +2,15 @@
 
 SchemaCrawler AI release notes.
 
+<a name="v17.15.7-1"></a>
+## Release 17.15.7-1 - 2026-09-29
+
+- Add optional `SCHCRWLR_DATABASE_ALIAS` and `SCHCRWLR_DATABASE_DESCRIPTION` settings for identifying database servers in MCP instructions and results
+- Add compact `database_server` identity blocks to function tool results, containing `alias` and `database_product` when available
+- Change `describe_er_relationships` to return a JSON object containing a `relationships` array
+- Document the removal of `db` from `describe_tables` and `describe_routines`; use the `database_server.database_product` identity instead
+
+
 <a name="v17.15.2-1"></a>
 ## Release 17.15.2-1 - 2026-09-10
 

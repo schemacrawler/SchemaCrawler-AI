@@ -44,7 +44,7 @@ public class CompactCatalogBuilderTest extends AbstractFunctionTest {
   public void build() {
     final CatalogDocument catalogDocument = CompactCatalogBuilder.builder(catalog, erModel).build();
     assertThat(catalogDocument, is(notNullValue()));
-    assertThat(catalogDocument.getDatabaseProductName(), is(notNullValue()));
+    assertThat(catalogDocument.toObjectNode().has("db"), is(false));
     assertThat(catalogDocument.getTables(), is(not(empty())));
     assertThat(catalogDocument.getRoutines(), is(not(empty())));
   }

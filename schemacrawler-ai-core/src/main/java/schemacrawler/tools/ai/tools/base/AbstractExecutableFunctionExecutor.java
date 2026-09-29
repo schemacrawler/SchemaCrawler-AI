@@ -40,6 +40,7 @@ import schemacrawler.tools.options.OutputOptions;
 import schemacrawler.tools.options.OutputOptionsBuilder;
 import tools.jackson.core.JacksonException;
 import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -111,7 +112,13 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
       final String results = Files.readString(outputFilePath);
       try {
         final JsonNode node = mapper.readTree(results);
-        return new JsonFunctionReturn(node);
+        if (node instanceof final ObjectNode objectNode) {
+          return new JsonFunctionReturn(objectNode);
+        }
+        LOGGER.log(
+            Level.WARNING,
+            "Results from <%s> are not a JSON object".formatted(getCommandName().getName()));
+        return new TextFunctionReturn(results);
       } catch (final JacksonException e) {
         LOGGER.log(
             Level.WARNING,

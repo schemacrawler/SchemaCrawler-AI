@@ -70,6 +70,8 @@ When the database connection cannot be established, `InErrorFactory` provides a 
 | `SCHCRWLR_HOST` | Database hostname |
 | `SCHCRWLR_PORT` | Database port |
 | `SCHCRWLR_DATABASE` | Database name |
+| `SCHCRWLR_DATABASE_ALIAS` | Optional stable alias for identifying this database server in MCP instructions and tool results |
+| `SCHCRWLR_DATABASE_DESCRIPTION` | Optional description of this database server, included in MCP instructions and `about_database` |
 | `SCHCRWLR_MCP_TRANSPORT` | `stdio` (default) or `http` |
 | `SCHCRWLR_EXCLUDED_TOOLS` | Comma-separated tool names to exclude from registration |
 

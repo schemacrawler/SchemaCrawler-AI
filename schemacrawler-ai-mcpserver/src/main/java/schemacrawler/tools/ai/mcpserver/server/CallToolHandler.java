@@ -22,14 +22,19 @@ import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.Content;
 import io.modelcontextprotocol.spec.McpSchema.Role;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.BiFunction;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
+import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
 import tools.jackson.databind.ObjectMapper;
+import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 class CallToolHandler
@@ -39,9 +44,18 @@ class CallToolHandler
       mapper.rebuild().disable(INDENT_OUTPUT).build();
 
   private final FunctionCallback<? extends FunctionParameters> functionCallback;
+  private final ObjectNode databaseNode;
 
-  CallToolHandler(final FunctionCallback<? extends FunctionParameters> functionCallback) {
+  CallToolHandler(
+      final FunctionCallback<? extends FunctionParameters> functionCallback,
+      final DatabaseIdentity databaseIdentity) {
     this.functionCallback = requireNonNull(functionCallback, "No function callback provided");
+    requireNonNull(databaseIdentity, "No database identity provided");
+    if (databaseIdentity.isEmpty()) {
+      databaseNode = null;
+    } else {
+      databaseNode = DatabaseIdentityUtility.toResultNode(databaseIdentity);
+    }
   }
 
   @Override
@@ -73,7 +87,7 @@ class CallToolHandler
   /** Create content from the tool result. */
   private Content toolOutputContent(final FunctionReturn result) {
     final Content toolOutput =
-        TextContent.builder(result.get())
+        TextContent.builder(toolOutputText(result))
             .meta(result.getMetadata().toMetadataMap("schemacrawler-ai/"))
             .build();
     return toolOutput;
@@ -83,11 +97,30 @@ class CallToolHandler
   private Content toolOutputMetadataContent(final FunctionReturn result) {
     final Annotations annotations =
         Annotations.builder().audience(List.of(Role.ASSISTANT)).priority(0.7).build();
+    final Map<String, Object> metadata = new LinkedHashMap<>(result.getMetadata().toMetadataMap());
+    if (databaseNode != null && !isJsonObjectResult(result)) {
+      metadata.put("database_server", databaseNode);
+    }
     final Content metadataContent =
-        TextContent.builder(
-                NO_INDENT_MAPPER.writeValueAsString(result.getMetadata().toMetadataMap()))
+        TextContent.builder(NO_INDENT_MAPPER.writeValueAsString(metadata))
             .annotations(annotations)
             .build();
     return metadataContent;
+  }
+
+  private boolean isJsonObjectResult(final FunctionReturn result) {
+    return result instanceof final JsonFunctionReturn jsonReturn
+        && jsonReturn.getResult() instanceof ObjectNode;
+  }
+
+  private String toolOutputText(final FunctionReturn result) {
+    if (databaseNode == null || !isJsonObjectResult(result)) {
+      return result.get();
+    }
+    // Put the database block first, so the source is seen before the payload
+    final ObjectNode output = mapper.createObjectNode();
+    output.set("database_server", databaseNode.deepCopy());
+    output.setAll((ObjectNode) ((JsonFunctionReturn) result).getResult());
+    return output.toString();
   }
 }

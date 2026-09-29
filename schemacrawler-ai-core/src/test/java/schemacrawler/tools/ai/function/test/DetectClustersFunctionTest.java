@@ -47,18 +47,18 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     final ImportanceModel importanceModel = ImportanceModelBuilder.builder(catalog).build();
     final JsonNode result =
         execute(new DetectClustersFunctionParameters(), importanceModel).getResult();
-    final JsonNode tableClusters = result.get("tableClusters");
+    final JsonNode tableClusters = result.get("table_clusters");
 
     assertThat(tableClusters.size(), greaterThan(0));
     assertThat(tableClusters.size(), is(Math.min(5, importanceModel.getTableClusters().size())));
     assertThat(result.size(), is(1));
     for (final JsonNode tableCluster : tableClusters) {
       assertThat(tableCluster.has("id"), is(true));
-      assertThat(tableCluster.has("anchorVertexId"), is(false));
-      assertThat(tableCluster.has("anchorTableFullName"), is(true));
-      assertThat(tableCluster.has("totalClusterSize"), is(true));
-      assertThat(tableCluster.has("memberVertexIds"), is(false));
-      assertThat(tableCluster.get("memberTableFullNames").size(), lessThanOrEqualTo(5));
+      assertThat(tableCluster.has("anchor_vertex_id"), is(false));
+      assertThat(tableCluster.has("anchor_table_full_name"), is(true));
+      assertThat(tableCluster.has("total_cluster_size"), is(true));
+      assertThat(tableCluster.has("member_vertex_ids"), is(false));
+      assertThat(tableCluster.get("member_table_full_names").size(), lessThanOrEqualTo(5));
     }
   }
 
@@ -79,14 +79,14 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
                 new DetectClustersFunctionParameters(Pattern.quote(matchingFullName), 5, 1),
                 importanceModel)
             .getResult()
-            .get("tableClusters");
+            .get("table_clusters");
 
     assertThat(tableClusters.size(), is(1));
     assertThat(tableClusters.get(0).get("id").asString(), is(expectedTableCluster.id().toString()));
     assertThat(
-        tableClusters.get(0).get("totalClusterSize").asInt(),
+        tableClusters.get(0).get("total_cluster_size").asInt(),
         is(expectedTableCluster.memberVertexIds().size()));
-    assertThat(tableClusters.get(0).has("memberVertexIds"), is(false));
+    assertThat(tableClusters.get(0).has("member_vertex_ids"), is(false));
   }
 
   @Test
@@ -96,31 +96,31 @@ public class DetectClustersFunctionTest extends AbstractFunctionTest {
     final JsonNode limited =
         execute(new DetectClustersFunctionParameters("", 1, 1), importanceModel)
             .getResult()
-            .get("tableClusters");
+            .get("table_clusters");
     assertThat(limited.size(), is(1));
-    assertThat(limited.get(0).has("memberVertexIds"), is(false));
-    assertThat(limited.get(0).get("memberTableFullNames").size(), is(1));
-    assertThat(limited.get(0).get("totalClusterSize").asInt(), greaterThan(0));
+    assertThat(limited.get(0).has("member_vertex_ids"), is(false));
+    assertThat(limited.get(0).get("member_table_full_names").size(), is(1));
+    assertThat(limited.get(0).get("total_cluster_size").asInt(), greaterThan(0));
 
     // A negative limit means unlimited - all table clusters, and all of their members, are
     // returned.
     final JsonNode unlimited =
         execute(new DetectClustersFunctionParameters("", -1, -1), importanceModel)
             .getResult()
-            .get("tableClusters");
+            .get("table_clusters");
     assertThat(unlimited.size(), is(importanceModel.getTableClusters().size()));
     for (final JsonNode tableCluster : unlimited) {
-      assertThat(tableCluster.has("memberVertexIds"), is(false));
+      assertThat(tableCluster.has("member_vertex_ids"), is(false));
       assertThat(
-          tableCluster.get("memberTableFullNames").size(),
-          is(tableCluster.get("totalClusterSize").asInt()));
+          tableCluster.get("member_table_full_names").size(),
+          is(tableCluster.get("total_cluster_size").asInt()));
     }
 
     // A zero limit on the number of table clusters means no results, not unlimited. Empty
-    // collections are omitted from the JSON output, so "tableClusters" is absent altogether.
+    // collections are omitted from the JSON output, so "table_clusters" is absent altogether.
     final JsonNode noneResult =
         execute(new DetectClustersFunctionParameters("", 0, -1), importanceModel).getResult();
-    assertThat(noneResult.has("tableClusters"), is(false));
+    assertThat(noneResult.has("table_clusters"), is(false));
   }
 
   private JsonFunctionReturn execute(

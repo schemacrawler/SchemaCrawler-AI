@@ -41,8 +41,9 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
       final JsonNode previous = importanceWithZeroLimit.get(i - 1);
       final JsonNode current = importanceWithZeroLimit.get(i);
       final double previousScore =
-          previous.get("tableImportance").get("importanceScore").asDouble();
-      final double currentScore = current.get("tableImportance").get("importanceScore").asDouble();
+          previous.get("table_importance").get("importance_score").asDouble();
+      final double currentScore =
+          current.get("table_importance").get("importance_score").asDouble();
       assertThat(previousScore >= currentScore, is(true));
     }
   }
@@ -55,7 +56,7 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
             .get("importance");
 
     assertThat(importance.size(), is(1));
-    assertThat(importance.get(0).get("tableFullName").asString(), is("PUBLIC.BOOKS.AUTHORS"));
+    assertThat(importance.get(0).get("table_full_name").asString(), is("PUBLIC.BOOKS.AUTHORS"));
   }
 
   @Test
@@ -72,7 +73,7 @@ public class TableImportanceFunctionTest extends AbstractFunctionTest {
 
     assertThat(result.size(), is(1));
     assertThat(result.has("importance"), is(true));
-    assertThat(result.has("tableClusters"), is(false));
+    assertThat(result.has("table_clusters"), is(false));
   }
 
   private JsonFunctionReturn execute(final TableImportanceFunctionParameters parameters)
