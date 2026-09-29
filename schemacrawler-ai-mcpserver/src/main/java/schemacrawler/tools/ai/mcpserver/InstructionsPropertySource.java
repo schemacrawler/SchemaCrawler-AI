@@ -24,6 +24,66 @@ public class InstructionsPropertySource extends MapPropertySource {
 
   private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
 
+  private static String createDatabaseServerDescription(final DatabaseIdentity databaseIdentity) {
+    if (databaseIdentity == null || databaseIdentity.isEmpty()) {
+      return "";
+    }
+
+    final StringBuilder description = new StringBuilder();
+    description.append(
+        """
+        # Database Server Description
+
+        """);
+    if (!isBlank(databaseIdentity.alias())) {
+      description.append(
+          """
+          The SchemaCrawler AI MCP Server is connected to a database server that has
+          an alias of "%s", to distinguish itself from other instances of
+          SchemaCrawler AI MCP Server that may be connected to other database servers.
+
+          """
+              .formatted(databaseIdentity.alias()));
+    }
+    if (!isBlank(databaseIdentity.description())) {
+      description.append(
+          """
+          The description of this database server is:
+          %s
+
+          """
+              .formatted(databaseIdentity.description()));
+    }
+    description.append(
+        """
+
+        Use the `about_database` tool to learn more about the database engine, version
+        and settings.
+
+        """);
+
+    return description.toString();
+  }
+
+  private static String instructions(
+      final boolean isInErrorState, final DatabaseIdentity databaseIdentity) {
+    final String instructions;
+    final String toolUsageGuide = toolUsageGuide();
+    if (isInErrorState) {
+      instructions =
+          """
+          The SchemaCrawler AI MCP Server could not connect to the database.
+          MCP tool calls will not return reliable results.
+          However, note that tool listings and other MCP server features
+          are available.
+          """;
+    } else {
+      final String databaseServerDescription = createDatabaseServerDescription(databaseIdentity);
+      instructions = databaseServerDescription + toolUsageGuide;
+    }
+    return instructions;
+  }
+
   private static String toolUsageGuide() {
     try (final BufferedReader reader =
         new ClasspathInputResource("tool-usage-guide.md").openNewInputReader(UTF_8)) {
@@ -34,16 +94,10 @@ public class InstructionsPropertySource extends MapPropertySource {
     }
   }
 
-  private static String instructions(final DatabaseIdentity databaseIdentity) {
-    final String description = databaseIdentity.description();
-    final String toolUsageGuide = toolUsageGuide();
-    if (isBlank(description)) {
-      return toolUsageGuide;
-    }
-    return description + "\n\n" + toolUsageGuide;
-  }
-
-  public InstructionsPropertySource(final DatabaseIdentity databaseIdentity) {
-    super("mcpServerInstructions", Map.of(INSTRUCTIONS_PROPERTY, instructions(databaseIdentity)));
+  public InstructionsPropertySource(
+      final boolean isInErrorState, final DatabaseIdentity databaseIdentity) {
+    super(
+        "mcpServerInstructions",
+        Map.of(INSTRUCTIONS_PROPERTY, instructions(isInErrorState, databaseIdentity)));
   }
 }

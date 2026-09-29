@@ -165,7 +165,7 @@ public class McpServerInitializer extends AbstractExecutionState
     context
         .getEnvironment()
         .getPropertySources()
-        .addFirst(new InstructionsPropertySource(databaseIdentity));
+        .addFirst(new InstructionsPropertySource(isInErrorState, databaseIdentity));
   }
 
   // The errored catalog throws on every call, so it cannot provide identity values
