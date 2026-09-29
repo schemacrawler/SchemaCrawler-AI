@@ -44,7 +44,7 @@ public final class DatabaseIdentityUtility {
     }
     final String databaseServerAlias;
     if (isBlank(alias)) {
-      databaseServerAlias = Nomen.est().adjective().separator().noun().get();
+      databaseServerAlias = Nomen.est().adjective().noun().get();
     } else {
       databaseServerAlias = alias;
     }

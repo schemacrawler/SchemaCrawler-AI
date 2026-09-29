@@ -1,9 +1,9 @@
 package schemacrawler.tools.ai.mcpserver;
 
-import static org.assertj.core.api.Assertions.not;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -50,7 +50,7 @@ public class McpServerInitializerTest {
     final DatabaseIdentity identity =
         getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
 
-    assertThat(identity.alias(), is(not(emptyString())));
+    assertThat(identity.alias().toString(), is(not(emptyString())));
     assertThat(identity.description(), is(""));
     // A mock connection source cannot connect, so the server is in an error state
     assertThat(identity.serverFingerprint().fingerprint(), is(""));
@@ -67,7 +67,7 @@ public class McpServerInitializerTest {
     final DatabaseIdentity identity =
         getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
 
-    assertThat(identity.alias(), is(not(emptyString())));
+    assertThat(identity.alias().toString(), is(not(emptyString())));
     assertThat(identity.description(), is(""));
   }
 

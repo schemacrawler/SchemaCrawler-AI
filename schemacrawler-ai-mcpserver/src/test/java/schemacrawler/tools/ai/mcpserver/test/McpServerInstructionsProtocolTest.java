@@ -8,9 +8,9 @@
 
 package schemacrawler.tools.ai.mcpserver.test;
 
-import static org.assertj.core.api.Assertions.not;
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.emptyString;
@@ -83,7 +83,7 @@ public class McpServerInstructionsProtocolTest {
         final JsonNode response =
             JsonUtility.mapper.readTree(((TextContent) aboutDatabase.content().getFirst()).text());
         final JsonNode databaseServer = response.get("database_server");
-        assertThat(databaseServer.get("alias"), is(not(emptyString())));
+        assertThat(databaseServer.get("alias").toString(), is(not(emptyString())));
         assertThat(databaseServer.get("description"), is(nullValue()));
         assertThat(response.has("database-server"), is(false));
         assertThat(databaseServer.has("database_product"), is(true));
