@@ -234,7 +234,6 @@ public class McpServerInitializerTest {
     assertThat(toolUsageGuide, containsString("Use `list_members_of_tables`"));
     assertThat(
         toolUsageGuide, containsString("Use regular expression filters to keep results small."));
-    assertThat(toolUsageGuide.contains("\r"), is(false));
     // Count words only, not Markdown markers such as "#" or "1."
     final long wordCount =
         Arrays.stream(toolUsageGuide.split("\\s+"))

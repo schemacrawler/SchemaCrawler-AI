@@ -8,13 +8,14 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
+import static java.util.stream.Collectors.joining;
 import static us.fatehi.utility.Utility.isBlank;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.UncheckedIOException;
-import java.nio.charset.StandardCharsets;
 import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
@@ -36,6 +37,7 @@ import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.state.AbstractExecutionState;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.ioresource.ClasspathInputResource;
 
 public class McpServerInitializer extends AbstractExecutionState
     implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -43,14 +45,12 @@ public class McpServerInitializer extends AbstractExecutionState
   private static final Logger LOGGER = Logger.getLogger(McpServerInitializer.class.getName());
 
   private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
-  private static final String TOOL_USAGE_GUIDE_RESOURCE = "tool-usage-guide.md";
 
   static String toolUsageGuide() {
-    try (final InputStream in =
-        McpServerInitializer.class.getResourceAsStream(TOOL_USAGE_GUIDE_RESOURCE)) {
-      requireNonNull(in, "Tool usage guide not found");
-      // Normalize line endings, since the resource may be checked out with CRLF
-      return new String(in.readAllBytes(), StandardCharsets.UTF_8).replace("\r\n", "\n").strip();
+    try (final BufferedReader reader =
+        new ClasspathInputResource("tool-usage-guide.md").openNewInputReader(UTF_8)) {
+      final String text = new BufferedReader(reader).lines().collect(joining("\n"));
+      return text;
     } catch (final IOException e) {
       throw new UncheckedIOException("Could not read tool usage guide", e);
     }
