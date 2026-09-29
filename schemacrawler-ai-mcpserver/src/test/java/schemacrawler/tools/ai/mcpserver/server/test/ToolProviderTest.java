@@ -169,7 +169,8 @@ public class ToolProviderTest {
         databaseServer.get("database_server_fingerprint").get("fingerprint").asString(),
         is("test-fingerprint"));
     assertThat(
-        databaseServer.get("database_server_fingerprint").get("confidence").asString(), is("high"));
+        databaseServer.get("database_server_fingerprint").get("confidence").asString(),
+        is(FingerprintConfidence.HIGH.name()));
     assertThat(
         databaseServer
             .get("database_server_fingerprint")

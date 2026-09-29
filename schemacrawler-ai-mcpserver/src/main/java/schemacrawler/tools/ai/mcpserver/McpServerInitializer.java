@@ -66,16 +66,6 @@ public class McpServerInitializer extends AbstractExecutionState
       final DatabaseConnectionSource connectionSource,
       final McpServerTransportType mcpTransport,
       final Collection<String> excludeTools) {
-    this(catalog, connectionSource, mcpTransport, excludeTools, null, null);
-  }
-
-  public McpServerInitializer(
-      final Catalog catalog,
-      final DatabaseConnectionSource connectionSource,
-      final McpServerTransportType mcpTransport,
-      final Collection<String> excludeTools,
-      final String databaseAlias,
-      final String databaseDescription) {
 
     this.mcpTransport = requireNonNull(mcpTransport, "No MCP Server transport provided");
     if (mcpTransport == McpServerTransportType.unknown) {
@@ -99,8 +89,7 @@ public class McpServerInitializer extends AbstractExecutionState
     }
     this.isInErrorState = isInErrorState;
 
-    databaseIdentity =
-        DatabaseIdentityUtility.from(databaseAlias, databaseDescription, nonErroredCatalog());
+    databaseIdentity = DatabaseIdentityUtility.from(null, null, nonErroredCatalog());
 
     if (excludeTools == null) {
       this.excludeTools = new ExcludeTools();

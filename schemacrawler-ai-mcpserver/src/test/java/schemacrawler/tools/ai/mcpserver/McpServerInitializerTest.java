@@ -42,18 +42,13 @@ public class McpServerInitializerTest {
     final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
     final McpServerInitializer initializer =
         new McpServerInitializer(
-            catalog,
-            connectionSource,
-            McpServerTransportType.stdio,
-            Collections.emptyList(),
-            " crm-prod ",
-            "CRM system of record");
+            catalog, connectionSource, McpServerTransportType.stdio, Collections.emptyList());
 
     final DatabaseIdentity identity =
         getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
 
-    assertThat(identity.alias(), is("crm-prod"));
-    assertThat(identity.description(), is("CRM system of record"));
+    assertThat(identity.alias(), is(""));
+    assertThat(identity.description(), is(""));
     // A mock connection source cannot connect, so the server is in an error state
     assertThat(identity.serverFingerprint().fingerprint(), is(""));
     assertThat(identity.databaseProduct().getName(), is(""));
@@ -185,19 +180,14 @@ public class McpServerInitializerTest {
     final DatabaseConnectionSource connectionSource = mock(DatabaseConnectionSource.class);
     final McpServerInitializer initializer =
         new McpServerInitializer(
-            catalog,
-            connectionSource,
-            McpServerTransportType.stdio,
-            Collections.emptyList(),
-            "crm-prod",
-            "CRM system of record");
+            catalog, connectionSource, McpServerTransportType.stdio, Collections.emptyList());
 
     final ApplicationContext context = getContext(initializer);
 
     assertThat(context.getBean("isInErrorState", Boolean.class), is(true));
     assertThat(
         context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is("CRM system of record\n\n" + McpServerInitializer.toolUsageGuide()));
+        is(McpServerInitializer.toolUsageGuide()));
   }
 
   @Test

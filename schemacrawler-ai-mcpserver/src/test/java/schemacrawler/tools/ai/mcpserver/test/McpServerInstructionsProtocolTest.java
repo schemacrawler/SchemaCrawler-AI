@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.nullValue;
 
 import io.modelcontextprotocol.client.McpClient;
 import io.modelcontextprotocol.client.McpSyncClient;
@@ -43,9 +44,7 @@ public class McpServerInstructionsProtocolTest {
             LightCatalogUtility.lightCatalog(),
             DatabaseConnectionSources.fromConnection(TestObjectUtility.mockConnection()),
             McpServerTransportType.http,
-            Collections.singletonList("about_database"),
-            "crm-prod",
-            "CRM system of record");
+            Collections.singletonList("about_database"));
 
     try (final ConfigurableApplicationContext app =
         new SpringApplicationBuilder(McpServer.class)
@@ -64,7 +63,9 @@ public class McpServerInstructionsProtocolTest {
         final InitializeResult result = client.initialize();
 
         assertThat(result.serverInfo().name(), is("schemacrawler-mcpserver"));
-        assertThat(result.instructions(), startsWith("CRM system of record\n\n"));
+        assertThat(
+            result.instructions(),
+            startsWith("# Tools Usage Guide for SchemaCrawler AI MCP Server"));
         assertThat(result.instructions(), containsString("Start here"));
         assertThat(result.instructions(), containsString("`list_members_of_tables`"));
         assertThat(
@@ -82,8 +83,8 @@ public class McpServerInstructionsProtocolTest {
         final JsonNode response =
             JsonUtility.mapper.readTree(((TextContent) aboutDatabase.content().getFirst()).text());
         final JsonNode databaseServer = response.get("database_server");
-        assertThat(databaseServer.get("alias").asString(), is("crm-prod"));
-        assertThat(databaseServer.get("description").asString(), is("CRM system of record"));
+        assertThat(databaseServer.get("alias"), is(nullValue()));
+        assertThat(databaseServer.get("description"), is(nullValue()));
         assertThat(response.has("database-server"), is(false));
         assertThat(databaseServer.has("database_product"), is(true));
         assertThat(response.has("server_info"), is(true));
