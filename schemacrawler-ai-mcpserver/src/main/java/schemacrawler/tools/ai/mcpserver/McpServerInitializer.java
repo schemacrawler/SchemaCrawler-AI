@@ -8,22 +8,14 @@
 
 package schemacrawler.tools.ai.mcpserver;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
 import static java.util.Objects.requireNonNull;
-import static java.util.stream.Collectors.joining;
-import static us.fatehi.utility.Utility.isBlank;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.UncheckedIOException;
 import java.util.Collection;
-import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.jspecify.annotations.NonNull;
 import org.springframework.context.ApplicationContextInitializer;
 import org.springframework.context.support.GenericApplicationContext;
-import org.springframework.core.env.MapPropertySource;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.importance.model.implementation.ImportanceModelBuilder;
@@ -37,24 +29,11 @@ import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.state.AbstractExecutionState;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
-import us.fatehi.utility.ioresource.ClasspathInputResource;
 
 public class McpServerInitializer extends AbstractExecutionState
     implements ApplicationContextInitializer<GenericApplicationContext> {
 
   private static final Logger LOGGER = Logger.getLogger(McpServerInitializer.class.getName());
-
-  private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
-
-  static String toolUsageGuide() {
-    try (final BufferedReader reader =
-        new ClasspathInputResource("tool-usage-guide.md").openNewInputReader(UTF_8)) {
-      final String text = new BufferedReader(reader).lines().collect(joining("\n"));
-      return text;
-    } catch (final IOException e) {
-      throw new UncheckedIOException("Could not read tool usage guide", e);
-    }
-  }
 
   private final boolean isInErrorState;
   private final McpServerTransportType mcpTransport;
@@ -175,30 +154,18 @@ public class McpServerInitializer extends AbstractExecutionState
         "isOffline",
         Boolean.class,
         () -> DatabaseConnectionSourceUtility.isOffline(connectionSource));
-    // Register services
+    context.registerBean("databaseIdentity", DatabaseIdentity.class, () -> databaseIdentity);
     context.registerBean(
         "functionDefinitionRegistry",
         FunctionDefinitionRegistry.class,
         () -> FunctionDefinitionRegistry.getFunctionDefinitionRegistry());
     context.registerBean("excludeTools", ExcludeTools.class, () -> excludeTools);
-    context.registerBean("databaseIdentity", DatabaseIdentity.class, () -> databaseIdentity);
 
-    // Highest precedence, so that the generated instructions cannot be overridden
+    // Highest precedence, so that the generated MCP server instructions cannot be overridden
     context
         .getEnvironment()
         .getPropertySources()
-        .addFirst(
-            new MapPropertySource(
-                "schemacrawlerInstructions", Map.of(INSTRUCTIONS_PROPERTY, instructions())));
-  }
-
-  private String instructions() {
-    final String description = databaseIdentity.description();
-    final String toolUsageGuide = toolUsageGuide();
-    if (isBlank(description)) {
-      return toolUsageGuide;
-    }
-    return description + "\n\n" + toolUsageGuide;
+        .addFirst(new InstructionsPropertySource(databaseIdentity));
   }
 
   // The errored catalog throws on every call, so it cannot provide identity values

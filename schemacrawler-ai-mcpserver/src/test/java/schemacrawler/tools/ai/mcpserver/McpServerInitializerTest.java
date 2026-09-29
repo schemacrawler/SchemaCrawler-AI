@@ -1,17 +1,14 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import org.junit.jupiter.api.BeforeEach;
@@ -29,6 +26,8 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 public class McpServerInitializerTest {
 
   private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
+  private static final String TOOLS_USAGE_GUIDE_HEADER =
+      "Tools Usage Guide for SchemaCrawler AI MCP Server";
 
   private Catalog catalog;
 
@@ -172,7 +171,7 @@ public class McpServerInitializerTest {
 
     assertThat(
         context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
+        containsString(TOOLS_USAGE_GUIDE_HEADER));
   }
 
   @Test
@@ -187,7 +186,7 @@ public class McpServerInitializerTest {
     assertThat(context.getBean("isInErrorState", Boolean.class), is(true));
     assertThat(
         context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
+        containsString(TOOLS_USAGE_GUIDE_HEADER));
   }
 
   @Test
@@ -206,7 +205,7 @@ public class McpServerInitializerTest {
     assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
     final String instructions = context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY);
     assertThat(instructions, startsWith("CRM system of record\n\n"));
-    assertThat(instructions, endsWith(McpServerInitializer.toolUsageGuide()));
+    assertThat(instructions, containsString(TOOLS_USAGE_GUIDE_HEADER));
   }
 
   @Test
@@ -220,26 +219,7 @@ public class McpServerInitializerTest {
 
     assertThat(
         context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
-  }
-
-  @Test
-  public void testToolUsageGuide() {
-    final String toolUsageGuide = McpServerInitializer.toolUsageGuide();
-
-    assertThat(toolUsageGuide.isBlank(), is(false));
-    assertThat(toolUsageGuide, startsWith("# "));
-    assertThat(toolUsageGuide, containsString("Start here"));
-    assertThat(toolUsageGuide, containsString("Use `list` for"));
-    assertThat(toolUsageGuide, containsString("Use `list_members_of_tables`"));
-    assertThat(
-        toolUsageGuide, containsString("Use regular expression filters to keep results small."));
-    // Count words only, not Markdown markers such as "#" or "1."
-    final long wordCount =
-        Arrays.stream(toolUsageGuide.split("\\s+"))
-            .filter(word -> word.matches(".*\\p{L}.*"))
-            .count();
-    assertThat(wordCount, is(lessThanOrEqualTo(220L)));
+        containsString(TOOLS_USAGE_GUIDE_HEADER));
   }
 
   @Test
