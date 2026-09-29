@@ -8,13 +8,13 @@ spring:
   main:
     banner-mode: off
   application:
-    name: schemacrawler-mcpserver
+    name: schemacrawler_ai_mcpserver
   ai:
     mcp:
       server:
         enabled: true
         type: SYNC
-        name: schemacrawler-mcpserver
+        name: schemacrawler_ai_mcpserver
 server:
   heartbeat: true
 
