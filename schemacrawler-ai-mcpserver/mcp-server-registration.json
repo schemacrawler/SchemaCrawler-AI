@@ -74,6 +74,20 @@
           "name": "SCHCRWLR_DATABASE"
         },
         {
+          "description": "Optional stable alias used to identify this database server in MCP instructions and tool results.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "SCHCRWLR_DATABASE_ALIAS"
+        },
+        {
+          "description": "Optional description of this database server, included in MCP instructions and the about_database response.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "SCHCRWLR_DATABASE_DESCRIPTION"
+        },
+        {
           "description": "How much database metadata to retrieve. Values are 'minimum', 'standard', 'detailed' or 'maximum'.",
           "isRequired": false,
           "format": "string",
