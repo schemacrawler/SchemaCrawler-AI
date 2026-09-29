@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
+import java.util.Map;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
 import schemacrawler.schema.DatabaseInfo;
@@ -52,7 +53,14 @@ public final class DatabaseIdentityUtility {
     putIfNotBlank(node, "description", databaseIdentity.description());
     final ProductVersion databaseProduct = databaseIdentity.databaseProduct();
     if (databaseProduct != null && !isBlank(databaseProduct.getProductName())) {
-      node.set("database_product", mapper.valueToTree(databaseProduct));
+      node.set(
+          "database_product",
+          mapper.valueToTree(
+              Map.of(
+                  "name",
+                  databaseProduct.getProductName(),
+                  "version",
+                  databaseProduct.getProductVersion())));
     }
     final DatabaseServerFingerprint serverFingerprint = databaseIdentity.serverFingerprint();
     if (serverFingerprint.confidence() == FingerprintConfidence.HIGH) {

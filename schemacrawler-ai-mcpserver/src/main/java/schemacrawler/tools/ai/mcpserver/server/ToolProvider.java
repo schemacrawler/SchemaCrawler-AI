@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import io.modelcontextprotocol.server.McpServerFeatures;
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -31,7 +32,6 @@ import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
-import schemacrawler.tools.ai.utility.JsonUtility;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
@@ -71,7 +71,7 @@ public class ToolProvider {
       @McpArg(description = "MCP Client identification, if available.", required = false)
           final String clientId,
       @McpArg(description = "Event id, if available.", required = false) final String eventId) {
-    final ObjectNode objectNode = JsonUtility.mapper.createObjectNode();
+    final ObjectNode objectNode = mapper.createObjectNode();
     objectNode.put("schemacrawler-version", Version.version().toString());
     objectNode.putPOJO("mcp-server-health", serverHealth.currentState());
 
@@ -103,14 +103,11 @@ public class ToolProvider {
               idempotentHint = true,
               openWorldHint = false))
   public JsonNode aboutDatabase(final McpSyncServerExchange exchange) {
-    final ObjectNode aboutDatabase = JsonUtility.mapper.createObjectNode();
+
     final DatabaseInfo databaseInfo = catalog.getDatabaseInfo();
+    final ObjectNode aboutDatabase = mapper.createObjectNode();
 
     final ObjectNode databaseServer = DatabaseIdentityUtility.toDetailNode(databaseIdentity);
-    databaseServer.remove("database_product");
-    final ObjectNode databaseProduct = databaseServer.putObject("database_product");
-    databaseProduct.put("database_product_name", databaseInfo.getDatabaseProductName());
-    databaseProduct.put("database_product_version", databaseInfo.getDatabaseProductVersion());
     aboutDatabase.set("database_server", databaseServer);
 
     final ArrayNode serverInfoArray = aboutDatabase.putArray("server_info");
@@ -127,13 +124,14 @@ public class ToolProvider {
 
     final List<SchemaStats> schemaStats = CatalogStatsUtility.schemaStatsFrom(catalog);
     if (schemaStats != null && !schemaStats.isEmpty()) {
-      aboutDatabase.set("schemas", JsonUtility.mapper.valueToTree(schemaStats));
+      aboutDatabase.set("schemas", mapper.valueToTree(schemaStats));
     }
 
+    // Log execution
     final CallToolLogger logger = new CallToolLogger(exchange);
-    logger.setFunctionCallbackNode(
-        JsonUtility.mapper.createObjectNode().put("name", "about_database"));
+    logger.setFunctionCallbackNode(mapper.createObjectNode().put("name", "about_database"));
     logger.log(RESPONSE, "Returned %s".formatted(databaseInfo.getDatabaseProductName()));
+
     return aboutDatabase;
   }
 

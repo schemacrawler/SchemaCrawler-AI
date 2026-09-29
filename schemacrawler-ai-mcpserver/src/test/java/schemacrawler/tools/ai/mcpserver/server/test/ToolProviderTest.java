@@ -159,12 +159,9 @@ public class ToolProviderTest {
 
     assertThat(databaseServer.get("alias").asString(), is("crm-prod"));
     assertThat(databaseServer.get("description").asString(), is("CRM system of record"));
+    assertThat(databaseServer.get("database_product").get("name").asString(), is("Test Database"));
     assertThat(
-        databaseServer.get("database_product").get("database_product_name").asString(),
-        is("Test Database"));
-    assertThat(
-        databaseServer.get("database_product").get("database_product_version").asString().isBlank(),
-        is(false));
+        databaseServer.get("database_product").get("version").asString().isBlank(), is(false));
     assertThat(
         databaseServer.get("database_server_fingerprint").get("fingerprint").asString(),
         is("test-fingerprint"));
