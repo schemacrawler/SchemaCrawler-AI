@@ -76,6 +76,13 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-web</artifactId>
     </dependency>
+
+    <!-- Other dependencies -->
+    <dependency>
+      <groupId>com.oblac</groupId>
+      <artifactId>nomen-est-omen</artifactId>
+      <version>2.2.1</version>
+    </dependency>
     
     <!-- Test dependencies -->
     <dependency>

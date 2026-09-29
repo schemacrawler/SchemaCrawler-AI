@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNull;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.utility.Utility.isBlank;
 
+import com.oblac.nomen.Nomen;
 import java.util.Map;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schema.CrawlInfo;
@@ -41,7 +42,14 @@ public final class DatabaseIdentityUtility {
         serverFingerprint = crawlInfo.getDatabaseServerFingerprint();
       }
     }
-    return new DatabaseIdentity(alias, description, databaseProduct, serverFingerprint);
+    final String databaseServerAlias;
+    if (isBlank(alias)) {
+      databaseServerAlias = Nomen.est().adjective().separator().noun().get();
+    } else {
+      databaseServerAlias = alias;
+    }
+    return new DatabaseIdentity(
+        databaseServerAlias, description, databaseProduct, serverFingerprint);
   }
 
   /** Detailed identity, for the about database tool. */
