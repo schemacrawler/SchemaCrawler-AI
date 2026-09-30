@@ -44,6 +44,7 @@ public final class DatabaseIdentityUtility {
     }
     final String databaseServerAlias;
     if (isBlank(alias)) {
+      // Give each unconfigured server alias a human-readable alias to distinguish MCP instances.
       databaseServerAlias = Nomen.est().adjective().noun().get();
     } else {
       databaseServerAlias = alias;

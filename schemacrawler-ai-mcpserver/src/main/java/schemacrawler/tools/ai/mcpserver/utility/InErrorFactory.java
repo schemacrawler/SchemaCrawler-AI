@@ -15,6 +15,7 @@ import java.sql.DriverManager;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Optional;
+import java.util.Set;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import us.fatehi.utility.UtilityMarker;
@@ -101,6 +102,9 @@ public final class InErrorFactory {
     }
     if (Optional.class.isAssignableFrom(returnType)) {
       return Optional.empty();
+    }
+    if (Set.class.isAssignableFrom(returnType)) {
+      return Collections.emptySet();
     }
     if (Collection.class.isAssignableFrom(returnType)) {
       return Collections.emptyList();

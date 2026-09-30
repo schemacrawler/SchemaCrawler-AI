@@ -87,8 +87,7 @@ public class InstructionsPropertySource extends MapPropertySource {
   private static String toolUsageGuide() {
     try (final BufferedReader reader =
         new ClasspathInputResource("tool-usage-guide.md").openNewInputReader(UTF_8)) {
-      final String text = new BufferedReader(reader).lines().collect(joining("\n"));
-      return text;
+      return reader.lines().collect(joining("\n"));
     } catch (final IOException e) {
       throw new UncheckedIOException("Could not read tool usage guide", e);
     }

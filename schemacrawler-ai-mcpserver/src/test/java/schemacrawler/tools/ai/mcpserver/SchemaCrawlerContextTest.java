@@ -11,14 +11,23 @@ package schemacrawler.tools.ai.mcpserver;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.sql.Connection;
+import java.sql.Statement;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
+import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.InfoLevel;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
+import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
+import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @DisplayName("SchemaCrawler configuration tests")
 public class SchemaCrawlerContextTest {
@@ -29,6 +38,68 @@ public class SchemaCrawlerContextTest {
   @BeforeEach
   void setUp() {
     envAccessor = ConfigUtility.newConfig();
+  }
+
+  @Test
+  @DisplayName("Should build an operations database connection source")
+  void shouldBuildOperationsDatabaseConnectionSource() throws Exception {
+    envAccessor.put("SCHCRWLR_JDBC_URL", "jdbc:hsqldb:mem:operations_source");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    try (DatabaseConnectionSource connectionSource =
+            context.buildOperationsDatabaseConnectionSource();
+        Connection connection = connectionSource.get()) {
+      assertThat(connection.isValid(1), is(true));
+    }
+  }
+
+  @Test
+  @DisplayName("Should use the configured connection source for an online catalog")
+  void shouldBuildOnlineCatalogDatabaseConnectionSource() throws Exception {
+    envAccessor.put("SCHCRWLR_JDBC_URL", "jdbc:hsqldb:mem:online_catalog_source");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    try (DatabaseConnectionSource connectionSource =
+            context.buildCatalogDatabaseConnectionSource();
+        Connection connection = connectionSource.get()) {
+      assertThat(connection.isValid(1), is(true));
+    }
+  }
+
+  @Test
+  @DisplayName("Should build an offline catalog connection source when a snapshot is configured")
+  void shouldBuildOfflineCatalogDatabaseConnectionSource(@TempDir final Path tempDirectory)
+      throws Exception {
+    final Path snapshot = tempDirectory.resolve("catalog.ser");
+    Files.writeString(snapshot, "offline catalog snapshot");
+    envAccessor.put("SCHCRWLR_OFFLINE_DATABASE", snapshot.toString());
+    context = new SchemaCrawlerContext(envAccessor);
+
+    try (DatabaseConnectionSource connectionSource =
+        context.buildCatalogDatabaseConnectionSource()) {
+      assertTrue(DatabaseConnectionSourceUtility.isOffline(connectionSource));
+    }
+  }
+
+  @Test
+  @DisplayName("Should load the catalog from the configured database")
+  void shouldLoadCatalog() throws Exception {
+    envAccessor.put("SCHCRWLR_JDBC_URL", "jdbc:hsqldb:mem:loaded_catalog");
+    context = new SchemaCrawlerContext(envAccessor);
+
+    try (DatabaseConnectionSource connectionSource =
+            context.buildOperationsDatabaseConnectionSource();
+        Connection connection = connectionSource.get();
+        Statement statement = connection.createStatement()) {
+      statement.execute("CREATE TABLE context_test_table (id INTEGER)");
+
+      final Catalog catalog = context.loadCatalog();
+
+      assertThat(catalog, notNullValue());
+      assertTrue(
+          catalog.getTables().stream()
+              .anyMatch(table -> "CONTEXT_TEST_TABLE".equalsIgnoreCase(table.getName())));
+    }
   }
 
   @Test
