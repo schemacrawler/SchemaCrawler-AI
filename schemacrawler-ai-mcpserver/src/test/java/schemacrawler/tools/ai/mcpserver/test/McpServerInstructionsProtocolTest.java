@@ -64,7 +64,7 @@ public class McpServerInstructionsProtocolTest {
       try {
         final InitializeResult result = client.initialize();
 
-        assertThat(result.serverInfo().name(), is("schemacrawler-mcpserver"));
+        assertThat(result.serverInfo().name(), is("schemacrawler_ai_mcpserver"));
         assertThat(result.instructions(), startsWith("# Database Server Description"));
         assertThat(result.instructions(), containsString("Start here"));
         assertThat(result.instructions(), containsString("`list_members_of_tables`"));
