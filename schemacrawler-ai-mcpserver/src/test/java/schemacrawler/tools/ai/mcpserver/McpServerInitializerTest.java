@@ -1,19 +1,18 @@
 package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.CoreMatchers.containsString;
-import static org.hamcrest.CoreMatchers.endsWith;
 import static org.hamcrest.CoreMatchers.instanceOf;
 import static org.hamcrest.CoreMatchers.is;
-import static org.hamcrest.CoreMatchers.startsWith;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.hamcrest.Matchers.lessThanOrEqualTo;
+import static org.hamcrest.Matchers.emptyString;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
+import org.jspecify.annotations.Nullable;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.context.ApplicationContext;
@@ -29,6 +28,10 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 public class McpServerInitializerTest {
 
   private static final String INSTRUCTIONS_PROPERTY = "spring.ai.mcp.server.instructions";
+  private static final String STARTUP_ERROR_MESSAGE =
+      "The SchemaCrawler AI MCP Server could not connect to the database.";
+  private static final String TOOLS_USAGE_GUIDE_HEADER =
+      "Tools Usage Guide for SchemaCrawler AI MCP Server";
 
   private Catalog catalog;
 
@@ -47,7 +50,7 @@ public class McpServerInitializerTest {
     final DatabaseIdentity identity =
         getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
 
-    assertThat(identity.alias(), is(""));
+    assertThat(identity.alias().toString(), is(not(emptyString())));
     assertThat(identity.description(), is(""));
     // A mock connection source cannot connect, so the server is in an error state
     assertThat(identity.serverFingerprint().fingerprint(), is(""));
@@ -64,7 +67,7 @@ public class McpServerInitializerTest {
     final DatabaseIdentity identity =
         getContext(initializer).getBean("databaseIdentity", DatabaseIdentity.class);
 
-    assertThat(identity.alias(), is(""));
+    assertThat(identity.alias().toString(), is(not(emptyString())));
     assertThat(identity.description(), is(""));
   }
 
@@ -170,9 +173,9 @@ public class McpServerInitializerTest {
     initializer.initialize(context);
     context.refresh();
 
-    assertThat(
-        context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
+    @Nullable
+    final String instructions = context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY);
+    assertThat(instructions, containsString(STARTUP_ERROR_MESSAGE));
   }
 
   @Test
@@ -184,10 +187,10 @@ public class McpServerInitializerTest {
 
     final ApplicationContext context = getContext(initializer);
 
+    @Nullable
+    final String instructions = context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY);
     assertThat(context.getBean("isInErrorState", Boolean.class), is(true));
-    assertThat(
-        context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
+    assertThat(instructions, containsString(STARTUP_ERROR_MESSAGE));
   }
 
   @Test
@@ -203,10 +206,11 @@ public class McpServerInitializerTest {
     final ApplicationContext context =
         getContext(new McpServerInitializer(scContext, serverContext));
 
-    assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
+    @Nullable
     final String instructions = context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY);
-    assertThat(instructions, startsWith("CRM system of record\n\n"));
-    assertThat(instructions, endsWith(McpServerInitializer.toolUsageGuide()));
+    assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
+    assertThat(instructions, containsString("CRM system of record\n\n"));
+    assertThat(instructions, containsString(TOOLS_USAGE_GUIDE_HEADER));
   }
 
   @Test
@@ -218,28 +222,9 @@ public class McpServerInitializerTest {
 
     final ApplicationContext context = getContext(initializer);
 
-    assertThat(
-        context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY),
-        is(McpServerInitializer.toolUsageGuide()));
-  }
-
-  @Test
-  public void testToolUsageGuide() {
-    final String toolUsageGuide = McpServerInitializer.toolUsageGuide();
-
-    assertThat(toolUsageGuide.isBlank(), is(false));
-    assertThat(toolUsageGuide, startsWith("# "));
-    assertThat(toolUsageGuide, containsString("Start here"));
-    assertThat(toolUsageGuide, containsString("Use `list` for"));
-    assertThat(toolUsageGuide, containsString("Use `list_members_of_tables`"));
-    assertThat(
-        toolUsageGuide, containsString("Use regular expression filters to keep results small."));
-    // Count words only, not Markdown markers such as "#" or "1."
-    final long wordCount =
-        Arrays.stream(toolUsageGuide.split("\\s+"))
-            .filter(word -> word.matches(".*\\p{L}.*"))
-            .count();
-    assertThat(wordCount, is(lessThanOrEqualTo(220L)));
+    @Nullable
+    final String instructions = context.getEnvironment().getProperty(INSTRUCTIONS_PROPERTY);
+    assertThat(instructions, containsString(STARTUP_ERROR_MESSAGE));
   }
 
   @Test

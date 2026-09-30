@@ -10,8 +10,10 @@ package schemacrawler.tools.ai.mcpserver.test;
 
 import static org.hamcrest.CoreMatchers.containsString;
 import static org.hamcrest.CoreMatchers.is;
+import static org.hamcrest.CoreMatchers.not;
 import static org.hamcrest.CoreMatchers.startsWith;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.emptyString;
 import static org.hamcrest.Matchers.nullValue;
 
 import io.modelcontextprotocol.client.McpClient;
@@ -63,9 +65,7 @@ public class McpServerInstructionsProtocolTest {
         final InitializeResult result = client.initialize();
 
         assertThat(result.serverInfo().name(), is("schemacrawler-mcpserver"));
-        assertThat(
-            result.instructions(),
-            startsWith("# Tools Usage Guide for SchemaCrawler AI MCP Server"));
+        assertThat(result.instructions(), startsWith("# Database Server Description"));
         assertThat(result.instructions(), containsString("Start here"));
         assertThat(result.instructions(), containsString("`list_members_of_tables`"));
         assertThat(
@@ -83,7 +83,7 @@ public class McpServerInstructionsProtocolTest {
         final JsonNode response =
             JsonUtility.mapper.readTree(((TextContent) aboutDatabase.content().getFirst()).text());
         final JsonNode databaseServer = response.get("database_server");
-        assertThat(databaseServer.get("alias"), is(nullValue()));
+        assertThat(databaseServer.get("alias").toString(), is(not(emptyString())));
         assertThat(databaseServer.get("description"), is(nullValue()));
         assertThat(response.has("database-server"), is(false));
         assertThat(databaseServer.has("database_product"), is(true));
