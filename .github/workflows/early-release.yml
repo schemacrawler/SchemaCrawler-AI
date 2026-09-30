@@ -93,13 +93,14 @@ jobs:
         git config user.email "sualeh@hotmail.com"
         ## Verify that gitsign is available
         gitsign --version
-        ## Delete previous early release and its tag
+        ## Delete previous Early Access release and its tag
         gh release delete "$TAG" -y || true
         git push origin --delete "$TAG" || true
         git rev-parse -q --verify "refs/tags/$TAG" >/dev/null && git tag -d "$TAG" || true
         ## Re-tag to last commit
         git tag -a "$TAG" -m "SchemaCrawler AI Early Access Release"
-        git push origin "$TAG"
+        git push --follow-tags origin "$TAG"
+        git show --no-patch "$TAG"
 
 
 # BUILD AND PUBLISH DOCKER IMAGE

@@ -95,3 +95,4 @@ jobs:
         git tag -a "$TAG" -m "SchemaCrawler AI Release to Docker Hub"
         git push --follow-tags origin "$TAG"
         git show --no-patch "$TAG"
+
