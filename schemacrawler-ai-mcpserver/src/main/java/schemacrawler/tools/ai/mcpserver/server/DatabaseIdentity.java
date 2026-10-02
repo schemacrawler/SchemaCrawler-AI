@@ -12,6 +12,7 @@ import static java.util.Objects.requireNonNullElseGet;
 import static us.fatehi.utility.Utility.isBlank;
 import static us.fatehi.utility.Utility.trimToEmpty;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
 import us.fatehi.utility.property.ProductVersion;
 
@@ -26,7 +27,7 @@ public record DatabaseIdentity(
     DatabaseServerFingerprint serverFingerprint) {
 
   private static final class EmptyProductVersion implements ProductVersion {
-    /** */
+
     private static final long serialVersionUID = 5413473984636621997L;
 
     @Override
@@ -59,6 +60,7 @@ public record DatabaseIdentity(
   }
 
   /** True when there is nothing to report in tool results. */
+  @JsonIgnore
   public boolean isEmpty() {
     return isBlank(alias) && isBlank(databaseProduct.getName());
   }

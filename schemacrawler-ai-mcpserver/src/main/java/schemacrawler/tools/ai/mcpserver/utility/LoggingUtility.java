@@ -8,6 +8,8 @@
 
 package schemacrawler.tools.ai.mcpserver.utility;
 
+import static java.util.Objects.requireNonNullElse;
+
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.logging.Level;
@@ -19,8 +21,13 @@ import schemacrawler.loader.ermodel.summary.ERModelSummaryUtility;
 import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
+import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
+import schemacrawler.tools.ai.utility.JsonUtility;
 import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
+import tools.jackson.databind.ObjectWriter;
 import us.fatehi.utility.UtilityMarker;
+import us.fatehi.utility.property.JvmArchitectureInfo;
+import us.fatehi.utility.property.OperatingSystemInfo;
 
 @UtilityMarker
 public final class LoggingUtility {
@@ -32,11 +39,28 @@ public final class LoggingUtility {
       return;
     }
 
+    final Boolean isInErrorState = beanFactory.getBean("isInErrorState", Boolean.class);
+    if (Boolean.TRUE.equals(requireNonNullElse(isInErrorState, Boolean.FALSE))) {
+      return;
+    }
+
+    final DatabaseIdentity databaseIdentity =
+        beanFactory.getBean("databaseIdentity", DatabaseIdentity.class);
     final Catalog catalog = beanFactory.getBean("catalog", Catalog.class);
     final ERModel erModel = beanFactory.getBean("erModel", ERModel.class);
 
     try (final StringWriter stringWriter = new StringWriter();
         final PrintWriter writer = new PrintWriter(stringWriter)) {
+
+      final ObjectWriter jsonPrinter = JsonUtility.mapper.writerWithDefaultPrettyPrinter();
+
+      writer.println("-".repeat(80));
+
+      if (databaseIdentity != null) {
+        writer.println(
+            "Database server:%n%s".formatted(jsonPrinter.writeValueAsString(databaseIdentity)));
+        writer.println();
+      }
 
       if (catalog != null) {
         writer.println("Catalog summary:%n%s".formatted(CatalogSummaryUtility.summarize(catalog)));
@@ -47,6 +71,8 @@ public final class LoggingUtility {
         writer.println("ER Model summary:%n%s".formatted(ERModelSummaryUtility.summarize(erModel)));
         writer.println();
       }
+
+      writer.println("-".repeat(80));
 
       writer.close();
 
@@ -72,6 +98,8 @@ public final class LoggingUtility {
       writer.println(new SpringAiVersion());
       writer.println(new SpringBootFrameworkVersion());
       writer.println(new SpringFrameworkVersion());
+      writer.println(JvmArchitectureInfo.jvmArchitectureInfo());
+      writer.println(OperatingSystemInfo.operatingSystemInfo());
 
       writer.println();
       writer.println(
