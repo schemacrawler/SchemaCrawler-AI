@@ -21,6 +21,8 @@ import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 import us.fatehi.utility.UtilityMarker;
+import us.fatehi.utility.property.JvmArchitectureInfo;
+import us.fatehi.utility.property.OperatingSystemInfo;
 
 @UtilityMarker
 public final class LoggingUtility {
@@ -72,6 +74,8 @@ public final class LoggingUtility {
       writer.println(new SpringAiVersion());
       writer.println(new SpringBootFrameworkVersion());
       writer.println(new SpringFrameworkVersion());
+      writer.println(JvmArchitectureInfo.jvmArchitectureInfo());
+      writer.println(OperatingSystemInfo.operatingSystemInfo());
 
       writer.println();
       writer.println(
