@@ -38,11 +38,9 @@ public final class DescribeTablesFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() throws Exception {
-    refilterCatalog();
-
     final Collection<AdditionalTableDetails> tableDetails = getTableDetails();
-    final ERModel erModel = getERModel();
-    final Catalog catalog = getCatalog();
+    final ERModel erModel = getSelectedERModel();
+    final Catalog catalog = getSelectedCatalog();
     final CatalogDocument catalogDocument =
         CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalTableDetails(tableDetails)

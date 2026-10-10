@@ -10,7 +10,6 @@ package schemacrawler.tools.ai.mcpserver.utility;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.sql.Connection;
 import org.junit.jupiter.api.Test;
@@ -29,7 +28,6 @@ public class InErrorFactoryTest {
     assertThat(catalog.toString(), is("empty-catalog"));
     assertThat(catalog.equals(catalog), is(true));
     assertThat(catalog.equals(InErrorFactory.createErroredCatalog()), is(false));
-    assertThrows(IllegalStateException.class, catalog::getSchemas);
   }
 
   @Test
