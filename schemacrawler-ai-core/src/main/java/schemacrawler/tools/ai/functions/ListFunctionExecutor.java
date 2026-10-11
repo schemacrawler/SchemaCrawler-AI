@@ -38,9 +38,7 @@ public final class ListFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() throws Exception {
-    refilterCatalog();
-
-    final Catalog catalog = getCatalog();
+    final Catalog catalog = getSelectedCatalog();
     final Collection<NamedObject> databaseObjects = new ArrayList<>();
     final DatabaseObjectType databaseObjectType = commandOptions.databaseObjectType();
     if (databaseObjectType == DatabaseObjectType.SCHEMAS || databaseObjectType == ALL) {

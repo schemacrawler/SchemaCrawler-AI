@@ -12,23 +12,26 @@ import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.regex.Pattern;
-import schemacrawler.filter.ReducerFactory;
+import schemacrawler.ermodel.model.ERModel;
+import schemacrawler.filter.CatalogProjectionBuilder;
 import schemacrawler.importance.model.ImportanceModel;
 import schemacrawler.inclusionrule.IncludeAll;
 import schemacrawler.inclusionrule.InclusionRule;
 import schemacrawler.inclusionrule.RegularExpressionInclusionRule;
 import schemacrawler.schema.Catalog;
-import schemacrawler.schema.CatalogReducer;
 import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.tools.FunctionExecutor;
 import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.command.AbstractCommand;
+import schemacrawler.tools.utility.SchemaCrawlerUtility;
 import us.fatehi.utility.property.PropertyName;
 
 public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
     extends AbstractCommand<P> implements FunctionExecutor<P> {
 
   private ImportanceModel importanceModel;
+  private Catalog selectedCatalog;
+  private ERModel selectedERModel;
 
   protected AbstractFunctionExecutor(final PropertyName functionName) {
     super(requireNonNull(functionName, "Function name not provided"));
@@ -46,6 +49,27 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
 
   protected abstract SchemaCrawlerOptions createSchemaCrawlerOptions();
 
+  /** Catalog projection for this invocation only. The shared baseline catalog is not modified. */
+  protected final Catalog getSelectedCatalog() {
+    if (selectedCatalog == null) {
+      selectedCatalog =
+          CatalogProjectionBuilder.builder(getCatalog()).withOptions(selectionOptions()).build();
+    }
+    return selectedCatalog;
+  }
+
+  /** Entity-relationship model for the selected catalog of this invocation. */
+  protected final ERModel getSelectedERModel() {
+    if (selectedERModel == null) {
+      selectedERModel = SchemaCrawlerUtility.buildERModel(getSelectedCatalog());
+    }
+    return selectedERModel;
+  }
+
+  protected SchemaCrawlerOptions selectionOptions() {
+    return createSchemaCrawlerOptions();
+  }
+
   protected final ImportanceModel getImportanceModel() {
     return importanceModel;
   }
@@ -59,14 +83,6 @@ public abstract class AbstractFunctionExecutor<P extends FunctionParameters>
       inclusionRule = new RegularExpressionInclusionRule(dependantObjectPattern);
     }
     return inclusionRule;
-  }
-
-  protected void refilterCatalog(final SchemaCrawlerOptions options) {
-    final Catalog catalog = getCatalog();
-
-    final CatalogReducer reducer = ReducerFactory.getCatalogReducer(options);
-    reducer.undo(catalog);
-    reducer.reduce(catalog);
   }
 
   private Pattern makeNameInclusionPattern(final String name) {

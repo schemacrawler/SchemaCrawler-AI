@@ -46,12 +46,10 @@ public final class ListMembersOfTablesFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() throws Exception {
-    refilterCatalog();
-
     final Collection<DependantObject<Table>> dependantObjects = new ArrayList<>();
     final TableMemberType memberType = commandOptions.memberType();
 
-    for (final Table table : getCatalog().getTables()) {
+    for (final Table table : getSelectedCatalog().getTables()) {
       switch (memberType) {
         case COLUMNS:
           dependantObjects.addAll(table.getColumns());
@@ -130,9 +128,9 @@ public final class ListMembersOfTablesFunctionExecutor
 
   private ObjectNode createDependentObjectNode(final DependantObject<Table> dependantObject) {
 
-    final ERModel erModel = getERModel();
+    final ERModel erModel = getSelectedERModel();
     final CompactCatalogBuilder catalogBuilder =
-        CompactCatalogBuilder.builder(getCatalog(), erModel);
+        CompactCatalogBuilder.builder(getSelectedCatalog(), erModel);
     final Document document =
         switch (dependantObject) {
           case final Column column -> catalogBuilder.buildColumnDocument(column);

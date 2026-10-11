@@ -32,8 +32,6 @@ public final class DescribeErRelationshipsFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() throws Exception {
-    refilterCatalog();
-
     final RelationshipCardinality cardinality = commandOptions.cardinality().cardinality();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.relationshipName());
     final ERModel erModel = getERModel();

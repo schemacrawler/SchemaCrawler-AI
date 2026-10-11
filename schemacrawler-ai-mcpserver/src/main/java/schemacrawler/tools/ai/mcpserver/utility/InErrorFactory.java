@@ -13,7 +13,9 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.sql.DriverManager;
 import java.util.Collection;
-import java.util.Collections;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import schemacrawler.ermodel.model.ERModel;
@@ -43,7 +45,7 @@ public final class InErrorFactory {
               case "getName", "getFullName", "toString" -> "empty-catalog"; // For debugging
               case "equals" -> proxy == args[0];
               case "hashCode" -> System.identityHashCode(proxy);
-              default -> throw new IllegalStateException(errorMessage);
+              default -> returnEmpty(method);
             };
 
     return (Catalog)
@@ -103,12 +105,74 @@ public final class InErrorFactory {
     if (Optional.class.isAssignableFrom(returnType)) {
       return Optional.empty();
     }
+    if (Map.class.isAssignableFrom(returnType)) {
+      return Map.of();
+    }
     if (Set.class.isAssignableFrom(returnType)) {
-      return Collections.emptySet();
+      return Set.of();
     }
     if (Collection.class.isAssignableFrom(returnType)) {
-      return Collections.emptyList();
+      return List.of();
     }
+    if (Iterator.class.isAssignableFrom(returnType)) {
+      return List.of().iterator();
+    }
+
+    // Handle primitives
+    if (returnType == boolean.class) {
+      return false;
+    }
+    if (returnType == int.class) {
+      return 0;
+    }
+    if (returnType == long.class) {
+      return 0L;
+    }
+    if (returnType == double.class) {
+      return 0.0d;
+    }
+    if (returnType == float.class) {
+      return 0.0f;
+    }
+    if (returnType == byte.class) {
+      return (byte) 0;
+    }
+    if (returnType == short.class) {
+      return (short) 0;
+    }
+    if (returnType == char.class) {
+      return '\0';
+    }
+
+    // Handle primitive wrappers
+    if (returnType == Boolean.class) {
+      return Boolean.FALSE;
+    }
+    if (returnType == Integer.class) {
+      return Integer.valueOf(0);
+    }
+    if (returnType == Long.class) {
+      return Long.valueOf(0L);
+    }
+    if (returnType == Double.class) {
+      return Double.valueOf(0.0d);
+    }
+    if (returnType == Float.class) {
+      return Float.valueOf(0.0f);
+    }
+    if (returnType == Byte.class) {
+      return Byte.valueOf((byte) 0);
+    }
+    if (returnType == Short.class) {
+      return Short.valueOf((short) 0);
+    }
+    if (returnType == Character.class) {
+      return Character.valueOf('\0');
+    }
+    if (returnType == String.class) {
+      return "";
+    }
+
     throw new UnsupportedOperationException(method.toString());
   }
 

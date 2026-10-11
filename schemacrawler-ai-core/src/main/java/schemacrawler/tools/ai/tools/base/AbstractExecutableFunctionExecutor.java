@@ -65,10 +65,8 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     requireNonNull(executionParameters, "No execution parameters provided");
 
     // Crate SchemaCrawler options
-    final SchemaCrawlerOptions options = adjustSchemaCrawlerOptions();
-    final Catalog catalog = getCatalog();
-
-    refilterCatalog(options);
+    final SchemaCrawlerOptions options = selectionOptions();
+    final Catalog catalog = getSelectedCatalog();
 
     // Create output file path
     final String outputFormatValue = executionParameters.outputFormat();
@@ -100,7 +98,7 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
   }
 
   protected boolean hasResults() {
-    return !getCatalog().getTables().isEmpty();
+    return !getSelectedCatalog().getTables().isEmpty();
   }
 
   protected final FunctionReturn returnJson(final Path outputFilePath) {
@@ -149,7 +147,8 @@ public abstract class AbstractExecutableFunctionExecutor<P extends FunctionParam
     }
   }
 
-  private final SchemaCrawlerOptions adjustSchemaCrawlerOptions() {
+  @Override
+  protected final SchemaCrawlerOptions selectionOptions() {
 
     final SchemaCrawlerOptions baseOptions = createSchemaCrawlerOptions();
     final LimitOptionsBuilder limitOptionsBuilder =

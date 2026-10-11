@@ -38,11 +38,9 @@ public final class DescribeRoutinesFunctionExecutor
 
   @Override
   public JsonFunctionReturn call() throws Exception {
-    refilterCatalog();
-
     final Collection<AdditionalRoutineDetails> routineDetails = getRoutineDetails();
-    final ERModel erModel = getERModel();
-    final Catalog catalog = getCatalog();
+    final ERModel erModel = getSelectedERModel();
+    final Catalog catalog = getSelectedCatalog();
     final CatalogDocument catalogDocument =
         CompactCatalogBuilder.builder(catalog, erModel)
             .withAdditionalRoutineDetails(routineDetails)
