@@ -34,7 +34,7 @@ public final class DescribeErRelationshipsFunctionExecutor
   public JsonFunctionReturn call() throws Exception {
     final RelationshipCardinality cardinality = commandOptions.cardinality().cardinality();
     final InclusionRule inclusionRule = makeInclusionRule(commandOptions.relationshipName());
-    final ERModel erModel = getERModel();
+    final ERModel erModel = getSelectedERModel();
     final Collection<RelationshipDocument> documents =
         CompactERModelBuilder.builder(erModel)
             .withRelationshipCardinalities(cardinality)
