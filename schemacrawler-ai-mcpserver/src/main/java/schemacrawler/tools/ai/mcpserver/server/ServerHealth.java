@@ -24,7 +24,7 @@ import us.fatehi.utility.property.ProductVersion;
 @Component
 public class ServerHealth {
 
-  private static final ProductVersion serverName = new SchemaCrawlerAiVersion();
+  private static final ProductVersion serverName = SchemaCrawlerAiVersion.version();
 
   @Autowired private boolean isInErrorState;
   @Autowired private boolean isOffline;

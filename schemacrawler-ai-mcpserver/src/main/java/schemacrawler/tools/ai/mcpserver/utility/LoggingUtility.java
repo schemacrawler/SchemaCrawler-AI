@@ -27,6 +27,7 @@ import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 import tools.jackson.databind.ObjectWriter;
 import us.fatehi.utility.UtilityMarker;
 import us.fatehi.utility.property.JvmArchitectureInfo;
+import us.fatehi.utility.property.JvmSystemInfo;
 import us.fatehi.utility.property.OperatingSystemInfo;
 
 @UtilityMarker
@@ -93,11 +94,12 @@ public final class LoggingUtility {
       writer.println();
       writer.println("-".repeat(80));
 
-      writer.println(new SchemaCrawlerAiVersion());
+      writer.println(SchemaCrawlerAiVersion.version());
       writer.println(Version.version());
-      writer.println(new SpringAiVersion());
-      writer.println(new SpringBootFrameworkVersion());
-      writer.println(new SpringFrameworkVersion());
+      writer.println(SpringAiVersion.version());
+      writer.println(SpringBootFrameworkVersion.version());
+      writer.println(SpringFrameworkVersion.version());
+      writer.println(JvmSystemInfo.jvmSystemInfo());
       writer.println(JvmArchitectureInfo.jvmArchitectureInfo());
       writer.println(OperatingSystemInfo.operatingSystemInfo());
 
