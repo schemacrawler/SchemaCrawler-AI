@@ -16,7 +16,13 @@ public class SpringFrameworkVersion extends BaseProductVersion {
 
   @Serial private static final long serialVersionUID = -7653937680189652866L;
 
-  public SpringFrameworkVersion() {
+  private static final SpringFrameworkVersion SPRING_VERSION = new SpringFrameworkVersion();
+
+  public static SpringFrameworkVersion version() {
+    return SPRING_VERSION;
+  }
+
+  private SpringFrameworkVersion() {
     super("Spring Framework", SpringVersion.getVersion());
   }
 }

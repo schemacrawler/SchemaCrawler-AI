@@ -17,6 +17,12 @@ public class SpringAiVersion extends BaseProductVersion {
 
   @Serial private static final long serialVersionUID = -7653937680189652866L;
 
+  private static final SpringAiVersion SPRING_AI_VERSION = new SpringAiVersion();
+
+  public static SpringAiVersion version() {
+    return SPRING_AI_VERSION;
+  }
+
   private static String getSpringAiVersion() {
     final String unknownVersion = "<unknown>";
     try {
@@ -30,7 +36,7 @@ public class SpringAiVersion extends BaseProductVersion {
     }
   }
 
-  public SpringAiVersion() {
+  private SpringAiVersion() {
     super("Spring AI", getSpringAiVersion());
   }
 }

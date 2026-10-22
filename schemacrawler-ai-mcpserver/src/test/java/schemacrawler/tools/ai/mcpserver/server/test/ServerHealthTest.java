@@ -83,7 +83,7 @@ public class ServerHealthTest {
             "transport",
             "exclude-tools"));
 
-    assertThat(state.get("_server"), is(new SchemaCrawlerAiVersion().toString()));
+    assertThat(state.get("_server"), is(SchemaCrawlerAiVersion.version().toString()));
     assertThat(state.get("in-error-state"), is(false));
     assertThat(state.get("transport"), is("http"));
     assertThat(state.get("exclude-tools"), is(Collections.emptySet()));
