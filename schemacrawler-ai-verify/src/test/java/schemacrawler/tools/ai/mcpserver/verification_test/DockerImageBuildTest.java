@@ -97,7 +97,7 @@ public class DockerImageBuildTest {
     assertThat("Health endpoint should return HTTP 200", response.statusCode(), is(200));
 
     final JsonNode state = mapper.readTree(response.body());
-    assertThat(state.get("_server").asString(), is(new SchemaCrawlerAiVersion().toString()));
+    assertThat(state.get("_server").asString(), is(SchemaCrawlerAiVersion.version().toString()));
     assertThat(state.get("in-error-state").asBoolean(), is(false));
     assertThat(state.get("transport").asString(), is("http"));
     assertThat(state.get("exclude-tools").isEmpty(), is(true));
