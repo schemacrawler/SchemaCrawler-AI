@@ -1,0 +1,93 @@
+name: Test Published Releases
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  test-docker:
+    name: Test SchemaCrawler AI Docker image
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.smoke-test.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Pull published image
+        run: docker pull schemacrawler/schemacrawler-ai:latest
+      - name: Start MCP server
+        run: |
+          docker run -d --name release-test \
+            -p 127.0.0.1:8181:8181 \
+            -e SCHCRWLR_MCP_SERVER_TRANSPORT=http \
+            -e SCHCRWLR_SERVER=sqlite \
+            -e SCHCRWLR_DATABASE=sc.db \
+            -e SERVER_PORT=8181 \
+            schemacrawler/schemacrawler-ai:latest
+      - id: smoke-test
+        name: Check health and published AI version
+        run: |
+          curl --fail --silent --show-error \
+            --retry 30 --retry-all-errors --retry-delay 2 --max-time 5 \
+            --output health.json http://127.0.0.1:8181/health
+          python3 .github/scripts/release-summary.py check-health health.json
+      - name: Container logs
+        if: always()
+        run: docker logs release-test
+      - name: Remove test container
+        if: always()
+        run: |
+          if docker container inspect release-test >/dev/null 2>&1; then
+            docker rm -f release-test
+          fi
+
+  test-mcp:
+    name: Test Docker MCP image
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    outputs:
+      version: ${{ steps.smoke-test.outputs.version }}
+    steps:
+      - uses: actions/checkout@v7
+      - name: Pull published image
+        run: docker pull mcp/schemacrawler-ai:latest
+      - name: Start MCP server
+        run: |
+          docker run -d --name release-test \
+            -p 127.0.0.1:8181:8181 \
+            -e SCHCRWLR_MCP_SERVER_TRANSPORT=http \
+            -e SCHCRWLR_SERVER=sqlite \
+            -e SCHCRWLR_DATABASE=sc.db \
+            -e SERVER_PORT=8181 \
+            mcp/schemacrawler-ai:latest
+      - id: smoke-test
+        name: Check health and published AI version
+        run: |
+          curl --fail --silent --show-error \
+            --retry 30 --retry-all-errors --retry-delay 2 --max-time 5 \
+            --output health.json http://127.0.0.1:8181/health
+          python3 .github/scripts/release-summary.py check-health health.json
+      - name: Container logs
+        if: always()
+        run: docker logs release-test
+      - name: Remove test container
+        if: always()
+        run: |
+          if docker container inspect release-test >/dev/null 2>&1; then
+            docker rm -f release-test
+          fi
+
+  release-summary:
+    name: Published version report
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [test-docker, test-mcp]
+    steps:
+      - uses: actions/checkout@v7
+      - name: Report published Docker versions
+        env:
+          PACKAGE_RESULTS: ${{ toJSON(needs) }}
+          GH_TOKEN: ${{ github.token }}
+        run: python3 .github/scripts/release-summary.py report

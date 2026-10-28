@@ -35,7 +35,7 @@ jobs:
       name: Prepare Maven build
       uses: sualeh/prepare-maven-build@v1.8.2
       with:
-        java-version: 21
+        java-version: 25
         fetch-depth: 0
 
 # BUILD DEPENDENCIES
