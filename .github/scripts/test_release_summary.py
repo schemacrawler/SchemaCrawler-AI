@@ -21,14 +21,14 @@ class ReleaseSummaryTest(unittest.TestCase):
         for overrides, valid in (
             ({}, True),
             ({"_server": "SchemaCrawler AI 17.11.4-3"}, True),
-            ({"_server": "SchemaCrawler 17.16.0"}, False),
+            ({"_server": "SchemaCrawler 18.0.1"}, False),
             ({"in-error-state": True}, False),
             ({"in-error-state": None}, False),
             ({"transport": "stdio"}, False),
         ):
             with self.subTest(overrides=overrides), tempfile.TemporaryDirectory() as directory:
                 health = {
-                    "_server": "SchemaCrawler AI 17.16.0-1",
+                    "_server": "SchemaCrawler AI 18.0.1-1",
                     "in-error-state": False,
                     "transport": "http",
                     **overrides,
@@ -49,12 +49,12 @@ class ReleaseSummaryTest(unittest.TestCase):
                             self.assertIn("version=", output.read_text())
 
     def test_latest_release(self):
-        for tag, valid in (("v17.16.0-1", True), ("17.16.0-1", True), ("latest", False), ("", False)):
+        for tag, valid in (("v18.0.1-1", True), ("18.0.1-1", True), ("latest", False), ("", False)):
             with self.subTest(tag=tag):
                 response = io.BytesIO(json.dumps({"tag_name": tag}).encode())
                 with patch.object(summary, "urlopen", return_value=response):
                     if valid:
-                        self.assertEqual(summary.latest_release(), "17.16.0-1")
+                        self.assertEqual(summary.latest_release(), "18.0.1-1")
                     else:
                         with self.assertRaises(ValueError):
                             summary.latest_release()
@@ -62,7 +62,7 @@ class ReleaseSummaryTest(unittest.TestCase):
     def test_reports_versions_icons_and_failures(self):
         for status, version, expected, exit_code in (
             ("success", "17.11.4-3", ":warning: | success", 0),
-            ("success", "17.16.0-1", " | success", 0),
+            ("success", "18.0.1-1", " | success", 0),
             ("failure", "", "Unknown | failure", 0),
             ("skipped", "", "Unknown | skipped", 0),
             ("cancelled", "", "Unknown | cancelled", 0),
@@ -78,15 +78,15 @@ class ReleaseSummaryTest(unittest.TestCase):
                 self.assertNotIn("Maven", text)
 
     def test_failed_latest_lookup_still_writes_report(self):
-        text, code = self.generate_report("success", "17.16.0-1", baseline_error=True)
+        text, code = self.generate_report("success", "18.0.1-1", baseline_error=True)
         self.assertEqual(code, 1)
         self.assertIn("Latest SchemaCrawler AI release: **Unknown**", text)
-        self.assertIn("| 17.16.0-1 | Unknown | success |", text)
+        self.assertIn("| 18.0.1-1 | Unknown | success |", text)
         self.assertIn("Latest SchemaCrawler AI release lookup failed", text)
 
     def generate_report(self, status, version, baseline_error=False):
         results = {
-            "test-docker": {"result": "success", "outputs": {"version": "17.16.0-1"}},
+            "test-docker": {"result": "success", "outputs": {"version": "18.0.1-1"}},
             "test-mcp": {"result": status, "outputs": {"version": version}},
         }
         with tempfile.TemporaryDirectory() as directory:
@@ -100,7 +100,7 @@ class ReleaseSummaryTest(unittest.TestCase):
                 if baseline_error:
                     latest.side_effect = OSError("GitHub unavailable")
                 else:
-                    latest.return_value = "17.16.0-1"
+                    latest.return_value = "18.0.1-1"
                 code = summary.report()
             return path.read_text(encoding="utf-8"), code
 
