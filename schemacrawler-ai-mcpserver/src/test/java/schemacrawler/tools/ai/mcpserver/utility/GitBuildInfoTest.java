@@ -26,9 +26,9 @@ class GitBuildInfoTest {
     assertThat(
         info.toString(),
         is(
-            "Git information:  Commit SHA:abc123"
+            "Git information:\n  Commit SHA: abc123"
                 + System.lineSeparator()
-                + "  Commit time:2026-11-02T00:00:00Z"
+                + "  Commit time: 2026-11-02T00:00:00Z"
                 + System.lineSeparator()));
   }
 
@@ -39,7 +39,8 @@ class GitBuildInfoTest {
     final GitBuildInfo info = new GitBuildInfo("abc123", commitTime);
 
     assertThat(info.isEmpty(), is(false));
-    assertThat(info.toString(), is("Git information:  Commit SHA:abc123" + System.lineSeparator()));
+    assertThat(
+        info.toString(), is("Git information:\n  Commit SHA: abc123" + System.lineSeparator()));
   }
 
   @ParameterizedTest
@@ -51,7 +52,7 @@ class GitBuildInfoTest {
     assertThat(info.isEmpty(), is(true));
     assertThat(
         info.toString(),
-        is("Git information:  Commit time:2026-11-02T00:00:00Z" + System.lineSeparator()));
+        is("Git information:\n  Commit time: 2026-11-02T00:00:00Z" + System.lineSeparator()));
   }
 
   @ParameterizedTest

@@ -21,9 +21,11 @@ import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.parallel.ResourceLock;
 import org.mockito.MockedStatic;
+
 import schemacrawler.tools.ai.mcpserver.McpServerTransportType;
 import us.fatehi.utility.property.JvmSystemInfo;
 import us.fatehi.utility.property.OperatingSystemInfo;
@@ -44,8 +46,8 @@ class LoggingUtilityTest {
 
     assertThat(messages.size(), is(1));
     assertThat(messages.getFirst(), containsString("Git information:"));
-    assertThat(messages.getFirst(), containsString("Commit SHA:abc123"));
-    assertThat(messages.getFirst(), containsString("Commit time:2026-11-02T00:00:00Z"));
+    assertThat(messages.getFirst(), containsString("Commit SHA: abc123"));
+    assertThat(messages.getFirst(), containsString("Commit time: 2026-11-02T00:00:00Z"));
     assertThat(messages.getFirst(), containsString("Spring Boot"));
     assertThat(messages.getFirst(), containsString(JvmSystemInfo.jvmSystemInfo().toString()));
     assertThat(
