@@ -10,8 +10,11 @@ package schemacrawler.tools.ai.mcpserver.utility;
 
 import static java.util.Objects.requireNonNullElse;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import org.springframework.beans.factory.BeanFactory;
@@ -26,6 +29,7 @@ import schemacrawler.tools.ai.utility.JsonUtility;
 import schemacrawler.tools.ai.utility.SchemaCrawlerAiVersion;
 import tools.jackson.databind.ObjectWriter;
 import us.fatehi.utility.UtilityMarker;
+import us.fatehi.utility.ioresource.ClasspathInputResource;
 import us.fatehi.utility.property.JvmArchitectureInfo;
 import us.fatehi.utility.property.JvmSystemInfo;
 import us.fatehi.utility.property.OperatingSystemInfo;
@@ -88,20 +92,28 @@ public final class LoggingUtility {
       return;
     }
 
+    final GitBuildInfo gitBuildInfo = readGitBuildInfo();
+
     try (final StringWriter stringWriter = new StringWriter();
         final PrintWriter writer = new PrintWriter(stringWriter)) {
 
       writer.println();
       writer.println("-".repeat(80));
 
-      writer.println(SchemaCrawlerAiVersion.version());
-      writer.println(Version.version());
-      writer.println(SpringAiVersion.version());
-      writer.println(SpringBootFrameworkVersion.version());
-      writer.println(SpringFrameworkVersion.version());
-      writer.println(JvmSystemInfo.jvmSystemInfo());
-      writer.println(JvmArchitectureInfo.jvmArchitectureInfo());
-      writer.println(OperatingSystemInfo.operatingSystemInfo());
+      writer.println("Technology stack:");
+      writer.println("  " + SchemaCrawlerAiVersion.version());
+      writer.println("  " + Version.version());
+      writer.println("  " + SpringAiVersion.version());
+      writer.println("  " + SpringBootFrameworkVersion.version());
+      writer.println("  " + SpringFrameworkVersion.version());
+      writer.println("  " + JvmSystemInfo.jvmSystemInfo());
+      writer.println("  " + JvmArchitectureInfo.jvmArchitectureInfo());
+      writer.println("  " + OperatingSystemInfo.operatingSystemInfo());
+
+      writer.println();
+      if (!gitBuildInfo.isEmpty()) {
+        writer.println(gitBuildInfo);
+      }
 
       writer.println();
       writer.println(
@@ -117,6 +129,23 @@ public final class LoggingUtility {
     } catch (final Exception e) {
       // Ignore exception
     }
+  }
+
+  static GitBuildInfo readGitBuildInfo() {
+    try (final InputStream stream =
+        new ClasspathInputResource("META-INF/schemacrawler-ai-git.properties")
+            .openNewInputStream()) {
+      if (stream != null) {
+        final Properties properties = new Properties();
+        properties.load(stream);
+        return new GitBuildInfo(
+            properties.getProperty("git.commit.id.full"),
+            properties.getProperty("git.commit.time"));
+      }
+    } catch (final IOException | IllegalArgumentException | SecurityException e) {
+      // Build metadata is optional and must not interrupt startup diagnostics
+    }
+    return new GitBuildInfo(null, null);
   }
 
   private LoggingUtility() {
