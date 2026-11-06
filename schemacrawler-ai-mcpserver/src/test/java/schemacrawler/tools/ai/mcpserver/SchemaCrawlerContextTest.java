@@ -12,6 +12,7 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.notNullValue;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -27,10 +28,18 @@ import schemacrawler.schemacrawler.SchemaCrawlerOptions;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseConnectionSourceUtility;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
+import us.fatehi.test.utility.extensions.WithSystemProperty;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 @DisplayName("SchemaCrawler configuration tests")
 public class SchemaCrawlerContextTest {
+
+  @Test
+  @WithSystemProperty(key = "SCHCRWLR_INFO_LEVEL", value = "minimum")
+  void defaultAccessorDoesNotReadSystemProperties() {
+    assumeTrue(System.getenv("SCHCRWLR_INFO_LEVEL") == null);
+    assertThat(new SchemaCrawlerContext().readInfoLevel(), is(InfoLevel.standard));
+  }
 
   private Config envAccessor;
   private SchemaCrawlerContext context;

@@ -10,15 +10,25 @@ package schemacrawler.tools.ai.mcpserver;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.junit.jupiter.api.Assumptions.assumeTrue;
+
 import java.util.Collection;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import schemacrawler.tools.options.Config;
 import schemacrawler.tools.options.ConfigUtility;
+import us.fatehi.test.utility.extensions.WithSystemProperty;
 
 @DisplayName("MCP Server configuration tests")
 public class McpServerContextTest {
+
+  @Test
+  @WithSystemProperty(key = "SCHCRWLR_MCP_SERVER_TRANSPORT", value = "http")
+  void defaultAccessorDoesNotReadSystemProperties() {
+    assumeTrue(System.getenv("SCHCRWLR_MCP_SERVER_TRANSPORT") == null);
+    assertThat(new McpServerContext().mcpTransport(), is(McpServerTransportType.stdio));
+  }
 
   private Config envAccessor;
   private McpServerContext context;
