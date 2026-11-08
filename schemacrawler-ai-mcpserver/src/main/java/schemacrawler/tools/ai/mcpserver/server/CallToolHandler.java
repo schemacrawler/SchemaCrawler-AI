@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.util.Objects.requireNonNull;
 import static java.util.Objects.requireNonNullElse;
+import static java.util.Objects.requireNonNullElseGet;
 import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.REQUEST;
 import static schemacrawler.tools.ai.mcpserver.server.CallToolLogger.TurnType.RESPONSE;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
@@ -33,6 +34,7 @@ import schemacrawler.tools.ai.tools.FunctionParameters;
 import schemacrawler.tools.ai.tools.FunctionReturn;
 import schemacrawler.tools.ai.tools.JsonFunctionReturn;
 import schemacrawler.tools.ai.tools.TextFunctionReturn;
+import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.ObjectMapper;
 import tools.jackson.databind.node.ObjectNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -63,12 +65,13 @@ class CallToolHandler
     final CallToolLogger logger = new CallToolLogger(exchange);
     FunctionReturn functionReturn;
     try {
-      final String arguments = mapper.writeValueAsString(request.arguments());
-      logger.setFunctionCallbackNode(functionCallback.toCallObject(arguments));
+      final Map<String, Object> argumentMap = requireNonNullElseGet(request.arguments(), Map::of);
+      final JsonNode argumentsNode = mapper.valueToTree(argumentMap);
+      logger.setFunctionCallbackNode(functionCallback.toCallObject(argumentsNode));
       logger.log(REQUEST, "Executing tool");
       final DatabaseConnectionSource connectionSource =
           DatabaseConnectionService.getDatabaseConnectionSource();
-      functionReturn = functionCallback.execute(arguments, connectionSource);
+      functionReturn = functionCallback.execute(argumentsNode, connectionSource);
       logger.log(RESPONSE, functionReturn.getSummary());
     } catch (final Exception e) {
       logger.log(e);

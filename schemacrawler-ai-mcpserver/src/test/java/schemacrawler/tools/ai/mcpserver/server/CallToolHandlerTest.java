@@ -11,7 +11,11 @@ package schemacrawler.tools.ai.mcpserver.server;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
+import static org.junit.jupiter.api.Assertions.assertSame;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
@@ -19,9 +23,12 @@ import io.modelcontextprotocol.spec.McpSchema.CallToolRequest;
 import io.modelcontextprotocol.spec.McpSchema.CallToolResult;
 import io.modelcontextprotocol.spec.McpSchema.TextContent;
 import java.util.Collections;
+import java.util.LinkedHashMap;
+import java.util.Map;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.mockito.ArgumentCaptor;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.test.context.junit.jupiter.SpringJUnitConfig;
@@ -63,6 +70,53 @@ public class CallToolHandlerTest {
           new BaseProductVersion("PostgreSQL", ""),
           new DatabaseServerFingerprint(
               "postgresql", HostClassification.INTERNAL, "a1b2c3", FingerprintConfidence.MEDIUM));
+
+  @Test
+  public void absentAndEmptyArgumentsUseEmptyObjects() {
+    final FunctionCallback<NoParameters> callback = mock(FunctionCallback.class);
+    when(callback.execute(any(JsonNode.class), any(DatabaseConnectionSource.class)))
+        .thenReturn(new TextFunctionReturn("ok"));
+    final CallToolHandler handler = new CallToolHandler(callback, DatabaseIdentity.empty());
+    final CallToolRequest absent = mock(CallToolRequest.class);
+    when(absent.name()).thenReturn("test-tool");
+    assertThat(handler.apply(null, absent).isError(), is(false));
+    assertThat(
+        handler
+            .apply(null, CallToolRequest.builder("test-tool").arguments(Map.of()).build())
+            .isError(),
+        is(false));
+    final ArgumentCaptor<JsonNode> arguments = ArgumentCaptor.forClass(JsonNode.class);
+    verify(callback, times(2)).execute(arguments.capture(), any(DatabaseConnectionSource.class));
+    assertThat(arguments.getAllValues().get(0), is(mapper.createObjectNode()));
+    assertThat(arguments.getAllValues().get(1), is(mapper.createObjectNode()));
+  }
+
+  @Test
+  public void nestedArgumentsAreConvertedOnceWithoutOmittingValues() {
+    final FunctionCallback<NoParameters> callback = mock(FunctionCallback.class);
+    when(callback.execute(any(JsonNode.class), any(DatabaseConnectionSource.class)))
+        .thenReturn(new TextFunctionReturn("ok"));
+    final Map<String, Object> nested = new LinkedHashMap<>();
+    nested.put("nullable", null);
+    nested.put("empty", "");
+    nested.put("array", Collections.singletonList(null));
+    final Map<String, Object> arguments = Map.of("nested", nested);
+    final CallToolHandler handler = new CallToolHandler(callback, DatabaseIdentity.empty());
+    final CallToolResult result =
+        handler.apply(null, CallToolRequest.builder("test-tool").arguments(arguments).build());
+    assertThat(result.isError(), is(false));
+    assertThat(outputText(result), is("ok"));
+    final ArgumentCaptor<JsonNode> described = ArgumentCaptor.forClass(JsonNode.class);
+    final ArgumentCaptor<JsonNode> executed = ArgumentCaptor.forClass(JsonNode.class);
+    verify(callback).toCallObject(described.capture());
+    verify(callback).execute(executed.capture(), any(DatabaseConnectionSource.class));
+    assertSame(described.getValue(), executed.getValue());
+    assertThat(
+        executed.getValue(),
+        is(mapper.readTree("{\"nested\":{\"nullable\":null,\"empty\":\"\",\"array\":[null]}}")));
+    assertThat(nested.containsKey("nullable"), is(true));
+    assertThat(nested.get("empty"), is(""));
+  }
 
   @Test
   public void exceptionResultWithIdentity() throws Exception {

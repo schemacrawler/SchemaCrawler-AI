@@ -16,11 +16,18 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
+import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.ArgumentCaptor;
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
@@ -43,6 +50,14 @@ public class FunctionCallbackTest {
       this(null);
     }
   }
+
+  public enum Mode {
+    FIRST
+  }
+
+  public static record StructuredParameters(
+      String camelCase, int count, Mode mode, List<Map<String, Object>> details)
+      implements FunctionParameters {}
 
   private DatabaseConnectionSource connectionSource;
   private Catalog catalog;
@@ -87,10 +102,10 @@ public class FunctionCallbackTest {
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel, null);
     final FunctionReturn actualReturn =
-        callback.execute("{\"param1\": \"value1\"}", connectionSource);
+        callback.execute(mapper.readTree("{\"param1\": \"value1\"}"), connectionSource);
 
     assertThat(actualReturn, is(expectedReturn));
-    verify(executor).configure(any(TestParameters.class));
+    verify(executor).configure(new TestParameters("value1"));
     verify(executor).initialize();
     verify(executor).setCatalog(catalog);
     verify(executor).setERModel(erModel);
@@ -115,7 +130,7 @@ public class FunctionCallbackTest {
     final Exception exception =
         assertThrows(
             schemacrawler.schemacrawler.exceptions.InternalRuntimeException.class,
-            () -> callback.execute("{}", connectionSource));
+            () -> callback.execute(mapper.createObjectNode(), connectionSource));
     assertThat(exception.getMessage(), containsString("Exception executing"));
     assertThat(exception.getMessage(), containsString("test-function"));
   }
@@ -135,7 +150,8 @@ public class FunctionCallbackTest {
 
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, null, null, null);
-    final FunctionReturn actualReturn = callback.execute("{}", connectionSource);
+    final FunctionReturn actualReturn =
+        callback.execute(mapper.createObjectNode(), connectionSource);
 
     assertThat(actualReturn, is(expectedReturn));
     verify(executor).configure(any(TestParameters.class));
@@ -158,7 +174,9 @@ public class FunctionCallbackTest {
         new FunctionCallback<>(definition, null, null, null);
 
     final RuntimeException exception =
-        assertThrows(RuntimeException.class, () -> callback.execute("{}", connectionSource));
+        assertThrows(
+            RuntimeException.class,
+            () -> callback.execute(mapper.createObjectNode(), connectionSource));
     assertThat(exception.getMessage(), is("test error"));
   }
 
@@ -168,7 +186,8 @@ public class FunctionCallbackTest {
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, null, null, null);
 
-    assertThrows(NullPointerException.class, () -> callback.execute("{}", null));
+    assertThrows(
+        NullPointerException.class, () -> callback.execute(mapper.createObjectNode(), null));
   }
 
   @Test
@@ -189,18 +208,18 @@ public class FunctionCallbackTest {
 
     when(definition.getFunctionName()).thenReturn(new PropertyName("test-function"));
     when(definition.getParametersClass()).thenReturn(TestParameters.class);
-    when(definition.newParameters()).thenReturn(new TestParameters());
+    final TestParameters defaults = new TestParameters("default");
+    when(definition.newParameters()).thenReturn(defaults);
     when(definition.newExecutor()).thenReturn(executor);
     when(executor.call()).thenReturn(new TextFunctionReturn("ok"));
 
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, null, null, null);
 
-    // This should trigger the catch block in instantiateArguments and use default
-    // constructor
-    final FunctionReturn result = callback.execute("invalid-json", connectionSource);
+    final FunctionReturn result =
+        callback.execute(mapper.readTree("{\"param1\": {\"invalid\": true}}"), connectionSource);
     assertThat(result, is(notNullValue()));
-    verify(executor).configure(any(TestParameters.class));
+    verify(executor).configure(defaults);
   }
 
   @Test
@@ -211,18 +230,92 @@ public class FunctionCallbackTest {
     final FunctionCallback<TestParameters> callback =
         new FunctionCallback<>(definition, null, null, null);
 
-    // Valid JSON
-    final JsonNode node = callback.toCallObject("{\"param1\": \"value1\"}");
+    final JsonNode arguments = mapper.readTree("{\"param1\": \"value1\"}");
+    final JsonNode node = callback.toCallObject(arguments);
     assertThat(node.get("name").asString(), is("test-function"));
     assertThat(node.get("arguments").get("param1").asString(), is("value1"));
 
-    // Blank arguments
-    final JsonNode nodeBlank = callback.toCallObject("");
+    final JsonNode nodeBlank = callback.toCallObject(null);
     assertThat(nodeBlank.get("arguments").isEmpty(), is(true));
+  }
 
-    // Invalid JSON
-    final JsonNode nodeInvalid = callback.toCallObject("invalid-json");
-    assertThat(nodeInvalid.get("arguments").asString(), is("invalid-json"));
+  @Test
+  public void structuredBindingUsesSnakeCaseAndPreservesArguments() throws Exception {
+    final FunctionDefinition<StructuredParameters> definition = mock(FunctionDefinition.class);
+    final FunctionExecutor<StructuredParameters> executor = mock(FunctionExecutor.class);
+    final StructuredParameters defaults =
+        new StructuredParameters("default", 7, Mode.FIRST, List.of());
+    when(definition.getFunctionName()).thenReturn(new PropertyName("structured-function"));
+    when(definition.getParametersClass()).thenReturn(StructuredParameters.class);
+    when(definition.newParameters()).thenReturn(defaults);
+    when(definition.newExecutor()).thenReturn(executor);
+    when(executor.call()).thenReturn(new TextFunctionReturn("ok"));
+    final FunctionCallback<StructuredParameters> callback =
+        new FunctionCallback<>(definition, catalog, erModel, null);
+    final List<JsonNode> inputs =
+        List.of(
+            mapper.readTree(
+                """
+                {"camel_case":"value","count":"2","mode":"first",
+                 "details":[{"nested":{"values":[1,null,true]},"empty":""}]}
+                """),
+            mapper.readTree("{\"count\":null}"),
+            mapper.readTree("{\"camelCase\":\"unsupported\"}"),
+            mapper.readTree("{\"unknown_field\":true}"),
+            mapper.readTree("{\"count\":{\"invalid\":true}}"));
+    for (final JsonNode arguments : inputs) {
+      final JsonNode before = arguments.deepCopy();
+      callback.execute(arguments, connectionSource);
+      assertThat(arguments, is(before));
+      assertThat(callback.toCallObject(arguments).get("arguments"), is(before));
+    }
+    final ArgumentCaptor<StructuredParameters> configured =
+        ArgumentCaptor.forClass(StructuredParameters.class);
+    verify(executor, times(inputs.size())).configure(configured.capture());
+    final StructuredParameters valid = configured.getAllValues().get(0);
+    assertThat(valid.camelCase(), is("value"));
+    assertThat(valid.count(), is(2));
+    assertThat(valid.mode(), is(Mode.FIRST));
+    assertThat(valid.details().get(0).get("empty"), is(""));
+    assertThat(
+        mapper.valueToTree(valid.details().get(0).get("nested")),
+        is(inputs.get(0).get("details").get(0).get("nested")));
+    assertThat(configured.getAllValues().get(1), is(new StructuredParameters(null, 0, null, null)));
+    for (int index = 2; index < inputs.size(); index++) {
+      assertThat(configured.getAllValues().get(index), is(defaults));
+    }
+  }
+
+  @Test
+  public void repeatedExecutionAndFailureLoggingDoNotMutateArguments() throws Exception {
+    final FunctionDefinition<StructuredParameters> definition = mock(FunctionDefinition.class);
+    final FunctionExecutor<StructuredParameters> first = mock(FunctionExecutor.class);
+    final FunctionExecutor<StructuredParameters> second = mock(FunctionExecutor.class);
+    when(definition.getFunctionName()).thenReturn(new PropertyName("structured-function"));
+    when(definition.getParametersClass()).thenReturn(StructuredParameters.class);
+    when(definition.newExecutor()).thenReturn(first, second);
+    when(first.call()).thenReturn(new TextFunctionReturn("ok"));
+    when(second.call()).thenThrow(new IllegalStateException("execution failure"));
+    final FunctionCallback<StructuredParameters> callback =
+        new FunctionCallback<>(definition, catalog, erModel, null);
+    final JsonNode arguments =
+        mapper.readTree("{\"details\":[{\"nested\":{\"values\":[1,null,true]}}]}");
+    final JsonNode before = arguments.deepCopy();
+    final Logger logger = Logger.getLogger(FunctionCallback.class.getCanonicalName());
+    final Level originalLevel = logger.getLevel();
+    logger.setLevel(Level.FINER);
+    try {
+      assertThat(callback.toCallObject(arguments).get("arguments"), is(before));
+      callback.execute(arguments, connectionSource);
+      assertThat(arguments, is(before));
+      assertThrows(
+          IllegalStateException.class, () -> callback.execute(arguments, connectionSource));
+      assertThat(arguments, is(before));
+      verify(first).initialize();
+      verify(second).initialize();
+    } finally {
+      logger.setLevel(originalLevel);
+    }
   }
 
   @Test

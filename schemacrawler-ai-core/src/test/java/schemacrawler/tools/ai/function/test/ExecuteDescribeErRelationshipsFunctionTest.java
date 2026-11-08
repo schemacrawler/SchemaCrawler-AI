@@ -13,6 +13,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,13 @@ public class ExecuteDescribeErRelationshipsFunctionTest extends AbstractFunction
         new DescribeErRelationshipsFunctionDefinition();
     final FunctionCallback<DescribeErRelationshipsFunctionParameters> callback =
         new FunctionCallback<>(definition, catalog, erModel, null);
-    final String arguments =
-        """
-        {
-          "cardinality" : "many_many"
-        }
-        """;
+    final JsonNode arguments =
+        mapper.readTree(
+            """
+            {
+              "cardinality" : "many_many"
+            }
+            """);
     final JsonFunctionReturn actualReturn =
         (JsonFunctionReturn) callback.execute(arguments, connectionSource);
 
