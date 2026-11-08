@@ -15,8 +15,6 @@ import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
 import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
 import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
-import java.io.PrintWriter;
-import java.io.StringWriter;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -47,13 +45,15 @@ public final class CallToolLogger {
       return;
     }
     // Log to client
-    final StringWriter stWriter = new StringWriter();
-    e.printStackTrace(new PrintWriter(stWriter));
+    final String message;
+    if (functionCallbackNode != null) {
+      message = "Tool call did not succeed";
+    } else {
+      message = e.getMessage();
+    }
+
     final String clientLogMessage =
-        "%s%nStack trace: %n%s"
-            .formatted(
-                makeMessage(TurnType.RESPONSE, null, e.getMessage(), functionCallbackNode),
-                stWriter.toString().indent(2));
+        makeMessage(TurnType.RESPONSE, null, message, functionCallbackNode);
     exchange.loggingNotification(
         LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
             .logger(LOGGER.getName())
