@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import org.springframework.ai.mcp.annotation.McpArg;
 import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
@@ -66,22 +65,14 @@ public class ToolProvider {
               destructiveHint = false,
               idempotentHint = false, // Health can change based on server uptime
               openWorldHint = false))
-  public JsonNode getSchemaCrawlerVersion(
-      final McpSyncServerExchange exchange,
-      @McpArg(description = "MCP Client identification, if available.", required = false)
-          final String clientId,
-      @McpArg(description = "Event id, if available.", required = false) final String eventId) {
+  public JsonNode getSchemaCrawlerVersion(final McpSyncServerExchange exchange) {
     final ObjectNode objectNode = mapper.createObjectNode();
     objectNode.put("schemacrawler-version", Version.version().toString());
     objectNode.putPOJO("mcp-server-health", serverHealth.currentState());
 
-    final ObjectNode clientNode = objectNode.putObject("client");
-    clientNode.put("mcp-client-id", clientId);
-    clientNode.put("mcp-event-id", eventId);
-
     // Log execution
     final CallToolLogger logger = new CallToolLogger(exchange);
-    logger.setFunctionCallbackNode(clientNode);
+    logger.setFunctionCallbackNode(mapper.createObjectNode().put("name", "mcp-server-health"));
     logger.log(RESPONSE, "Returned SchemaCrawler AI MCP Server health");
 
     return objectNode;
