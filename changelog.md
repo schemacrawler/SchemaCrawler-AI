@@ -5,12 +5,18 @@ SchemaCrawler AI release notes.
 <a name="unreleased"></a>
 ## Unreleased
 
+- Report packaged Git commit and commit time in startup diagnostics
+- Remove stack traces from exception notifications
+
+
+<a name="v18.0.1-1"></a>
+## v18.0.1-1
+
 - Isolate each function invocation's catalog selection, selected ER model, and
   result construction so concurrent calls do not leak selection-dependent
-  state.
-- Preserve baseline catalog reads and existing JDBC connection lifecycle;
-  catalog selection does not guarantee physical JDBC connection safety or
-  arbitrary concurrent metadata-write isolation.
+  state
+- Preserve baseline catalog model
+
 
 <a name="v17.15.7-1"></a>
 ## Release 17.15.7-1 - 2026-09-29
