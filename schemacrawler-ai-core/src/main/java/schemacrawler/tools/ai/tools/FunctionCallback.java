@@ -9,8 +9,8 @@
 package schemacrawler.tools.ai.tools;
 
 import static java.util.Objects.requireNonNull;
+import static java.util.Objects.requireNonNullElseGet;
 import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
-import static us.fatehi.utility.Utility.isBlank;
 
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -20,7 +20,6 @@ import schemacrawler.schema.Catalog;
 import schemacrawler.schemacrawler.exceptions.InternalRuntimeException;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
-import us.fatehi.mcp_json_schema.utility.DeserializationUtility;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.property.PropertyName;
 import us.fatehi.utility.string.StringFormat;
@@ -60,23 +59,24 @@ public final class FunctionCallback<P extends FunctionParameters> {
   }
 
   /**
-   * Execute the function, given arguments as a JSON string.
+   * Execute the function, given a read-only argument tree.
    *
-   * @param argumentsString JSON string with arguments.
+   * @param argumentsNode JSON arguments; null is treated as an empty object.
    * @return Result of execution.
    */
   public FunctionReturn execute(
-      final String argumentsString, final DatabaseConnectionSource connectionSource) {
+      final JsonNode argumentsNode, final DatabaseConnectionSource connectionSource) {
 
     requireNonNull(connectionSource, "No database connection provided");
+    final JsonNode argumentsTree = requireNonNullElseGet(argumentsNode, mapper::createObjectNode);
 
     if (LOGGER.isLoggable(Level.FINER)) {
       LOGGER.log(
-          Level.FINER, "Executing%n%s".formatted(toCallObject(argumentsString).toPrettyString()));
+          Level.FINER, "Executing%n%s".formatted(toCallObject(argumentsTree).toPrettyString()));
     }
 
     try {
-      final P arguments = instantiateArguments(argumentsString);
+      final P arguments = instantiateArguments(argumentsTree);
 
       final FunctionReturn returnValue = executeFunction(arguments, connectionSource);
       return returnValue;
@@ -85,7 +85,8 @@ public final class FunctionCallback<P extends FunctionParameters> {
           Level.INFO,
           e,
           new StringFormat(
-              "Exception executing: <%s>%n%s", toCallObject(argumentsString), e.getMessage()));
+              "Exception executing: <%s>%n%s%n%s",
+              functionDefinition.getFunctionName(), e.getMessage(), toCallObject(argumentsTree)));
       if (e instanceof final RuntimeException runex) {
         throw runex;
       }
@@ -109,24 +110,18 @@ public final class FunctionCallback<P extends FunctionParameters> {
     return functionName;
   }
 
-  public JsonNode toCallObject(final String argumentsString) {
+  /**
+   * Describe a call - name and arguments.
+   *
+   * @param argumentsNode JSON arguments; null is treated as an empty object.
+   * @return Function name and arguments.
+   */
+  public JsonNode toCallObject(final JsonNode argumentsNode) {
     final ObjectNode objectNode = mapper.createObjectNode();
 
     final PropertyName functionName = getFunctionName();
     objectNode.put("name", functionName.getName());
-
-    try {
-      final String functionArguments;
-      if (isBlank(argumentsString)) {
-        functionArguments = "{}";
-      } else {
-        functionArguments = argumentsString;
-      }
-      final JsonNode arguments = mapper.readTree(functionArguments);
-      objectNode.set("arguments", arguments);
-    } catch (final Exception e) {
-      objectNode.put("arguments", argumentsString);
-    }
+    objectNode.set("arguments", requireNonNullElseGet(argumentsNode, mapper::createObjectNode));
 
     return objectNode;
   }
@@ -154,12 +149,16 @@ public final class FunctionCallback<P extends FunctionParameters> {
     return functionReturn;
   }
 
-  private P instantiateArguments(final String argumentsString) throws Exception {
+  private P instantiateArguments(final JsonNode argumentsNode) {
     final Class<P> parametersClass = functionDefinition.getParametersClass();
-    P parameters;
-    // Try with arguments string first, assuming arguments are valid
-    parameters = DeserializationUtility.instantiateArguments(argumentsString, parametersClass);
-    // If that fails, since parameters may be invalid, fall back to defaults
+    P parameters = null;
+    if (parametersClass != null && argumentsNode != null) {
+      try {
+        parameters = mapper.treeToValue(argumentsNode, parametersClass);
+      } catch (final Exception e) {
+        LOGGER.log(Level.FINE, e, () -> parametersClass.getName());
+      }
+    }
     if (parameters == null) {
       parameters = functionDefinition.newParameters();
     }

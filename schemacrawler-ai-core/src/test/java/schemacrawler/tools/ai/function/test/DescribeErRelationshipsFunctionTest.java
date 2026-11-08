@@ -10,6 +10,7 @@ package schemacrawler.tools.ai.function.test;
 
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.is;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
@@ -65,7 +66,8 @@ public class DescribeErRelationshipsFunctionTest extends AbstractFunctionTest {
 
     final JsonFunctionReturn result =
         (JsonFunctionReturn)
-            callback.execute("{\"relationship_name\":\"BOOKAUTHORS\"}", connectionSource);
+            callback.execute(
+                mapper.readTree("{\"relationship_name\":\"BOOKAUTHORS\"}"), connectionSource);
     final JsonNode relationships = result.getResult().get("relationships");
 
     assertThat(relationships.size(), is(1));

@@ -14,6 +14,7 @@ import static org.hamcrest.Matchers.hasSize;
 import static org.hamcrest.Matchers.not;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static schemacrawler.tools.ai.utility.JsonUtility.mapper;
 import static us.fatehi.test.utility.extensions.FileHasContent.classpathResource;
 import static us.fatehi.test.utility.extensions.FileHasContent.hasSameContentAs;
 import static us.fatehi.test.utility.extensions.FileHasContent.outputOf;
@@ -93,7 +94,8 @@ public class AllFunctionsTest {
         break;
       default:
         assertDoesNotThrow(
-            () -> callback.execute("invalid-json", connectionSource), functionDefinition.getName());
+            () -> callback.execute(mapper.readTree("[]"), connectionSource),
+            functionDefinition.getName());
     }
   }
 
