@@ -7,7 +7,7 @@
 # ========================================================================
 
 # Provided arguments
-ARG FROM_IMAGE=schemacrawler/schemacrawler:v18.0.1
+ARG FROM_IMAGE=schemacrawler/schemacrawler:v18.0.2
 
 # BUILDER stage - Build SchemaCrawler AI
 FROM maven:3.10-eclipse-temurin-25 AS builder
