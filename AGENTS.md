@@ -81,3 +81,6 @@ When the database connection cannot be established, `InErrorFactory` provides a 
 - Follow the same immutability and thread-safety conventions as SchemaCrawler-Core: use `final` on fields, parameters, and local variables; avoid mutable shared state.
 - Tests use **JUnit 5** with **Hamcrest** matchers; integration tests use the shared HSQLDB test database from `schemacrawler-testdb`.
 - All dependency versions are inherited from `schemacrawler-parent`; do not declare versions in sub-module POMs.
+- Never use `var` to define variables; use the actual Java type.
+- Always use imports instead of fully qualified class names in code, unless there is a class name conflict in the file.
+- When generating Markdown, keep each paragraph on a single line; do not hard-wrap paragraph text.
