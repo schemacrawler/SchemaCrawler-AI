@@ -39,35 +39,35 @@
           "name": "SCHCRWLR_DATABASE_PASSWORD"
         },
         {
-          "description": "JDBC URL for database connection. If this is provided, the server, host, port and database are not used.",
+          "description": "Optional JDBC URL for database connection. If nonblank, server, host, port, and database are ignored. Credentials may still be supplied separately.",
           "isRequired": false,
           "format": "string",
-          "isSecret": false,
+          "isSecret": true,
           "name": "SCHCRWLR_JDBC_URL"
         },
         {
-          "description": "SchemaCrawler database plugin, for example, 'sqlserver' or 'sqlite'. Used only if the JDBC URL is not provided.",
+          "description": "SchemaCrawler database connector identifier, for example, 'sqlserver' or 'sqlite'. Required if the JDBC URL is blank or unset.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_SERVER"
         },
         {
-          "description": "Database host. Defaults to localhost. Used only if the JDBC URL is not provided.",
+          "description": "Database host. Defaults to the connector's host default. Used only if the JDBC URL is blank or unset.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_HOST"
         },
         {
-          "description": "Database port. Defaults to the default port for the server type. Used only if the JDBC URL is not provided.",
+          "description": "Database port. Valid decimal values from 1024 through 65535 are used; otherwise the connector's default port is retained. Used only if the JDBC URL is blank or unset.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_PORT"
         },
         {
-          "description": "Database to connect to (optional). Used only if the JDBC URL is not provided.",
+          "description": "Optional database name or connector-specific database value. Used only if the JDBC URL is blank or unset.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
@@ -88,14 +88,14 @@
           "name": "SCHCRWLR_DATABASE_DESCRIPTION"
         },
         {
-          "description": "How much database metadata to retrieve. Values are 'minimum', 'standard', 'detailed' or 'maximum'.",
+          "description": "How much database metadata to retrieve: 'minimum', 'standard', 'detailed', or 'maximum'. Defaults to 'standard'; unset or unrecognized values also use 'standard'.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_INFO_LEVEL"
         },
         {
-          "description": "Logging verbosity level. Values are 'SEVERE', 'WARNING', 'INFO', 'CONFIG', or 'FINE'.",
+          "description": "Java logging level. Defaults to 'INFO'. Java logging names such as 'SEVERE', 'WARNING', 'INFO', 'CONFIG', 'FINE', 'FINER', 'FINEST', 'ALL', and 'OFF', and numeric levels are accepted.",
           "isRequired": false,
           "format": "string",
           "isSecret": false,
@@ -107,6 +107,20 @@
           "format": "string",
           "isSecret": false,
           "name": "SCHCRWLR_EXCLUDE_TOOLS"
+        },
+        {
+          "description": "Optional path to a serialized offline catalog snapshot. When set, catalog loading uses this snapshot.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": false,
+          "name": "SCHCRWLR_OFFLINE_DATABASE"
+        },
+        {
+          "description": "Additional SchemaCrawler configuration encoded as a JSON object. Invalid JSON logs a warning and uses empty additional configuration; do not include secrets.",
+          "isRequired": false,
+          "format": "string",
+          "isSecret": true,
+          "name": "SCHCRWLR_ADDITIONAL_CONFIG"
         }
       ]
     }
