@@ -66,13 +66,13 @@ public class ResourceProvider {
   @Autowired private ERModel erModel;
 
   @McpResource(
-      uri = "catalog://routines/{routine-name}",
+      uri = "catalog://routines/{routine_name}",
       name = "routine-details",
       title = "Routine metadata details",
       description = "Provides detailed database metadata for the specified routine, as JSON.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getRoutineDetails(
-      @McpArg(name = "routine-name", description = "Fully-qualified routine name.", required = true)
+      @McpArg(name = "routine_name", description = "Fully-qualified routine name.", required = true)
           final String routineName) {
 
     final Collection<Routine> routines =
@@ -88,13 +88,13 @@ public class ResourceProvider {
   }
 
   @McpResource(
-      uri = "catalog://tables/{table-name}",
+      uri = "catalog://tables/{table_name}",
       name = "table-details",
       title = "Table metadata details",
       description = "Provides detailed database metadata for the specified table, as JSON.",
       mimeType = APPLICATION_JSON_VALUE)
   public String getTableDetails(
-      @McpArg(name = "table-name", description = "Fully-qualified table name.", required = true)
+      @McpArg(name = "table_name", description = "Fully-qualified table name.", required = true)
           final String tableName) {
 
     final Collection<Table> tables =
