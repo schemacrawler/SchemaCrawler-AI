@@ -20,6 +20,10 @@ jobs:
   build:
     name: Build and Publish SchemaCrawler AI Docker Image
     runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC authentication
+      contents: write # Required for creating releases
+      attestations: write # Required for creating attestations
     steps:
 
 # VALIDATE TAGS
@@ -143,3 +147,13 @@ jobs:
         provenance: true
         load: false
         push: true
+
+    - id: attest-and-publish
+      name: Create provenance attestation and publish image digest
+      uses: schemacrawler/actions-docker-attest@v2.0.0
+      with:
+        image-name: docker.io/schemacrawler/schemacrawler-ai
+        digest: ${{ steps.push-docker-image.outputs.digest }}
+        publishing-repo: schemacrawler/SchemaCrawler-AI
+        tag-name: ${{ github.ref_name }}
+        update-release: ${{ startsWith(github.ref, 'refs/tags/') }}
