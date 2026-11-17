@@ -22,6 +22,6 @@ public class SchemaCrawlerAiVersion extends BaseProductVersion {
   }
 
   private SchemaCrawlerAiVersion() {
-    super("SchemaCrawler AI", "18.0.2-2");
+    super("SchemaCrawler AI", "18.0.3-1");
   }
 }
