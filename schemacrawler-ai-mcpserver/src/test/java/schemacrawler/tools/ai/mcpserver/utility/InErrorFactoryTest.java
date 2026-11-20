@@ -12,7 +12,9 @@ import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 
 import java.sql.Connection;
+
 import org.junit.jupiter.api.Test;
+
 import schemacrawler.ermodel.model.ERModel;
 import schemacrawler.schema.Catalog;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
@@ -37,7 +39,7 @@ public class InErrorFactoryTest {
 
     assertThat(connectionSource.toString(), is("empty-data-source"));
     assertThat(connectionSource.releaseConnection(null), is(true));
-    connectionSource.setFirstConnectionInitializer(null);
+    connectionSource.withConnectionInitializer(null);
     try (Connection connection = connectionSource.get()) {
       assertThat(connection.isValid(1), is(true));
     }
