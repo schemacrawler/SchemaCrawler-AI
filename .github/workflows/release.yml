@@ -89,10 +89,20 @@ jobs:
         gitsign --version
         ## Delete previous Docker Hub release and its tag
         gh release delete "$TAG" -y || true
-        git push origin --delete "$TAG" || true
+        git push origin --delete "refs/tags/$TAG" || true
         git rev-parse -q --verify "refs/tags/$TAG" >/dev/null && git tag -d "$TAG" || true
         ## Re-tag to last commit
         git tag -a "$TAG" -m "SchemaCrawler AI Release to Docker Hub"
-        git push --follow-tags origin "$TAG"
+        git push origin "refs/tags/$TAG:refs/tags/$TAG"
         git show --no-patch "$TAG"
+
+    - id: move-branch
+      name: Update docker-mcp-registry branch
+      if: success() && github.event_name == 'push' && startsWith(github.ref, 'refs/tags/v')
+      env:
+        SHA: ${{ github.sha }}
+      shell: bash
+      run: |
+        set -euo pipefail
+        git push origin "$SHA:refs/heads/docker-mcp-registry"
 
