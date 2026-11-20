@@ -14,6 +14,8 @@ jobs:
   release:
     name: Create Release
     runs-on: ubuntu-latest
+    env:
+      TAG_DOCKER_MCP_REGISTRY: docker-mcp-registry
     permissions:
       id-token: write # Required for OIDC authentication
       contents: write # Required to create a new tag
@@ -65,7 +67,7 @@ jobs:
           SchemaCrawler AI ${{ github.event.release.tag_name }} release at last commit ${{ github.sha }}
         generate_release_notes: true
 
-# MOVE GITHUB TAG
+# MOVE GITHUB TAG AND BRANCH FOR DOCKER MCP REGISTRY
     - id: install-gitsign
       name: Install gitsign for commit signing
       # See https://github.com/chainguard-dev/actions/blob/main/setup-gitsign/action.yml
@@ -76,7 +78,6 @@ jobs:
         GITSIGN_CONNECTOR_ID: "https://github.com/login/oauth"
         GITSIGN_TOKEN_PROVIDER: "github-actions"
         GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        TAG: docker-mcp-registry
         SHA: ${{ github.sha }}
       shell: bash
       run: |
@@ -88,13 +89,13 @@ jobs:
         ## Verify that gitsign is available
         gitsign --version
         ## Delete previous Docker Hub release and its tag
-        gh release delete "$TAG" -y || true
-        git push origin --delete "refs/tags/$TAG" || true
-        git rev-parse -q --verify "refs/tags/$TAG" >/dev/null && git tag -d "$TAG" || true
+        gh release delete "$TAG_DOCKER_MCP_REGISTRY" -y || true
+        git push origin --delete "refs/tags/$TAG_DOCKER_MCP_REGISTRY" || true
+        git rev-parse -q --verify "refs/tags/$TAG_DOCKER_MCP_REGISTRY" >/dev/null && git tag -d "$TAG_DOCKER_MCP_REGISTRY" || true
         ## Re-tag to last commit
-        git tag -a "$TAG" -m "SchemaCrawler AI Release to Docker Hub"
-        git push origin "refs/tags/$TAG:refs/tags/$TAG"
-        git show --no-patch "$TAG"
+        git tag -a "$TAG_DOCKER_MCP_REGISTRY" -m "SchemaCrawler AI Release to Docker Hub"
+        git push origin "refs/tags/$TAG_DOCKER_MCP_REGISTRY:refs/tags/$TAG_DOCKER_MCP_REGISTRY"
+        git show --no-patch "$TAG_DOCKER_MCP_REGISTRY"
 
     - id: move-branch
       name: Update docker-mcp-registry branch
@@ -104,5 +105,4 @@ jobs:
       shell: bash
       run: |
         set -euo pipefail
-        git push origin "$SHA:refs/heads/docker-mcp-registry"
-
+        git push origin "$SHA:refs/heads/$TAG_DOCKER_MCP_REGISTRY"
