@@ -13,8 +13,6 @@ import static us.fatehi.utility.Utility.isBlank;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
 import io.modelcontextprotocol.spec.McpSchema.Implementation;
-import io.modelcontextprotocol.spec.McpSchema.LoggingLevel;
-import io.modelcontextprotocol.spec.McpSchema.LoggingMessageNotification;
 import java.util.UUID;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -41,38 +39,19 @@ public final class CallToolLogger {
   }
 
   public void log(final Exception e) {
-    if (exchange == null || e == null) {
+    if (e == null) {
       return;
     }
-    // Log to client
-    final String message;
-    if (functionCallbackNode != null) {
-      message = "Tool call did not succeed";
-    } else {
-      message = e.getMessage();
-    }
-
-    final String clientLogMessage =
-        makeMessage(TurnType.RESPONSE, null, message, functionCallbackNode);
-    exchange.loggingNotification(
-        LoggingMessageNotification.builder(LoggingLevel.ERROR, clientLogMessage)
-            .logger(LOGGER.getName())
-            .build());
+    LOGGER.log(Level.WARNING, e.getMessage(), e);
   }
 
   public void log(final TurnType turnType, final String message) {
-    if (exchange != null) {
-      // Log to client
-      final String clientLogMessage = makeMessage(turnType, null, message, functionCallbackNode);
-      exchange.loggingNotification(
-          LoggingMessageNotification.builder(LoggingLevel.INFO, clientLogMessage)
-              .logger(LOGGER.getName())
-              .build());
+    final Level level = Level.FINE;
+    if (!LOGGER.isLoggable(level)) {
+      return;
     }
-    // Log to server
-    final String serverLogMessage =
-        makeServerLogMessage(turnType, exchange, message, functionCallbackNode);
-    LOGGER.log(Level.INFO, serverLogMessage);
+    final String serverLogMessage = makeLogMessage(turnType, message);
+    LOGGER.log(level, serverLogMessage);
   }
 
   public void setFunctionCallbackNode(final JsonNode functionCallbackNode) {
@@ -82,55 +61,48 @@ public final class CallToolLogger {
     this.functionCallbackNode = functionCallbackNode;
   }
 
-  private String makeMessage(
-      final TurnType turnType,
-      final JsonNode clientSession,
-      final String message,
-      final JsonNode logData) {
+  /** Appends a heading line followed by the indented body text. */
+  private void appendSection(final StringBuilder builder, final String heading, final String body) {
+    builder.append(heading).append(lineSeparator());
+    builder.append(body.indent(2)).append(lineSeparator());
+  }
+
+  /** Describes the connected client (name, version, session id), if the exchange provides it. */
+  private ObjectNode describeClientSession() {
+    final ObjectNode clientSession = JsonUtility.mapper.createObjectNode();
+    if (exchange == null) {
+      return clientSession;
+    }
+    try {
+      final Implementation clientInfo = exchange.getClientInfo();
+      if (clientInfo != null) {
+        clientSession.put("client-name", clientInfo.name());
+        clientSession.put("client-version", clientInfo.version());
+      }
+      clientSession.put("session-id", exchange.sessionId());
+    } catch (final Exception e) {
+      // Client details are best-effort; logging must never fail the tool call
+    }
+    return clientSession;
+  }
+
+  private String makeLogMessage(final TurnType turnType, final String message) {
     final StringBuilder builder = new StringBuilder();
     builder.append(lineSeparator());
-    builder.append("Call tool request id: ").append(instanceId).append(lineSeparator());
+    appendSection(builder, "Call tool request id: ", instanceId.toString());
     if (turnType != null) {
       builder.append(turnType).append(lineSeparator());
     }
     if (!isBlank(message)) {
-      builder
-          .append("Message: ")
-          .append(lineSeparator())
-          .append(message.indent(2))
-          .append(lineSeparator());
+      appendSection(builder, "Message: ", message);
     }
-    if (logData != null) {
-      builder.append("Call tool request: ").append(lineSeparator());
-      builder.append(logData.toPrettyString().indent(2)).append(lineSeparator());
+    if (functionCallbackNode != null) {
+      appendSection(builder, "Call tool request: ", functionCallbackNode.toPrettyString());
     }
-    if (clientSession != null) {
-      builder.append("For client: ").append(lineSeparator());
-      builder.append(clientSession.toPrettyString().indent(2)).append(lineSeparator());
-    }
+
+    final ObjectNode clientSession = describeClientSession();
+    appendSection(builder, "For client: ", clientSession.toPrettyString());
+
     return builder.toString();
-  }
-
-  private String makeServerLogMessage(
-      final TurnType turnType,
-      final McpSyncServerExchange exchange,
-      final String message,
-      final JsonNode logData) {
-
-    final ObjectNode clientSession = JsonUtility.mapper.createObjectNode();
-    if (exchange != null) {
-      try {
-        final Implementation clientInfo = exchange.getClientInfo();
-        if (clientInfo != null) {
-          clientSession.put("client-name", clientInfo.name());
-          clientSession.put("client-version", clientInfo.version());
-        }
-        clientSession.put("session-id", exchange.sessionId());
-      } catch (final Exception e) {
-        // Ignore
-      }
-    }
-
-    return makeMessage(turnType, clientSession, message, logData);
   }
 }
