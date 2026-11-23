@@ -9,6 +9,7 @@
 package schemacrawler.tools.ai.mcpserver.server;
 
 import static java.lang.System.lineSeparator;
+import static java.util.Objects.requireNonNull;
 import static us.fatehi.utility.Utility.isBlank;
 
 import io.modelcontextprotocol.server.McpSyncServerExchange;
@@ -19,7 +20,9 @@ import java.util.logging.Logger;
 import schemacrawler.tools.ai.utility.JsonUtility;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ObjectNode;
+import us.fatehi.utility.logging.LoggerMarker;
 
+@LoggerMarker
 public final class CallToolLogger {
 
   public enum TurnType {
@@ -27,13 +30,13 @@ public final class CallToolLogger {
     RESPONSE
   }
 
-  private static final Logger LOGGER = Logger.getLogger(CallToolLogger.class.getCanonicalName());
-
+  private final Logger logger;
   private final UUID instanceId;
   private final McpSyncServerExchange exchange;
   private JsonNode functionCallbackNode;
 
-  public CallToolLogger(final McpSyncServerExchange exchange) {
+  public CallToolLogger(final Logger logger, final McpSyncServerExchange exchange) {
+    this.logger = requireNonNull(logger, "No logger provided");
     instanceId = UUID.randomUUID();
     this.exchange = exchange;
   }
@@ -42,16 +45,16 @@ public final class CallToolLogger {
     if (e == null) {
       return;
     }
-    LOGGER.log(Level.WARNING, e.getMessage(), e);
+    logger.log(Level.WARNING, e.getMessage(), e);
   }
 
   public void log(final TurnType turnType, final String message) {
     final Level level = Level.FINE;
-    if (!LOGGER.isLoggable(level)) {
+    if (!logger.isLoggable(level)) {
       return;
     }
     final String serverLogMessage = makeLogMessage(turnType, message);
-    LOGGER.log(level, serverLogMessage);
+    logger.log(level, serverLogMessage);
   }
 
   public void setFunctionCallbackNode(final JsonNode functionCallbackNode) {

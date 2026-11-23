@@ -71,7 +71,7 @@ public class ToolProvider {
     objectNode.putPOJO("mcp-server-health", serverHealth.currentState());
 
     // Log execution
-    final CallToolLogger logger = new CallToolLogger(exchange);
+    final CallToolLogger logger = new CallToolLogger(LOGGER, exchange);
     logger.setFunctionCallbackNode(mapper.createObjectNode().put("name", "mcp-server-health"));
     logger.log(RESPONSE, "Returned SchemaCrawler AI MCP Server health");
 
@@ -119,7 +119,7 @@ public class ToolProvider {
     }
 
     // Log execution
-    final CallToolLogger logger = new CallToolLogger(exchange);
+    final CallToolLogger logger = new CallToolLogger(LOGGER, exchange);
     logger.setFunctionCallbackNode(mapper.createObjectNode().put("name", "about_database"));
     logger.log(RESPONSE, "Returned %s".formatted(databaseInfo.getDatabaseProductName()));
 

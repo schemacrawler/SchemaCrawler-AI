@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BiFunction;
+import java.util.logging.Logger;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.tools.ExceptionFunctionReturn;
 import schemacrawler.tools.ai.tools.FunctionCallback;
@@ -41,6 +42,8 @@ import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 class CallToolHandler
     implements BiFunction<McpSyncServerExchange, CallToolRequest, CallToolResult> {
+
+  private static final Logger LOGGER = Logger.getLogger(CallToolHandler.class.getCanonicalName());
 
   private static final ObjectMapper NO_INDENT_MAPPER =
       mapper.rebuild().disable(INDENT_OUTPUT).build();
@@ -62,7 +65,7 @@ class CallToolHandler
 
   @Override
   public CallToolResult apply(final McpSyncServerExchange exchange, final CallToolRequest request) {
-    final CallToolLogger logger = new CallToolLogger(exchange);
+    final CallToolLogger logger = new CallToolLogger(LOGGER, exchange);
     FunctionReturn functionReturn;
     try {
       final Map<String, Object> argumentMap = requireNonNullElseGet(request.arguments(), Map::of);
