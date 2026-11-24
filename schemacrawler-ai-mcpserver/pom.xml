@@ -7,9 +7,9 @@
 
   <parent>
     <groupId>us.fatehi</groupId>
-    <artifactId>schemacrawler-parent</artifactId>
-    <version>18.0.4</version>
-    <relativePath />
+    <artifactId>schemacrawler-ai-aggregator</artifactId>
+    <version>18.0.4-1</version>
+    <relativePath>../pom.xml</relativePath>
   </parent>
   <artifactId>schemacrawler-ai-mcpserver</artifactId>
   <version>18.0.4-1</version>
@@ -22,34 +22,6 @@
     <java.version>21</java.version>
     <skip.signing.artifacts>true</skip.signing.artifacts>
   </properties>
-
-  <dependencyManagement>
-    <dependencies>
-      <!-- SchemaCrawler library -->
-      <dependency>
-        <groupId>us.fatehi</groupId>
-        <artifactId>schemacrawler-library-bom</artifactId>
-        <version>18.0.4</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <!-- Other libraries -->
-      <dependency>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-dependencies</artifactId>
-        <version>4.2.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework.ai</groupId>
-        <artifactId>spring-ai-bom</artifactId>
-        <version>2.1.0</version>
-        <type>pom</type>
-        <scope>import</scope>
-      </dependency>
-    </dependencies>
-  </dependencyManagement>
 
   <dependencies>
     <dependency>
