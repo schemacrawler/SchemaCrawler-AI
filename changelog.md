@@ -2,8 +2,24 @@
 
 SchemaCrawler AI release notes.
 
-<a name="unreleased"></a>
-## Unreleased
+<a name="v18.0.4-1"></a>
+## v18.0.4-1
+
+- Update to Spring AI 2.1.0 and Spring Boot 4.2.0
+- Refactor tool call logging to use the logger pattern
+- Remove unused SQL table extraction utility
+- Update release workflows and Docker MCP registry branch
+
+
+<a name="v18.0.3-1"></a>
+## v18.0.3-1
+
+- Attest Docker releases
+- Update build and release workflows
+
+
+<a name="v18.0.2-1"></a>
+## v18.0.2-1
 
 - Report packaged Git commit and commit time in startup diagnostics
 - Remove stack traces from exception notifications
