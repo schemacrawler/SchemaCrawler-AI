@@ -1,6 +1,6 @@
 # Tools Usage Guide for SchemaCrawler AI MCP Server
 
-1. **Orient.** Use `about_database` to learn the database engine, version and settings before writing platform-specific SQL. When you do not know table names yet, use `table_importance` to find the key tables, and `detect_clusters` to find the functional areas of the schema.
+1. **Orient.** Use `about_database` to learn the database engine, version and settings before writing platform-specific SQL. When the database uses recognizable words in its object names, `about_database` and the end of these instructions also list the most used terms, which you can use in name patterns for `list` and `list_members_of_tables`. When you do not know table names yet, use `table_importance` to find the key tables, and `detect_clusters` to find the functional areas of the schema.
 
 2. **Discover.** Start here for most questions. Use `list` for an inventory of tables, views, routines, sequences and synonyms, filtered by object type and name pattern. Use `list_members_of_tables` to search for columns, indexes, foreign keys or triggers across tables, for example every column from every table that matches "email".
 

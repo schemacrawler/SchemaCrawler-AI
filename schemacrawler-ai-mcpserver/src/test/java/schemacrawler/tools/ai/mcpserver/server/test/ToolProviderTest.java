@@ -11,15 +11,18 @@ package schemacrawler.tools.ai.mcpserver.server.test;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsInAnyOrder;
+import static org.hamcrest.Matchers.containsString;
 import static org.mockito.Mockito.mock;
 
 import io.modelcontextprotocol.server.McpServerFeatures.SyncToolSpecification;
+import io.modelcontextprotocol.server.McpSyncServerExchange;
 import java.util.List;
 import java.util.Set;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.api.TestInstance.Lifecycle;
+import org.springframework.ai.mcp.annotation.McpTool;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
@@ -37,7 +40,10 @@ import schemacrawler.tools.ai.mcpserver.server.ToolHelper;
 import schemacrawler.tools.ai.mcpserver.server.ToolProvider;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
 import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
+import schemacrawler.tools.ai.mcpserver.utility.VocabularyTerms;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.vocabulary.Vocabulary;
+import schemacrawler.vocabulary.VocabularyTerm;
 import tools.jackson.databind.JsonNode;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 import us.fatehi.utility.jdbc.serverfingerprint.DatabaseServerFingerprint;
@@ -198,5 +204,44 @@ public class ToolProviderTest {
     } finally {
       ReflectionTestUtils.setField(toolProvider, "databaseIdentity", originalIdentity);
     }
+  }
+
+  @Test
+  @DisplayName("about_database has terms only when the vocabulary is trusted")
+  public void testAboutDatabaseTerms() {
+    final JsonNode withoutVocabulary = toolProvider.aboutDatabase(null);
+    assertThat(withoutVocabulary.has("terms"), is(false));
+    assertThat(withoutVocabulary.has("terms_usage"), is(false));
+
+    final List<VocabularyTerm> terms = List.of(new VocabularyTerm("customers", "customer", 7));
+    ReflectionTestUtils.setField(toolProvider, "vocabulary", new Vocabulary(terms, false));
+    try {
+      final JsonNode untrusted = toolProvider.aboutDatabase(null);
+      assertThat(untrusted.toString(), is(withoutVocabulary.toString()));
+
+      ReflectionTestUtils.setField(toolProvider, "vocabulary", new Vocabulary(terms, true));
+      final JsonNode trusted = toolProvider.aboutDatabase(null);
+      assertThat(trusted.get("terms").size(), is(1));
+      assertThat(trusted.get("terms").get(0).get("word").asString(), is("customers"));
+      assertThat(trusted.get("terms").get(0).get("objects").asInt(), is(7));
+      assertThat(trusted.get("terms_usage").asString(), is(VocabularyTerms.USAGE_SENTENCE));
+      // Existing contents are unchanged
+      assertThat(trusted.get("database_server"), is(withoutVocabulary.get("database_server")));
+      assertThat(trusted.get("server_info"), is(withoutVocabulary.get("server_info")));
+    } finally {
+      ReflectionTestUtils.setField(toolProvider, "vocabulary", null);
+    }
+  }
+
+  @Test
+  @DisplayName("about_database description says to start there and mentions the terms")
+  public void testAboutDatabaseDescription() throws Exception {
+    final String description =
+        ToolProvider.class
+            .getMethod("aboutDatabase", McpSyncServerExchange.class)
+            .getAnnotation(McpTool.class)
+            .description();
+    assertThat(description, containsString("Start here"));
+    assertThat(description, containsString("most used terms in object names"));
   }
 }

@@ -22,6 +22,8 @@ public final class ListFunctionDefinition
        analysis. The tool supports object type filtering and pattern-based searching.
        Use `list_members_of_tables` instead when you need columns, indexes, foreign keys,
        or triggers belonging to one or more tables.
+       Use `about_database` to see the most used terms in object names, which help build
+       name patterns.
        Returns JSON data.
     """
         .stripIndent()

@@ -22,6 +22,8 @@ public final class ListMembersOfTablesFunctionDefinition
        discover tables or other schema objects; use `list` for that. Supports regular
        expression based table and member name filtering. For complete physical
        table details, use `describe_tables`.
+       Use `about_database` to see the most used terms in object names, which help build
+       name patterns.
        Returns JSON data.
     """
         .stripIndent()
