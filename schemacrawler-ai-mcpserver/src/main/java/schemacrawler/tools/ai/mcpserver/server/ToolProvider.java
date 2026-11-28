@@ -29,8 +29,10 @@ import schemacrawler.schema.DatabaseInfo;
 import schemacrawler.schemacrawler.Version;
 import schemacrawler.tools.ai.mcpserver.ExcludeTools;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
+import schemacrawler.tools.ai.mcpserver.utility.VocabularyTerms;
 import schemacrawler.tools.ai.tools.FunctionDefinition;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
+import schemacrawler.vocabulary.Vocabulary;
 import tools.jackson.databind.JsonNode;
 import tools.jackson.databind.node.ArrayNode;
 import tools.jackson.databind.node.ObjectNode;
@@ -53,6 +55,9 @@ public class ToolProvider {
   @Autowired private ToolHelper toolHelper;
   @Autowired private ExcludeTools excludeTools;
   @Autowired private boolean isOffline;
+
+  @Autowired(required = false)
+  private Vocabulary vocabulary;
 
   @McpTool(
       name = "mcp-server-health",
@@ -82,10 +87,12 @@ public class ToolProvider {
       name = "about_database",
       title = "Show database server information",
       description =
-          "Provides database environment and server configuration metadata, including engine "
-              + "type and version, collation, encoding, parameters, capabilities, and platform "
-              + "details. Also reports database identity, including alias, product, and server "
-              + "fingerprint.",
+          "Start here. Provides database environment and server configuration metadata, "
+              + "including engine type and version, collation, encoding, parameters, "
+              + "capabilities, and platform details. Also reports database identity, including "
+              + "alias, product, and server fingerprint. May also list the most used terms in "
+              + "object names, to help build name patterns for `list` and "
+              + "`list_members_of_tables`.",
       annotations =
           @McpTool.McpAnnotations(
               title = "Show database server information",
@@ -117,6 +124,8 @@ public class ToolProvider {
     if (schemaStats != null && !schemaStats.isEmpty()) {
       aboutDatabase.set("schemas", mapper.valueToTree(schemaStats));
     }
+
+    VocabularyTerms.addTerms(aboutDatabase, vocabulary);
 
     // Log execution
     final CallToolLogger logger = new CallToolLogger(LOGGER, exchange);

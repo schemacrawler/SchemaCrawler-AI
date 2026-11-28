@@ -15,9 +15,13 @@ import static us.fatehi.utility.Utility.isBlank;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.util.List;
 import java.util.Map;
 import org.springframework.core.env.MapPropertySource;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
+import schemacrawler.tools.ai.mcpserver.utility.VocabularyTerms;
+import schemacrawler.vocabulary.Vocabulary;
+import schemacrawler.vocabulary.VocabularyTerm;
 import us.fatehi.utility.ioresource.ClasspathInputResource;
 
 public class InstructionsPropertySource extends MapPropertySource {
@@ -65,8 +69,30 @@ public class InstructionsPropertySource extends MapPropertySource {
     return description.toString();
   }
 
+  private static String createTermsSection(final Vocabulary vocabulary) {
+    final List<VocabularyTerm> terms = VocabularyTerms.displayTerms(vocabulary);
+    if (terms.isEmpty()) {
+      return "";
+    }
+    final String termList =
+        terms.stream()
+            .map(term -> "%s (%d)".formatted(term.word(), term.objectCount()))
+            .collect(joining(", "));
+    return """
+
+    # Terms Used in This Database
+
+    %s
+
+    %s
+    """
+        .formatted(VocabularyTerms.USAGE_SENTENCE, termList);
+  }
+
   private static String instructions(
-      final boolean isInErrorState, final DatabaseIdentity databaseIdentity) {
+      final boolean isInErrorState,
+      final DatabaseIdentity databaseIdentity,
+      final Vocabulary vocabulary) {
     final String instructions;
     final String toolUsageGuide = toolUsageGuide();
     if (isInErrorState) {
@@ -79,7 +105,8 @@ public class InstructionsPropertySource extends MapPropertySource {
           """;
     } else {
       final String databaseServerDescription = createDatabaseServerDescription(databaseIdentity);
-      instructions = databaseServerDescription + toolUsageGuide;
+      final String vocabularySection = createTermsSection(vocabulary);
+      instructions = databaseServerDescription + toolUsageGuide + vocabularySection;
     }
     return instructions;
   }
@@ -94,9 +121,11 @@ public class InstructionsPropertySource extends MapPropertySource {
   }
 
   public InstructionsPropertySource(
-      final boolean isInErrorState, final DatabaseIdentity databaseIdentity) {
+      final boolean isInErrorState,
+      final DatabaseIdentity databaseIdentity,
+      final Vocabulary vocabulary) {
     super(
         "mcpServerInstructions",
-        Map.of(INSTRUCTIONS_PROPERTY, instructions(isInErrorState, databaseIdentity)));
+        Map.of(INSTRUCTIONS_PROPERTY, instructions(isInErrorState, databaseIdentity, vocabulary)));
   }
 }

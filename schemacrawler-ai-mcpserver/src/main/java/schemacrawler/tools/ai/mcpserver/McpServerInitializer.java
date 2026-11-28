@@ -28,7 +28,10 @@ import schemacrawler.tools.ai.mcpserver.utility.InErrorFactory;
 import schemacrawler.tools.ai.tools.FunctionDefinitionRegistry;
 import schemacrawler.tools.state.AbstractExecutionState;
 import schemacrawler.tools.utility.SchemaCrawlerUtility;
+import schemacrawler.vocabulary.CatalogVocabularyAnalyzer;
+import schemacrawler.vocabulary.Vocabulary;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
+import us.fatehi.utility.string.StringFormat;
 
 public class McpServerInitializer extends AbstractExecutionState
     implements ApplicationContextInitializer<GenericApplicationContext> {
@@ -139,6 +142,7 @@ public class McpServerInitializer extends AbstractExecutionState
     final DatabaseConnectionSource connectionSource = getConnectionSource();
     final ImportanceModel importanceModel =
         isInErrorState ? null : ImportanceModelBuilder.builder(catalog).build();
+    final Vocabulary vocabulary = isInErrorState ? null : buildVocabulary(catalog);
 
     context.registerBean("mcpTransport", McpServerTransportType.class, () -> mcpTransport);
     context.registerBean(
@@ -148,6 +152,9 @@ public class McpServerInitializer extends AbstractExecutionState
     context.registerBean("erModel", ERModel.class, () -> erModel);
     if (importanceModel != null) {
       context.registerBean("importanceModel", ImportanceModel.class, () -> importanceModel);
+    }
+    if (vocabulary != null) {
+      context.registerBean("vocabulary", Vocabulary.class, () -> vocabulary);
     }
     context.registerBean("isInErrorState", Boolean.class, () -> isInErrorState);
     context.registerBean(
@@ -165,7 +172,24 @@ public class McpServerInitializer extends AbstractExecutionState
     context
         .getEnvironment()
         .getPropertySources()
-        .addFirst(new InstructionsPropertySource(isInErrorState, databaseIdentity));
+        .addFirst(new InstructionsPropertySource(isInErrorState, databaseIdentity, vocabulary));
+  }
+
+  /**
+   * Builds the schema vocabulary once, from the baseline catalog. It can be overridden to supply a
+   * different vocabulary, for example in tests.
+   *
+   * @param catalog Loaded catalog
+   * @return Vocabulary, which is not shown unless it is trusted
+   */
+  protected Vocabulary buildVocabulary(final Catalog catalog) {
+    final long start = System.nanoTime();
+    final Vocabulary vocabulary = CatalogVocabularyAnalyzer.analyze(catalog);
+    LOGGER.log(
+        Level.INFO,
+        new StringFormat(
+            "Built schema vocabulary in %d ms", (System.nanoTime() - start) / 1_000_000L));
+    return vocabulary;
   }
 
   // The errored catalog throws on every call, so it cannot provide identity values

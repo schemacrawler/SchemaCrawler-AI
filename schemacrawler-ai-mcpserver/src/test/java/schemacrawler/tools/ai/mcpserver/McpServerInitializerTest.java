@@ -23,6 +23,7 @@ import schemacrawler.schemacrawler.exceptions.ExecutionRuntimeException;
 import schemacrawler.test.utility.crawl.LightCatalogUtility;
 import schemacrawler.tools.ai.mcpserver.server.DatabaseIdentity;
 import schemacrawler.tools.ai.mcpserver.utility.DatabaseIdentityUtility;
+import schemacrawler.vocabulary.Vocabulary;
 import us.fatehi.utility.datasource.DatabaseConnectionSource;
 
 public class McpServerInitializerTest {
@@ -133,6 +134,7 @@ public class McpServerInitializerTest {
     assertThat(
         context.getBean("databaseConnectionSource"), instanceOf(DatabaseConnectionSource.class));
     assertThat(context.getBean("isInErrorState", Boolean.class), is(true));
+    assertThat(context.containsBean("vocabulary"), is(false));
   }
 
   @Test
@@ -152,6 +154,7 @@ public class McpServerInitializerTest {
     assertThat(
         context.getBean("importanceModel"),
         instanceOf(schemacrawler.importance.model.ImportanceModel.class));
+    assertThat(context.getBean("vocabulary"), instanceOf(Vocabulary.class));
     assertThat(context.getBean("mcpTransport"), is(McpServerTransportType.stdio));
     assertThat(context.getBean("isInErrorState", Boolean.class), is(false));
   }
